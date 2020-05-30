@@ -1,0 +1,179 @@
+---
+title: "Honours outline"
+author: "Jess"
+date: "2/21/2020"
+output: html_document
+---
+
+```{r, setup}
+pacman::p_load(tidyverse,
+               rscopus,
+               httr,
+               XML,
+               taxize)
+```
+
+```{r, function to get result count}
+#code from Fonti (modified)
+searchCount <- function(search.string, datatype = "application/xml") {
+  library(httr)
+  library(XML)
+  key <- "442b9048417ef20cf680a0ae26ee4d86" #my api key
+  theURL <- GET("http://api.elsevier.com/content/search/scopus",
+              query = list(apiKey = key,
+                           query = paste(search.string),
+                           httpAccept = "application/xml")) #format the URL to be sent to the API
+  stop_for_status(theURL) #pass any HTTP errors to the R console
+  theData <- content(theURL, as = "text") #extract the content of the response
+  newData <- xmlParse(theURL) #parse the data to extract values
+  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
+  return(resultCount)
+}
+```
+
+```{r}
+#code from Christopher Belter https://github.com/christopherBelter/scopusAPI/blob/master/scopusAPI.R
+extractcontent<- function(search.string, datatype = "application/xml") {
+  library(httr)
+  library(XML)
+  key <- "442b9048417ef20cf680a0ae26ee4d86" #my api key
+  theURL <- GET("http://api.elsevier.com/content/search/scopus",
+              query = list(apiKey = key,
+                           query = paste(search.string),
+                           httpAccept = "application/xml")) #format the URL to be sent to the API
+  stop_for_status(theURL) #pass any HTTP errors to the R console
+  theData <- content(theURL, as = "text") #extract the content of the response
+  return(theData)
+}
+```
+
+```{r, function to extract XML}
+#code from Christopher Belter https://github.com/christopherBelter/scopusAPI/blob/master/scopusAPI.R
+extractXML <- function(theFile) {
+	##library(XML)
+	newData <- XML::xmlParse(theFile) ## parse the XML
+	records <- XML::getNodeSet(newData, "//cto:entry", namespaces = "cto") ## create a list of records for missing or duplicate node handling
+	scopusID <- lapply(records, XML::xpathSApply, "./cto:eid", XML::xmlValue, namespaces = "cto") ## handle potentially missing eid nodes
+	scopusID[sapply(scopusID, is.list)] <- NA
+	scopusID <- unlist(scopusID)
+	doi <- lapply(records, XML::xpathSApply, "./prism:doi", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) ## handle potentially missing doi nodes
+	doi[sapply(doi, is.list)] <- NA
+	doi <- unlist(doi)
+	pmid <- lapply(records, XML::xpathSApply, "./cto:pubmed-id", XML::xmlValue, namespaces = "cto") ## handle potentially missing pmid nodes: returns a list with the node value if the node is present and an empty list if the node is missing
+	pmid[sapply(pmid, is.list)] <- NA ## find the empty lists in pmid and set them to NA
+	pmid <- unlist(pmid) ## turn the pmid list into a vector
+	authLast <- lapply(records, XML::xpathSApply, ".//cto:surname", XML::xmlValue, namespaces = "cto") ## grab the surname and initials for each author in each record, then paste them together 
+	authLast[sapply(authLast, is.list)] <- NA
+	authInit <- lapply(records, XML::xpathSApply, ".//cto:initials", XML::xmlValue, namespaces = "cto")
+	authInit[sapply(authInit, is.list)] <- NA
+	authors <- mapply(paste, authLast, authInit, collapse = "|")
+	authors <- sapply(strsplit(authors, "|", fixed = TRUE), unique) ## remove the duplicate author listings
+	authors <- sapply(authors, paste, collapse = "|")
+	affiliations <- lapply(records, XML::xpathSApply, ".//cto:affilname", XML::xmlValue, namespaces = "cto") ## handle multiple affiliation names
+	affiliations[sapply(affiliations, is.list)] <- NA
+	affiliations <- sapply(affiliations, paste, collapse = "|")
+	affiliations <- sapply(strsplit(affiliations, "|", fixed = TRUE), unique) ## remove the duplicate affiliation listings
+	affiliations <- sapply(affiliations, paste, collapse = "|")
+	countries <- lapply(records, XML::xpathSApply, ".//cto:affiliation-country", XML::xmlValue, namespaces = "cto")
+	countries[sapply(countries, is.list)] <- NA
+	countries <- sapply(countries, paste, collapse = "|")
+	countries <- sapply(strsplit(countries, "|", fixed = TRUE), unique) ## remove the duplicate country listings
+	countries <- sapply(countries, paste, collapse = "|") 
+	year <- lapply(records, XML::xpathSApply, "./prism:coverDate", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/"))
+	year[sapply(year, is.list)] <- NA
+	year <- unlist(year)
+	year <- gsub("\\-..", "", year) ## extract only year from coverDate string (e.g. extract "2015" from "2015-01-01")
+	articletitle <- lapply(records, XML::xpathSApply, "./dc:title", XML::xmlValue, namespaces = c(dc = "http://purl.org/dc/elements/1.1/"))
+	articletitle[sapply(articletitle, is.list)] <- NA
+	articletitle <- unlist(articletitle)
+	journal <- lapply(records, XML::xpathSApply, "./prism:publicationName", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) ## handle potentially missing issue nodes
+	journal[sapply(journal, is.list)] <- NA
+	journal <- unlist(journal)
+	volume <- lapply(records, XML::xpathSApply, "./prism:volume", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) ## handle potentially missing issue nodes
+	volume[sapply(volume, is.list)] <- NA
+	volume <- unlist(volume)
+	issue <- lapply(records, XML::xpathSApply, "./prism:issueIdentifier", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) ## handle potentially missing issue nodes
+	issue[sapply(issue, is.list)] <- NA
+	issue <- unlist(issue)
+	pages <- lapply(records, XML::xpathSApply, "./prism:pageRange", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) ## handle potentially missing issue nodes
+	pages[sapply(pages, is.list)] <- NA
+	pages <- unlist(pages)
+	abstract <- lapply(records, XML::xpathSApply, "./dc:description", XML::xmlValue, namespaces = c(dc = "http://purl.org/dc/elements/1.1/")) ## handle potentially missing abstract nodes
+	abstract[sapply(abstract, is.list)] <- NA
+	abstract <- unlist(abstract)
+	keywords <- lapply(records, XML::xpathSApply, "./cto:authkeywords", XML::xmlValue, namespaces = "cto")
+	keywords[sapply(keywords, is.list)] <- NA
+	keywords <- unlist(keywords)
+	keywords <- gsub(" | ", "|", keywords, fixed = TRUE)
+	ptype <- lapply(records, XML::xpathSApply, "./cto:subtypeDescription", XML::xmlValue, namespaces = "cto")
+	ptype[sapply(ptype, is.list)] <- NA
+	ptype <- unlist(ptype)
+	timescited <- lapply(records, XML::xpathSApply, "./cto:citedby-count", XML::xmlValue, namespaces = "cto")
+	timescited[sapply(timescited, is.list)] <- NA
+	timescited <- unlist(timescited)
+	theDF <- data.frame(scopusID, doi, pmid, authors, affiliations, countries, year, articletitle, journal, volume, issue, pages, keywords, abstract, ptype, timescited, stringsAsFactors = FALSE)
+	return(theDF)
+}
+```
+
+```{r, function to calculate species h-index}
+SpHindex <- function(data) {
+  library(dplyr)
+  total <- data %>%
+    group_by(timescited >= Count)
+  SpHindex <- count(total)
+  return(SpHindex)
+}
+```
+
+```{r, calculate H-index}
+Count <- searchCount(search.string = "TITLE(woylie OR \"brush-tailed bettong\" OR \"Bettongia penicillata\") AND DOCTYPE (ar OR re)")
+
+File <- extractcontent(search.string = "TITLE(woylie OR \"brush-tailed bettong\" OR \"Bettongia penicillata\") AND DOCTYPE (ar OR re)")
+
+WoylieData <- extractXML(File) #turns xml data in dataframe
+
+HWoylie <- SpHindex(WoylieData)
+
+
+WoylieData %>%
+  group_by(timescited >= nrow(WoylieData)) %>%
+  count() %>%
+  ungroup()
+
+print(WoylieData$timescited)
+
+sum(WoylieData$timescited>=Count)
+
+
+publications <- nrow(WoylieData)
+
+
+class(Count)
+class(publications)
+class(WoylieData$timescited)
+
+```
+
+
+```{r, simple Scopus search}
+
+TestWoylie <- scopus_search(query = "TITLE(woylie OR \"brush-tailed bettong\" OR \"Bettongia penicillata\") AND DOCTYPE(ar OR re)",
+                            api_key = "29a25986f5fe26edfcaec8b3f3b42718",
+                            max_count = 200,
+                            count = 10)
+
+```
+
+
+```{r, Division of taxa}
+#count mammal orders
+downstream("Mammalia", downto = "Family", db = "itis")
+downstream("Mammalia", downto = "Genus", db = "itis")
+
+gnr_resolve(names = c("Bettongia penicillata"))
+```
+
+
+
+
