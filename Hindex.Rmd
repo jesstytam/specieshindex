@@ -177,3 +177,36 @@ gnr_resolve(names = c("Bettongia penicillata"))
 
 
 
+
+
+```{r my h-index code}
+      
+citations <- c(0) #0
+citations <- c(1) #1
+citations <- c(0,0,0,0,0,0) #0
+citations <- c(0,0,1,0,0,0) #1
+citations <- c(2,3,0,5,6,0) #3
+citations <- c(0,1,0,5,6,0) #2
+citations <- c(4,4,4,1,4,0) #4
+citations <- c(5,5,5,5,5,5) #5
+citations <- c(6,6,6,6,6,6) #6
+citations <- c(6,6,6,6,6,5) #5
+citations <- c(6,6,6,9,9,9) #5
+citations <- xdf$citations #53?
+
+citations <- sort(citations, decreasing = TRUE)
+
+mycount <- 0   
+for(i in 1:length(citations)) {
+  if (citations[i] > mycount) {
+    mycount <- mycount + 1
+  }
+}
+print(paste("h: ", mycount))
+
+#see: https://publons.com/blog/5-things-the-h-index-cant-tell-you/
+#also: m (Hirsch, 2005). M measures the slope or rate of increase of the H-index over time and is, in my view, a greatly underappreciated measure.   To calculate the m-value, take the researchers H-index and divide by the number of years since their first publication.
+#H5Y factor. It is the H factor, but calculated only on citations received in the past five years. 
+
+#i10 - check it out?
+```
