@@ -116,45 +116,109 @@ extractXML <- function(theFile) {
 }
 ```
 
-```{r, function to calculate species h-index}
-SpHindex <- function(data) {
+```{r, species h-index}
+#this function calculates the h-index
+Hindex <- function(data) {
   library(dplyr)
-  total <- data %>%
-    group_by(timescited >= Count)
-  SpHindex <- count(total)
-  return(SpHindex)
+  data$citations <- as.numeric(data$citations) #change class from factor to numeric
+  sort(data$citations, decreasing = TRUE) #sort in descending order
+    Hindex <- 0   #computes h-index
+  for(i in 1:length(data$citations)) {
+    if (data$citations[i] > Hindex) {
+      Hindex <- Hindex + 1
+    }
+  }
+  return(Hindex)
+}
+
+#occasionally doesn't work when "data$" is missing in lines 128-129
+#gives different result depending on whether "data$" is in lines 128-129
+```
+
+```{r, add year column}
+#this function adds a year column
+AddYear <- function(data) {
+  library(dplyr)
+  mutate(data, Year = substring(cover_date, 1, 4)) #extract year from date
+  data$Year <- as.numeric(data$Year)
+}
+
+#does not want to convert Year to numerical values
+```
+
+```{r, m-index}
+#this function calculates the m-index
+#it does not requires the calculation of the h-index beforehand
+Mindex <- function(data) {
+  library(dplyr)
+  data$citations <- as.numeric(data$citations) #change class from factor to numeric
+  sort(data$citations, decreasing = TRUE) #sort in descending order
+  data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") #change format of the date from factor to date
+  data$year = format(data$cover_date, format="%Y")
+  subset <- subset(data, cover_date > "2015-06-30")
+  Mindex <- 0   #computes h-index
+  for(i in 1:length(data$citations)) {
+    if (data$citations[i] > Mindex) {
+      Mindex <- Mindex + 1
+    }
+    }
+  return(Mindex)
+}
+#i'm looking for a function that will subset the data exactly 5 years from today's date
+```
+
+```{r, i10 index}
+#this functions calculates the i10 index
+#i10 index counts all of the publications with 10+ citations
+i10 <- function(data) {
+  library(dplyr)
+  data$citations <- as.numeric(data$citations) #change class from factor to numeric
+  sort(data$citations, decreasing = TRUE) #sort in descending order
+  i10 <- sum(data$citations>=10)
+  return(i10)
+}
+
+#count is inaccurate
+```
+
+```{r, h5 index}
+#this function caculates the h5 index, which is the h-index for the past 5 years
+H5 <- function(data) {
+  library(dplyr)
+  data$citations <- as.numeric(data$citations)
+  sort(data$citations, decreasing = TRUE) #sort in descending order
+  data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") #change format of the date from factor to date
+  datefilter <- data %>% #filters papers from the last 5 years
+    filter(cover_date >= "2016-01-01")
+  h5 <- 0   #computes the h-index
+  for(i in 1:length(datefilter$citations)) {
+    if (datefilter$citations[i] > h5) {
+      h5 <- h5 + 1
+    }
+    }
+  return(h5)
 }
 ```
 
-```{r, calculate H-index}
-Count <- searchCount(search.string = "TITLE(woylie OR \"brush-tailed bettong\" OR \"Bettongia penicillata\") AND DOCTYPE (ar OR re)")
+```{r, rscopus}
+#some tests
 
-File <- extractcontent(search.string = "TITLE(woylie OR \"brush-tailed bettong\" OR \"Bettongia penicillata\") AND DOCTYPE (ar OR re)")
-
-WoylieData <- extractXML(File) #turns xml data in dataframe
-
-HWoylie <- SpHindex(WoylieData)
-
-
-WoylieData %>%
-  group_by(timescited >= nrow(WoylieData)) %>%
-  count() %>%
-  ungroup()
-
-print(WoylieData$timescited)
-
-sum(WoylieData$timescited>=Count)
+x <- scopus_search(query = "TITLE(koala OR koalas OR \"Phascolarctos cinereus\") AND DOCTYPE(ar OR re)",
+                   api_key = "442b9048417ef20cf680a0ae26ee4d86",
+                   verbose = TRUE)
+xdf <- entries_to_citation_df(x$entries)
+Hxdf <- Hindex(xdf)
+xdfYear <- AddYear(xdf)
+Mxdf <- Mindex(xdf)
+i10xdf <- i10(xdf)
+h5xdf <- H5(xdf)
 
 
-publications <- nrow(WoylieData)
+class(xdfYear$Year)
 
 
-class(Count)
-class(publications)
-class(WoylieData$timescited)
 
 ```
-
 
 ```{r, simple Scopus search}
 
@@ -179,7 +243,7 @@ gnr_resolve(names = c("Bettongia penicillata"))
 
 
 
-```{r my h-index code}
+```{r, Losia's h-index code}
       
 citations <- c(0) #0
 citations <- c(1) #1
