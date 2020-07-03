@@ -1,5 +1,5 @@
 ---
-title: "Honours outline"
+title: "Honours methods"
 author: "Jess"
 date: "2/21/2020"
 output: html_document
@@ -12,6 +12,44 @@ pacman::p_load(tidyverse,
                XML,
                taxize)
 ```
+
+**Functions**
+1. searchCount
+  + counts the total number of search results on Scopus
+2. extractcontent
+  + extracts content from Scopus using a search string
+  + data is not ready for analysis; requires extractXML
+3. extractXML
+  + converts data from extractcontent into a dataframe for analyses
+4. *Fetch
+  + fetches data from Scopus using genus and species name
+  + title only
+5. TotalPub
+  + counts the total number of publications
+6. TotalCite
+  + counts the total number of citations
+7. TotalJournals
+  + counts the total number of journals
+8. ^Ratio
+  + counts the total number of articles and reviews
+  + calculates article:review ratio
+9. Hindex
+  + calculates h-index
+10. YearsPublishing
+  + calculates the number of years since the first publication
+11. Mindex
+  + calculates m-index (h-index / total years)
+12. i10
+  + counts the publications with 10+ citations
+13. H5
+  + calculates h-index for the past 5 years
+14. HAfterdate
+  + calculates h-index with a given time frame
+
+*function is not working yet
+^kind of functional but needs more work
+
+
 
 ```{r, function to get result count}
 #code from Fonti (modified)
@@ -130,13 +168,57 @@ Fetch <- function(genus, species) {
 #not functional yet
 ```
 
+```{r, total publications}
+#this function calculates the total number of publications
+TotalPub <- function(data) {
+  total <- nrow(data) #counts the number of publications by summing the records
+  return(total)
+}
+```
+
+```{r, total citations}
+#this function calculates the total number of citations
+TotalCite <- function(data) {
+  data$citations <- as.numeric(data$citations) #changes the class to numerical for calculation
+  total <- sum(data$citations) #sums all of the citations
+  return(total)
+}
+```
+
+```{r, total journals}
+#this function calculates the total number of journals
+TotalJournals <- function(data) {
+  filter <- unique(data$journal) #filters data to pick out each journal
+  total <- length(filter) #counts the number of journals
+  return(total)
+}
+```
+
+```{r, article:review ratio}
+#this function calculates the ratio of articles:rerviews
+Ratio <- function(data) {
+  Article <- sum(data$description == "Article") #calculates the number of articles
+  Review <- sum(data$description == "Review") #calculates the number of reviews
+  ArticleRatio <- Article/(Article+Review)*100 #percentage of articles
+  ReviewRatio <- Review/(Article+Review)*100 #percentage of reviews
+  Ratio <- paste(ArticleRatio, ":", ReviewRatio) #prints ratio
+  cat(Article, "articles", "\n",
+      Review, "reviews", "\n",
+      "Article : Review =", Ratio)
+  return(Article)
+  return(Review)
+  return(Ratio)
+}
+
+#how do i make it save all values instead of just the number of articles
+```
+
 ```{r, species h-index}
 #this function calculates the h-index
 Hindex <- function(data) {
-  library(dplyr)
   data$citations <- as.numeric(data$citations) #change class from factor to numeric
   sorteddf <- sort(data$citations, decreasing = TRUE) #sort in descending order
-    Hindex <- 0   #computes h-index
+  Hindex <- 0   #computes h-index
   for(i in 1:length(sorteddf)) {
     if (sorteddf[i] > Hindex) {
       Hindex <- Hindex + 1
@@ -146,7 +228,7 @@ Hindex <- function(data) {
 }
 ```
 
-```{r}
+```{r, years of publication}
 #this function canculates the number of years since the first publication
 YearsPublishing <- function(data) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
@@ -160,7 +242,6 @@ YearsPublishing <- function(data) {
 #this function calculates the m-index
 #it does not requires the calculation of the h-index beforehand
 Mindex <- function(data) {
-  library(dplyr)
   data$citations <- as.numeric(data$citations) #change class from factor to numeric
   sorteddf <- sort(data$citations, decreasing = TRUE) #sort in descending order
   Hindex <- 0   #computes h-index
@@ -180,32 +261,35 @@ Mindex <- function(data) {
 #this functions calculates the i10 index
 #i10 index counts all of the publications with 10+ citations
 i10 <- function(data) {
-  library(dplyr)
-  data$citations <- as.numeric(data$citations) #change class from factor to numeric
-  sorteddf <- sort(data$citations, decreasing = TRUE) #sort in descending order
-  i10 <- sum(sorteddf>=10)
+  data$citations <- as.numeric(data$citations) #changes class from factor to numeric
+  sorteddf <- sort(data$citations, decreasing = TRUE) #sorts in descending order
+  i10 <- sum(sorteddf>=10) #counts the publications with 10 or more citations
   return(i10)
 }
 ```
 
 ```{r, h5 index}
-#this function caculates the h5 index, which is the h-index for the past 5 years
-H5 <- function(data, date) {
-  library(dplyr)
-  data$citations <- as.numeric(data$citations)
-  sorteddf <- sort(data$citations, decreasing = TRUE) #sort in descending order
-  sorteddf$cover_date <- as.Date(sorteddf$cover_date, format = "%Y-%m-%d") #change format of the date from factor to date
-  sorteddf$year = format(sorteddf$cover_date, format="%Y")
-  subsetdate <- subset(sorteddf, cover_date > as.date(paste(date)))
-  h5 <- 0   #computes h-index
-  for(i in 1:length(subsetdate)) {
-    if (subsetdate[i] > h5) {
-      h5 <- h5 + 1
-    }
-    }
-  return(h5)
+H5 <- function(data) { #last 5 years from the current date
+  current_date <- as.numeric(substr(Sys.Date(), 1, 4)) #current year
+  #The easiest thing to do is to convert it into POSIXlt and subtract 5 from the years slot.
+  d <- as.POSIXlt(Sys.Date())
+  d$year <- d$year-5
+  as.Date(d)
+  return(HAfterdate(data, d))
 }
 ```
+
+```{r, h-index with a given date}
+HAfterdate <- function(data, date) {
+  library(dplyr)
+  data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") #change format of the date from factor to date
+  subsetdata <- filter(data, cover_date > as.Date(date) )
+  HAfterdate <- Hindex(subsetdata)
+  return(HAfterdate)
+}
+```
+
+**Tests**
 
 ```{r, rscopus}
 #some tests
@@ -215,15 +299,37 @@ x <- scopus_search(query = "TITLE(koala OR koalas OR \"Phascolarctos cinereus\")
                    verbose = TRUE)
 xdf <- entries_to_citation_df(x$entries)
 
-Woylie <- Fetch(bettongia, penicillata)
 
-Hxdf <- Hindex(xdf)
-yearsxdf <- YearsPublishing(xdf)
-Mxdf <- Mindex(xdf)
-i10xdf <- i10(xdf)
-h5xdf <- H5(xdf, 2016-07-01)
+Woylie <- Fetch(bettongia, penicillata) #fetch function not working yet
+
+Pubxdf <- TotalPub(xdf) #929
+Citexdf <- TotalCite(xdf) #16170
+Journalxdf <- TotalJournals(xdf) #299
+Ratioxdf <- Ratio(xdf) #890:39, 95.8019375672766:4.19806243272336; can't save all of the values tho
+Hxdf <- Hindex(xdf) #53
+yearsxdf <- YearsPublishing(xdf) #139
+Mxdf <- Mindex(xdf) #0.381294964028777
+i10xdf <- i10(xdf) #467
+h5xdf <- H5(xdf) #15
+datexdf <- HAfterdate(xdf, "2000-01-01") #47
 
 ```
+
+```{r}
+#test with dummy data
+dummy1 <- data.frame("citations" = c(12, 5, 0, 21, 3, 4, 9, 17, 1, 10,
+                                     10, 1, 0, 16, 26, 24, 15, 34, 31, 29),
+                     "cover_date" = c(2000, 2015, 1986, 1994, 1972, 2002, 2006, 2019, 2016, 2006,
+                                      1997, 1989, 2007, 2010, 2013, 2020, 2017, 1994, 1999, 2016))
+Hindex(dummy1) #10
+YearsPublishing(dummy1) #48
+Mindex(dummy1) #0.2083333
+i10(dummy1) #12
+
+
+#total publications, total citations, total journals, reviews/journals percentage
+```
+
 
 ```{r, simple Scopus search}
 
@@ -234,7 +340,6 @@ TestWoylie <- scopus_search(query = "TITLE(woylie OR \"brush-tailed bettong\" OR
 
 ```
 
-
 ```{r, Division of taxa}
 #count mammal orders
 downstream("Mammalia", downto = "Family", db = "itis")
@@ -242,22 +347,6 @@ downstream("Mammalia", downto = "Genus", db = "itis")
 
 gnr_resolve(names = c("Bettongia penicillata"))
 ```
-
-```{r}
-dummy1 <- data.frame("citations" = c(12, 5, 0, 21, 3, 4, 9, 17, 1, 10,
-                                     10, 1, 0, 16, 26, 24, 15, 34, 31, 29),
-                     "cover_date" = c(2000, 2015, 1986, 1994, 1972, 2002, 2006, 2019, 2016, 2006,
-                                      1997, 1989, 2007, 2010, 2013, 2020, 2017, 1994, 1999, 2016))
-Hindex(dummy1) #10
-YearsPublishing(dummy1) #48
-Mindex(dummy1) #0.2083333
-i10(dummy1) #12
-H5(dummy1, "2016-07-01")
-
-```
-
-
-
 
 ```{r, Losia's h-index code}
       
