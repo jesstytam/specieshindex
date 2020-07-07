@@ -16,12 +16,12 @@ pacman::p_load(tidyverse,
 **Functions**
 1. searchCount
   + counts the total number of search results on Scopus
-2. extractcontent
+2. *extractcontent
   + extracts content from Scopus using a search string
   + data is not ready for analysis; requires extractXML
-3. extractXML
+3. *extractXML
   + converts data from extractcontent into a dataframe for analyses
-4. *Fetch
+4. FetchSp
   + fetches data from Scopus using genus and species name
   + title only
 5. TotalPub
@@ -48,7 +48,7 @@ pacman::p_load(tidyverse,
 15. Allindices
   + shows a summary of the main indices
 
-*function is not working yet
+*function not available to users
 
 
 
@@ -157,10 +157,10 @@ extractXML <- function(theFile) {
 
 ```{r}
 #this function downloads citation data from scopus
-Fetch <- function(genus, species) {
+FetchSp <- function(genus, species, APIkey) {
   library(rscopus)
   search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
-                          api_key = "442b9048417ef20cf680a0ae26ee4d86",
+                          api_key = paste0(APIkey),
                           verbose = TRUE)
   searchdf <- entries_to_citation_df(search$entries)
   return(searchdf)
@@ -300,17 +300,7 @@ Allindices <- function(data) {
 
 ```{r, rscopus}
 #some tests
-
-
-
-
-x <- scopus_search(query = "TITLE(koala OR koalas OR \"Phascolarctos cinereus\") AND DOCTYPE(ar OR re)",
-                   api_key = "442b9048417ef20cf680a0ae26ee4d86",
-                   verbose = TRUE)
-xdf <- entries_to_citation_df(x$entries)
-
-
-tiger <- Fetch("Panthera", "tigris") 
+tiger <- FetchSp("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86") 
 
 Pubxdf <- TotalPub(xdf) #929
 Citexdf <- TotalCite(xdf) #16170
