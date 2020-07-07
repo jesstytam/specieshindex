@@ -30,7 +30,7 @@ pacman::p_load(tidyverse,
   + counts the total number of citations
 7. TotalJournals
   + counts the total number of journals
-8. ^Ratio
+8. Ratio
   + counts the total number of articles and reviews
   + calculates article:review ratio
 9. Hindex
@@ -45,9 +45,10 @@ pacman::p_load(tidyverse,
   + calculates h-index for the past 5 years
 14. HAfterdate
   + calculates h-index with a given time frame
+15. Allindices
+  + shows a summary of the main indices
 
 *function is not working yet
-^kind of functional but needs more work
 
 
 
@@ -158,7 +159,7 @@ extractXML <- function(theFile) {
 #this function downloads citation data from scopus
 Fetch <- function(genus, species) {
   library(rscopus)
-  search <- scopus_search(query = "TITLE(\"", paste(genus), " ", paste(species), "\") AND DOCTYPE(ar OR re)",
+  search <- scopus_search(query = "TITLE(\"", genus, " ", species, "\") AND DOCTYPE(ar OR re)",
                           api_key = "442b9048417ef20cf680a0ae26ee4d86",
                           verbose = TRUE)
   searchdf <- entries_to_citation_df(search$entries)
@@ -205,12 +206,8 @@ Ratio <- function(data) {
   cat(Article, "articles", "\n",
       Review, "reviews", "\n",
       "Article : Review =", Ratio)
-  return(Article)
-  return(Review)
   return(Ratio)
 }
-
-#how do i make it save all values instead of just the number of articles
 ```
 
 ```{r, species h-index}
@@ -289,6 +286,16 @@ HAfterdate <- function(data, date) {
 }
 ```
 
+```{r}
+#this function returns a summary of all of the indices
+Allindices <- function(data) {
+  cat(" h:", Hindex(data), "\n",
+      "m:", Mindex(data), "\n",
+      "i10:", i10(data), "\n",
+      "h5:", H5(data))
+}
+```
+
 **Tests**
 
 ```{r, rscopus}
@@ -305,13 +312,14 @@ Woylie <- Fetch(bettongia, penicillata) #fetch function not working yet
 Pubxdf <- TotalPub(xdf) #929
 Citexdf <- TotalCite(xdf) #16170
 Journalxdf <- TotalJournals(xdf) #299
-Ratioxdf <- Ratio(xdf) #890:39, 95.8019375672766:4.19806243272336; can't save all of the values tho
+Ratio(xdf) #890:39, 95.8019375672766:4.19806243272336
 Hxdf <- Hindex(xdf) #53
 yearsxdf <- YearsPublishing(xdf) #139
 Mxdf <- Mindex(xdf) #0.381294964028777
 i10xdf <- i10(xdf) #467
 h5xdf <- H5(xdf) #15
 datexdf <- HAfterdate(xdf, "2000-01-01") #47
+Allindices(xdf)
 
 ```
 
