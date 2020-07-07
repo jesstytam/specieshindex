@@ -159,7 +159,7 @@ extractXML <- function(theFile) {
 #this function downloads citation data from scopus
 Fetch <- function(genus, species) {
   library(rscopus)
-  search <- scopus_search(query = "TITLE(\"", genus, " ", species, "\") AND DOCTYPE(ar OR re)",
+  search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                           api_key = "442b9048417ef20cf680a0ae26ee4d86",
                           verbose = TRUE)
   searchdf <- entries_to_citation_df(search$entries)
@@ -301,19 +301,22 @@ Allindices <- function(data) {
 ```{r, rscopus}
 #some tests
 
+
+
+
 x <- scopus_search(query = "TITLE(koala OR koalas OR \"Phascolarctos cinereus\") AND DOCTYPE(ar OR re)",
                    api_key = "442b9048417ef20cf680a0ae26ee4d86",
                    verbose = TRUE)
 xdf <- entries_to_citation_df(x$entries)
 
 
-Woylie <- Fetch(bettongia, penicillata) #fetch function not working yet
+lion <- Fetch("Panthera", "tigris") #fetch function not working yet
 
 Pubxdf <- TotalPub(xdf) #929
 Citexdf <- TotalCite(xdf) #16170
 Journalxdf <- TotalJournals(xdf) #299
 Ratio(xdf) #890:39, 95.8019375672766:4.19806243272336
-Hxdf <- Hindex(xdf) #53
+Hxdf <- Hindex(lion) #53
 yearsxdf <- YearsPublishing(xdf) #139
 Mxdf <- Mindex(xdf) #0.381294964028777
 i10xdf <- i10(xdf) #467
