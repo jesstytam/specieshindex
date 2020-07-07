@@ -310,13 +310,13 @@ x <- scopus_search(query = "TITLE(koala OR koalas OR \"Phascolarctos cinereus\")
 xdf <- entries_to_citation_df(x$entries)
 
 
-lion <- Fetch("Panthera", "tigris") #fetch function not working yet
+tiger <- Fetch("Panthera", "tigris") 
 
 Pubxdf <- TotalPub(xdf) #929
 Citexdf <- TotalCite(xdf) #16170
 Journalxdf <- TotalJournals(xdf) #299
 Ratio(xdf) #890:39, 95.8019375672766:4.19806243272336
-Hxdf <- Hindex(lion) #53
+Hxdf <- Hindex(tiger) #53
 yearsxdf <- YearsPublishing(xdf) #139
 Mxdf <- Mindex(xdf) #0.381294964028777
 i10xdf <- i10(xdf) #467
