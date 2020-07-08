@@ -27,6 +27,8 @@ pacman::p_load(tidyverse,
 5. FetchSpTAK
   + fetches data from Scopus using genus and species name
   + title + abstract + keywords
+5.2 ^FetchSpTAKloop
+  + loop added
 6. TotalPub
   + counts the total number of publications
 7. TotalCite
@@ -52,17 +54,18 @@ pacman::p_load(tidyverse,
   + shows a summary of the main indices
 
 *function not available to users
+^not functional yet
 
 
 
 ```{r, function to get result count}
 #code from Fonti (modified)
-searchCount <- function(search.string, APIkey, datatype = "application/xml") {
+searchCount <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
               query = list(apiKey = paste0(APIkey),
-                           query = paste(search.string),
+                           query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                            httpAccept = "application/xml")) #format the URL to be sent to the API
   stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- content(theURL, as = "text") #extract the content of the response
@@ -162,6 +165,7 @@ extractXML <- function(theFile) {
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
+  library(taxize)
   if (is_missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stops the function from running
   }
@@ -184,6 +188,34 @@ FetchSpTAK <- function(genus, species, APIkey) {
   search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                           api_key = paste0(APIkey),
                           verbose = TRUE)
+  searchdf <- entries_to_citation_df(search$entries)
+  return(searchdf)
+}
+```
+
+```{r, loop test}
+#this function downloads citation data from scopus
+FetchSpTAKloop <- function(genus, species, APIkey) {
+  library(rscopus)
+  library(rlang)
+  if (is_missing(APIkey)) {
+    stop("You need to register for an API key on Scopus.") #stops the function from running
+  }
+  search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          max_count = 3000,
+                          start = 1,
+                          wait_time = 1)
+  while (search > 3000) { #loop
+    print("fetching more records...")
+    search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          max_count = 3000,
+                          start = length(search) + 1,
+                          wait_time = 1)
+  }
   searchdf <- entries_to_citation_df(search$entries)
   return(searchdf)
 }
@@ -311,10 +343,13 @@ HAfterdate <- function(data, date) {
 ```{r, shows main indices}
 #this function returns a summary of all of the indices
 Allindices <- function(data) {
+  combine <- data.frame(Hindex(data), Mindex(data), i10(data), H5(data))
+  colnames(combine) <- c("h", "m", "i10", "h5")
   cat(" h:", Hindex(data), "\n",
       "m:", Mindex(data), "\n",
       "i10:", i10(data), "\n",
       "h5:", H5(data))
+  return(combine)
 }
 ```
 
@@ -326,6 +361,14 @@ tiger <- FetchSpT("Panthera", "tigris") #shows warning
 tiger <- FetchSpTAK("Panthera", "tigris") #shows warning
 fox <- FetchSpT("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #1133 results
 foxTAK <- FetchSpTAK("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #3324 results
+drosophila <- FetchSpTAK("Drosophila", "montana", "442b9048417ef20cf680a0ae26ee4d86") #93 results
+drosophila2 <- FetchSpTAK("drosophila", "melanogaster", "442b9048417ef20cf680a0ae26ee4d86") #60904 results, error at 23%
+drosophila3 <- FetchSpTAK("Mus", "musculus", "442b9048417ef20cf680a0ae26ee4d86") 
+cat <- FetchSpTAKloop("felis", "catus", "442b9048417ef20cf680a0ae26ee4d86") #17622 results, error at 26%
+
+FetchSpT("catus", "catus", "442b9048417ef20cf680a0ae26ee4d86")
+
+searchCount("Mus", "musculus", "442b9048417ef20cf680a0ae26ee4d86") #34252 count
 
 Pubxdf <- TotalPub(xdf) #929
 Citexdf <- TotalCite(xdf) #16170
@@ -337,7 +380,7 @@ Mxdf <- Mindex(xdf) #0.381294964028777
 i10xdf <- i10(xdf) #467
 h5xdf <- H5(xdf) #15
 datexdf <- HAfterdate(xdf, "2000-01-01") #47
-Allindices(xdf)
+xdfALL <- Allindices(xdf)
 
 ```
 
