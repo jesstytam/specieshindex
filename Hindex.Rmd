@@ -21,31 +21,34 @@ pacman::p_load(tidyverse,
   + data is not ready for analysis; requires extractXML
 3. *extractXML
   + converts data from extractcontent into a dataframe for analyses
-4. FetchSp
+4. FetchSpT
   + fetches data from Scopus using genus and species name
   + title only
-5. TotalPub
+5. FetchSpTAK
+  + fetches data from Scopus using genus and species name
+  + title + abstract + keywords
+6. TotalPub
   + counts the total number of publications
-6. TotalCite
+7. TotalCite
   + counts the total number of citations
-7. TotalJournals
+8. TotalJournals
   + counts the total number of journals
-8. Ratio
+9. Ratio
   + counts the total number of articles and reviews
   + calculates article:review ratio
-9. Hindex
+10. Hindex
   + calculates h-index
-10. YearsPublishing
+11. YearsPublishing
   + calculates the number of years since the first publication
-11. Mindex
+12. Mindex
   + calculates m-index (h-index / total years)
-12. i10
+13. i10
   + counts the publications with 10+ citations
-13. H5
+14. H5
   + calculates h-index for the past 5 years
-14. HAfterdate
+15. HAfterdate
   + calculates h-index with a given time frame
-15. Allindices
+16. Allindices
   + shows a summary of the main indices
 
 *function not available to users
@@ -157,7 +160,7 @@ extractXML <- function(theFile) {
 
 ```{r}
 #this function downloads citation data from scopus
-FetchSp <- function(genus, species, APIkey) {
+FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                           api_key = paste0(APIkey),
@@ -165,8 +168,18 @@ FetchSp <- function(genus, species, APIkey) {
   searchdf <- entries_to_citation_df(search$entries)
   return(searchdf)
 }
+```
 
-#not functional yet
+```{r}
+#this function downloads citation data from scopus
+FetchSpTAK <- function(genus, species, APIkey) {
+  library(rscopus)
+  search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE)
+  searchdf <- entries_to_citation_df(search$entries)
+  return(searchdf)
+}
 ```
 
 ```{r, total publications}
@@ -301,6 +314,8 @@ Allindices <- function(data) {
 ```{r, rscopus}
 #some tests
 tiger <- FetchSp("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86") 
+fox <- FetchSp("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #1133 results
+foxTAK <- FetchSpTAK("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #3324 results
 
 Pubxdf <- TotalPub(xdf) #929
 Citexdf <- TotalCite(xdf) #16170
@@ -329,24 +344,6 @@ i10(dummy1) #12
 
 
 #total publications, total citations, total journals, reviews/journals percentage
-```
-
-
-```{r, simple Scopus search}
-
-TestWoylie <- scopus_search(query = "TITLE(woylie OR \"brush-tailed bettong\" OR \"Bettongia penicillata\") AND DOCTYPE(ar OR re)",
-                            api_key = "29a25986f5fe26edfcaec8b3f3b42718",
-                            max_count = 200,
-                            count = 10)
-
-```
-
-```{r, Division of taxa}
-#count mammal orders
-downstream("Mammalia", downto = "Family", db = "itis")
-downstream("Mammalia", downto = "Genus", db = "itis")
-
-gnr_resolve(names = c("Bettongia penicillata"))
 ```
 
 ```{r, Losia's h-index code}
