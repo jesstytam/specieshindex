@@ -57,12 +57,11 @@ pacman::p_load(tidyverse,
 
 ```{r, function to get result count}
 #code from Fonti (modified)
-searchCount <- function(search.string, datatype = "application/xml") {
+searchCount <- function(search.string, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
-  key <- "442b9048417ef20cf680a0ae26ee4d86" #my api key
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
-              query = list(apiKey = key,
+              query = list(apiKey = paste0(APIkey),
                            query = paste(search.string),
                            httpAccept = "application/xml")) #format the URL to be sent to the API
   stop_for_status(theURL) #pass any HTTP errors to the R console
@@ -158,10 +157,14 @@ extractXML <- function(theFile) {
 }
 ```
 
-```{r}
+```{r, fetch using title only}
 #this function downloads citation data from scopus
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
+  library(rlang)
+  if (is_missing(APIkey)) {
+    stop("You need to register for an API key on Scopus.") #stops the function from running
+  }
   search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                           api_key = paste0(APIkey),
                           verbose = TRUE)
@@ -170,10 +173,14 @@ FetchSpT <- function(genus, species, APIkey) {
 }
 ```
 
-```{r}
+```{r, fetch using title+abs+key}
 #this function downloads citation data from scopus
 FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
+  library(rlang)
+  if (is_missing(APIkey)) {
+    stop("You need to register for an API key on Scopus.") #stops the function from running
+  }
   search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                           api_key = paste0(APIkey),
                           verbose = TRUE)
@@ -268,7 +275,7 @@ Mindex <- function(data) {
 ```
 
 ```{r, i10 index}
-#this functions calculates the i10 index
+#this function calculates the i10 index
 #i10 index counts all of the publications with 10+ citations
 i10 <- function(data) {
   data$citations <- as.numeric(data$citations) #changes class from factor to numeric
@@ -279,6 +286,7 @@ i10 <- function(data) {
 ```
 
 ```{r, h5 index}
+#this function calculates the h-index of the past 5 years
 H5 <- function(data) { #last 5 years from the current date
   current_date <- as.numeric(substr(Sys.Date(), 1, 4)) #current year
   #The easiest thing to do is to convert it into POSIXlt and subtract 5 from the years slot.
@@ -290,6 +298,7 @@ H5 <- function(data) { #last 5 years from the current date
 ```
 
 ```{r, h-index with a given date}
+#this function calculates the h-index using a given date up till the newest record
 HAfterdate <- function(data, date) {
   library(dplyr)
   data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") #change format of the date from factor to date
@@ -299,7 +308,7 @@ HAfterdate <- function(data, date) {
 }
 ```
 
-```{r}
+```{r, shows main indices}
 #this function returns a summary of all of the indices
 Allindices <- function(data) {
   cat(" h:", Hindex(data), "\n",
@@ -313,8 +322,9 @@ Allindices <- function(data) {
 
 ```{r, rscopus}
 #some tests
-tiger <- FetchSp("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86") 
-fox <- FetchSp("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #1133 results
+tiger <- FetchSpT("Panthera", "tigris") #shows warning
+tiger <- FetchSpTAK("Panthera", "tigris") #shows warning
+fox <- FetchSpT("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #1133 results
 foxTAK <- FetchSpTAK("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #3324 results
 
 Pubxdf <- TotalPub(xdf) #929
