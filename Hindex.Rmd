@@ -343,9 +343,15 @@ HAfterdate <- function(data, date) {
 ```{r, shows main indices}
 #this function returns a summary of all of the indices
 Allindices <- function(data) {
-  combine <- data.frame(Hindex(data), Mindex(data), i10(data), H5(data))
-  colnames(combine) <- c("h", "m", "i10", "h5")
-  cat(" h:", Hindex(data), "\n",
+  combine <- data.frame(TotalPub(data), TotalCite(data), TotalJournals(data),
+                        YearsPublishing(data), Hindex(data), Mindex(data), i10(data), H5(data))
+  colnames(combine) <- c("publications", "citations", "journals",
+                         "years_publishing", "h", "m", "i10", "h5")
+  cat("", TotalPub(data), "publications", "\n",
+      TotalCite(data), "citations", "\n",
+      TotalJournals(data), "journals", "\n",
+      YearsPublishing(data), "years of publishing", "\n",
+      "h:", Hindex(data), "\n",
       "m:", Mindex(data), "\n",
       "i10:", i10(data), "\n",
       "h5:", H5(data))
