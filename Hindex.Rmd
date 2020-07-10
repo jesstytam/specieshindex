@@ -10,7 +10,8 @@ pacman::p_load(tidyverse,
                rscopus,
                httr,
                XML,
-               taxize)
+               taxize,
+               rlang)
 ```
 
 **Functions**
@@ -35,22 +36,25 @@ pacman::p_load(tidyverse,
   + counts the total number of citations
 8. TotalJournals
   + counts the total number of journals
-9. Ratio
-  + counts the total number of articles and reviews
+9. TotalArt
+  + counts the total number of articles
+10. TotalRev
+  + counts the total number of reviews
+11. ARRatio
   + calculates article:review ratio
-10. Hindex
+12. SpHindex
   + calculates h-index
-11. YearsPublishing
+13. YearsPublishing
   + calculates the number of years since the first publication
-12. Mindex
+14. SpMindex
   + calculates m-index (h-index / total years)
-13. i10
+15. Spi10
   + counts the publications with 10+ citations
-14. H5
+16. SpH5
   + calculates h-index for the past 5 years
-15. HAfterdate
+17. SpHAfterdate
   + calculates h-index with a given time frame
-16. Allindices
+18. Allindices
   + shows a summary of the main indices
 
 *function not available to users
@@ -165,7 +169,6 @@ extractXML <- function(theFile) {
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
-  library(taxize)
   if (is_missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stops the function from running
   }
@@ -247,24 +250,37 @@ TotalJournals <- function(data) {
 }
 ```
 
+```{r, total articles}
+#this function calculates the total number of articles
+TotalArt <- function(data) {
+  Article <- sum(data$description == "Article") #calculates the number of articles
+  return(Article)
+}
+```
+
+```{r, total reviews}
+#this function calculates the total number of reviews
+TotalRev <- function(data) {
+  Review <- sum(data$description == "Review") #calculates the number of reviews
+  return(Review)
+}
+```
+
 ```{r, article:review ratio}
 #this function calculates the ratio of articles:rerviews
-Ratio <- function(data) {
+ARRatio <- function(data) {
   Article <- sum(data$description == "Article") #calculates the number of articles
   Review <- sum(data$description == "Review") #calculates the number of reviews
   ArticleRatio <- Article/(Article+Review)*100 #percentage of articles
   ReviewRatio <- Review/(Article+Review)*100 #percentage of reviews
   Ratio <- paste(ArticleRatio, ":", ReviewRatio) #prints ratio
-  cat(Article, "articles", "\n",
-      Review, "reviews", "\n",
-      "Article : Review =", Ratio)
   return(Ratio)
 }
 ```
 
 ```{r, species h-index}
 #this function calculates the h-index
-Hindex <- function(data) {
+SpHindex <- function(data) {
   data$citations <- as.numeric(data$citations) #change class from factor to numeric
   sorteddf <- sort(data$citations, decreasing = TRUE) #sort in descending order
   Hindex <- 0   #computes h-index
@@ -290,7 +306,7 @@ YearsPublishing <- function(data) {
 ```{r, m-index}
 #this function calculates the m-index
 #it does not requires the calculation of the h-index beforehand
-Mindex <- function(data) {
+SpMindex <- function(data) {
   data$citations <- as.numeric(data$citations) #change class from factor to numeric
   sorteddf <- sort(data$citations, decreasing = TRUE) #sort in descending order
   Hindex <- 0   #computes h-index
@@ -309,7 +325,7 @@ Mindex <- function(data) {
 ```{r, i10 index}
 #this function calculates the i10 index
 #i10 index counts all of the publications with 10+ citations
-i10 <- function(data) {
+Spi10 <- function(data) {
   data$citations <- as.numeric(data$citations) #changes class from factor to numeric
   sorteddf <- sort(data$citations, decreasing = TRUE) #sorts in descending order
   i10 <- sum(sorteddf>=10) #counts the publications with 10 or more citations
@@ -319,7 +335,7 @@ i10 <- function(data) {
 
 ```{r, h5 index}
 #this function calculates the h-index of the past 5 years
-H5 <- function(data) { #last 5 years from the current date
+SpH5 <- function(data) { #last 5 years from the current date
   current_date <- as.numeric(substr(Sys.Date(), 1, 4)) #current year
   #The easiest thing to do is to convert it into POSIXlt and subtract 5 from the years slot.
   d <- as.POSIXlt(Sys.Date())
@@ -331,7 +347,7 @@ H5 <- function(data) { #last 5 years from the current date
 
 ```{r, h-index with a given date}
 #this function calculates the h-index using a given date up till the newest record
-HAfterdate <- function(data, date) {
+SpHAfterdate <- function(data, date) {
   library(dplyr)
   data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") #change format of the date from factor to date
   subsetdata <- filter(data, cover_date > as.Date(date) )
@@ -343,27 +359,150 @@ HAfterdate <- function(data, date) {
 ```{r, shows main indices}
 #this function returns a summary of all of the indices
 Allindices <- function(data) {
-  combine <- data.frame(TotalPub(data), TotalCite(data), TotalJournals(data),
-                        YearsPublishing(data), Hindex(data), Mindex(data), i10(data), H5(data))
-  colnames(combine) <- c("publications", "citations", "journals",
-                         "years_publishing", "h", "m", "i10", "h5")
+  combine <- data.frame(TotalPub(data), TotalCite(data), TotalJournals(data), TotalArt(data),
+                        TotalRev(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data),
+                        SpH5(data))
+  colnames(combine) <- c("publications", "citations", "journals", "articles",
+                         "reviews", "years_publishing", "h", "m", "i10",
+                         "h5")
   cat("", TotalPub(data), "publications", "\n",
       TotalCite(data), "citations", "\n",
       TotalJournals(data), "journals", "\n",
+      TotalArt(data), "articles", "\n",
+      TotalRev(data), "reviews", "\n",
       YearsPublishing(data), "years of publishing", "\n",
-      "h:", Hindex(data), "\n",
-      "m:", Mindex(data), "\n",
-      "i10:", i10(data), "\n",
-      "h5:", H5(data))
+      "h:", SpHindex(data), "\n",
+      "m:", SpMindex(data), "\n",
+      "i10:", Spi10(data), "\n",
+      "h5:", SpH5(data))
   return(combine)
 }
 ```
 
 **Tests**
 
+```{r, woylie}
+#test done on 10 july
+searchCount("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #113
+Woylie <- FetchSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+
+TotalPub(Woylie) #113
+TotalCite(Woylie) #1897
+TotalJournals(Woylie) #55
+TotalArt(Woylie) #110
+TotalRev(Woylie) #3
+ARRatio(Woylie) #97.3451327433628:2.65486725663717
+
+YearsPublishing(Woylie) #43
+SpHindex(Woylie) #26
+SpMindex(Woylie) #0.6046512
+Spi10(Woylie) #54
+SpH5(Woylie) #8
+SpHAfterdate(Woylie, "2000-01-01") #20
+
+B_penicillata <- Allindices(Woylie)
+```
+
+```{r, quokka}
+#test done on 10 july
+searchCount("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86") #242
+Quokka <- FetchSpTAK("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86")
+
+TotalPub(Quokka) #242
+TotalCite(Quokka) #3423
+TotalJournals(Quokka) #107
+TotalArt(Quokka) #237
+TotalRev(Quokka) #5
+ARRatio(Quokka) #97.9338842975207:2.06611570247934
+
+YearsPublishing(Quokka) #66
+SpHindex(Quokka) #29
+SpMindex(Quokka) #0.4393939
+Spi10(Quokka) #121
+SpH5(Quokka) #3
+SpHAfterdate(Quokka, "2000-01-01") #17
+
+S_brachyurus <- Allindices(Quokka)
+```
+
+```{r, platypus}
+#test done on 10 july
+searchCount("Ornithorhynchus", "anatinus", "442b9048417ef20cf680a0ae26ee4d86") #321
+Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", "442b9048417ef20cf680a0ae26ee4d86")
+
+TotalPub(Platypus) #321
+TotalCite(Platypus) #6363
+TotalJournals(Platypus) #153
+TotalArt(Platypus) #308
+TotalRev(Platypus) #13
+ARRatio(Platypus) #95.9501557632399 : 4.04984423676012
+
+YearsPublishing(Platypus) #67
+SpHindex(Platypus) #41
+SpMindex(Platypus) #0.6119403
+Spi10(Platypus) #177
+SpH5(Platypus) #7
+SpHAfterdate(Platypus, "2000-01-01") #32
+
+O_anatinus <- Allindices(Platypus)
+```
+
+```{r, koala}
+#test done on 10 july
+searchCount("Phascolarctos", "cinereus", "442b9048417ef20cf680a0ae26ee4d86") #777
+#did we not have 930 records?? hmm...
+Koala <- FetchSpTAK("Phascolarctos", "cinereus", "442b9048417ef20cf680a0ae26ee4d86")
+
+TotalPub(Koala) #777
+TotalCite(Koala) #14329
+TotalJournals(Koala) #227
+TotalArt(Koala) #748
+TotalRev(Koala) #29
+ARRatio(Koala) #96.2676962676963 : 3.73230373230373
+
+YearsPublishing(Koala) #139
+SpHindex(Koala) #53
+SpMindex(Koala) #0.381295
+Spi10(Koala) #428
+SpH5(Koala) #14
+SpHAfterdate(Koala, "2000-01-01") #44
+
+P_cinereus <- Allindices(Koala)
+```
+
+```{r, combining the datasets}
+Combinedata <- rbind(B_penicillata, S_brachyurus, O_anatinus, P_cinereus)
+
+plot(Combinedata$publications)
+plot(Combinedata$citations)
+plot(Combinedata$journals)
+plot(Combinedata$articles)
+plot(Combinedata$reviews)
+plot(Combinedata$years_publishing)
+plot(Combinedata$h)
+plot(Combinedata$m) #this is quite interesting
+plot(Combinedata$i10)
+plot(Combinedata$h5) #woylie has a pretty high index here
+```
+
+```{r, manual tests}
+#test with dummy data
+dummy1 <- data.frame("citations" = c(12, 5, 0, 21, 3, 4, 9, 17, 1, 10,
+                                     10, 1, 0, 16, 26, 24, 15, 34, 31, 29),
+                     "cover_date" = c(2000, 2015, 1986, 1994, 1972, 2002, 2006, 2019, 2016, 2006,
+                                      1997, 1989, 2007, 2010, 2013, 2020, 2017, 1994, 1999, 2016))
+SpHindex(dummy1) #10
+YearsPublishing(dummy1) #48
+SpMindex(dummy1) #0.2083333
+Spi10(dummy1) #12
+
+```
+
+
+
 ```{r, rscopus}
 #some tests
-tiger <- FetchSpT("Panthera", "tigris") #shows warning
+tiger <- FetchSpT("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86") #402 results
 tiger <- FetchSpTAK("Panthera", "tigris") #shows warning
 fox <- FetchSpT("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #1133 results
 foxTAK <- FetchSpTAK("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #3324 results
@@ -376,34 +515,25 @@ FetchSpT("catus", "catus", "442b9048417ef20cf680a0ae26ee4d86")
 
 searchCount("Mus", "musculus", "442b9048417ef20cf680a0ae26ee4d86") #34252 count
 
-Pubxdf <- TotalPub(xdf) #929
-Citexdf <- TotalCite(xdf) #16170
-Journalxdf <- TotalJournals(xdf) #299
-Ratio(xdf) #890:39, 95.8019375672766:4.19806243272336
-Hxdf <- Hindex(tiger) #53
-yearsxdf <- YearsPublishing(xdf) #139
-Mxdf <- Mindex(xdf) #0.381294964028777
-i10xdf <- i10(xdf) #467
-h5xdf <- H5(xdf) #15
+Pub <- TotalPub(tiger) #402
+Cite <- TotalCite(tiger) #5244
+Journal <- TotalJournals(tiger) #168
+Article <- TotalArt(tiger)
+Review <- TotalRev(tiger)
+Ratio <- ARRatio(tiger) #97.5124378109453 : 2.48756218905473
+class(Article)
+
+H <- SpHindex(tiger) #53
+years <- YearsPublishing(tiger) #139
+M <- SpMindex(tiger) #0.381294964028777
+i10 <- Spi10(tiger) #467
+h5 <- SpH5(tiger) #15
 datexdf <- HAfterdate(xdf, "2000-01-01") #47
-xdfALL <- Allindices(xdf)
+ALL <- Allindices(tiger)
 
 ```
 
-```{r}
-#test with dummy data
-dummy1 <- data.frame("citations" = c(12, 5, 0, 21, 3, 4, 9, 17, 1, 10,
-                                     10, 1, 0, 16, 26, 24, 15, 34, 31, 29),
-                     "cover_date" = c(2000, 2015, 1986, 1994, 1972, 2002, 2006, 2019, 2016, 2006,
-                                      1997, 1989, 2007, 2010, 2013, 2020, 2017, 1994, 1999, 2016))
-Hindex(dummy1) #10
-YearsPublishing(dummy1) #48
-Mindex(dummy1) #0.2083333
-i10(dummy1) #12
 
-
-#total publications, total citations, total journals, reviews/journals percentage
-```
 
 ```{r, Losia's h-index code}
       
