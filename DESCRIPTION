@@ -4,7 +4,7 @@ Title: How (scientifically) popular is a given species?
 Version: 0.0.1
 Date: 2020-07-10
 Author: Jessica Tan
-Maintainer: Jessica Tan <wcornwell@gmail.com>
+Maintainer: Jessica Tam <tamtinying@gmail.com>
 Description: Finds the h-index of a species. 
 Depends: R (>= 3.1.0)
 LazyData: true
@@ -18,5 +18,5 @@ Suggests:
     roxygen2,
     devtools
 License: MIT + file LICENSE
-URL: https://github.com/cornwell-lab-unsw/litterfitter
+URL: https://github.com/jessicatytam/Honours
 RoxygenNote: 7.1.1
