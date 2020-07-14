@@ -3,7 +3,7 @@ Type: Package
 Title: How (scientifically) popular is a given species?
 Version: 0.0.1
 Date: 2020-07-10
-Author: Jessica Tan
+Author: Jessica Tam
 Maintainer: Jessica Tam <tamtinying@gmail.com>
 Description: Finds the h-index of a species. 
 Depends: R (>= 3.1.0)
