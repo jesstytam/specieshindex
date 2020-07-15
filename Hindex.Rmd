@@ -204,20 +204,29 @@ FetchSpTAKloop <- function(genus, species, APIkey) {
   if (is_missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stops the function from running
   }
+  count <- searchCount(genus, species, APIkey)
+  print(paste(count, "records found."))
   search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
-                          max_count = 3000,
-                          start = 1,
+                          max_count = 500,
+                          start = 0,
                           wait_time = 1)
-  while (search > 3000) { #loop
-    print("fetching more records...")
+  returned <- as.numeric(length(search))
+  if (returned > 500) {
+    print(paste("More than 200 records found, fetching more records now."))
+  }
+  while (count > 500) { #loop
     search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
-                          max_count = 3000,
-                          start = length(search) + 1,
+                          max_count = 500,
+                          start = returned,
                           wait_time = 1)
+    print(paste(returned, "records retrived, fetching more records now."))
+    if (returned == count) {
+      break
+    }
   }
   searchdf <- entries_to_citation_df(search$entries)
   return(searchdf)
@@ -509,9 +518,10 @@ foxTAK <- FetchSpTAK("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #33
 drosophila <- FetchSpTAK("Drosophila", "montana", "442b9048417ef20cf680a0ae26ee4d86") #93 results
 drosophila2 <- FetchSpTAK("drosophila", "melanogaster", "442b9048417ef20cf680a0ae26ee4d86") #60904 results, error at 23%
 drosophila3 <- FetchSpTAK("Mus", "musculus", "442b9048417ef20cf680a0ae26ee4d86") 
-cat <- FetchSpTAKloop("felis", "catus", "442b9048417ef20cf680a0ae26ee4d86") #17622 results, error at 26%
 
-FetchSpT("catus", "catus", "442b9048417ef20cf680a0ae26ee4d86")
+cat <- FetchSpTAKloop("felis", "catus", "442b9048417ef20cf680a0ae26ee4d86") #17622 results, error at 26%, current loop can only output 2000 records
+elephant <- FetchSpTAKloop("Loxodonta","africana", "442b9048417ef20cf680a0ae26ee4d86") #1401 results
+possum <- FetchSpTAKloop("Burramys", "parvus", "442b9048417ef20cf680a0ae26ee4d86") #45
 
 searchCount("Mus", "musculus", "442b9048417ef20cf680a0ae26ee4d86") #34252 count
 
