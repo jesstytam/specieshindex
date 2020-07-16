@@ -15,46 +15,48 @@ pacman::p_load(tidyverse,
 ```
 
 **Functions**
-1. searchCount
+1. searchCountT
   + counts the total number of search results on Scopus
-2. *extractcontent
+  + title only
+2. searchCoundTAK
+  + counts the total number of search results on Scopus
+  + title + abstract + keywords
+3. *extractcontent
   + extracts content from Scopus using a search string
   + data is not ready for analysis; requires extractXML
-3. *extractXML
+4. *extractXML
   + converts data from extractcontent into a dataframe for analyses
-4. FetchSpT
+5. FetchSpT
   + fetches data from Scopus using genus and species name
   + title only
-5. FetchSpTAK
+6. FetchSpTAK
   + fetches data from Scopus using genus and species name
   + title + abstract + keywords
-5.2 ^FetchSpTAKloop
-  + loop added
-6. TotalPub
+7. TotalPub
   + counts the total number of publications
-7. TotalCite
+8. TotalCite
   + counts the total number of citations
-8. TotalJournals
+9. TotalJournals
   + counts the total number of journals
-9. TotalArt
+10. TotalArt
   + counts the total number of articles
-10. TotalRev
+11. TotalRev
   + counts the total number of reviews
-11. ARRatio
+12. ARRatio
   + calculates article:review ratio
-12. SpHindex
+13. SpHindex
   + calculates h-index
-13. YearsPublishing
+14. YearsPublishing
   + calculates the number of years since the first publication
-14. SpMindex
+15. SpMindex
   + calculates m-index (h-index / total years)
-15. Spi10
+16. Spi10
   + counts the publications with 10+ citations
-16. SpH5
+17. SpH5
   + calculates h-index for the past 5 years
-17. SpHAfterdate
+18. SpHAfterdate
   + calculates h-index with a given time frame
-18. Allindices
+19. Allindices
   + shows a summary of the main indices
 
 *function not available to users
@@ -62,9 +64,26 @@ pacman::p_load(tidyverse,
 
 
 
-```{r, function to get result count}
+```{r, function to get result count title only}
 #code from Fonti (modified)
-searchCount <- function(genus, species, APIkey, datatype = "application/xml") {
+searchCountT <- function(genus, species, APIkey, datatype = "application/xml") {
+  library(httr)
+  library(XML)
+  theURL <- GET("http://api.elsevier.com/content/search/scopus",
+              query = list(apiKey = paste0(APIkey),
+                           query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+                           httpAccept = "application/xml")) #format the URL to be sent to the API
+  stop_for_status(theURL) #pass any HTTP errors to the R console
+  theData <- content(theURL, as = "text") #extract the content of the response
+  newData <- xmlParse(theURL) #parse the data to extract values
+  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
+  return(resultCount)
+}
+```
+
+```{r, function to get result count title+abs+key}
+#code from Fonti (modified)
+searchCountTAK <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
@@ -169,16 +188,26 @@ extractXML <- function(theFile) {
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
+  library(taxize)
   library(dplyr)
   if (is_missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") #stops the function from running
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
-  count <- searchCount(genus, species, APIkey)
+  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
+  if (findname$user_supplied_name %in% findname$matched_name) {
+    print(paste("Species found on the Encyclopedia of Life, proceeding data extraction."))
+  } else {
+    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
+  }
+  count <- searchCountT(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
-  step_size <- 1000
+  if (count > 1000) {
+    print(paste("More than 1000 records found, this will take a while unless you have a nice computer."))
+  }
+  step_size <- 1000 #the number of records to retrieve in each loop
   start_record <- 0
   datalist = list()
-  looprepeat <- ceiling(count/step_size)
+  looprepeat <- ceiling(count/step_size) #the number of loop times, rounded up to the nearest integer
   #loop starts
   for (i in 1:looprepeat) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
@@ -195,13 +224,12 @@ FetchSpT <- function(genus, species, APIkey) {
     print(paste("Retrieved", start_record, "records."))
   }
   #loop ends
-  searchcombine <- do.call(rbind, datalist) # convert list of dataframes into one big dataframe
+  searchcombine <- do.call(rbind, datalist) #convert list of dataframes into one big dataframe
   returned <- dim(searchcombine)[1]
   print(paste(returned, "records retrived in total."))
-  #remove duplicates
-  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1]
+  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
-  if (duplicates>0) {
+  if (duplicates>0) { #remove duplicates if they are present
     print(paste("Removing duplicated records."))
     searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
   }
@@ -217,16 +245,26 @@ FetchSpT <- function(genus, species, APIkey) {
 FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
+  library(taxize)
   library(dplyr)
   if (is_missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") #stops the function from running
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
-  count <- searchCount(genus, species, APIkey)
+  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
+  if (findname$user_supplied_name %in% findname$matched_name) {
+    print(paste("Species found on the Encyclopedia of Life, proceeding data extraction."))
+  } else {
+    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
+  }
+  count <- searchCountTAK(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
-  step_size <- 1000
+  if (count > 1000) {
+    print(paste("More than 1000 records found, this will take a while unless you have a nice computer."))
+  }
+  step_size <- 1000 #the number of records to retrieve in each loop
   start_record <- 0
   datalist = list()
-  looprepeat <- ceiling(count/step_size)
+  looprepeat <- ceiling(count/step_size) #the number of loop times, rounded up to the nearest integer
   #loop starts
   for (i in 1:looprepeat) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
@@ -243,13 +281,12 @@ FetchSpTAK <- function(genus, species, APIkey) {
     print(paste("Retrieved", start_record, "records."))
   }
   #loop ends
-  searchcombine <- do.call(rbind, datalist) # convert list of dataframes into one big dataframe
+  searchcombine <- do.call(rbind, datalist) #convert list of dataframes into one big dataframe
   returned <- dim(searchcombine)[1]
   print(paste(returned, "records retrived in total."))
-  #remove duplicates
-  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1]
+  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
-  if (duplicates>0) {
+  if (duplicates>0) { #remove duplicates if they are present
     print(paste("Removing duplicated records."))
     searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
   }
@@ -555,10 +592,12 @@ cat <- FetchSpTAK("felis", "catus", "442b9048417ef20cf680a0ae26ee4d86") #17622 r
 elephant <- FetchSpTAK("Loxodonta","africana", "442b9048417ef20cf680a0ae26ee4d86") #1401 results
 dim(elephant[duplicated(elephant$title),])[1]
 
-possum <- FetchSpTAKloop("Burramys", "parvus", "442b9048417ef20cf680a0ae26ee4d86") #45
+possum <- FetchSpT("Burramys", "parvus", "442b9048417ef20cf680a0ae26ee4d86") #45
 dim(possum[duplicated(possum$title),])[1]
 
 searchCount("Mus", "musculus", "442b9048417ef20cf680a0ae26ee4d86") #34252 count
+
+gnr_resolve(names = c("felis catus"))
 
 Pub <- TotalPub(tiger) #402
 Cite <- TotalCite(tiger) #5244
