@@ -169,14 +169,46 @@ extractXML <- function(theFile) {
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
+  library(dplyr)
   if (is_missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stops the function from running
   }
-  search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+  count <- searchCount(genus, species, APIkey)
+  print(paste(count, "records found."))
+  step_size <- 1000
+  start_record <- 0
+  datalist = list()
+  looprepeat <- ceiling(count/step_size)
+  #loop starts
+  for (i in 1:looprepeat) { 
+    print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
+    print(paste("Fetching records now."))
+    search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                           api_key = paste0(APIkey),
-                          verbose = TRUE)
-  searchdf <- entries_to_citation_df(search$entries)
-  return(searchdf)
+                          verbose = TRUE,
+                          max_count = step_size,
+                          start = start_record,
+                          wait_time = 1)
+    start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
+    searchdf <- entries_to_citation_df(search$entries)
+    datalist[[i]] <- searchdf
+    print(paste("Retrieved", start_record, "records."))
+  }
+  #loop ends
+  searchcombine <- do.call(rbind, datalist) # convert list of dataframes into one big dataframe
+  returned <- dim(searchcombine)[1]
+  print(paste(returned, "records retrived in total."))
+  #remove duplicates
+  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1]
+  print(paste(duplicates, "duplicates found."))
+  if (duplicates>0) {
+    print(paste("Removing duplicated records."))
+    searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
+  }
+  #showing final list of records
+  retrieved <- dim(searchcombine)[1] #check the number
+  print(paste(retrieved, "unique records successfully fetched."))
+  return(searchcombine)
 }
 ```
 
@@ -185,51 +217,46 @@ FetchSpT <- function(genus, species, APIkey) {
 FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
-  if (is_missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") #stops the function from running
-  }
-  search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
-                          api_key = paste0(APIkey),
-                          verbose = TRUE)
-  searchdf <- entries_to_citation_df(search$entries)
-  return(searchdf)
-}
-```
-
-```{r, loop test}
-#this function downloads citation data from scopus
-FetchSpTAKloop <- function(genus, species, APIkey) {
-  library(rscopus)
-  library(rlang)
+  library(dplyr)
   if (is_missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stops the function from running
   }
   count <- searchCount(genus, species, APIkey)
   print(paste(count, "records found."))
-  search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
-                          api_key = paste0(APIkey),
-                          verbose = TRUE,
-                          max_count = 500,
-                          start = 0,
-                          wait_time = 1)
-  returned <- as.numeric(length(search))
-  if (returned > 500) {
-    print(paste("More than 200 records found, fetching more records now."))
-  }
-  while (count > 500) { #loop
+  step_size <- 1000
+  start_record <- 0
+  datalist = list()
+  looprepeat <- ceiling(count/step_size)
+  #loop starts
+  for (i in 1:looprepeat) { 
+    print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
+    print(paste("Fetching records now."))
     search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
-                          max_count = 500,
-                          start = returned,
+                          max_count = step_size,
+                          start = start_record,
                           wait_time = 1)
-    print(paste(returned, "records retrived, fetching more records now."))
-    if (returned == count) {
-      break
-    }
+    start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
+    searchdf <- entries_to_citation_df(search$entries)
+    datalist[[i]] <- searchdf
+    print(paste("Retrieved", start_record, "records."))
   }
-  searchdf <- entries_to_citation_df(search$entries)
-  return(searchdf)
+  #loop ends
+  searchcombine <- do.call(rbind, datalist) # convert list of dataframes into one big dataframe
+  returned <- dim(searchcombine)[1]
+  print(paste(returned, "records retrived in total."))
+  #remove duplicates
+  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1]
+  print(paste(duplicates, "duplicates found."))
+  if (duplicates>0) {
+    print(paste("Removing duplicated records."))
+    searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
+  }
+  #showing final list of records
+  retrieved <- dim(searchcombine)[1] #check the number
+  print(paste(retrieved, "unique records successfully fetched."))
+  return(searchcombine)
 }
 ```
 
@@ -393,7 +420,7 @@ Allindices <- function(data) {
 ```{r, woylie}
 #test done on 10 july
 searchCount("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #113
-Woylie <- FetchSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+Woylie <- FetchSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
 
 TotalPub(Woylie) #113
 TotalCite(Woylie) #1897
@@ -415,7 +442,7 @@ B_penicillata <- Allindices(Woylie)
 ```{r, quokka}
 #test done on 10 july
 searchCount("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86") #242
-Quokka <- FetchSpTAK("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86")
+Quokka <- FetchSpTAK("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
 
 TotalPub(Quokka) #242
 TotalCite(Quokka) #3423
@@ -437,7 +464,7 @@ S_brachyurus <- Allindices(Quokka)
 ```{r, platypus}
 #test done on 10 july
 searchCount("Ornithorhynchus", "anatinus", "442b9048417ef20cf680a0ae26ee4d86") #321
-Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", "442b9048417ef20cf680a0ae26ee4d86")
+Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
 
 TotalPub(Platypus) #321
 TotalCite(Platypus) #6363
@@ -460,20 +487,20 @@ O_anatinus <- Allindices(Platypus)
 #test done on 10 july
 searchCount("Phascolarctos", "cinereus", "442b9048417ef20cf680a0ae26ee4d86") #777
 #did we not have 930 records?? hmm...
-Koala <- FetchSpTAK("Phascolarctos", "cinereus", "442b9048417ef20cf680a0ae26ee4d86")
+Koala <- FetchSpTAK("Phascolarctos", "cinereus", "442b9048417ef20cf680a0ae26ee4d86") #4 duplicates
 
-TotalPub(Koala) #777
-TotalCite(Koala) #14329
+TotalPub(Koala) #773
+TotalCite(Koala) #14291
 TotalJournals(Koala) #227
-TotalArt(Koala) #748
+TotalArt(Koala) #744
 TotalRev(Koala) #29
-ARRatio(Koala) #96.2676962676963 : 3.73230373230373
+ARRatio(Koala) #96.248382923674 : 3.751617076326
 
 YearsPublishing(Koala) #139
 SpHindex(Koala) #53
 SpMindex(Koala) #0.381295
-Spi10(Koala) #428
-SpH5(Koala) #14
+Spi10(Koala) #427
+SpH5(Koala) #15
 SpHAfterdate(Koala, "2000-01-01") #44
 
 P_cinereus <- Allindices(Koala)
@@ -511,17 +538,25 @@ Spi10(dummy1) #12
 
 ```{r, rscopus}
 #some tests
-tiger <- FetchSpT("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86") #402 results
+tiger <- FetchSpTAK("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86") #402 results
+searchCount("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86")
+dim(tiger[duplicated(tiger$title),])[1]
+
 tiger <- FetchSpTAK("Panthera", "tigris") #shows warning
 fox <- FetchSpT("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #1133 results
+
 foxTAK <- FetchSpTAK("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #3324 results
 drosophila <- FetchSpTAK("Drosophila", "montana", "442b9048417ef20cf680a0ae26ee4d86") #93 results
 drosophila2 <- FetchSpTAK("drosophila", "melanogaster", "442b9048417ef20cf680a0ae26ee4d86") #60904 results, error at 23%
 drosophila3 <- FetchSpTAK("Mus", "musculus", "442b9048417ef20cf680a0ae26ee4d86") 
 
-cat <- FetchSpTAKloop("felis", "catus", "442b9048417ef20cf680a0ae26ee4d86") #17622 results, error at 26%, current loop can only output 2000 records
-elephant <- FetchSpTAKloop("Loxodonta","africana", "442b9048417ef20cf680a0ae26ee4d86") #1401 results
+cat <- FetchSpTAK("felis", "catus", "442b9048417ef20cf680a0ae26ee4d86") #17622 results, error at 26%, current loop can only output 2000 records
+
+elephant <- FetchSpTAK("Loxodonta","africana", "442b9048417ef20cf680a0ae26ee4d86") #1401 results
+dim(elephant[duplicated(elephant$title),])[1]
+
 possum <- FetchSpTAKloop("Burramys", "parvus", "442b9048417ef20cf680a0ae26ee4d86") #45
+dim(possum[duplicated(possum$title),])[1]
 
 searchCount("Mus", "musculus", "442b9048417ef20cf680a0ae26ee4d86") #34252 count
 
