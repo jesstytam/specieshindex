@@ -1,6 +1,37 @@
 #' This function counts the total number of search results.
+#' It counts only the publications with the binomial name in their title.
+#' 
+#' @title Search count - title only
 #'
-#' @title Search count
+#' @param genus 
+#' @param species 
+#' @param APIkey 
+#' @param datatype 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+searchCountT <- function(genus, species, APIkey, datatype = "application/xml") {
+  library(httr)
+  library(XML)
+  theURL <- GET("http://api.elsevier.com/content/search/scopus",
+                query = list(apiKey = paste0(APIkey),
+                             query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+                             httpAccept = "application/xml")) 
+  stop_for_status(theURL) 
+  theData <- content(theURL, as = "text") 
+  newData <- xmlParse(theURL)
+  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) 
+  return(resultCount)
+}
+
+
+
+#' This function counts the total number of search results.
+#' It counts the publications with the binomial name in the title, abstract and keywords.
+#'
+#' @title Search count - title, abstract and keywords
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
@@ -17,7 +48,7 @@
 #' 
 #' searchCount("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
 #' 
-searchCount <- function(genus, species, APIkey, datatype = "application/xml") {
+searchCountTAK <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
@@ -163,17 +194,26 @@ extractXML <- function(theFile) {
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
+  library(taxize)
   library(dplyr)
   if (is_missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") #stops the function from running
+    stop("You need to register for an API key on Scopus.") 
   }
-  count <- searchCount(genus, species, APIkey)
+  findname <- gnr_resolve(names = c(genus, species)) 
+  if (findname$user_supplied_name %in% findname$matched_name) {
+    print(paste("Species found on the Encyclopedia of Life, proceeding data extraction."))
+  } else {
+    stop("Species not found on the Encyclopedia of Life, please check your spelling.") 
+  }
+  count <- searchCountT(genus, species, APIkey) 
   print(paste(count, "records found."))
-  step_size <- 1000
+  if (count > 1000) {
+    print(paste("More than 1000 records found, this will take a while unless you have a nice computer."))
+  }
+  step_size <- 1000 
   start_record <- 0
   datalist = list()
   looprepeat <- ceiling(count/step_size)
-  #loop starts
   for (i in 1:looprepeat) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
     print(paste("Fetching records now."))
@@ -183,24 +223,21 @@ FetchSpT <- function(genus, species, APIkey) {
                             max_count = step_size,
                             start = start_record,
                             wait_time = 1)
-    start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
+    start_record <- as.numeric(summary(search)[1,1])
     searchdf <- entries_to_citation_df(search$entries)
     datalist[[i]] <- searchdf
     print(paste("Retrieved", start_record, "records."))
   }
-  #loop ends
-  searchcombine <- do.call(rbind, datalist) # convert list of dataframes into one big dataframe
+  searchcombine <- do.call(rbind, datalist)
   returned <- dim(searchcombine)[1]
   print(paste(returned, "records retrived in total."))
-  #remove duplicates
-  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1]
+  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1] 
   print(paste(duplicates, "duplicates found."))
-  if (duplicates>0) {
+  if (duplicates>0) { 
     print(paste("Removing duplicated records."))
     searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
   }
-  #showing final list of records
-  retrieved <- dim(searchcombine)[1] #check the number
+  retrieved <- dim(searchcombine)[1] 
   print(paste(retrieved, "unique records successfully fetched."))
   return(searchcombine)
 }
@@ -229,17 +266,26 @@ FetchSpT <- function(genus, species, APIkey) {
 FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
+  library(taxize)
   library(dplyr)
   if (is_missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") #stops the function from running
+    stop("You need to register for an API key on Scopus.") 
   }
-  count <- searchCount(genus, species, APIkey)
+  findname <- gnr_resolve(names = c(genus, species)) 
+  if (findname$user_supplied_name %in% findname$matched_name) {
+    print(paste("Species found on the Encyclopedia of Life, proceeding data extraction."))
+  } else {
+    stop("Species not found on the Encyclopedia of Life, please check your spelling.") 
+  }
+  count <- searchCountTAK(genus, species, APIkey) 
   print(paste(count, "records found."))
-  step_size <- 1000
+  if (count > 1000) {
+    print(paste("More than 1000 records found, this will take a while unless you have a nice computer."))
+  }
+  step_size <- 1000 
   start_record <- 0
   datalist = list()
-  looprepeat <- ceiling(count/step_size)
-  #loop starts
+  looprepeat <- ceiling(count/step_size) 
   for (i in 1:looprepeat) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
     print(paste("Fetching records now."))
@@ -249,24 +295,21 @@ FetchSpTAK <- function(genus, species, APIkey) {
                             max_count = step_size,
                             start = start_record,
                             wait_time = 1)
-    start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
+    start_record <- as.numeric(summary(search)[1,1])
     searchdf <- entries_to_citation_df(search$entries)
     datalist[[i]] <- searchdf
     print(paste("Retrieved", start_record, "records."))
   }
-  #loop ends
-  searchcombine <- do.call(rbind, datalist) # convert list of dataframes into one big dataframe
+  searchcombine <- do.call(rbind, datalist) 
   returned <- dim(searchcombine)[1]
   print(paste(returned, "records retrived in total."))
-  #remove duplicates
-  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1]
+  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1] 
   print(paste(duplicates, "duplicates found."))
-  if (duplicates>0) {
+  if (duplicates>0) { 
     print(paste("Removing duplicated records."))
     searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
   }
-  #showing final list of records
-  retrieved <- dim(searchcombine)[1] #check the number
+  retrieved <- dim(searchcombine)[1]
   print(paste(retrieved, "unique records successfully fetched."))
   return(searchcombine)
 }
