@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{extractXML}
 \alias{extractXML}
-\title{Extract XML list into a dataframe.}
+\title{Extract XML}
 \usage{
 extractXML(theFile)
 }

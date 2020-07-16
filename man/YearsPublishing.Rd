@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{YearsPublishing}
 \alias{YearsPublishing}
-\title{The number of years since the first publication in relation to the species.}
+\title{Years since first publication}
 \usage{
 YearsPublishing(data)
 }

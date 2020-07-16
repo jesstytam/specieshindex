@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{TotalPub}
 \alias{TotalPub}
-\title{This function calculates the total number of publications.}
+\title{Total publications}
 \usage{
 TotalPub(data)
 }

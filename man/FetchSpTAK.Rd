@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{FetchSpTAK}
 \alias{FetchSpTAK}
-\title{This function fetches citation information from Scopus using genus and species name found in the title, abstract and keywords of the publications.}
+\title{Fetch data - title, abstract and keywords}
 \usage{
 FetchSpTAK(genus, species, APIkey)
 }
@@ -18,6 +18,7 @@ A dataframe of the species' citation records with the given \code{genus} and \co
 }
 \description{
 This function fetches citation information from Scopus using genus and species name found in the title, abstract and keywords of the publications.
+Duplicates are removed after fetching the data.
 }
 \examples{
 FetchSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{ARRatio}
 \alias{ARRatio}
-\title{This function calculates the percentage ratio of articles:rerviews.}
+\title{Article:Review ratio}
 \usage{
 ARRatio(data)
 }
@@ -13,7 +13,7 @@ ARRatio(data)
 A character value of the percentage ratio of the number of articles and reviews.
 }
 \description{
-This function calculates the percentage ratio of articles:rerviews.
+This function calculates the percentage ratio of article:rerview.
 }
 \examples{
 ARRatio(SpeciesData)

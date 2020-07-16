@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{TotalArt}
 \alias{TotalArt}
-\title{This function calculates the total number of articles.}
+\title{Total Article}
 \usage{
 TotalArt(data)
 }

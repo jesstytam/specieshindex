@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{TotalRev}
 \alias{TotalRev}
-\title{This function calculates the total number of reviews.}
+\title{Total reviews}
 \usage{
 TotalRev(data)
 }

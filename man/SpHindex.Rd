@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{SpHindex}
 \alias{SpHindex}
-\title{This function calculates the h-index of a species.}
+\title{Species h-index}
 \usage{
 SpHindex(data)
 }

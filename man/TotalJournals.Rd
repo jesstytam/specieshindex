@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{TotalJournals}
 \alias{TotalJournals}
-\title{This function calculates the total number of journals.}
+\title{Total journals}
 \usage{
 TotalJournals(data)
 }

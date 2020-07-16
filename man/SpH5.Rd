@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{SpH5}
 \alias{SpH5}
-\title{This function calculates the h-index of a species in the past 5 years.}
+\title{Species h5 index}
 \usage{
 SpH5(data)
 }

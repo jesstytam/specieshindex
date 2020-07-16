@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{extractcontent}
 \alias{extractcontent}
-\title{Extract citation data from Scopus.}
+\title{Extract content}
 \usage{
 extractcontent(search.string, datatype = "application/xml")
 }

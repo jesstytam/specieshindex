@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{TotalCite}
 \alias{TotalCite}
-\title{This function calculates the total number of citations.}
+\title{Total citations}
 \usage{
 TotalCite(data)
 }

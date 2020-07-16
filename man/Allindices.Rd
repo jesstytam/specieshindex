@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{Allindices}
 \alias{Allindices}
-\title{This function returns a summary of all of the indices.}
+\title{Index summary}
 \usage{
 Allindices(data)
 }
@@ -13,7 +13,7 @@ Allindices(data)
 A datarame of all of the indices in the package.
 }
 \description{
-This function returns a summary of all of the indices.
+This function returns a dataframe of the summary of all of the indices.
 }
 \examples{
 Allindices(SpeciesData)

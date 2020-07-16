@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hindex.R
 \name{searchCount}
 \alias{searchCount}
-\title{This function counts the total number of search results.}
+\title{Search count}
 \usage{
 searchCount(genus, species, APIkey, datatype = "application/xml")
 }
