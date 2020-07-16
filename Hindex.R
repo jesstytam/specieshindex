@@ -1,5 +1,7 @@
 #' This function counts the total number of search results.
 #'
+#' @title Search count
+#'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param APIkey Scopus API key needed to access and download data from their database.
@@ -33,6 +35,8 @@ searchCount <- function(genus, species, APIkey, datatype = "application/xml") {
 
 #' Extract citation data from Scopus.
 #'
+#' @title Extract content
+#'
 #' @param search.string Search string with Boolean operators or Scopus advanced search.
 #' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
 #'
@@ -58,6 +62,8 @@ extractcontent<- function(search.string, datatype = "application/xml") {
 
 
 #' Extract XML list into a dataframe.
+#'
+#' @title Extract XML
 #'
 #' @param theFile The file to be converted.
 #'
@@ -136,6 +142,9 @@ extractXML <- function(theFile) {
 
 
 #' This function fetches citation information from Scopus using genus and species name found in the title of the publications.
+#' Duplicates are removed after fetching the data.
+#'
+#' @title Fetch data - title only
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
@@ -154,19 +163,54 @@ extractXML <- function(theFile) {
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
+  library(dplyr)
   if (is_missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") 
+    stop("You need to register for an API key on Scopus.") #stops the function from running
   }
-  search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
-                          api_key = paste0(APIkey),
-                          verbose = TRUE)
-  searchdf <- entries_to_citation_df(search$entries)
-  return(searchdf)
+  count <- searchCount(genus, species, APIkey)
+  print(paste(count, "records found."))
+  step_size <- 1000
+  start_record <- 0
+  datalist = list()
+  looprepeat <- ceiling(count/step_size)
+  #loop starts
+  for (i in 1:looprepeat) { 
+    print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
+    print(paste("Fetching records now."))
+    search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+                            api_key = paste0(APIkey),
+                            verbose = TRUE,
+                            max_count = step_size,
+                            start = start_record,
+                            wait_time = 1)
+    start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
+    searchdf <- entries_to_citation_df(search$entries)
+    datalist[[i]] <- searchdf
+    print(paste("Retrieved", start_record, "records."))
+  }
+  #loop ends
+  searchcombine <- do.call(rbind, datalist) # convert list of dataframes into one big dataframe
+  returned <- dim(searchcombine)[1]
+  print(paste(returned, "records retrived in total."))
+  #remove duplicates
+  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1]
+  print(paste(duplicates, "duplicates found."))
+  if (duplicates>0) {
+    print(paste("Removing duplicated records."))
+    searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
+  }
+  #showing final list of records
+  retrieved <- dim(searchcombine)[1] #check the number
+  print(paste(retrieved, "unique records successfully fetched."))
+  return(searchcombine)
 }
 
 
 
 #' This function fetches citation information from Scopus using genus and species name found in the title, abstract and keywords of the publications.
+#' Duplicates are removed after fetching the data.
+#'
+#' @title Fetch data - title, abstract and keywords
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
@@ -185,19 +229,53 @@ FetchSpT <- function(genus, species, APIkey) {
 FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
+  library(dplyr)
   if (is_missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") 
+    stop("You need to register for an API key on Scopus.") #stops the function from running
   }
-  search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
-                          api_key = paste0(APIkey),
-                          verbose = TRUE)
-  searchdf <- entries_to_citation_df(search$entries)
-  return(searchdf)
+  count <- searchCount(genus, species, APIkey)
+  print(paste(count, "records found."))
+  step_size <- 1000
+  start_record <- 0
+  datalist = list()
+  looprepeat <- ceiling(count/step_size)
+  #loop starts
+  for (i in 1:looprepeat) { 
+    print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
+    print(paste("Fetching records now."))
+    search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+                            api_key = paste0(APIkey),
+                            verbose = TRUE,
+                            max_count = step_size,
+                            start = start_record,
+                            wait_time = 1)
+    start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
+    searchdf <- entries_to_citation_df(search$entries)
+    datalist[[i]] <- searchdf
+    print(paste("Retrieved", start_record, "records."))
+  }
+  #loop ends
+  searchcombine <- do.call(rbind, datalist) # convert list of dataframes into one big dataframe
+  returned <- dim(searchcombine)[1]
+  print(paste(returned, "records retrived in total."))
+  #remove duplicates
+  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1]
+  print(paste(duplicates, "duplicates found."))
+  if (duplicates>0) {
+    print(paste("Removing duplicated records."))
+    searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
+  }
+  #showing final list of records
+  retrieved <- dim(searchcombine)[1] #check the number
+  print(paste(retrieved, "unique records successfully fetched."))
+  return(searchcombine)
 }
 
 
 
 #' This function calculates the total number of publications.
+#'
+#' @title Total publications
 #'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
@@ -215,6 +293,8 @@ TotalPub <- function(data) {
 
 
 #' This function calculates the total number of citations.
+#'
+#' @title Total citations
 #'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
@@ -234,6 +314,8 @@ TotalCite <- function(data) {
 
 #' This function calculates the total number of journals.
 #'
+#' @title Total journals
+#'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
 #' @return An integer of the total number of journals.
@@ -252,6 +334,8 @@ TotalJournals <- function(data) {
 
 #' This function calculates the total number of articles.
 #'
+#' @title Total Article
+#'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
 #' @return An integer of the total number of articles.
@@ -269,6 +353,8 @@ TotalArt <- function(data) {
 
 #' This function calculates the total number of reviews.
 #'
+#' @title Total reviews
+#'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
 #' @return An integer of the total number of reviews.
@@ -284,7 +370,9 @@ TotalRev <- function(data) {
 
 
 
-#' This function calculates the percentage ratio of articles:rerviews.
+#' This function calculates the percentage ratio of article:rerview.
+#'
+#' @title Article:Review ratio
 #'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
@@ -306,6 +394,8 @@ ARRatio <- function(data) {
 
 
 #' This function calculates the h-index of a species.
+#'
+#' @title Species h-index
 #'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
@@ -331,6 +421,8 @@ SpHindex <- function(data) {
 
 #' The number of years since the first publication in relation to the species.
 #'
+#' @title Years since first publication
+#'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
 #' @return Number of years.
@@ -350,6 +442,8 @@ YearsPublishing <- function(data) {
 
 #' This function calculates the m-index of  species.
 #' M-index uses the h-index and divides it by the number of years of activity.
+#'
+#' @title Species m-index
 #'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
@@ -379,6 +473,8 @@ SpMindex <- function(data) {
 #' This function calculates the i10 index of a species.
 #' i10 index counts all of the publications with 10 or more citations.
 #'
+#' @title Species i10 index
+#' 
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
 #' @return i10 index.
@@ -397,6 +493,8 @@ Spi10 <- function(data) {
 
 
 #' This function calculates the h-index of a species in the past 5 years.
+#' 
+#' @title Species h5 index
 #'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
@@ -417,6 +515,8 @@ SpH5 <- function(data) {
 
 
 #' This function calculates the h-index using a given date up till the newest record.
+#' 
+#' @title Species h-index with a given time frame
 #'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #' @param date The lower limit of the timeframe.
@@ -437,7 +537,9 @@ SpHAfterdate <- function(data, date) {
 
 
 
-#' This function returns a summary of all of the indices.
+#' This function returns a dataframe of the summary of all of the indices.
+#' 
+#' @title Index summary
 #'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
