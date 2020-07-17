@@ -58,6 +58,8 @@ pacman::p_load(tidyverse,
   + calculates h-index with a given time frame
 19. Allindices
   + shows a summary of the main indices
+20. SpHYear
+  + calculates the h-index by year
 
 *function not available to users
 ^not functional yet
@@ -414,7 +416,7 @@ SpH5 <- function(data) { #last 5 years from the current date
   d <- as.POSIXlt(Sys.Date())
   d$year <- d$year-5
   as.Date(d)
-  return(HAfterdate(data, d))
+  return(HAfterdate(data, d)) #calls HAfterdate function
 }
 ```
 
@@ -424,7 +426,7 @@ SpHAfterdate <- function(data, date) {
   library(dplyr)
   data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") #change format of the date from factor to date
   subsetdata <- filter(data, cover_date > as.Date(date) )
-  HAfterdate <- Hindex(subsetdata)
+  HAfterdate <- Hindex(subsetdata) #calls Hindex function
   return(HAfterdate)
 }
 ```
@@ -449,6 +451,20 @@ Allindices <- function(data) {
       "i10:", Spi10(data), "\n",
       "h5:", SpH5(data))
   return(combine)
+}
+```
+
+```{r, h-index by year}
+#this function calculates h-index by year
+SpHYear <- function(data) {
+  library(dplyr)
+  data$year <- as.numeric(substr(data$cover_date, 1, 4))
+  yeargroup <- data %>% #group data by year
+    group_by(data$year)
+  splitdf <- split(yeargroup, data$year) #split dfs into smaller dfs according to year
+  splitH <- lapply(splitdf, function(splitdf){SpHindex(splitdf)}) #compute h-index for each year
+  H <- setNames(stack(splitH)[2:1], c('year','h')) #converts list to df and adding column names
+  return(H)
 }
 ```
 

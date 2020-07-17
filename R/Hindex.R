@@ -611,3 +611,28 @@ Allindices <- function(data) {
       "h5:", SpH5(data))
   return(combine)
 }
+
+
+
+#' This function calculates the h-index by year.
+#' 
+#' @title H-index by year
+#'
+#' @param data 
+#'
+#' @returnA A dataframe of h-index by year.
+#' @export
+#'
+#' @examples
+#' SpHGrowth(SpeciesData)
+#' 
+SpHYear <- function(data) {
+  library(dplyr)
+  data$year <- as.numeric(substr(data$cover_date, 1, 4))
+  yeargroup <- data %>% 
+    group_by(data$year)
+  splitdf <- split(yeargroup, data$year) 
+  splitH <- lapply(splitdf, function(splitdf){SpHindex(splitdf)}) 
+  H <- setNames(stack(splitH)[2:1], c('year','h')) 
+  return(H)
+}
