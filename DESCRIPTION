@@ -16,7 +16,9 @@ Suggests:
     testthat,
     knitr,
     roxygen2,
-    devtools
+    devtools,
+    rmarkdown
 License: MIT + file LICENSE
 URL: https://github.com/jessicatytam/Honours
 RoxygenNote: 7.1.1
+VignetteBuilder: knitr

@@ -1,0 +1,54 @@
+---
+title: "vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(specieshindex) #change the name? maybe
+```
+
+
+# Introduction to specieshindex
+
+## Connecting to Scopus
+
+searchCountT()
+searchCountTAK()
+FetchSpT()
+FetchSpTAK()
+
+## Simple counts
+
+TotalPub()
+TotalCite()
+TotalJournals()
+TotalArt()
+TotalRev()
+ARRatio()
+YearPublishing()
+
+## Computing indices
+
+SpHindex()
+SpMindex()
+Spi10()
+SpH5()
+SpHAfterdate()
+SpHYear
+
+## Quick summary of the metrics
+
+Allindices
+
+

@@ -472,7 +472,7 @@ SpHYear <- function(data) {
 
 ```{r, woylie}
 #test done on 10 july
-searchCount("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #113
+searchCountTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #113
 Woylie <- FetchSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
 
 TotalPub(Woylie) #113
@@ -494,7 +494,7 @@ B_penicillata <- Allindices(Woylie)
 
 ```{r, quokka}
 #test done on 10 july
-searchCount("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86") #242
+searchCountTAK("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86") #242
 Quokka <- FetchSpTAK("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
 
 TotalPub(Quokka) #242
@@ -516,7 +516,7 @@ S_brachyurus <- Allindices(Quokka)
 
 ```{r, platypus}
 #test done on 10 july
-searchCount("Ornithorhynchus", "anatinus", "442b9048417ef20cf680a0ae26ee4d86") #321
+searchCountTAK #321
 Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
 
 TotalPub(Platypus) #321
