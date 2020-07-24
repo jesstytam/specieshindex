@@ -1,5 +1,5 @@
 ---
-title: "vignette"
+title: "Introduction to specieshindex"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{vignette}
@@ -14,41 +14,162 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(specieshindex) #change the name? maybe
+```{r, eval=FALSE}
+library(specieshindex)
 ```
 
+intro here
 
-# Introduction to specieshindex
+## Example dataset
+To illustrate the use of this package, the dataset `Woylie` will be used. 
+```{r, eval=FALSE}
+dim(Woylie)
+```
+A total of 113 citation records were found on Scopus.
 
-## Connecting to Scopus
+## Workflow
 
-searchCountT()
-searchCountTAK()
-FetchSpT()
-FetchSpTAK()
+Working with large datasets can be tedious. Having a plan before doing any analysis will help smoothing the process and relieving the stress. To get from data collection to making nice plots, you can follow these suggested steps:
 
-## Simple counts
+1. Connect to Scopus and download citation data
+2. Compute various indices
+3. Visualise and explain data
 
-TotalPub()
-TotalCite()
-TotalJournals()
-TotalArt()
-TotalRev()
-ARRatio()
-YearPublishing()
+### Connecting to Scopus
+Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise the functions will not run (and is in fact illegal). You can register your key [here](https://dev.elsevier.com/).
 
-## Computing indices
+It is recommend that you run a quick search using `CountSpT()` or `CountSpTAK()` before actually fetching the records. Both functions give a search count of the amount of records found on the Scopus database. 
 
-SpHindex()
-SpMindex()
-Spi10()
-SpH5()
-SpHAfterdate()
-SpHYear
+In the following functions, the suffixes 'T' is for title and 'TAK' is for title, abstract and keywords. These are common Boolean operators used to subset the records found in Scopus. While 'T' only targets the publications with the binomial name in its title, 'TAK' targets those with the name in its title, abstract and keywords. The document type has also been coded into the functions. Only articles and reviews will be included in the search. Make sure you are using binomial names instead of common names.
 
-## Quick summary of the metrics
+```{r, eval=FALSE}
+CountSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #HIDE API KEY DUDE
+```
 
-Allindices
+```{r, eval=FALSE}
+CountSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+```
 
+`CountSpTAK()` yielded more results since it also looked for the binomial name in the abstract and keywords in addition to the title. Now that you know exactly how many publications there are for the search, you can proceed to fetch the data from Scopus.
 
+As you will soon discover, some species have been studied more than the others and thus resulting in higher research output. Therefore, if there are more than a few thousand citation records found, it will take a considerably longer time to fetch them all unless you are using a computer with high processing power.
+
+```{r, eval=FALSE}
+FetchSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+```
+
+```{r, eval=FALSE}
+FetchSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+```
+
+In larger datasets, duplicates may appear, although usually in low numbers. `FetchSpT()` and `FetchSpTAK()` will clean up the dataset by removing them if found. The first occurence of the record will be kept, which is normally the original record.
+
+#### Possible errors
+
+If an error occurs (`Bad Request (HTTP 400)`) in this step, make sure you are connected to the internet via your institute's provider instead of the one at home. This might be caused by some authorisation issues.
+
+It is important to make sure you have spelt the genus and species name accurately when entering the function. If unsure, you can go to the [Encyclopedia of Life](https://eol.org/) for verification. This is where the above functions are linked to for checking via the package `Taxize`. If the desired species is not in the encyclopedia, it is possible that it has just been discovered and not officially listed yet.
+
+### Simple counts
+
+These functions do simple calculations with various parameters. Although they are not statistical figures, they could provide insights into how they affect the indices. 
+
+`TotalPub()` sums up the total publications from the search.
+
+```{r, eval=FALSE}
+TotalPub(Woylie)
+```
+
+`TotalCite()` sums up the total citations of all the records from the search.
+
+```{r, eval=FALSE}
+TotalCite(Woylie)
+```
+
+`TotalJournals()` counts the number of unique journals that the species have appeared in.
+
+```{r, eval=FALSE}
+TotalJournals(Woylie)
+```
+
+`TotalArt()` counts the number of publications that are articles.
+
+```{r, eval=FALSE}
+TotalArt(Woylie)
+```
+
+`TotalRev()` counts the number of publications that are reviews.
+
+```{r, eval=FALSE}
+TotalRev(Woylie)
+```
+
+`ARRatio()` calculates the percentage ratio of the number of articles:reviews, and rounds the percentage to 4 significant figures.
+
+```{r, eval=FALSE}
+ARRatio(Woylie)
+```
+
+`YearsPublishing()` counts the number of years since the first publication of the species.
+
+```{r, eval=FALSE}
+YearPublishing(Woylie)
+```
+
+### Computing indices
+
+Statistical indices can provide deeper insigts than the counts above. They measure the productivity of publications regarding various species in this case. They take other parameters into consideration, such as time, total citations, total publications, etc., to compute the index.
+
+Use `SpHindex()` to compute the h-index. It which sorts the citation count in descending order and then counts the number of publications (n) that have EACH been cited at least n times.
+
+```{r, eval=FALSE}
+SpHindex(Woylie)
+```
+
+The h5 index computes the h-index for the past 5 years.
+
+```{r, eval=FALSE}
+SpH5(Woylie)
+```
+
+To subset the time with a specific lower limit, you can use `SpHAfterdate()`. Make sure the date parameter is in the exact format of yyyy-mm-dd. Inputting a different format or using slashes `/` or hyphens `-` will return an error.
+
+```{r, eval=FALSE}
+SpHAfterdate(Woylie, "2000-01-01")
+```
+
+If you want to know the h-index for every year of publication, you can use `SpHYear()`. It returns a dataframe ready for further analyses.
+
+```{r, eval=FALSE}
+SpHYear(Woylie)
+```
+
+`SpHGrowth()` calls `SpHYear()` first, and then sums up the h-index overtime by year. 
+
+```{r, eval=FALSE}
+SpHGrowth(Woylie)
+```
+
+The m-index can be calculated using `SpMindex()`, which first computes the h-index and then divides it by the number of years of activity.
+
+```{r, eval=FALSE}
+SpMindex(Woylie)
+```
+
+The i10 index can be calculated using `Spi10()`, which simply counts the publications that has 10 or more citations.
+
+```{r, eval=FALSE}
+Spi10(Woylie)
+```
+
+### Quick summary of the metrics
+
+The `Allindices()` function conveniently returns a dataframe with most of the above indices. This allows for quick analyses and plotting. If multiple species are being compared against each other, `rbind()` can be used to stitch them together and create an expansive dataframe.
+
+```{r, eval=FALSE}
+Allindices(Woylie)
+```
+
+## Tying it all together
+
+add some tests here
