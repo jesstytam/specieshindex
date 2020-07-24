@@ -122,7 +122,7 @@ FetchSpT <- function(genus, species, APIkey) {
   datalist = data.frame()
   looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
   #loop starts
-  for (i in 0:looprepeat) { 
+  for (i in 0:4) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
     print(paste("Fetching records now."))
     search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
@@ -190,7 +190,7 @@ FetchSpTAK <- function(genus, species, APIkey) {
   datalist = data.frame()
   looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
   #loop starts
-  for (i in 0:looprepeat) { 
+  for (i in 0:5) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
     print(paste("Fetching records now."))
     search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
