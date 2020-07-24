@@ -16,6 +16,6 @@ A character value of the percentage ratio of the number of articles and reviews.
 This function calculates the percentage ratio of article:rerview.
 }
 \examples{
-ARRatio(SpeciesData)
+ARRatio(data)
 
 }

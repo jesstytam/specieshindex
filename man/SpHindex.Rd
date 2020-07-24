@@ -16,6 +16,6 @@ H-index.
 This function calculates the h-index of a species.
 }
 \examples{
-SpHindex(SpeciesData)
+SpHindex(data)
 
 }

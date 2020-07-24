@@ -16,6 +16,6 @@ H5 index.
 This function calculates the h-index of a species in the past 5 years.
 }
 \examples{
-SpH5(SpeciesData)
+SpH5(data)
 
 }

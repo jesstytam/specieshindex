@@ -17,6 +17,6 @@ This function calculates the m-index of  species.
 M-index uses the h-index and divides it by the number of years of activity.
 }
 \examples{
-SpMindex(SpeciesData)
+SpMindex(data)
 
 }

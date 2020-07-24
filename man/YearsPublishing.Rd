@@ -16,6 +16,6 @@ Number of years.
 The number of years since the first publication in relation to the species.
 }
 \examples{
-YearsPublishing(SpeciesData)
+YearsPublishing(data)
 
 }

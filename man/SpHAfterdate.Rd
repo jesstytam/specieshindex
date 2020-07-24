@@ -18,6 +18,6 @@ H-index of the given time period.
 This function calculates the h-index using a given date up till the newest record.
 }
 \examples{
-HAfterdate(SpeciesData, "2000-01-01")
+HAfterdate(data, "2000-01-01")
 
 }

@@ -16,6 +16,6 @@ An integer of the total number of articles.
 This function calculates the total number of articles.
 }
 \examples{
-TotalArt(SpeciesData)
+TotalArt(data)
 
 }

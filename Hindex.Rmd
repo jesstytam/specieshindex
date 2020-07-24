@@ -15,62 +15,68 @@ pacman::p_load(tidyverse,
 ```
 
 **Functions**
-1. searchCountT
+1. CountSpT
   + counts the total number of search results on Scopus
   + title only
-2. searchCoundTAK
+2. CountSpTAK
   + counts the total number of search results on Scopus
   + title + abstract + keywords
-3. *extractcontent
-  + extracts content from Scopus using a search string
-  + data is not ready for analysis; requires extractXML
-4. *extractXML
-  + converts data from extractcontent into a dataframe for analyses
-5. FetchSpT
+3. FetchSpT
   + fetches data from Scopus using genus and species name
   + title only
-6. FetchSpTAK
+4. FetchSpTAK
   + fetches data from Scopus using genus and species name
   + title + abstract + keywords
-7. TotalPub
+5. TotalPub
   + counts the total number of publications
-8. TotalCite
+6. TotalCite
   + counts the total number of citations
-9. TotalJournals
+7. TotalJournals
   + counts the total number of journals
-10. TotalArt
+8. TotalArt
   + counts the total number of articles
-11. TotalRev
+9. TotalRev
   + counts the total number of reviews
-12. ARRatio
+10. ARRatio
   + calculates article:review ratio
-13. SpHindex
+11. SpHindex
   + calculates h-index
-14. YearsPublishing
+12. YearsPublishing
   + calculates the number of years since the first publication
-15. SpMindex
+13. SpMindex
   + calculates m-index (h-index / total years)
-16. Spi10
+14. Spi10
   + counts the publications with 10+ citations
-17. SpH5
+15. SpH5
   + calculates h-index for the past 5 years
-18. SpHAfterdate
+16. SpHAfterdate
   + calculates h-index with a given time frame
+17. SpHYear
+  + calculates the h-index by year
+18. SpHGrowth
+  + calculates the cumulative h-index
 19. Allindices
   + shows a summary of the main indices
-20. SpHYear
-  + calculates the h-index by year
 
-*function not available to users
-^not functional yet
 
 
 
 ```{r, function to get result count title only}
 #code from Fonti (modified)
-searchCountT <- function(genus, species, APIkey, datatype = "application/xml") {
+CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
+  library(rlang)
+  library(taxize)
+    if (is_missing(APIkey)) {
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
+  }
+  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
+  if (findname$submitted_name %in% findname$matched_name) {
+    print(paste("Species found on the Encyclopedia of Life."))
+  } else {
+    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
+  }
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
               query = list(apiKey = paste0(APIkey),
                            query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
@@ -85,10 +91,21 @@ searchCountT <- function(genus, species, APIkey, datatype = "application/xml") {
 
 ```{r, function to get result count title+abs+key}
 #code from Fonti (modified)
-searchCountTAK <- function(genus, species, APIkey, datatype = "application/xml") {
+CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
-  theURL <- GET("http://api.elsevier.com/content/search/scopus",
+  library(rlang)
+  library(taxize)
+    if (is_missing(APIkey)) {
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
+   }
+  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
+  if (findname$submitted_name %in% findname$matched_name) {
+    print(paste("Species found on the Encyclopedia of Life."))
+  } else {
+    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
+  } 
+   theURL <- GET("http://api.elsevier.com/content/search/scopus",
               query = list(apiKey = paste0(APIkey),
                            query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                            httpAccept = "application/xml")) #format the URL to be sent to the API
@@ -100,145 +117,53 @@ searchCountTAK <- function(genus, species, APIkey, datatype = "application/xml")
 }
 ```
 
-```{r}
-#code from Christopher Belter https://github.com/christopherBelter/scopusAPI/blob/master/scopusAPI.R
-extractcontent<- function(search.string, datatype = "application/xml") {
-  library(httr)
-  library(XML)
-  key <- "442b9048417ef20cf680a0ae26ee4d86" #my api key
-  theURL <- GET("http://api.elsevier.com/content/search/scopus",
-              query = list(apiKey = key,
-                           query = paste(search.string),
-                           httpAccept = "application/xml")) #format the URL to be sent to the API
-  stop_for_status(theURL) #pass any HTTP errors to the R console
-  theData <- content(theURL, as = "text") #extract the content of the response
-  return(theData)
-}
-```
-
-```{r, function to extract XML}
-#code from Christopher Belter https://github.com/christopherBelter/scopusAPI/blob/master/scopusAPI.R
-extractXML <- function(theFile) {
-	##library(XML)
-	newData <- XML::xmlParse(theFile) ## parse the XML
-	records <- XML::getNodeSet(newData, "//cto:entry", namespaces = "cto") ## create a list of records for missing or duplicate node handling
-	scopusID <- lapply(records, XML::xpathSApply, "./cto:eid", XML::xmlValue, namespaces = "cto") ## handle potentially missing eid nodes
-	scopusID[sapply(scopusID, is.list)] <- NA
-	scopusID <- unlist(scopusID)
-	doi <- lapply(records, XML::xpathSApply, "./prism:doi", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) ## handle potentially missing doi nodes
-	doi[sapply(doi, is.list)] <- NA
-	doi <- unlist(doi)
-	pmid <- lapply(records, XML::xpathSApply, "./cto:pubmed-id", XML::xmlValue, namespaces = "cto") ## handle potentially missing pmid nodes: returns a list with the node value if the node is present and an empty list if the node is missing
-	pmid[sapply(pmid, is.list)] <- NA ## find the empty lists in pmid and set them to NA
-	pmid <- unlist(pmid) ## turn the pmid list into a vector
-	authLast <- lapply(records, XML::xpathSApply, ".//cto:surname", XML::xmlValue, namespaces = "cto") ## grab the surname and initials for each author in each record, then paste them together 
-	authLast[sapply(authLast, is.list)] <- NA
-	authInit <- lapply(records, XML::xpathSApply, ".//cto:initials", XML::xmlValue, namespaces = "cto")
-	authInit[sapply(authInit, is.list)] <- NA
-	authors <- mapply(paste, authLast, authInit, collapse = "|")
-	authors <- sapply(strsplit(authors, "|", fixed = TRUE), unique) ## remove the duplicate author listings
-	authors <- sapply(authors, paste, collapse = "|")
-	affiliations <- lapply(records, XML::xpathSApply, ".//cto:affilname", XML::xmlValue, namespaces = "cto") ## handle multiple affiliation names
-	affiliations[sapply(affiliations, is.list)] <- NA
-	affiliations <- sapply(affiliations, paste, collapse = "|")
-	affiliations <- sapply(strsplit(affiliations, "|", fixed = TRUE), unique) ## remove the duplicate affiliation listings
-	affiliations <- sapply(affiliations, paste, collapse = "|")
-	countries <- lapply(records, XML::xpathSApply, ".//cto:affiliation-country", XML::xmlValue, namespaces = "cto")
-	countries[sapply(countries, is.list)] <- NA
-	countries <- sapply(countries, paste, collapse = "|")
-	countries <- sapply(strsplit(countries, "|", fixed = TRUE), unique) ## remove the duplicate country listings
-	countries <- sapply(countries, paste, collapse = "|") 
-	year <- lapply(records, XML::xpathSApply, "./prism:coverDate", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/"))
-	year[sapply(year, is.list)] <- NA
-	year <- unlist(year)
-	year <- gsub("\\-..", "", year) ## extract only year from coverDate string (e.g. extract "2015" from "2015-01-01")
-	articletitle <- lapply(records, XML::xpathSApply, "./dc:title", XML::xmlValue, namespaces = c(dc = "http://purl.org/dc/elements/1.1/"))
-	articletitle[sapply(articletitle, is.list)] <- NA
-	articletitle <- unlist(articletitle)
-	journal <- lapply(records, XML::xpathSApply, "./prism:publicationName", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) ## handle potentially missing issue nodes
-	journal[sapply(journal, is.list)] <- NA
-	journal <- unlist(journal)
-	volume <- lapply(records, XML::xpathSApply, "./prism:volume", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) ## handle potentially missing issue nodes
-	volume[sapply(volume, is.list)] <- NA
-	volume <- unlist(volume)
-	issue <- lapply(records, XML::xpathSApply, "./prism:issueIdentifier", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) ## handle potentially missing issue nodes
-	issue[sapply(issue, is.list)] <- NA
-	issue <- unlist(issue)
-	pages <- lapply(records, XML::xpathSApply, "./prism:pageRange", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) ## handle potentially missing issue nodes
-	pages[sapply(pages, is.list)] <- NA
-	pages <- unlist(pages)
-	abstract <- lapply(records, XML::xpathSApply, "./dc:description", XML::xmlValue, namespaces = c(dc = "http://purl.org/dc/elements/1.1/")) ## handle potentially missing abstract nodes
-	abstract[sapply(abstract, is.list)] <- NA
-	abstract <- unlist(abstract)
-	keywords <- lapply(records, XML::xpathSApply, "./cto:authkeywords", XML::xmlValue, namespaces = "cto")
-	keywords[sapply(keywords, is.list)] <- NA
-	keywords <- unlist(keywords)
-	keywords <- gsub(" | ", "|", keywords, fixed = TRUE)
-	ptype <- lapply(records, XML::xpathSApply, "./cto:subtypeDescription", XML::xmlValue, namespaces = "cto")
-	ptype[sapply(ptype, is.list)] <- NA
-	ptype <- unlist(ptype)
-	timescited <- lapply(records, XML::xpathSApply, "./cto:citedby-count", XML::xmlValue, namespaces = "cto")
-	timescited[sapply(timescited, is.list)] <- NA
-	timescited <- unlist(timescited)
-	theDF <- data.frame(scopusID, doi, pmid, authors, affiliations, countries, year, articletitle, journal, volume, issue, pages, keywords, abstract, ptype, timescited, stringsAsFactors = FALSE)
-	return(theDF)
-}
-```
-
 ```{r, fetch using title only}
 #this function downloads citation data from scopus
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
-  library(taxize)
   library(dplyr)
   if (is_missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
-  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
-  if (findname$user_supplied_name %in% findname$matched_name) {
-    print(paste("Species found on the Encyclopedia of Life, proceeding data extraction."))
-  } else {
-    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
-  }
-  count <- searchCountT(genus, species, APIkey) #check the number of records
+  count <- CountSpT(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
-  if (count > 1000) {
-    print(paste("More than 1000 records found, this will take a while unless you have a nice computer."))
+  if (count > 2000) {
+    print(paste("More than 2000 records found, this will take a while unless you have a nice computer."))
   }
   step_size <- 1000 #the number of records to retrieve in each loop
   start_record <- 0
-  datalist = list()
-  looprepeat <- ceiling(count/step_size) #the number of loop times, rounded up to the nearest integer
+  datalist = data.frame()
+  looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
   #loop starts
-  for (i in 1:looprepeat) { 
+  for (i in 0:looprepeat) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
     print(paste("Fetching records now."))
     search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           max_count = step_size,
-                          start = start_record,
-                          wait_time = 1)
+                          start = step_size*i,
+                          wait_time = 3)
     start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
     searchdf <- entries_to_citation_df(search$entries)
-    datalist[[i]] <- searchdf
+    list <- data.frame(searchdf)
+    datalist <- rbind(datalist, list)
     print(paste("Retrieved", start_record, "records."))
   }
   #loop ends
-  searchcombine <- do.call(rbind, datalist) #convert list of dataframes into one big dataframe
-  returned <- dim(searchcombine)[1]
+  returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
-  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1] #check for duplicates
+  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
   if (duplicates>0) { #remove duplicates if they are present
     print(paste("Removing duplicated records."))
-    searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
+    datalist <- datalist[!duplicated(datalist$title), ] 
   }
   #showing final list of records
-  retrieved <- dim(searchcombine)[1] #check the number
+  retrieved <- dim(datalist)[1] #check the number
   print(paste(retrieved, "unique records successfully fetched."))
-  return(searchcombine)
+  return(datalist)
 }
 ```
 
@@ -247,55 +172,48 @@ FetchSpT <- function(genus, species, APIkey) {
 FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
-  library(taxize)
   library(dplyr)
   if (is_missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
-  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
-  if (findname$user_supplied_name %in% findname$matched_name) {
-    print(paste("Species found on the Encyclopedia of Life, proceeding data extraction."))
-  } else {
-    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
-  }
-  count <- searchCountTAK(genus, species, APIkey) #check the number of records
+  count <- CountSpTAK(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
-  if (count > 1000) {
-    print(paste("More than 1000 records found, this will take a while unless you have a nice computer."))
+  if (count > 2000) {
+    print(paste("More than 2000 records found, this will take a while unless you have a nice computer."))
   }
   step_size <- 1000 #the number of records to retrieve in each loop
   start_record <- 0
-  datalist = list()
-  looprepeat <- ceiling(count/step_size) #the number of loop times, rounded up to the nearest integer
+  datalist = data.frame()
+  looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
   #loop starts
-  for (i in 1:looprepeat) { 
+  for (i in 0:4) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
     print(paste("Fetching records now."))
     search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           max_count = step_size,
-                          start = start_record,
-                          wait_time = 1)
+                          start = step_size*i,
+                          wait_time = 3)
     start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
     searchdf <- entries_to_citation_df(search$entries)
-    datalist[[i]] <- searchdf
+    list <- data.frame(searchdf)
+    datalist <- rbind(datalist, list)
     print(paste("Retrieved", start_record, "records."))
   }
   #loop ends
-  searchcombine <- do.call(rbind, datalist) #convert list of dataframes into one big dataframe
-  returned <- dim(searchcombine)[1]
+  returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
-  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1] #check for duplicates
+  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
   if (duplicates>0) { #remove duplicates if they are present
     print(paste("Removing duplicated records."))
-    searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
+    datalist <- datalist[!duplicated(datalist$title), ] 
   }
   #showing final list of records
-  retrieved <- dim(searchcombine)[1] #check the number
+  retrieved <- dim(datalist)[1] #check the number
   print(paste(retrieved, "unique records successfully fetched."))
-  return(searchcombine)
+  return(datalist)
 }
 ```
 
@@ -346,8 +264,8 @@ TotalRev <- function(data) {
 ARRatio <- function(data) {
   Article <- sum(data$description == "Article") #calculates the number of articles
   Review <- sum(data$description == "Review") #calculates the number of reviews
-  ArticleRatio <- Article/(Article+Review)*100 #percentage of articles
-  ReviewRatio <- Review/(Article+Review)*100 #percentage of reviews
+  ArticleRatio <- signif(Article/(Article+Review)*100, digits = 4) #percentage of articles, rounded to 4 sf
+  ReviewRatio <- signif(Review/(Article+Review)*100, digits = 4) #percentage of reviews, rounded to 4 sf
   Ratio <- paste(ArticleRatio, ":", ReviewRatio) #prints ratio
   return(Ratio)
 }
@@ -416,7 +334,7 @@ SpH5 <- function(data) { #last 5 years from the current date
   d <- as.POSIXlt(Sys.Date())
   d$year <- d$year-5
   as.Date(d)
-  return(HAfterdate(data, d)) #calls HAfterdate function
+  return(SpHAfterdate(data, d)) #calls HAfterdate function
 }
 ```
 
@@ -426,8 +344,31 @@ SpHAfterdate <- function(data, date) {
   library(dplyr)
   data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") #change format of the date from factor to date
   subsetdata <- filter(data, cover_date > as.Date(date) )
-  HAfterdate <- Hindex(subsetdata) #calls Hindex function
+  HAfterdate <- SpHindex(subsetdata) #calls Hindex function
   return(HAfterdate)
+}
+```
+
+```{r, h-index by year}
+#this function calculates the h-index by year
+SpHYear <- function(data) {
+  library(dplyr)
+  data$year <- as.numeric(substr(data$cover_date, 1, 4))
+  yeargroup <- data %>% #group data by year
+    group_by(data$year)
+  splitdf <- split(yeargroup, data$year) #split dfs into smaller dfs according to year
+  splitH <- lapply(splitdf, function(splitdf){SpHindex(splitdf)}) #compute h-index for each year
+  H <- setNames(stack(splitH)[2:1], c('year','h')) #converts list to df and adding column names
+  return(H)
+}
+```
+
+```{r, cumulative h-index}
+#this function calculates the cumulative h-index overtime by year
+SpHGrowth <- function(data) {
+  HbyYear <- SpHYear(data)
+  HbyYear$h <- cumsum(HbyYear [,2])
+  return(HbyYear)
 }
 ```
 
@@ -454,25 +395,12 @@ Allindices <- function(data) {
 }
 ```
 
-```{r, h-index by year}
-#this function calculates h-index by year
-SpHYear <- function(data) {
-  library(dplyr)
-  data$year <- as.numeric(substr(data$cover_date, 1, 4))
-  yeargroup <- data %>% #group data by year
-    group_by(data$year)
-  splitdf <- split(yeargroup, data$year) #split dfs into smaller dfs according to year
-  splitH <- lapply(splitdf, function(splitdf){SpHindex(splitdf)}) #compute h-index for each year
-  H <- setNames(stack(splitH)[2:1], c('year','h')) #converts list to df and adding column names
-  return(H)
-}
-```
 
 **Tests**
 
 ```{r, woylie}
 #test done on 10 july
-searchCountTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #113
+CountSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #113
 Woylie <- FetchSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
 
 TotalPub(Woylie) #113
@@ -480,7 +408,7 @@ TotalCite(Woylie) #1897
 TotalJournals(Woylie) #55
 TotalArt(Woylie) #110
 TotalRev(Woylie) #3
-ARRatio(Woylie) #97.3451327433628:2.65486725663717
+ARRatio(Woylie) #97.35 : 2.655
 
 YearsPublishing(Woylie) #43
 SpHindex(Woylie) #26
@@ -488,13 +416,15 @@ SpMindex(Woylie) #0.6046512
 Spi10(Woylie) #54
 SpH5(Woylie) #8
 SpHAfterdate(Woylie, "2000-01-01") #20
+SpHYear(Woylie)
+SpHGrowth(Woylie)
 
 B_penicillata <- Allindices(Woylie)
 ```
 
 ```{r, quokka}
 #test done on 10 july
-searchCountTAK("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86") #242
+CountSpTAK("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86") #242
 Quokka <- FetchSpTAK("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
 
 TotalPub(Quokka) #242
@@ -502,7 +432,7 @@ TotalCite(Quokka) #3423
 TotalJournals(Quokka) #107
 TotalArt(Quokka) #237
 TotalRev(Quokka) #5
-ARRatio(Quokka) #97.9338842975207:2.06611570247934
+ARRatio(Quokka) #97.93 : 2.066
 
 YearsPublishing(Quokka) #66
 SpHindex(Quokka) #29
@@ -510,13 +440,15 @@ SpMindex(Quokka) #0.4393939
 Spi10(Quokka) #121
 SpH5(Quokka) #3
 SpHAfterdate(Quokka, "2000-01-01") #17
+SpHYear(Quokka)
+SpHGrowth(Quokka)
 
 S_brachyurus <- Allindices(Quokka)
 ```
 
 ```{r, platypus}
 #test done on 10 july
-searchCountTAK #321
+CountSpTAK #321
 Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
 
 TotalPub(Platypus) #321
@@ -524,7 +456,7 @@ TotalCite(Platypus) #6363
 TotalJournals(Platypus) #153
 TotalArt(Platypus) #308
 TotalRev(Platypus) #13
-ARRatio(Platypus) #95.9501557632399 : 4.04984423676012
+ARRatio(Platypus) #95.95 : 4.05
 
 YearsPublishing(Platypus) #67
 SpHindex(Platypus) #41
@@ -532,13 +464,15 @@ SpMindex(Platypus) #0.6119403
 Spi10(Platypus) #177
 SpH5(Platypus) #7
 SpHAfterdate(Platypus, "2000-01-01") #32
+SpHYear(Platypus)
+SpHGrowth(Platypus)
 
 O_anatinus <- Allindices(Platypus)
 ```
 
 ```{r, koala}
 #test done on 10 july
-searchCount("Phascolarctos", "cinereus", "442b9048417ef20cf680a0ae26ee4d86") #777
+CountSpTAK("Phascolarctos", "cinereus", "442b9048417ef20cf680a0ae26ee4d86") #777
 #did we not have 930 records?? hmm...
 Koala <- FetchSpTAK("Phascolarctos", "cinereus", "442b9048417ef20cf680a0ae26ee4d86") #4 duplicates
 
@@ -547,7 +481,7 @@ TotalCite(Koala) #14291
 TotalJournals(Koala) #227
 TotalArt(Koala) #744
 TotalRev(Koala) #29
-ARRatio(Koala) #96.248382923674 : 3.751617076326
+ARRatio(Koala) #96.25 : 3.752
 
 YearsPublishing(Koala) #139
 SpHindex(Koala) #53
@@ -555,6 +489,8 @@ SpMindex(Koala) #0.381295
 Spi10(Koala) #427
 SpH5(Koala) #15
 SpHAfterdate(Koala, "2000-01-01") #44
+SpHYear(Koala)
+SpHGrowth(Koala)
 
 P_cinereus <- Allindices(Koala)
 ```
@@ -592,18 +528,23 @@ Spi10(dummy1) #12
 ```{r, rscopus}
 #some tests
 tiger <- FetchSpTAK("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86") #402 results
-searchCount("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86")
+CountSpTAK("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86")
+
 dim(tiger[duplicated(tiger$title),])[1]
 
 tiger <- FetchSpTAK("Panthera", "tigris") #shows warning
 fox <- FetchSpT("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #1133 results
 
-foxTAK <- FetchSpTAK("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #3324 results
+fox <- FetchSpTAK("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #3324 results
 drosophila <- FetchSpTAK("Drosophila", "montana", "442b9048417ef20cf680a0ae26ee4d86") #93 results
 drosophila2 <- FetchSpTAK("drosophila", "melanogaster", "442b9048417ef20cf680a0ae26ee4d86") #60904 results, error at 23%
 drosophila3 <- FetchSpTAK("Mus", "musculus", "442b9048417ef20cf680a0ae26ee4d86") 
 
-cat <- FetchSpTAK("felis", "catus", "442b9048417ef20cf680a0ae26ee4d86") #17622 results, error at 26%, current loop can only output 2000 records
+cat <- CountSpT("felis", "catus", "442b9048417ef20cf680a0ae26ee4d86") #17622 results, error at 26%, current loop can only output 2000 records
+gnr_resolve(names = c("felis", "catus"))
+
+chimps <- FetchSpTAK("pan", "troglodytes", "442b9048417ef20cf680a0ae26ee4d86") #10018 results
+gnr_resolve(names = c("pan", "troglodytes"))
 
 elephant <- FetchSpTAK("Loxodonta","africana", "442b9048417ef20cf680a0ae26ee4d86") #1401 results
 dim(elephant[duplicated(elephant$title),])[1]
@@ -666,3 +607,4 @@ print(paste("h: ", mycount))
 
 #i10 - check it out?
 ```
+

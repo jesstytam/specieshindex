@@ -12,17 +12,28 @@
 #' @export
 #'
 #' @examples
-searchCountT <- function(genus, species, APIkey, datatype = "application/xml") {
+CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
+  library(rlang)
+  library(taxize)
+  if (is_missing(APIkey)) {
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
+  }
+  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
+  if (findname$submitted_name %in% findname$matched_name) {
+    print(paste("Species found on the Encyclopedia of Life."))
+  } else {
+    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
+  } 
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
                 query = list(apiKey = paste0(APIkey),
                              query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
-                             httpAccept = "application/xml")) 
-  stop_for_status(theURL) 
-  theData <- content(theURL, as = "text") 
-  newData <- xmlParse(theURL)
-  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) 
+                             httpAccept = "application/xml")) #format the URL to be sent to the API
+  stop_for_status(theURL) #pass any HTTP errors to the R console
+  theData <- content(theURL, as = "text") #extract the content of the response
+  newData <- xmlParse(theURL) #parse the data to extract values
+  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
   return(resultCount)
 }
 
@@ -48,126 +59,29 @@ searchCountT <- function(genus, species, APIkey, datatype = "application/xml") {
 #' 
 #' searchCount("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
 #' 
-searchCountTAK <- function(genus, species, APIkey, datatype = "application/xml") {
+CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
+  library(rlang)
+  library(taxize)
+  if (is_missing(APIkey)) {
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
+  }
+  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
+  if (findname$submitted_name %in% findname$matched_name) {
+    print(paste("Species found on the Encyclopedia of Life."))
+  } else {
+    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
+  } 
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
                 query = list(apiKey = paste0(APIkey),
                              query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
-                             httpAccept = "application/xml")) 
-  stop_for_status(theURL) 
-  theData <- content(theURL, as = "text") 
-  newData <- xmlParse(theURL) 
-  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) 
+                             httpAccept = "application/xml")) #format the URL to be sent to the API
+  stop_for_status(theURL) #pass any HTTP errors to the R console
+  theData <- content(theURL, as = "text") #extract the content of the response
+  newData <- xmlParse(theURL) #parse the data to extract values
+  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
   return(resultCount)
-}
-
-
-
-#' Extract citation data from Scopus.
-#'
-#' @title Extract content
-#'
-#' @param search.string Search string with Boolean operators or Scopus advanced search.
-#' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
-#'
-#' @return A list of entries of the search from Scopus.
-#' @export 
-#'
-#' @examples
-#' extractcontent("TITLE-ABS-KEY("bettongia penicillata") AND DOCTYPE(ar OR re)")
-#' 
-extractcontent<- function(search.string, datatype = "application/xml") {
-  library(httr)
-  library(XML)
-  key <- "442b9048417ef20cf680a0ae26ee4d86" 
-  theURL <- GET("http://api.elsevier.com/content/search/scopus",
-                query = list(apiKey = key,
-                             query = paste(search.string),
-                             httpAccept = "application/xml")) 
-  stop_for_status(theURL) 
-  theData <- content(theURL, as = "text") 
-  return(theData)
-}
-
-
-
-#' Extract XML list into a dataframe.
-#'
-#' @title Extract XML
-#'
-#' @param theFile The file to be converted.
-#'
-#' @return A converted dataframe generated from \code{\link{extractcontent}}.
-#' @export 
-#'
-#' @examples
-#' extractXML(SpeciesXML)
-#' 
-extractXML <- function(theFile) {
-  library(XML)
-  newData <- XML::xmlParse(theFile) 
-  records <- XML::getNodeSet(newData, "//cto:entry", namespaces = "cto") 
-  scopusID <- lapply(records, XML::xpathSApply, "./cto:eid", XML::xmlValue, namespaces = "cto") 
-  scopusID[sapply(scopusID, is.list)] <- NA
-  scopusID <- unlist(scopusID)
-  doi <- lapply(records, XML::xpathSApply, "./prism:doi", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/"))
-  doi[sapply(doi, is.list)] <- NA
-  doi <- unlist(doi)
-  pmid <- lapply(records, XML::xpathSApply, "./cto:pubmed-id", XML::xmlValue, namespaces = "cto") 
-  pmid[sapply(pmid, is.list)] <- NA 
-  pmid <- unlist(pmid) 
-  authLast <- lapply(records, XML::xpathSApply, ".//cto:surname", XML::xmlValue, namespaces = "cto") 
-  authLast[sapply(authLast, is.list)] <- NA
-  authInit <- lapply(records, XML::xpathSApply, ".//cto:initials", XML::xmlValue, namespaces = "cto")
-  authInit[sapply(authInit, is.list)] <- NA
-  authors <- mapply(paste, authLast, authInit, collapse = "|")
-  authors <- sapply(strsplit(authors, "|", fixed = TRUE), unique)
-  authors <- sapply(authors, paste, collapse = "|")
-  affiliations <- lapply(records, XML::xpathSApply, ".//cto:affilname", XML::xmlValue, namespaces = "cto")
-  affiliations[sapply(affiliations, is.list)] <- NA
-  affiliations <- sapply(affiliations, paste, collapse = "|")
-  affiliations <- sapply(strsplit(affiliations, "|", fixed = TRUE), unique) 
-  affiliations <- sapply(affiliations, paste, collapse = "|")
-  countries <- lapply(records, XML::xpathSApply, ".//cto:affiliation-country", XML::xmlValue, namespaces = "cto")
-  countries[sapply(countries, is.list)] <- NA
-  countries <- sapply(countries, paste, collapse = "|")
-  countries <- sapply(strsplit(countries, "|", fixed = TRUE), unique) 
-  countries <- sapply(countries, paste, collapse = "|") 
-  year <- lapply(records, XML::xpathSApply, "./prism:coverDate", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/"))
-  year[sapply(year, is.list)] <- NA
-  year <- unlist(year)
-  year <- gsub("\\-..", "", year) 
-  articletitle <- lapply(records, XML::xpathSApply, "./dc:title", XML::xmlValue, namespaces = c(dc = "http://purl.org/dc/elements/1.1/"))
-  articletitle[sapply(articletitle, is.list)] <- NA
-  articletitle <- unlist(articletitle)
-  journal <- lapply(records, XML::xpathSApply, "./prism:publicationName", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) 
-  journal[sapply(journal, is.list)] <- NA
-  journal <- unlist(journal)
-  volume <- lapply(records, XML::xpathSApply, "./prism:volume", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/"))
-  volume[sapply(volume, is.list)] <- NA
-  volume <- unlist(volume)
-  issue <- lapply(records, XML::xpathSApply, "./prism:issueIdentifier", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) 
-  issue[sapply(issue, is.list)] <- NA
-  issue <- unlist(issue)
-  pages <- lapply(records, XML::xpathSApply, "./prism:pageRange", XML::xmlValue, namespaces = c(prism = "http://prismstandard.org/namespaces/basic/2.0/")) 
-  pages[sapply(pages, is.list)] <- NA
-  pages <- unlist(pages)
-  abstract <- lapply(records, XML::xpathSApply, "./dc:description", XML::xmlValue, namespaces = c(dc = "http://purl.org/dc/elements/1.1/"))
-  abstract[sapply(abstract, is.list)] <- NA
-  abstract <- unlist(abstract)
-  keywords <- lapply(records, XML::xpathSApply, "./cto:authkeywords", XML::xmlValue, namespaces = "cto")
-  keywords[sapply(keywords, is.list)] <- NA
-  keywords <- unlist(keywords)
-  keywords <- gsub(" | ", "|", keywords, fixed = TRUE)
-  ptype <- lapply(records, XML::xpathSApply, "./cto:subtypeDescription", XML::xmlValue, namespaces = "cto")
-  ptype[sapply(ptype, is.list)] <- NA
-  ptype <- unlist(ptype)
-  timescited <- lapply(records, XML::xpathSApply, "./cto:citedby-count", XML::xmlValue, namespaces = "cto")
-  timescited[sapply(timescited, is.list)] <- NA
-  timescited <- unlist(timescited)
-  theDF <- data.frame(scopusID, doi, pmid, authors, affiliations, countries, year, articletitle, journal, volume, issue, pages, keywords, abstract, ptype, timescited, stringsAsFactors = FALSE)
-  return(theDF)
 }
 
 
@@ -194,52 +108,48 @@ extractXML <- function(theFile) {
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
-  library(taxize)
   library(dplyr)
   if (is_missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") 
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
-  findname <- gnr_resolve(names = c(genus, species)) 
-  if (findname$user_supplied_name %in% findname$matched_name) {
-    print(paste("Species found on the Encyclopedia of Life, proceeding data extraction."))
-  } else {
-    stop("Species not found on the Encyclopedia of Life, please check your spelling.") 
-  }
-  count <- searchCountT(genus, species, APIkey) 
+  count <- CountSpT(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
-  if (count > 1000) {
-    print(paste("More than 1000 records found, this will take a while unless you have a nice computer."))
+  if (count > 2000) {
+    print(paste("More than 2000 records found, this will take a while unless you have a nice computer."))
   }
-  step_size <- 1000 
+  step_size <- 1000 #the number of records to retrieve in each loop
   start_record <- 0
-  datalist = list()
-  looprepeat <- ceiling(count/step_size)
-  for (i in 1:looprepeat) { 
+  datalist = data.frame()
+  looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
+  #loop starts
+  for (i in 0:looprepeat) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
     print(paste("Fetching records now."))
     search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                             api_key = paste0(APIkey),
                             verbose = TRUE,
                             max_count = step_size,
-                            start = start_record,
-                            wait_time = 1)
-    start_record <- as.numeric(summary(search)[1,1])
+                            start = step_size*i,
+                            wait_time = 3)
+    start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
     searchdf <- entries_to_citation_df(search$entries)
-    datalist[[i]] <- searchdf
+    list <- data.frame(searchdf)
+    datalist <- rbind(datalist, list)
     print(paste("Retrieved", start_record, "records."))
   }
-  searchcombine <- do.call(rbind, datalist)
-  returned <- dim(searchcombine)[1]
+  #loop ends
+  returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
-  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1] 
+  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
-  if (duplicates>0) { 
+  if (duplicates>0) { #remove duplicates if they are present
     print(paste("Removing duplicated records."))
-    searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
+    datalist <- datalist[!duplicated(datalist$title), ] 
   }
-  retrieved <- dim(searchcombine)[1] 
+  #showing final list of records
+  retrieved <- dim(datalist)[1] #check the number
   print(paste(retrieved, "unique records successfully fetched."))
-  return(searchcombine)
+  return(datalist)
 }
 
 
@@ -266,52 +176,48 @@ FetchSpT <- function(genus, species, APIkey) {
 FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
-  library(taxize)
   library(dplyr)
   if (is_missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") 
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
-  findname <- gnr_resolve(names = c(genus, species)) 
-  if (findname$user_supplied_name %in% findname$matched_name) {
-    print(paste("Species found on the Encyclopedia of Life, proceeding data extraction."))
-  } else {
-    stop("Species not found on the Encyclopedia of Life, please check your spelling.") 
-  }
-  count <- searchCountTAK(genus, species, APIkey) 
+  count <- CountSpTAK(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
-  if (count > 1000) {
-    print(paste("More than 1000 records found, this will take a while unless you have a nice computer."))
+  if (count > 2000) {
+    print(paste("More than 2000 records found, this will take a while unless you have a nice computer."))
   }
-  step_size <- 1000 
+  step_size <- 1000 #the number of records to retrieve in each loop
   start_record <- 0
-  datalist = list()
-  looprepeat <- ceiling(count/step_size) 
-  for (i in 1:looprepeat) { 
+  datalist = data.frame()
+  looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
+  #loop starts
+  for (i in 0:looprepeat) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
     print(paste("Fetching records now."))
     search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
                             api_key = paste0(APIkey),
                             verbose = TRUE,
                             max_count = step_size,
-                            start = start_record,
-                            wait_time = 1)
-    start_record <- as.numeric(summary(search)[1,1])
+                            start = step_size*i,
+                            wait_time = 3)
+    start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
     searchdf <- entries_to_citation_df(search$entries)
-    datalist[[i]] <- searchdf
+    list <- data.frame(searchdf)
+    datalist <- rbind(datalist, list)
     print(paste("Retrieved", start_record, "records."))
   }
-  searchcombine <- do.call(rbind, datalist) 
-  returned <- dim(searchcombine)[1]
+  #loop ends
+  returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
-  duplicates <- dim(searchcombine[duplicated(searchcombine$title),])[1] 
+  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
-  if (duplicates>0) { 
+  if (duplicates>0) { #remove duplicates if they are present
     print(paste("Removing duplicated records."))
-    searchcombine <- searchcombine[!duplicated(searchcombine$title), ] 
+    datalist <- datalist[!duplicated(datalist$title), ] 
   }
-  retrieved <- dim(searchcombine)[1]
+  #showing final list of records
+  retrieved <- dim(datalist)[1] #check the number
   print(paste(retrieved, "unique records successfully fetched."))
-  return(searchcombine)
+  return(datalist)
 }
 
 
@@ -326,7 +232,7 @@ FetchSpTAK <- function(genus, species, APIkey) {
 #' @export
 #'
 #' @examples
-#' TotalPub(SpeciesData)
+#' TotalPub(data)
 #' 
 TotalPub <- function(data) {
   total <- nrow(data) 
@@ -345,7 +251,7 @@ TotalPub <- function(data) {
 #' @export
 #'
 #' @examples
-#' TotalCite(SpeciesData)
+#' TotalCite(data)
 #' 
 TotalCite <- function(data) {
   data$citations <- as.numeric(data$citations) 
@@ -365,7 +271,7 @@ TotalCite <- function(data) {
 #' @export
 #'
 #' @examples
-#' TotalJournals(SpeciesData)
+#' TotalJournals(data)
 #' 
 TotalJournals <- function(data) {
   filter <- unique(data$journal)
@@ -385,7 +291,7 @@ TotalJournals <- function(data) {
 #' @export
 #'
 #' @examples
-#' TotalArt(SpeciesData)
+#' TotalArt(data)
 #' 
 TotalArt <- function(data) {
   Article <- sum(data$description == "Article")
@@ -404,7 +310,7 @@ TotalArt <- function(data) {
 #' @export
 #'
 #' @examples
-#' TotalRev(SpeciesData)
+#' TotalRev(data)
 #' 
 TotalRev <- function(data) {
   Review <- sum(data$description == "Review") 
@@ -423,13 +329,13 @@ TotalRev <- function(data) {
 #' @export
 #'
 #' @examples
-#' ARRatio(SpeciesData)
+#' ARRatio(data)
 #' 
 ARRatio <- function(data) {
   Article <- sum(data$description == "Article") 
   Review <- sum(data$description == "Review") 
-  ArticleRatio <- Article/(Article+Review)*100 
-  ReviewRatio <- Review/(Article+Review)*100 
+  ArticleRatio <- signif(Article/(Article+Review)*100, digits = 4)
+  ReviewRatio <- signif(Review/(Article+Review)*100, digits = 4)
   Ratio <- paste(ArticleRatio, ":", ReviewRatio)
   return(Ratio)
 }
@@ -446,7 +352,7 @@ ARRatio <- function(data) {
 #' @export
 #'
 #' @examples
-#' SpHindex(SpeciesData)
+#' SpHindex(data)
 #' 
 SpHindex <- function(data) {
   data$citations <- as.numeric(data$citations) 
@@ -472,7 +378,7 @@ SpHindex <- function(data) {
 #' @export
 #'
 #' @examples
-#' YearsPublishing(SpeciesData)
+#' YearsPublishing(data)
 #' 
 YearsPublishing <- function(data) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
@@ -494,7 +400,7 @@ YearsPublishing <- function(data) {
 #' @export
 #'
 #' @examples
-#' SpMindex(SpeciesData)
+#' SpMindex(data)
 #' 
 SpMindex <- function(data) {
   data$citations <- as.numeric(data$citations) 
@@ -524,7 +430,7 @@ SpMindex <- function(data) {
 #' @export
 #'
 #' @examples
-#' Spi10(SpeciesData)
+#' Spi10(data)
 #' 
 Spi10 <- function(data) {
   data$citations <- as.numeric(data$citations)
@@ -545,14 +451,14 @@ Spi10 <- function(data) {
 #' @export
 #'
 #' @examples
-#' SpH5(SpeciesData)
+#' SpH5(data)
 #' 
 SpH5 <- function(data) { 
   current_date <- as.numeric(substr(Sys.Date(), 1, 4)) 
   d <- as.POSIXlt(Sys.Date())
   d$year <- d$year-5
   as.Date(d)
-  return(HAfterdate(data, d))
+  return(SpHAfterdate(data, d))
 }
 
 
@@ -568,14 +474,59 @@ SpH5 <- function(data) {
 #' @export 
 #'
 #' @examples
-#' HAfterdate(SpeciesData, "2000-01-01")
+#' HAfterdate(data, "2000-01-01")
 #' 
 SpHAfterdate <- function(data, date) {
   library(dplyr)
   data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") 
   subsetdata <- filter(data, cover_date > as.Date(date) )
-  HAfterdate <- Hindex(subsetdata)
+  HAfterdate <- SpHindex(subsetdata)
   return(HAfterdate)
+}
+
+
+
+#' This function calculates the h-index by year.
+#' 
+#' @title H-index by year
+#'
+#' @param data 
+#'
+#' @returnA A dataframe of h-index by year.
+#' @export
+#'
+#' @examples
+#' SpHGrowth(data)
+#' 
+SpHYear <- function(data) {
+  library(dplyr)
+  data$year <- as.numeric(substr(data$cover_date, 1, 4))
+  yeargroup <- data %>% 
+    group_by(data$year)
+  splitdf <- split(yeargroup, data$year) 
+  splitH <- lapply(splitdf, function(splitdf){SpHindex(splitdf)}) 
+  H <- setNames(stack(splitH)[2:1], c('year','h')) 
+  return(H)
+}
+
+
+
+#' This function calculates the cumulative h-index overtime by year.
+#' 
+#' @title H-index growth
+#'
+#' @param data 
+#'
+#' @return A dataframe of the cumulative h-index.
+#' @export
+#'
+#' @examples
+#' SpHGrowth(data)
+#' 
+SpHGrowth <- function(data) {
+  HbyYear <- SpHYear(data)
+  HbyYear$h <- cumsum(HbyYear [,2])
+  return(HbyYear)
 }
 
 
@@ -590,7 +541,7 @@ SpHAfterdate <- function(data, date) {
 #' @export
 #'
 #' @examples
-#' Allindices(SpeciesData)
+#' Allindices(data)
 #' 
 Allindices <- function(data) {
   combine <- data.frame(TotalPub(data), TotalCite(data), TotalJournals(data), TotalArt(data),
@@ -610,29 +561,4 @@ Allindices <- function(data) {
       "i10:", Spi10(data), "\n",
       "h5:", SpH5(data))
   return(combine)
-}
-
-
-
-#' This function calculates the h-index by year.
-#' 
-#' @title H-index by year
-#'
-#' @param data 
-#'
-#' @returnA A dataframe of h-index by year.
-#' @export
-#'
-#' @examples
-#' SpHGrowth(SpeciesData)
-#' 
-SpHYear <- function(data) {
-  library(dplyr)
-  data$year <- as.numeric(substr(data$cover_date, 1, 4))
-  yeargroup <- data %>% 
-    group_by(data$year)
-  splitdf <- split(yeargroup, data$year) 
-  splitH <- lapply(splitdf, function(splitdf){SpHindex(splitdf)}) 
-  H <- setNames(stack(splitH)[2:1], c('year','h')) 
-  return(H)
 }

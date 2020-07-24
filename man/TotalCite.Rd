@@ -16,6 +16,6 @@ A numerical value of the total number of citations.
 This function calculates the total number of citations.
 }
 \examples{
-TotalCite(SpeciesData)
+TotalCite(data)
 
 }

@@ -16,6 +16,6 @@ An integer of the total number of publications.
 This function calculates the total number of publications.
 }
 \examples{
-TotalPub(SpeciesData)
+TotalPub(data)
 
 }
