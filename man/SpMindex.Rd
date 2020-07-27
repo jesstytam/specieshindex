@@ -20,3 +20,6 @@ M-index uses the h-index and divides it by the number of years of activity.
 SpMindex(data)
 
 }
+\references{
+Hirsch, J. (2005). An index to quantify an individual's scientific research output. Proceedings of the National Academy of Sciences of the United States of America, 102(46), 16569-16572.
+}

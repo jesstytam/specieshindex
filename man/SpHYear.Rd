@@ -7,7 +7,7 @@
 SpHYear(data)
 }
 \arguments{
-\item{data}{}
+\item{data}{The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.}
 }
 \description{
 This function calculates the h-index by year.

@@ -19,3 +19,7 @@ This function calculates the h-index of a species.
 SpHindex(data)
 
 }
+\references{
+Bertoli-Barsotti, L., & Lando, T. (2015). On a formula for the h-index. Journal of Informetrics, 9(4), 762-776.
+Hirsch, J. (2005). An index to quantify an individual's scientific research output. Proceedings of the National Academy of Sciences of the United States of America, 102(46), 16569-16572.
+}

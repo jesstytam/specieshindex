@@ -7,7 +7,7 @@
 SpHGrowth(data)
 }
 \arguments{
-\item{data}{}
+\item{data}{The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.}
 }
 \value{
 A dataframe of the cumulative h-index.

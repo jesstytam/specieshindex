@@ -1,17 +1,27 @@
 #' This function counts the total number of search results.
 #' It counts only the publications with the binomial name in their title.
+#' A check will be conducted via \code{taxize} to validify the genus and species names.
 #' 
 #' @title Search count - title only
 #'
-#' @param genus 
-#' @param species 
-#' @param APIkey 
-#' @param datatype 
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param APIkey Scopus API key needed to access and download data from their database.
+#' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
 #'
-#' @return
+#' @return Search count of the species with the given \code{genus} and \code{species}.
 #' @export
 #'
+#' @references 
+#' Scott Chamberlain, Eduard Szocs (2013). "taxize - taxonomic search and retrieval in R." F1000Research. http://f1000research.com/articles/2-191/v2.
+#' 
 #' @examples
+#' CountSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountSpT("bettongia", "penicillata", "
+#' 
 CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
@@ -41,6 +51,7 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
 
 #' This function counts the total number of search results.
 #' It counts the publications with the binomial name in the title, abstract and keywords.
+#' A check will be conducted via \code{taxize} to validify the genus and species names.
 #'
 #' @title Search count - title, abstract and keywords
 #'
@@ -51,13 +62,16 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
 #' @export 
+#' 
+#' @references 
+#' Scott Chamberlain, Eduard Szocs (2013). "taxize - taxonomic search and retrieval in R." F1000Research. http://f1000research.com/articles/2-191/v2.
 #'
 #' @examples
-#' searchCount("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+#' CountSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' searchCount("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+#' CountSpTAK("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
 #' 
 CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
@@ -190,7 +204,7 @@ FetchSpTAK <- function(genus, species, APIkey) {
   datalist = data.frame()
   looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
   #loop starts
-  for (i in 0:5) { 
+  for (i in 0:4) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
     print(paste("Fetching records now."))
     search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
@@ -351,6 +365,10 @@ ARRatio <- function(data) {
 #' @return H-index.
 #' @export
 #'
+#' @references 
+#' Bertoli-Barsotti, L., & Lando, T. (2015). On a formula for the h-index. Journal of Informetrics, 9(4), 762-776.
+#' Hirsch, J. (2005). An index to quantify an individual's scientific research output. Proceedings of the National Academy of Sciences of the United States of America, 102(46), 16569-16572.
+#'
 #' @examples
 #' SpHindex(data)
 #' 
@@ -398,6 +416,9 @@ YearsPublishing <- function(data) {
 #'
 #' @return M-index.
 #' @export
+#'
+#' @references 
+#' Hirsch, J. (2005). An index to quantify an individual's scientific research output. Proceedings of the National Academy of Sciences of the United States of America, 102(46), 16569-16572.
 #'
 #' @examples
 #' SpMindex(data)
@@ -490,7 +511,7 @@ SpHAfterdate <- function(data, date) {
 #' 
 #' @title H-index by year
 #'
-#' @param data 
+#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
 #' @returnA A dataframe of h-index by year.
 #' @export
@@ -515,7 +536,7 @@ SpHYear <- function(data) {
 #' 
 #' @title H-index growth
 #'
-#' @param data 
+#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #'
 #' @return A dataframe of the cumulative h-index.
 #' @export
@@ -536,21 +557,23 @@ SpHGrowth <- function(data) {
 #' @title Index summary
 #'
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
 #'
 #' @return A datarame of all of the indices in the package.
 #' @export
 #'
 #' @examples
-#' Allindices(data)
+#' Allindices(data, genus = "genus_name", species = "species_name")
 #' 
-Allindices <- function(data) {
-  combine <- data.frame(TotalPub(data), TotalCite(data), TotalJournals(data), TotalArt(data),
-                        TotalRev(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data),
-                        SpH5(data))
-  colnames(combine) <- c("publications", "citations", "journals", "articles",
-                         "reviews", "years_publishing", "h", "m", "i10",
-                         "h5")
-  cat("", TotalPub(data), "publications", "\n",
+Allindices <- function(data, genus, species) {
+  combine <- data.frame(paste0(genus, "_", species), TotalPub(data), TotalCite(data),
+                        TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
+                        SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+  colnames(combine) <- c("species", "publications", "citations", "journals", "articles",
+                         "reviews", "years_publishing", "h", "m", "i10", "h5")
+  cat("", genus, species, "\n",
+      TotalPub(data), "publications", "\n",
       TotalCite(data), "citations", "\n",
       TotalJournals(data), "journals", "\n",
       TotalArt(data), "articles", "\n",

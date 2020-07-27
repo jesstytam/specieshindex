@@ -14,18 +14,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, eval=FALSE}
+```{r, include=FALSE}
+devtools::load_all(".")
+```
+
+```{r}
 library(specieshindex)
 ```
 
 intro here
 
-## Example dataset
-To illustrate the use of this package, the dataset `Woylie` will be used. 
-```{r, eval=FALSE}
-dim(Woylie)
-```
-A total of 113 citation records were found on Scopus.
 
 ## Workflow
 
@@ -150,7 +148,7 @@ SpHYear(Woylie)
 SpHGrowth(Woylie)
 ```
 
-The m-index can be calculated using `SpMindex()`, which first computes the h-index and then divides it by the number of years of activity.
+The m-index can be calculated using `SpMindex()`, which first computes the h-index and then divides it by the number of years of activity ($h/years~publishing$).
 
 ```{r, eval=FALSE}
 SpMindex(Woylie)
@@ -167,9 +165,157 @@ Spi10(Woylie)
 The `Allindices()` function conveniently returns a dataframe with most of the above indices. This allows for quick analyses and plotting. If multiple species are being compared against each other, `rbind()` can be used to stitch them together and create an expansive dataframe.
 
 ```{r, eval=FALSE}
-Allindices(Woylie)
+Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 ```
 
-## Tying it all together
+## Worked examples
 
-add some tests here
+To demonstrate how this could be helpful in the real world, I will be comparing the citations of 4 species of marsupials. 
+
+```{r}
+dim(Woylie)
+dim(Quokka)
+dim(Platypus)
+dim(Koala)
+```
+
+As shown here, there were 113 records of the woylie, 242 records of the quokka, 321 records of the platypus, and 773 records of the koala. They all have a total of 20 variables. I have skipped the steps of fetching the data from Scopus since it had already been demonstrated above.
+
+### Comparing indices
+
+The function `Allindices()` is a quick way to get all of the indices at once. It adds another column `species` containing the genus and species names. This will be very convenient when making plots.
+
+Now, if you want to compare and analyse them against each other, you can use the function `rbind()` to combine each entry of species into a single dataframe. But first, you will need to assign them separately into their own individual records. 
+
+```{r}
+W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
+Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
+P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
+K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
+
+CombineSp <- rbind(W, Q, P, K) #combining the citation records
+return(CombineSp)
+```
+
+After preparing the data, we are ready to make some plots. Using the package `ggplot2`, I have arranged the h-index, m-index, and i10 index in the separate plots. When comparing the indices, it is important to remember that their scales may differ drastically. Therefore, putting the variables in the same plot may generate plots that do not make a lot of sense. Nonetheless, it is worth making such plots if you want to know what the results would be.
+
+```{r, fig.height=6, fig.width=7, fig.align='center'}
+library(ggplot2)
+
+ggplot(CombineSp, aes(x = species)) +
+  geom_point(aes(y = h,
+                 colour = "H-index"),
+             size = 3) +
+  labs(x = "Species",
+       y = "Index Score",
+       colour = "Index") +
+  scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + #x-axis labels
+  scale_colour_manual(values = c("H-index" = "#3498DB")) #colour
+
+ggplot(CombineSp, aes(x = species)) +
+  geom_point(aes(y = m,
+                 colour = "M-index"),
+             size = 3) +
+  labs(x = "Species",
+       y = "Index Score",
+       colour = "Index") +
+  scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + #x-axis labels
+  scale_colour_manual(values = c("M-index"  = "#E74C3C")) #colour
+
+ggplot(CombineSp, aes(x = species)) +
+  geom_point(aes(y = i10,
+                 colour = "i10 index"),
+             size = 3) +
+  labs(x = "Species",
+       y = "Index Score",
+       colour = "Index") +
+  scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + #x-axis labels
+  scale_colour_manual(values = c("i10 index" = "#F39C12")) #colour
+```
+
+\
+\
+While both the h-index and i10 index plots showed consistency with their number of publications and citations, the m-index plot deviated from that the most. Recalling that m-index is calculated by dividing the h-index by the number of years of activity ($h/years~publishing$), let us have a close inspection at the variables `h` and `years_publishing`.
+
+```{r}
+CombineSp$h
+CombineSp$years_publishing
+```
+
+In order to understand what yields a high m-index score, we can view the index as a ratio. The combination of a higher `h` value and a lower `years_publishing` value is how a high m-index can be achieved. This explains why koala publications have a much lower score albeit its highest h-index. Its years in activity is more than 3 times that of the woylie. Although the h-index of woylie publications was half of that of the koala, it had only been in the scientific scene for a few decades. Similar comparisons can be drawn between the quokka and the platypus.
+
+### H-index over time
+
+Let's say you want to know how the h-index of the species have changed overtime, you have the options of using either `SpHYear` or `SpHGrowth`. 
+
+```{r, fig.height=6, fig.width=9, fig.align='center'}
+Wyear <- SpHYear(Woylie)
+Qyear <- SpHYear(Quokka)
+Pyear <- SpHYear(Platypus)
+Kyear <- SpHYear(Koala)
+
+ggplot() +
+  geom_point(data = Wyear,
+            aes(x = year,
+                y = h,
+                colour = "Woylie"),
+            size = 1) +
+  geom_point(data = Qyear,
+            aes(x = year,
+                y = h,
+                colour = "Quokka"),
+            size = 1) +
+  geom_point(data = Pyear,
+            aes(x = year,
+                y = h,
+                colour = "Platypus"),
+            size = 1) +
+  geom_point(data = Kyear,
+            aes(x = year,
+                y = h,
+                colour = "Koala"),
+            size = 1) +
+  labs(x = "Year",
+       y = "H-index") +
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_colour_manual(values = c("Woylie" = "#F97068",
+                                 "Quokka" = "#C4C92C",
+                                 "Platypus" = "#57C4E5",
+                                 "Koala" = "#4B5B81")) 
+```
+
+```{r, fig.height=6, fig.width=9, fig.align='center'}
+Wgrowth <- SpHGrowth(Woylie)
+Qgrowth <- SpHGrowth(Quokka)
+Pgrowth <- SpHGrowth(Platypus)
+Kgrowth <- SpHGrowth(Koala)
+
+ggplot() +
+  geom_point(data = Wgrowth,
+            aes(x = year,
+                y = h,
+                colour = "Woylie"),
+            size = 1) +
+  geom_point(data = Qgrowth,
+            aes(x = year,
+                y = h,
+                colour = "Quokka"),
+            size = 1) +
+  geom_point(data = Pgrowth,
+            aes(x = year,
+                y = h,
+                colour = "Platypus"),
+            size = 1) +
+  geom_point(data = Kgrowth,
+            aes(x = year,
+                y = h,
+                colour = "Koala"),
+            size = 1) +
+  labs(x = "Year",
+       y = "H-index") +
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_colour_manual(values = c("Woylie" = "#F97068",
+                                 "Quokka" = "#C4C92C",
+                                 "Platypus" = "#57C4E5",
+                                 "Koala" = "#4B5B81")) 
+```

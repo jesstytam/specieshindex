@@ -11,7 +11,8 @@ pacman::p_load(tidyverse,
                httr,
                XML,
                taxize,
-               rlang)
+               rlang,
+               gtools)
 ```
 
 **Functions**
@@ -374,14 +375,15 @@ SpHGrowth <- function(data) {
 
 ```{r, shows main indices}
 #this function returns a summary of all of the indices
-Allindices <- function(data) {
-  combine <- data.frame(TotalPub(data), TotalCite(data), TotalJournals(data), TotalArt(data),
-                        TotalRev(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data),
-                        SpH5(data))
-  colnames(combine) <- c("publications", "citations", "journals", "articles",
+Allindices <- function(data, genus, species) {
+  combine <- data.frame(paste0(genus, "_", species), TotalPub(data), TotalCite(data),
+                        TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
+                        SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+  colnames(combine) <- c("species", "publications", "citations", "journals", "articles",
                          "reviews", "years_publishing", "h", "m", "i10",
                          "h5")
-  cat("", TotalPub(data), "publications", "\n",
+  cat("", genus, species, "\n",
+      TotalPub(data), "publications", "\n",
       TotalCite(data), "citations", "\n",
       TotalJournals(data), "journals", "\n",
       TotalArt(data), "articles", "\n",
@@ -419,7 +421,7 @@ SpHAfterdate(Woylie, "2000-01-01") #20
 SpHYear(Woylie)
 SpHGrowth(Woylie)
 
-B_penicillata <- Allindices(Woylie)
+B_penicillata <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 ```
 
 ```{r, quokka}
@@ -443,7 +445,7 @@ SpHAfterdate(Quokka, "2000-01-01") #17
 SpHYear(Quokka)
 SpHGrowth(Quokka)
 
-S_brachyurus <- Allindices(Quokka)
+S_brachyurus <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
 ```
 
 ```{r, platypus}
@@ -467,7 +469,7 @@ SpHAfterdate(Platypus, "2000-01-01") #32
 SpHYear(Platypus)
 SpHGrowth(Platypus)
 
-O_anatinus <- Allindices(Platypus)
+O_anatinus <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
 ```
 
 ```{r, koala}
@@ -492,7 +494,7 @@ SpHAfterdate(Koala, "2000-01-01") #44
 SpHYear(Koala)
 SpHGrowth(Koala)
 
-P_cinereus <- Allindices(Koala)
+P_cinereus <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
 ```
 
 ```{r, combining the datasets}
@@ -544,6 +546,7 @@ cat <- CountSpT("felis", "catus", "442b9048417ef20cf680a0ae26ee4d86") #17622 res
 gnr_resolve(names = c("felis", "catus"))
 
 chimps <- FetchSpTAK("pan", "troglodytes", "442b9048417ef20cf680a0ae26ee4d86") #10018 results
+chimps2 <- FetchTAK10k("pan", "troglodytes", "442b9048417ef20cf680a0ae26ee4d86")
 gnr_resolve(names = c("pan", "troglodytes"))
 
 elephant <- FetchSpTAK("Loxodonta","africana", "442b9048417ef20cf680a0ae26ee4d86") #1401 results

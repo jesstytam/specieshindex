@@ -7,18 +7,22 @@
 CountSpT(genus, species, APIkey, datatype = "application/xml")
 }
 \arguments{
-\item{genus}{}
+\item{genus}{Genus classification from the binomial name.}
 
-\item{species}{}
+\item{species}{Species classification from the binomial name.}
 
-\item{APIkey}{}
+\item{APIkey}{Scopus API key needed to access and download data from their database.}
 
-\item{datatype}{}
+\item{datatype}{Formats the URL to be sent to the API. The default is "application/xml".}
 }
 \value{
-
+Search count of the species with the given \code{genus} and \code{species}.
 }
 \description{
 This function counts the total number of search results.
 It counts only the publications with the binomial name in their title.
+A check will be conducted via \code{taxize} to validify the genus and species names.
+}
+\references{
+Scott Chamberlain, Eduard Szocs (2013). "taxize - taxonomic search and retrieval in R." F1000Research. http://f1000research.com/articles/2-191/v2.
 }

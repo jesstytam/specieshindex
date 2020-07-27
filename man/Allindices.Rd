@@ -4,10 +4,14 @@
 \alias{Allindices}
 \title{Index summary}
 \usage{
-Allindices(data)
+Allindices(data, genus, species)
 }
 \arguments{
 \item{data}{The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.}
+
+\item{genus}{Genus classification from the binomial name.}
+
+\item{species}{Species classification from the binomial name.}
 }
 \value{
 A datarame of all of the indices in the package.
@@ -16,6 +20,6 @@ A datarame of all of the indices in the package.
 This function returns a dataframe of the summary of all of the indices.
 }
 \examples{
-Allindices(data)
+Allindices(data, genus = "genus_name", species = "species_name")
 
 }
