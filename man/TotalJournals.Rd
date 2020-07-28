@@ -16,6 +16,7 @@ An integer of the total number of journals.
 This function calculates the total number of journals.
 }
 \examples{
-TotalJournals(data)
+data(Woylie)
+TotalJournals(Woylie)
 
 }

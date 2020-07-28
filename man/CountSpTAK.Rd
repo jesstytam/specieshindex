@@ -24,12 +24,13 @@ It counts the publications with the binomial name in the title, abstract and key
 A check will be conducted via \code{taxize} to validify the genus and species names.
 }
 \examples{
+\dontrun{
 CountSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
 
 #lower case letter in genus is also accepted and will return identical results
 
 CountSpTAK("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
-
+}
 }
 \references{
 Scott Chamberlain, Eduard Szocs (2013). "taxize - taxonomic search and retrieval in R." F1000Research. http://f1000research.com/articles/2-191/v2.

@@ -13,6 +13,7 @@ SpHYear(data)
 This function calculates the h-index by year.
 }
 \examples{
-SpHGrowth(data)
+data(Woylie)
+SpHYear(Woylie)
 
 }

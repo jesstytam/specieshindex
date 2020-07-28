@@ -20,6 +20,7 @@ A datarame of all of the indices in the package.
 This function returns a dataframe of the summary of all of the indices.
 }
 \examples{
-Allindices(data, genus = "genus_name", species = "species_name")
+data(Woylie)
+Allindices(Woylie, genus = "genus_name", species = "species_name")
 
 }

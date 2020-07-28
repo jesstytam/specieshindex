@@ -16,6 +16,7 @@ An integer of the total number of reviews.
 This function calculates the total number of reviews.
 }
 \examples{
-TotalRev(data)
+data(Woylie)
+TotalRev(Woylie)
 
 }

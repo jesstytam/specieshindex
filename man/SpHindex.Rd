@@ -16,7 +16,8 @@ H-index.
 This function calculates the h-index of a species.
 }
 \examples{
-SpHindex(data)
+data(Woylie)
+SpHindex(Woylie)
 
 }
 \references{

@@ -16,6 +16,7 @@ A dataframe of the cumulative h-index.
 This function calculates the cumulative h-index overtime by year.
 }
 \examples{
-SpHGrowth(data)
+data(Woylie)
+SpHGrowth(Woylie)
 
 }

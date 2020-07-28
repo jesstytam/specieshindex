@@ -16,12 +16,13 @@
 #' Scott Chamberlain, Eduard Szocs (2013). "taxize - taxonomic search and retrieval in R." F1000Research. http://f1000research.com/articles/2-191/v2.
 #' 
 #' @examples
+#' \dontrun{
 #' CountSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' CountSpT("bettongia", "penicillata", "
-#' 
+#'  CountSpT("bettongia", "penicillata", "
+#' }
 CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
@@ -67,17 +68,14 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
 #' Scott Chamberlain, Eduard Szocs (2013). "taxize - taxonomic search and retrieval in R." F1000Research. http://f1000research.com/articles/2-191/v2.
 #'
 #' @examples
+#' \dontrun{
 #' CountSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
 #' CountSpTAK("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
-#' 
+#' }
 CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
-  library(httr)
-  library(XML)
-  library(rlang)
-  library(taxize)
   if (is_missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
@@ -113,12 +111,13 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
 #' @export 
 #'
 #' @examples
+#' \dontrun{
 #' FetchSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
 #' FetchSpT("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
-#' 
+#' }
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
@@ -181,12 +180,13 @@ FetchSpT <- function(genus, species, APIkey) {
 #' @export 
 #'
 #' @examples
+#' \dontrun{
 #' FetchSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
 #' FetchSpT("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
-#' 
+#' }
 FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
@@ -246,7 +246,8 @@ FetchSpTAK <- function(genus, species, APIkey) {
 #' @export
 #'
 #' @examples
-#' TotalPub(data)
+#' data(Woylie)
+#' TotalPub(Woylie)
 #' 
 TotalPub <- function(data) {
   total <- nrow(data) 
@@ -265,7 +266,8 @@ TotalPub <- function(data) {
 #' @export
 #'
 #' @examples
-#' TotalCite(data)
+#' data(Woylie)
+#' TotalCite(Woylie)
 #' 
 TotalCite <- function(data) {
   data$citations <- as.numeric(data$citations) 
@@ -285,7 +287,8 @@ TotalCite <- function(data) {
 #' @export
 #'
 #' @examples
-#' TotalJournals(data)
+#' data(Woylie)
+#' TotalJournals(Woylie)
 #' 
 TotalJournals <- function(data) {
   filter <- unique(data$journal)
@@ -305,7 +308,8 @@ TotalJournals <- function(data) {
 #' @export
 #'
 #' @examples
-#' TotalArt(data)
+#' data(Woylie)
+#' TotalArt(Woylie)
 #' 
 TotalArt <- function(data) {
   Article <- sum(data$description == "Article")
@@ -324,7 +328,8 @@ TotalArt <- function(data) {
 #' @export
 #'
 #' @examples
-#' TotalRev(data)
+#' data(Woylie)
+#' TotalRev(Woylie)
 #' 
 TotalRev <- function(data) {
   Review <- sum(data$description == "Review") 
@@ -343,7 +348,8 @@ TotalRev <- function(data) {
 #' @export
 #'
 #' @examples
-#' ARRatio(data)
+#' data(Woylie)
+#' ARRatio(Woylie)
 #' 
 ARRatio <- function(data) {
   Article <- sum(data$description == "Article") 
@@ -370,7 +376,8 @@ ARRatio <- function(data) {
 #' Hirsch, J. (2005). An index to quantify an individual's scientific research output. Proceedings of the National Academy of Sciences of the United States of America, 102(46), 16569-16572.
 #'
 #' @examples
-#' SpHindex(data)
+#' data(Woylie)
+#' SpHindex(Woylie)
 #' 
 SpHindex <- function(data) {
   data$citations <- as.numeric(data$citations) 
@@ -396,7 +403,8 @@ SpHindex <- function(data) {
 #' @export
 #'
 #' @examples
-#' YearsPublishing(data)
+#' data(Woylie)
+#' YearsPublishing(Woylie)
 #' 
 YearsPublishing <- function(data) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
@@ -421,7 +429,8 @@ YearsPublishing <- function(data) {
 #' Hirsch, J. (2005). An index to quantify an individual's scientific research output. Proceedings of the National Academy of Sciences of the United States of America, 102(46), 16569-16572.
 #'
 #' @examples
-#' SpMindex(data)
+#' data(Woylie)
+#' SpMindex(Woylie)
 #' 
 SpMindex <- function(data) {
   data$citations <- as.numeric(data$citations) 
@@ -451,7 +460,8 @@ SpMindex <- function(data) {
 #' @export
 #'
 #' @examples
-#' Spi10(data)
+#' data(Woylie)
+#' Spi10(Woylie)
 #' 
 Spi10 <- function(data) {
   data$citations <- as.numeric(data$citations)
@@ -472,7 +482,8 @@ Spi10 <- function(data) {
 #' @export
 #'
 #' @examples
-#' SpH5(data)
+#' data(Woylie)
+#' SpH5(Woylie)
 #' 
 SpH5 <- function(data) { 
   current_date <- as.numeric(substr(Sys.Date(), 1, 4)) 
@@ -495,10 +506,11 @@ SpH5 <- function(data) {
 #' @export 
 #'
 #' @examples
-#' HAfterdate(data, "2000-01-01")
+#' data(Woylie)
+#' SpHAfterdate(Woylie, "2000-01-01")
 #' 
 SpHAfterdate <- function(data, date) {
-  library(dplyr)
+  #library(dplyr)
   data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") 
   subsetdata <- filter(data, cover_date > as.Date(date) )
   HAfterdate <- SpHindex(subsetdata)
@@ -517,10 +529,11 @@ SpHAfterdate <- function(data, date) {
 #' @export
 #'
 #' @examples
-#' SpHGrowth(data)
+#' data(Woylie)
+#' SpHYear(Woylie)
 #' 
 SpHYear <- function(data) {
-  library(dplyr)
+  #library(dplyr)
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
   yeargroup <- data %>% 
     group_by(data$year)
@@ -547,7 +560,8 @@ SpHYear <- function(data) {
 #' @export
 #'
 #' @examples
-#' SpHGrowth(data)
+#' data(Woylie)
+#' SpHGrowth(Woylie)
 #' 
 SpHGrowth <- function(data) {
   HbyYear <- SpHYear(data)
@@ -569,7 +583,8 @@ SpHGrowth <- function(data) {
 #' @export
 #'
 #' @examples
-#' Allindices(data, genus = "genus_name", species = "species_name")
+#' data(Woylie)
+#' Allindices(Woylie, genus = "genus_name", species = "species_name")
 #' 
 Allindices <- function(data, genus, species) {
   combine <- data.frame(paste0(genus, "_", species), TotalPub(data), TotalCite(data),

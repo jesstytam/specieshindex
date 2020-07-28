@@ -18,6 +18,7 @@ H-index of the given time period.
 This function calculates the h-index using a given date up till the newest record.
 }
 \examples{
-HAfterdate(data, "2000-01-01")
+data(Woylie)
+SpHAfterdate(Woylie, "2000-01-01")
 
 }
