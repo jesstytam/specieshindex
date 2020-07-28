@@ -22,8 +22,8 @@ devtools::load_all(".")
 library(specieshindex)
 ```
 
-intro here
-
+(intro here)
+Here, I have created a package to compute species h-index and other indices, to enable comparisons of the productivity of research on different species.
 
 ## Workflow
 
@@ -31,7 +31,7 @@ Working with large datasets can be tedious. Having a plan before doing any analy
 
 1. Connect to Scopus and download citation data
 2. Compute various indices
-3. Visualise and explain data
+3. Visualise and explain results
 
 ### Connecting to Scopus
 Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise the functions will not run (and is in fact illegal). You can register your key [here](https://dev.elsevier.com/).
@@ -64,7 +64,7 @@ In larger datasets, duplicates may appear, although usually in low numbers. `Fet
 
 #### Possible errors
 
-If an error occurs (`Bad Request (HTTP 400)`) in this step, make sure you are connected to the internet via your institute's provider instead of the one at home. This might be caused by some authorisation issues.
+If the error `Bad Request (HTTP 400)` occurs in this step, try connecting to the internet via your institute's provider instead of the one at home. This error might be caused by some authorisation issues.
 
 It is important to make sure you have spelt the genus and species name accurately when entering the function. If unsure, you can go to the [Encyclopedia of Life](https://eol.org/) for verification. This is where the above functions are linked to for checking via the package `Taxize`. If the desired species is not in the encyclopedia, it is possible that it has just been discovered and not officially listed yet.
 
@@ -74,97 +74,97 @@ These functions do simple calculations with various parameters. Although they ar
 
 `TotalPub()` sums up the total publications from the search.
 
-```{r, eval=FALSE}
+```{r}
 TotalPub(Woylie)
 ```
 
 `TotalCite()` sums up the total citations of all the records from the search.
 
-```{r, eval=FALSE}
+```{r}
 TotalCite(Woylie)
 ```
 
 `TotalJournals()` counts the number of unique journals that the species have appeared in.
 
-```{r, eval=FALSE}
+```{r}
 TotalJournals(Woylie)
 ```
 
 `TotalArt()` counts the number of publications that are articles.
 
-```{r, eval=FALSE}
+```{r}
 TotalArt(Woylie)
 ```
 
 `TotalRev()` counts the number of publications that are reviews.
 
-```{r, eval=FALSE}
+```{r}
 TotalRev(Woylie)
 ```
 
 `ARRatio()` calculates the percentage ratio of the number of articles:reviews, and rounds the percentage to 4 significant figures.
 
-```{r, eval=FALSE}
+```{r}
 ARRatio(Woylie)
 ```
 
 `YearsPublishing()` counts the number of years since the first publication of the species.
 
-```{r, eval=FALSE}
-YearPublishing(Woylie)
+```{r}
+YearsPublishing(Woylie)
 ```
 
-### Computing indices
+### Statistical indices
 
 Statistical indices can provide deeper insigts than the counts above. They measure the productivity of publications regarding various species in this case. They take other parameters into consideration, such as time, total citations, total publications, etc., to compute the index.
 
 Use `SpHindex()` to compute the h-index. It which sorts the citation count in descending order and then counts the number of publications (n) that have EACH been cited at least n times.
 
-```{r, eval=FALSE}
+```{r}
 SpHindex(Woylie)
 ```
 
 The h5 index computes the h-index for the past 5 years.
 
-```{r, eval=FALSE}
+```{r}
 SpH5(Woylie)
 ```
 
 To subset the time with a specific lower limit, you can use `SpHAfterdate()`. Make sure the date parameter is in the exact format of yyyy-mm-dd. Inputting a different format or using slashes `/` or hyphens `-` will return an error.
 
-```{r, eval=FALSE}
+```{r}
 SpHAfterdate(Woylie, "2000-01-01")
 ```
 
 If you want to know the h-index for every year of publication, you can use `SpHYear()`. It returns a dataframe ready for further analyses.
 
-```{r, eval=FALSE}
+```{r}
 SpHYear(Woylie)
 ```
 
 `SpHGrowth()` calls `SpHYear()` first, and then sums up the h-index overtime by year. 
 
-```{r, eval=FALSE}
+```{r}
 SpHGrowth(Woylie)
 ```
 
 The m-index can be calculated using `SpMindex()`, which first computes the h-index and then divides it by the number of years of activity ($h/years~publishing$).
 
-```{r, eval=FALSE}
+```{r}
 SpMindex(Woylie)
 ```
 
 The i10 index can be calculated using `Spi10()`, which simply counts the publications that has 10 or more citations.
 
-```{r, eval=FALSE}
+```{r}
 Spi10(Woylie)
 ```
 
-### Quick summary of the metrics
+### Quick summary of the metrices
 
 The `Allindices()` function conveniently returns a dataframe with most of the above indices. This allows for quick analyses and plotting. If multiple species are being compared against each other, `rbind()` can be used to stitch them together and create an expansive dataframe.
 
-```{r, eval=FALSE}
+```{r}
 Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 ```
 
@@ -179,7 +179,7 @@ dim(Platypus)
 dim(Koala)
 ```
 
-As shown here, there were 113 records of the woylie, 242 records of the quokka, 321 records of the platypus, and 773 records of the koala. They all have a total of 20 variables. I have skipped the steps of fetching the data from Scopus since it had already been demonstrated above.
+As shown here, there were 113 records of the woylie, 242 records of the quokka, 321 records of the platypus, and 773 records of the koala. They all have a total of 20 variables. I have skipped the steps of fetching the data from Scopus since it had already been demonstrated above. The function I used for this step was `FetchSpTAK()`.
 
 ### Comparing indices
 
@@ -209,8 +209,8 @@ ggplot(CombineSp, aes(x = species)) +
   labs(x = "Species",
        y = "Index Score",
        colour = "Index") +
-  scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + #x-axis labels
-  scale_colour_manual(values = c("H-index" = "#3498DB")) #colour
+  scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) +
+  scale_colour_manual(values = c("H-index" = "#3498DB")) 
 
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = m,
@@ -219,8 +219,8 @@ ggplot(CombineSp, aes(x = species)) +
   labs(x = "Species",
        y = "Index Score",
        colour = "Index") +
-  scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + #x-axis labels
-  scale_colour_manual(values = c("M-index"  = "#E74C3C")) #colour
+  scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + 
+  scale_colour_manual(values = c("M-index"  = "#E74C3C"))
 
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = i10,
@@ -229,55 +229,58 @@ ggplot(CombineSp, aes(x = species)) +
   labs(x = "Species",
        y = "Index Score",
        colour = "Index") +
-  scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + #x-axis labels
-  scale_colour_manual(values = c("i10 index" = "#F39C12")) #colour
+  scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + 
+  scale_colour_manual(values = c("i10 index" = "#F39C12")) 
 ```
 
 \
-\
-While both the h-index and i10 index plots showed consistency with their number of publications and citations, the m-index plot deviated from that the most. Recalling that m-index is calculated by dividing the h-index by the number of years of activity ($h/years~publishing$), let us have a close inspection at the variables `h` and `years_publishing`.
+While both the h-index and i10 index plots showed consistency with their number of publications and citations, the m-index plot deviated from that the most. Recalling that m-index is calculated by dividing the h-index by the number of years of activity ($h/years~publishing$), let us have a closer inspection at the variables `h` and `years_publishing`.
 
 ```{r}
 CombineSp$h
 CombineSp$years_publishing
 ```
 
-In order to understand what yields a high m-index score, we can view the index as a ratio. The combination of a higher `h` value and a lower `years_publishing` value is how a high m-index can be achieved. This explains why koala publications have a much lower score albeit its highest h-index. Its years in activity is more than 3 times that of the woylie. Although the h-index of woylie publications was half of that of the koala, it had only been in the scientific scene for a few decades. Similar comparisons can be drawn between the quokka and the platypus.
+In order to understand what yields a high m-index score, we can consider the index as a ratio. The combination of a higher `h` value and a lower `years_publishing` value is how a high m-index can be achieved. This explains why koala publications have a much lower score albeit its highest h-index. Its years in activity is more than 3 times that of the woylie. Although the h-index of woylie publications was half of that of the koala, it had only been in the scientific scene for a few decades. Similar comparisons can be drawn between the quokka and the platypus.
 
 ### H-index over time
 
-Let's say you want to know how the h-index of the species have changed overtime, you have the options of using either `SpHYear` or `SpHGrowth`. 
+Let's say you want to know how the h-index of the species have changed overtime, you have the options of using either `SpHYear()` or `SpHGrowth()`. Since there wasn't much research being published before the 1950s, I will use the function `filter()` to visualise the data with `year>1950`.
 
 ```{r, fig.height=6, fig.width=9, fig.align='center'}
-Wyear <- SpHYear(Woylie)
-Qyear <- SpHYear(Quokka)
-Pyear <- SpHYear(Platypus)
-Kyear <- SpHYear(Koala)
+Wyear <- SpHYear(Woylie) %>%
+  filter(year > 1950)
+Qyear <- SpHYear(Quokka) %>%
+  filter(year > 1950)
+Pyear <- SpHYear(Platypus) %>%
+  filter(year > 1950)
+Kyear <- SpHYear(Koala) %>%
+  filter(year > 1950)
 
 ggplot() +
-  geom_point(data = Wyear,
+  geom_line(data = Wyear,
             aes(x = year,
                 y = h,
                 colour = "Woylie"),
-            size = 1) +
-  geom_point(data = Qyear,
+            size = 1.2) +
+  geom_line(data = Qyear,
             aes(x = year,
                 y = h,
                 colour = "Quokka"),
-            size = 1) +
-  geom_point(data = Pyear,
+            size = 1.2) +
+  geom_line(data = Pyear,
             aes(x = year,
                 y = h,
                 colour = "Platypus"),
-            size = 1) +
-  geom_point(data = Kyear,
+            size = 1.2) +
+  geom_line(data = Kyear,
             aes(x = year,
                 y = h,
                 colour = "Koala"),
-            size = 1) +
+            size = 1.2) +
   labs(x = "Year",
-       y = "H-index") +
-  theme(axis.text.x = element_text(angle = 90)) +
+       y = "Index score",
+       colour = "Species") +
   scale_colour_manual(values = c("Woylie" = "#F97068",
                                  "Quokka" = "#C4C92C",
                                  "Platypus" = "#57C4E5",
@@ -285,37 +288,44 @@ ggplot() +
 ```
 
 ```{r, fig.height=6, fig.width=9, fig.align='center'}
-Wgrowth <- SpHGrowth(Woylie)
-Qgrowth <- SpHGrowth(Quokka)
-Pgrowth <- SpHGrowth(Platypus)
-Kgrowth <- SpHGrowth(Koala)
+Wgrowth <- SpHGrowth(Woylie) %>%
+  filter(year > 1950)
+Qgrowth <- SpHGrowth(Quokka) %>%
+  filter(year > 1950)
+Pgrowth <- SpHGrowth(Platypus) %>%
+  filter(year > 1950)
+Kgrowth <- SpHGrowth(Koala) %>%
+  filter(year > 1950)
 
 ggplot() +
-  geom_point(data = Wgrowth,
+  geom_line(data = Wgrowth,
             aes(x = year,
                 y = h,
                 colour = "Woylie"),
-            size = 1) +
-  geom_point(data = Qgrowth,
+            size = 1.2) +
+  geom_line(data = Qgrowth,
             aes(x = year,
                 y = h,
                 colour = "Quokka"),
-            size = 1) +
-  geom_point(data = Pgrowth,
+            size = 1.2) +
+  geom_line(data = Pgrowth,
             aes(x = year,
                 y = h,
                 colour = "Platypus"),
-            size = 1) +
-  geom_point(data = Kgrowth,
+            size = 1.2) +
+  geom_line(data = Kgrowth,
             aes(x = year,
                 y = h,
                 colour = "Koala"),
-            size = 1) +
+            size = 1.2) +
   labs(x = "Year",
-       y = "H-index") +
-  theme(axis.text.x = element_text(angle = 90)) +
+       y = "Index score",
+       colour = "Species") +
   scale_colour_manual(values = c("Woylie" = "#F97068",
                                  "Quokka" = "#C4C92C",
                                  "Platypus" = "#57C4E5",
                                  "Koala" = "#4B5B81")) 
 ```
+
+\
+Recalling that `SpHYear()` computes the annual h-index and `SpHGrowth()` sums the score, peaks and troughs will appear in the first function and the latter will only increase overtime. Both of these graphs will provide different indications to the activity of publication. Funding availability, media coverage, plummeting population, etc., could provide explainations to the rising or dropping of the h value.
