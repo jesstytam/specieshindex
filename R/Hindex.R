@@ -527,7 +527,12 @@ SpHYear <- function(data) {
   splitdf <- split(yeargroup, data$year) 
   splitH <- lapply(splitdf, function(splitdf){SpHindex(splitdf)}) 
   H <- setNames(stack(splitH)[2:1], c('year','h')) 
-  return(H)
+  H$year <- as.integer(levels(H$year))[H$year]
+  fulldates <- seq(min(H$year), max(H$year)) 
+  fulldates <- data.frame(year = fulldates) 
+  completeH <- merge(fulldates, H, by = "year", all.x = TRUE)
+  completeH[is.na(completeH)] <- 0 
+  return(completeH)
 }
 
 

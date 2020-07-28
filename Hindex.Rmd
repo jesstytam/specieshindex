@@ -359,8 +359,13 @@ SpHYear <- function(data) {
     group_by(data$year)
   splitdf <- split(yeargroup, data$year) #split dfs into smaller dfs according to year
   splitH <- lapply(splitdf, function(splitdf){SpHindex(splitdf)}) #compute h-index for each year
-  H <- setNames(stack(splitH)[2:1], c('year','h')) #converts list to df and adding column names
-  return(H)
+  H <- setNames(stack(splitH)[2:1], c('year','h')) #convert list to df and adding column names
+  H$year <- as.integer(levels(H$year))[H$year] #convert from factor to integer class
+  fulldates <- seq(min(H$year), max(H$year)) #fill in the year gaps with no publications
+  fulldates <- data.frame(year = fulldates) #create the df
+  completeH <- merge(fulldates, H, by = "year", all.x = TRUE) #merge to get the complete time scale
+  completeH[is.na(completeH)] <- 0 #replace NA values with 0
+  return(completeH)
 }
 ```
 
