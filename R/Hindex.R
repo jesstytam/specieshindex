@@ -24,10 +24,10 @@
 #'  CountSpT("bettongia", "penicillata", "
 #' }
 CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
-  library(httr)
-  library(XML)
-  library(rlang)
-  library(taxize)
+  requireNamespace("httr", quietly = TRUE)
+  requireNamespace("XML", quietly = TRUE)
+  requireNamespace("rlang", quietly = TRUE)
+  requireNamespace("taxize", quietly = TRUE)
   if (is_missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
@@ -185,9 +185,9 @@ FetchSpT <- function(genus, species, APIkey) {
 #' FetchSpT("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
 #' }
 FetchSpTAK <- function(genus, species, APIkey) {
-  library(rscopus)
-  library(rlang)
-  library(dplyr)
+  requireNamespace("rscopus", quietly = TRUE)
+  requireNamespace("rlang", quietly = TRUE)
+  requireNamespace("dplyr", quietly = TRUE)
   if (is_missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
@@ -507,7 +507,6 @@ SpH5 <- function(data) {
 #' SpHAfterdate(Woylie, "2000-01-01")
 #' 
 SpHAfterdate <- function(data, date) {
-  #library(dplyr)
   data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") 
   subsetdata <- dplyr::filter(data, cover_date > as.Date(date) )
   HAfterdate <- SpHindex(subsetdata)
@@ -530,10 +529,9 @@ SpHAfterdate <- function(data, date) {
 #' SpHYear(Woylie)
 #' 
 SpHYear <- function(data) {
-  library(dplyr)
+  requireNamespace("dplyr", quietly = TRUE)
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
-  yeargroup <- data %>% 
-    dplyr::group_by(data$year)
+  yeargroup <- dplyr::group_by(data,year)
   splitdf <- split(yeargroup, data$year) 
   splitH <- lapply(splitdf, function(splitdf){SpHindex(splitdf)}) 
   H <- setNames(stack(splitH)[2:1], c('year','h')) 
