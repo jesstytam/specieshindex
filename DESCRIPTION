@@ -11,13 +11,18 @@ LazyData: true
 Imports: 
     rscopus,
     taxize,
-    tidyverse
+    dplyr,
+    httr,
+    XML,
+    rlang,
+    taxize
 Suggests: 
     testthat,
     knitr,
     roxygen2,
     devtools,
-    rmarkdown
+    rmarkdown,
+    ggplot2
 License: MIT + file LICENSE
 URL: https://github.com/jessicatytam/Honours
 RoxygenNote: 7.1.1

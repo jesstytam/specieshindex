@@ -1,7 +1,7 @@
 context("testing_indices")
 
 test_that("Woylie_stats", {
-  Woylie <- FetchSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") 
+  data(Woylie)
   expect_true(is.data.frame(Woylie))
   expect_true(TotalPub(Woylie)>=113)
   expect_true(TotalCite(Woylie)>=1897)
@@ -15,6 +15,7 @@ test_that("Woylie_stats", {
   expect_true(Spi10(Woylie)>=54)
   expect_true(SpH5(Woylie)>=8)
   expect_true(SpHAfterdate(Woylie, "2000-01-01")>=20)
-  B_penicillata <- Allindices(Woylie)
+  B_penicillata <- Allindices(Woylie,"Bettongia","penicillata")
+  expect_true(is.data.frame(B_penicillata))
 })
 #
