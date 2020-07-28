@@ -14,8 +14,7 @@ Imports:
     dplyr,
     httr,
     XML,
-    rlang,
-    taxize
+    rlang
 Suggests: 
     testthat,
     knitr,

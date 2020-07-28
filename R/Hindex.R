@@ -119,9 +119,6 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
 #' FetchSpT("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
 #' }
 FetchSpT <- function(genus, species, APIkey) {
-  library(rscopus)
-  library(rlang)
-  library(dplyr)
   if (is_missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
@@ -512,7 +509,7 @@ SpH5 <- function(data) {
 SpHAfterdate <- function(data, date) {
   #library(dplyr)
   data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") 
-  subsetdata <- filter(data, cover_date > as.Date(date) )
+  subsetdata <- dplyr::filter(data, cover_date > as.Date(date) )
   HAfterdate <- SpHindex(subsetdata)
   return(HAfterdate)
 }
@@ -533,10 +530,10 @@ SpHAfterdate <- function(data, date) {
 #' SpHYear(Woylie)
 #' 
 SpHYear <- function(data) {
-  #library(dplyr)
+  library(dplyr)
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
   yeargroup <- data %>% 
-    group_by(data$year)
+    dplyr::group_by(data$year)
   splitdf <- split(yeargroup, data$year) 
   splitH <- lapply(splitdf, function(splitdf){SpHindex(splitdf)}) 
   H <- setNames(stack(splitH)[2:1], c('year','h')) 
