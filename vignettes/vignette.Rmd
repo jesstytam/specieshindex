@@ -20,6 +20,8 @@ devtools::load_all(".")
 
 ```{r}
 library(specieshindex)
+library(secret)
+myAPI <- get_secret("myAPI", key = private_key, vault = vault) #loading my hidden API key
 ```
 
 (intro here)
@@ -40,24 +42,24 @@ It is recommend that you run a quick search using `CountSpT()` or `CountSpTAK()`
 
 In the following functions, the suffixes 'T' is for title and 'TAK' is for title, abstract and keywords. These are common Boolean operators used to subset the records found in Scopus. While 'T' only targets the publications with the binomial name in its title, 'TAK' targets those with the name in its title, abstract and keywords. The document type has also been coded into the functions. Only articles and reviews will be included in the search. Make sure you are using binomial names instead of common names.
 
-```{r, eval=FALSE}
-CountSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #HIDE API KEY DUDE
+```{r}
+CountSpT("Bettongia", "penicillata", myAPI)
 ```
 
-```{r, eval=FALSE}
-CountSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+```{r}
+CountSpTAK("Bettongia", "penicillata", myAPI)
 ```
 
 `CountSpTAK()` yielded more results since it also looked for the binomial name in the abstract and keywords in addition to the title. Now that you know exactly how many publications there are for the search, you can proceed to fetch the data from Scopus.
 
 As you will soon discover, some species have been studied more than the others and thus resulting in higher research output. Therefore, if there are more than a few thousand citation records found, it will take a considerably longer time to fetch them all unless you are using a computer with high processing power.
 
-```{r, eval=FALSE}
-FetchSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+```{r}
+FetchSpT("Bettongia", "penicillata", myAPI)
 ```
 
-```{r, eval=FALSE}
-FetchSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+```{r}
+FetchSpTAK("Bettongia", "penicillata", myAPI)
 ```
 
 In larger datasets, duplicates may appear, although usually in low numbers. `FetchSpT()` and `FetchSpTAK()` will clean up the dataset by removing them if found. The first occurence of the record will be kept, which is normally the original record.
