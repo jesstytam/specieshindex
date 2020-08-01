@@ -21,11 +21,14 @@ devtools::load_all(".")
 ```{r}
 library(specieshindex)
 library(secret)
+vault <- file.path("C:/Users/iamje/Jess/UNSW/Honours/Honours", ".vault")
+key_dir <- file.path(system.file(package = "secret"), "user_keys")
+public_key <- file.path(key_dir, "jesst.pub")
+private_key <- file.path(key_dir, "jesst.pem")
 myAPI <- get_secret("myAPI", key = private_key, vault = vault) #loading my hidden API key
 ```
 
-(intro here)
-Here, I have created a package to compute species h-index and other indices, to enable comparisons of the productivity of research on different species.
+H-index is one of the main methods to measure publication influence objectively. Here, I have created a package to compute species h-index and other indices, to enable comparisons of the productivity of research on different species.
 
 ## Workflow
 
@@ -42,11 +45,11 @@ It is recommend that you run a quick search using `CountSpT()` or `CountSpTAK()`
 
 In the following functions, the suffixes 'T' is for title and 'TAK' is for title, abstract and keywords. These are common Boolean operators used to subset the records found in Scopus. While 'T' only targets the publications with the binomial name in its title, 'TAK' targets those with the name in its title, abstract and keywords. The document type has also been coded into the functions. Only articles and reviews will be included in the search. Make sure you are using binomial names instead of common names.
 
-```{r}
+```{r, eval=FALSE}
 CountSpT("Bettongia", "penicillata", myAPI)
 ```
 
-```{r}
+```{r, eval=FALSE}
 CountSpTAK("Bettongia", "penicillata", myAPI)
 ```
 
@@ -54,11 +57,11 @@ CountSpTAK("Bettongia", "penicillata", myAPI)
 
 As you will soon discover, some species have been studied more than the others and thus resulting in higher research output. Therefore, if there are more than a few thousand citation records found, it will take a considerably longer time to fetch them all unless you are using a computer with high processing power.
 
-```{r}
+```{r, eval=FALSE}
 FetchSpT("Bettongia", "penicillata", myAPI)
 ```
 
-```{r}
+```{r, eval=FALSE}
 FetchSpTAK("Bettongia", "penicillata", myAPI)
 ```
 
@@ -249,15 +252,15 @@ In order to understand what yields a high m-index score, we can consider the ind
 
 Let's say you want to know how the h-index of the species have changed overtime, you have the options of using either `SpHYear()` or `SpHGrowth()`. Since there wasn't much research being published before the 1950s, I will use the function `filter()` to visualise the data with `year>1950`.
 
-```{r, fig.height=6, fig.width=9, fig.align='center'}
-Wyear <- SpHYear(Woylie) %>%
-  filter(year > 1950)
-Qyear <- SpHYear(Quokka) %>%
-  filter(year > 1950)
-Pyear <- SpHYear(Platypus) %>%
-  filter(year > 1950)
-Kyear <- SpHYear(Koala) %>%
-  filter(year > 1950)
+```{r, cache=TRUE, fig.height=6, fig.width=9, fig.align='center'}
+Wyear <- SpHYear(Woylie)
+filter(Wyear, Wyear$year > 1950)
+Qyear <- SpHYear(Quokka)
+filter(Qyear, Qyear$year > 1950)
+Pyear <- SpHYear(Platypus)
+filter(Pyear, Pyear$year > 1950)
+Kyear <- SpHYear(Koala)
+filter(Kyear, Kyear$year > 1950)
 
 ggplot() +
   geom_line(data = Wyear,
@@ -289,15 +292,15 @@ ggplot() +
                                  "Koala" = "#4B5B81")) 
 ```
 
-```{r, fig.height=6, fig.width=9, fig.align='center'}
-Wgrowth <- SpHGrowth(Woylie) %>%
-  filter(year > 1950)
-Qgrowth <- SpHGrowth(Quokka) %>%
-  filter(year > 1950)
-Pgrowth <- SpHGrowth(Platypus) %>%
-  filter(year > 1950)
-Kgrowth <- SpHGrowth(Koala) %>%
-  filter(year > 1950)
+```{r, cache=TRUE, fig.height=6, fig.width=9, fig.align='center'}
+Wgrowth <- SpHGrowth(Woylie)
+filter(Wgrowth, Wgrowth$year > 1950)
+Qgrowth <- SpHGrowth(Quokka)
+filter(Qgrowth, Qgrowth$year > 1950)
+Pgrowth <- SpHGrowth(Platypus)
+filter(Pgrowth, Pgrowth$year > 1950)
+Kgrowth <- SpHGrowth(Koala)
+filter(Kgrowth, Kgrowth$year > 1950)
 
 ggplot() +
   geom_line(data = Wgrowth,

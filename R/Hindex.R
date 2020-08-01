@@ -17,7 +17,7 @@
 #' 
 #' @examples
 #' \dontrun{
-#' CountSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+#' CountSpT("Bettongia", "penicillata", "myAPI")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
@@ -28,7 +28,7 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   requireNamespace("XML", quietly = TRUE)
   requireNamespace("rlang", quietly = TRUE)
   requireNamespace("taxize", quietly = TRUE)
-  if (is_missing(APIkey)) {
+  if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
   findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
@@ -69,14 +69,14 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
 #'
 #' @examples
 #' \dontrun{
-#' CountSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+#' CountSpTAK("Bettongia", "penicillata", "myAPI")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' CountSpTAK("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+#' CountSpTAK("bettongia", "penicillata", "myAPI")
 #' }
 CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
-  if (is_missing(APIkey)) {
+  if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
   findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
@@ -112,14 +112,14 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
 #'
 #' @examples
 #' \dontrun{
-#' FetchSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+#' FetchSpT("Bettongia", "penicillata", "myAPI")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchSpT("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+#' FetchSpT("bettongia", "penicillata", "myAPI")
 #' }
 FetchSpT <- function(genus, species, APIkey) {
-  if (is_missing(APIkey)) {
+  if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
   count <- CountSpT(genus, species, APIkey) #check the number of records
@@ -178,17 +178,17 @@ FetchSpT <- function(genus, species, APIkey) {
 #'
 #' @examples
 #' \dontrun{
-#' FetchSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+#' FetchSpT("Bettongia", "penicillata", "myAPI")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchSpT("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+#' FetchSpT("bettongia", "penicillata", "myAPI")
 #' }
 FetchSpTAK <- function(genus, species, APIkey) {
   requireNamespace("rscopus", quietly = TRUE)
   requireNamespace("rlang", quietly = TRUE)
   requireNamespace("dplyr", quietly = TRUE)
-  if (is_missing(APIkey)) {
+  if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
   count <- CountSpTAK(genus, species, APIkey) #check the number of records

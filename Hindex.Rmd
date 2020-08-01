@@ -12,7 +12,8 @@ pacman::p_load(tidyverse,
                XML,
                taxize,
                rlang,
-               gtools)
+               gtools,
+               secret)
 ```
 
 **Functions**
@@ -69,7 +70,7 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   library(XML)
   library(rlang)
   library(taxize)
-    if (is_missing(APIkey)) {
+    if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
   findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
@@ -97,7 +98,7 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
   library(XML)
   library(rlang)
   library(taxize)
-    if (is_missing(APIkey)) {
+    if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
    }
   findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
@@ -124,7 +125,7 @@ FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
   library(dplyr)
-  if (is_missing(APIkey)) {
+  if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
   count <- CountSpT(genus, species, APIkey) #check the number of records
@@ -174,7 +175,7 @@ FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
   library(dplyr)
-  if (is_missing(APIkey)) {
+  if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
   count <- CountSpTAK(genus, species, APIkey) #check the number of records
@@ -202,6 +203,98 @@ FetchSpTAK <- function(genus, species, APIkey) {
     datalist <- rbind(datalist, list)
     print(paste("Retrieved", start_record, "records."))
   }
+  #loop ends
+  returned <- dim(datalist)[1]
+  print(paste(returned, "records retrived in total."))
+  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
+  print(paste(duplicates, "duplicates found."))
+  if (duplicates>0) { #remove duplicates if they are present
+    print(paste("Removing duplicated records."))
+    datalist <- datalist[!duplicated(datalist$title), ] 
+  }
+  #showing final list of records
+  retrieved <- dim(datalist)[1] #check the number
+  print(paste(retrieved, "unique records successfully fetched."))
+  return(datalist)
+}
+```
+
+```{r, fetch using title+abs+key}
+#this function downloads citation data from scopus
+FetchSpY <- function(genus, species, APIkey) {
+  library(rscopus)
+  library(rlang)
+  library(dplyr)
+  if (missing(APIkey)) {
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
+  }
+  count <- CountSpTAK(genus, species, APIkey) #check the number of records
+  print(paste(count, "records found."))
+  if (count > 2000) {
+    print(paste("More than 2000 records found, this will take a while unless you have a nice computer."))
+  }
+  step_size <- 2000 #the number of records to retrieve in each loop
+  start_record <- 0
+  datalist = data.frame()
+  looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
+  #loop starts
+  for (i in 0:looprepeat) { 
+    print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
+    print(paste("Fetching records now."))
+    search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\")&cursor=*&count=25 AND DOCTYPE(ar OR re)"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          max_count = step_size,
+                          wait_time = 3)
+    start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
+    searchdf <- entries_to_citation_df(search$entries)
+    list <- data.frame(searchdf)
+    datalist <- rbind(datalist, list)
+    print(paste("Retrieved", start_record, "records."))
+  }
+  #loop ends
+  returned <- dim(datalist)[1]
+  print(paste(returned, "records retrived in total."))
+  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
+  print(paste(duplicates, "duplicates found."))
+  if (duplicates>0) { #remove duplicates if they are present
+    print(paste("Removing duplicated records."))
+    datalist <- datalist[!duplicated(datalist$title), ] 
+  }
+  #showing final list of records
+  retrieved <- dim(datalist)[1] #check the number
+  print(paste(retrieved, "unique records successfully fetched."))
+  return(datalist)
+}
+```
+
+```{r, fetch using title+abs+key}
+#this function downloads citation data from scopus
+FetchSpYNext <- function(genus, species, APIkey) {
+  library(rscopus)
+  library(rlang)
+  library(dplyr)
+    search1 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR AFT 2010"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)
+    search1df <- entries_to_citation_df(search1$entries)
+    search2 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR AFT 2000 AND PUBYEAR BEF 2010"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+    search2df <- entries_to_citation_df(search2$entries)
+    search3 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR AFT 1980 AND PUBYEAR BEF 2000"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+    search3df <- entries_to_citation_df(search3$entries)
+    search4 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR BEF 1980"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+    search4df <- entries_to_citation_df(search4$entries)
+    datalist <- rbind(search1df, search2df, search3df, search4df)
   #loop ends
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
@@ -407,8 +500,8 @@ Allindices <- function(data, genus, species) {
 
 ```{r, woylie}
 #test done on 10 july
-CountSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #113
-Woylie <- FetchSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
+CountSpTAK("Bettongia", "penicillata", myAPI) #113
+Woylie <- FetchSpTAK("Bettongia", "penicillata", myAPI) #no duplicates
 
 TotalPub(Woylie) #113
 TotalCite(Woylie) #1897
@@ -431,8 +524,8 @@ B_penicillata <- Allindices(Woylie, genus = "Bettongia", species = "penicillata"
 
 ```{r, quokka}
 #test done on 10 july
-CountSpTAK("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86") #242
-Quokka <- FetchSpTAK("Setonix", "brachyurus", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
+CountSpTAK("Setonix", "brachyurus", myAPI) #242
+Quokka <- FetchSpTAK("Setonix", "brachyurus", myAPI) #no duplicates
 
 TotalPub(Quokka) #242
 TotalCite(Quokka) #3423
@@ -456,7 +549,7 @@ S_brachyurus <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
 ```{r, platypus}
 #test done on 10 july
 CountSpTAK #321
-Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", "442b9048417ef20cf680a0ae26ee4d86") #no duplicates
+Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", myAPI) #no duplicates
 
 TotalPub(Platypus) #321
 TotalCite(Platypus) #6363
@@ -479,9 +572,9 @@ O_anatinus <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinu
 
 ```{r, koala}
 #test done on 10 july
-CountSpTAK("Phascolarctos", "cinereus", "442b9048417ef20cf680a0ae26ee4d86") #777
+CountSpTAK("Phascolarctos", "cinereus", myAPI) #777
 #did we not have 930 records?? hmm...
-Koala <- FetchSpTAK("Phascolarctos", "cinereus", "442b9048417ef20cf680a0ae26ee4d86") #4 duplicates
+Koala <- FetchSpTAK("Phascolarctos", "cinereus", myAPI) #4 duplicates
 
 TotalPub(Koala) #773
 TotalCite(Koala) #14291
@@ -533,34 +626,52 @@ Spi10(dummy1) #12
 
 
 ```{r, rscopus}
+myAPI <- secret::get_secret("myAPI", key = private_key, vault = vault) #loading my hidden API key
+
 #some tests
-tiger <- FetchSpTAK("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86") #402 results
-CountSpTAK("Panthera", "tigris", "442b9048417ef20cf680a0ae26ee4d86")
+
+test <- scopus_search(query = "TITLE-ABS-KEY(\"pan troglodytes\") AND PUBYEAR AFT 2010",
+                          api_key = myAPI,
+                          verbose = TRUE,
+                          wait_time = 3)
+test2 <- scopus_search(query = "TITLE-ABS-KEY(\"pan troglodytes\") AND PUBYEAR BEF 2010 AND PUBYEAR AFT 2000",
+                          api_key = myAPI,
+                          verbose = TRUE,
+                          wait_time = 3)
+testdf <- entries_to_citation_df(test$entries)
+
+tiger <- FetchSpT("Panthera", "tigris", myAPI) #402 results
+CountSpTAK("Panthera", "tigris", myAPI)
 
 dim(tiger[duplicated(tiger$title),])[1]
 
 tiger <- FetchSpTAK("Panthera", "tigris") #shows warning
-fox <- FetchSpT("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #1133 results
+fox <- FetchSpT("Vulpes", "vulpes", myAPI) #1133 results
 
-fox <- FetchSpTAK("Vulpes", "vulpes", "442b9048417ef20cf680a0ae26ee4d86") #3324 results
-drosophila <- FetchSpTAK("Drosophila", "montana", "442b9048417ef20cf680a0ae26ee4d86") #93 results
-drosophila2 <- FetchSpTAK("drosophila", "melanogaster", "442b9048417ef20cf680a0ae26ee4d86") #60904 results, error at 23%
-drosophila3 <- FetchSpTAK("Mus", "musculus", "442b9048417ef20cf680a0ae26ee4d86") 
+fox <- FetchSpTAK("Vulpes", "vulpes", myAPI) #3324 results
+drosophila <- FetchSpTAK("Drosophila", "montana", myAPI) #93 results
+drosophila2 <- FetchSpTAK("drosophila", "melanogaster", myAPI) #60904 results, error at 23%
+drosophila3 <- FetchSpTAK("Mus", "musculus", myAPI) 
 
-cat <- CountSpT("felis", "catus", "442b9048417ef20cf680a0ae26ee4d86") #17622 results, error at 26%, current loop can only output 2000 records
+cat <- CountSpT("felis", "catus", myAPI) #17622 results, error at 26%, current loop can only output 2000 records
 gnr_resolve(names = c("felis", "catus"))
 
-chimps <- FetchSpTAK("pan", "troglodytes", "442b9048417ef20cf680a0ae26ee4d86") #10018 results
-chimps2 <- FetchTAK10k("pan", "troglodytes", "442b9048417ef20cf680a0ae26ee4d86")
+chimps <- FetchSpTAK("pan", "troglodytes", myAPI) #10018 results
+chimps2 <- FetchSpNext("pan", "troglodytes", myAPI)
+chimpsY <- FetchSpY("pan", "troglodytes", myAPI)
+chimpsN <- FetchSpYNext("pan", "troglodytes", myAPI)
 gnr_resolve(names = c("pan", "troglodytes"))
 
-elephant <- FetchSpTAK("Loxodonta","africana", "442b9048417ef20cf680a0ae26ee4d86") #1401 results
+elephant <- FetchSpTAK("Loxodonta","africana", myAPI) #1401 results
 dim(elephant[duplicated(elephant$title),])[1]
 
-possum <- FetchSpT("Burramys", "parvus", "442b9048417ef20cf680a0ae26ee4d86") #45
+possum <- FetchSpT("Burramys", "parvus", myAPI) #29
+possum <- FetchSpTAK("Burramys", "parvus", myAPI) #45
+CountSpT("Burramys", "parvus", myAPI)
+
 dim(possum[duplicated(possum$title),])[1]
 
-searchCount("Mus", "musculus", "442b9048417ef20cf680a0ae26ee4d86") #34252 count
+searchCount("Mus", "musculus", myAPI) #34252 count
 
 gnr_resolve(names = c("felis catus"))
 
@@ -616,3 +727,4 @@ print(paste("h: ", mycount))
 #i10 - check it out?
 ```
 
+add year, can you run 2 queries with diff time periods
