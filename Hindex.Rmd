@@ -233,69 +233,44 @@ FetchSpY <- function(genus, species, APIkey) {
   if (count > 2000) {
     print(paste("More than 2000 records found, this will take a while unless you have a nice computer."))
   }
-  step_size <- 2000 #the number of records to retrieve in each loop
-  start_record <- 0
-  datalist = data.frame()
-  looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
-  #loop starts
-  for (i in 0:looprepeat) { 
-    print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
-    print(paste("Fetching records now."))
-    search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\")&cursor=*&count=25 AND DOCTYPE(ar OR re)"),
-                          api_key = paste0(APIkey),
-                          verbose = TRUE,
-                          max_count = step_size,
-                          wait_time = 3)
-    start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
-    searchdf <- entries_to_citation_df(search$entries)
-    list <- data.frame(searchdf)
-    datalist <- rbind(datalist, list)
-    print(paste("Retrieved", start_record, "records."))
-  }
-  #loop ends
-  returned <- dim(datalist)[1]
-  print(paste(returned, "records retrived in total."))
-  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
-  print(paste(duplicates, "duplicates found."))
-  if (duplicates>0) { #remove duplicates if they are present
-    print(paste("Removing duplicated records."))
-    datalist <- datalist[!duplicated(datalist$title), ] 
-  }
-  #showing final list of records
-  retrieved <- dim(datalist)[1] #check the number
-  print(paste(retrieved, "unique records successfully fetched."))
-  return(datalist)
-}
-```
-
-```{r, fetch using title+abs+key}
-#this function downloads citation data from scopus
-FetchSpYNext <- function(genus, species, APIkey) {
-  library(rscopus)
-  library(rlang)
-  library(dplyr)
-    search1 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR AFT 2010"),
+  #search begins
+  search1 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 2010"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           wait_time = 3)
-    search1df <- entries_to_citation_df(search1$entries)
-    search2 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR AFT 2000 AND PUBYEAR BEF 2010"),
+  search1df <- entries_to_citation_df(search1$entries)
+  search2 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 2000 AND PUBYEAR < 2011"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           wait_time = 3)  
-    search2df <- entries_to_citation_df(search2$entries)
-    search3 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR AFT 1980 AND PUBYEAR BEF 2000"),
+  search2df <- entries_to_citation_df(search2$entries)
+  search3 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1990 AND PUBYEAR < 2001"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           wait_time = 3)  
-    search3df <- entries_to_citation_df(search3$entries)
-    search4 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR BEF 1980"),
+  search3df <- entries_to_citation_df(search3$entries)
+  search4 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1980 AND PUBYEAR < 1991"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           wait_time = 3)  
-    search4df <- entries_to_citation_df(search4$entries)
-    datalist <- rbind(search1df, search2df, search3df, search4df)
-  #loop ends
+  search4df <- entries_to_citation_df(search4$entries)
+  search5 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1970 AND PUBYEAR < 1981"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search5df <- entries_to_citation_df(search5$entries)
+  search6 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1960 AND PUBYEAR < 1971"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search6df <- entries_to_citation_df(search6$entries)
+  search7 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR < 1961"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search7df <- entries_to_citation_df(search7$entries)
+  datalist <- rbind(search1df, search2df, search3df, search4df, search5df, search6df, search7df)
+  #search ends  
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
   duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
@@ -658,8 +633,7 @@ gnr_resolve(names = c("felis", "catus"))
 
 chimps <- FetchSpTAK("pan", "troglodytes", myAPI) #10018 results
 chimps2 <- FetchSpNext("pan", "troglodytes", myAPI)
-chimpsY <- FetchSpY("pan", "troglodytes", myAPI)
-chimpsN <- FetchSpYNext("pan", "troglodytes", myAPI)
+chimpsY <- FetchSpY("pan", "troglodytes", myAPI) #10844 results
 gnr_resolve(names = c("pan", "troglodytes"))
 
 elephant <- FetchSpTAK("Loxodonta","africana", myAPI) #1401 results
