@@ -587,7 +587,7 @@ Allindices <- function(data, genus, species) {
                         SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
   colnames(combine) <- c("species", "publications", "citations", "journals", "articles",
                          "reviews", "years_publishing", "h", "m", "i10", "h5")
-  cat("", genus, species, "\n",
+  cat("\n", genus, species, "\n",
       TotalPub(data), "publications", "\n",
       TotalCite(data), "citations", "\n",
       TotalJournals(data), "journals", "\n",
