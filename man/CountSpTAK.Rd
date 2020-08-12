@@ -25,13 +25,13 @@ A check will be conducted via \code{taxize} to validify the genus and species na
 }
 \examples{
 \dontrun{
-CountSpTAK("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+CountSpTAK("Bettongia", "penicillata", "myAPI")
 
 #lower case letter in genus is also accepted and will return identical results
 
-CountSpTAK("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+CountSpTAK("bettongia", "penicillata", "myAPI")
 }
 }
 \references{
-Scott Chamberlain, Eduard Szocs (2013). "taxize - taxonomic search and retrieval in R." F1000Research. http://f1000research.com/articles/2-191/v2.
+Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. F1000Research, 2, 191.
 }

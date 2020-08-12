@@ -53,11 +53,7 @@ pacman::p_load(tidyverse,
   + calculates h-index for the past 5 years
 16. SpHAfterdate
   + calculates h-index with a given time frame
-17. SpHYear
-  + calculates the h-index by year
-18. SpHGrowth
-  + calculates the cumulative h-index
-19. Allindices
+17. Allindices
   + shows a summary of the main indices
 
 
@@ -81,7 +77,7 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   }
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
               query = list(apiKey = paste0(APIkey),
-                           query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+                           query = paste0("TITLE(\"",genus," ",species,"\")"),
                            httpAccept = "application/xml")) #format the URL to be sent to the API
   stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- content(theURL, as = "text") #extract the content of the response
@@ -109,7 +105,7 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
   } 
    theURL <- GET("http://api.elsevier.com/content/search/scopus",
               query = list(apiKey = paste0(APIkey),
-                           query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+                           query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\")"),
                            httpAccept = "application/xml")) #format the URL to be sent to the API
   stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- content(theURL, as = "text") #extract the content of the response
@@ -125,23 +121,19 @@ FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
   library(dplyr)
-  if (missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") #stop running if API key missing
-  }
   count <- CountSpT(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
-  if (count > 2000) {
-    print(paste("More than 2000 records found, this will take a while unless you have a nice computer."))
-  }
-  step_size <- 1000 #the number of records to retrieve in each loop
+  #loop if count is under 5000
+  if (count <= 5000) {
+    step_size <- 1000 #the number of records to retrieve in each loop
   start_record <- 0
   datalist = data.frame()
   looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
   #loop starts
-  for (i in 0:4) { 
+  for (i in 0:looprepeat) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
     print(paste("Fetching records now."))
-    search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+    search <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\")"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           max_count = step_size,
@@ -151,11 +143,140 @@ FetchSpT <- function(genus, species, APIkey) {
     searchdf <- entries_to_citation_df(search$entries)
     list <- data.frame(searchdf)
     datalist <- rbind(datalist, list)
-    print(paste("Retrieved", start_record, "records."))
+    #loop ends
+  }} else {
+  #search begins
+  search1 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 2018"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)
+  search1df <- entries_to_citation_df(search1$entries)
+  search2 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR = 2018"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)
+  search2df <- entries_to_citation_df(search2$entries)
+  search3 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR = 2017"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search3df <- entries_to_citation_df(search3$entries)
+  search4 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR = 2016"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search4df <- entries_to_citation_df(search4$entries)
+  search5 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR = 2015"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search5df <- entries_to_citation_df(search5$entries)
+  search6 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR = 2014"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search6df <- entries_to_citation_df(search6$entries)
+  search7 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR = 2013"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search7df <- entries_to_citation_df(search7$entries)
+  search8 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR = 2012"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search8df <- entries_to_citation_df(search8$entries)
+  search9 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR = 2011"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search9df <- entries_to_citation_df(search9$entries)
+  search10 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR = 2010"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search10df <- entries_to_citation_df(search10$entries)
+  search11 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR = 2009"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search11df <- entries_to_citation_df(search11$entries)
+  search12 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 2006 AND PUBYEAR < 2009"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search12df <- entries_to_citation_df(search12$entries)
+  search13 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 2004 AND PUBYEAR < 2007"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search13df <- entries_to_citation_df(search13$entries)
+  search14 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 2002 AND PUBYEAR < 2005"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search14df <- entries_to_citation_df(search14$entries)
+  search15 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 2000 AND PUBYEAR < 2003"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search15df <- entries_to_citation_df(search15$entries)
+  search16 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 1998 AND PUBYEAR < 2001"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search16df <- entries_to_citation_df(search16$entries)
+  search17 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 1996 AND PUBYEAR < 1999"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search17df <- entries_to_citation_df(search17$entries)
+  search18 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 1994 AND PUBYEAR < 1997"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search18df <- entries_to_citation_df(search18$entries)
+  search19 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 1992 AND PUBYEAR < 1995"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search19df <- entries_to_citation_df(search19$entries)
+  search20 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 1990 AND PUBYEAR < 1993"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search20df <- entries_to_citation_df(search20$entries)
+  search21 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 1985 AND PUBYEAR < 1991"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search21df <- entries_to_citation_df(search21$entries)
+  search22 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 1980 AND PUBYEAR < 1986"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search22df <- entries_to_citation_df(search22$entries)
+  search23 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 1975 AND PUBYEAR < 1981"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search23df <- entries_to_citation_df(search23$entries)
+  search24 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR > 1970 AND PUBYEAR < 1976"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search24df <- entries_to_citation_df(search24$entries)
+  search25 <- scopus_search(query = paste0("TITLE(\"",genus," ",species,"\") AND PUBYEAR < 1971"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search25df <- entries_to_citation_df(search25$entries)
+  datalist <- rbind(search1df, search2df, search3df, search4df, search5df, search6df, search7df, search8df, search9df, search10df, search11df, search12df, search13df, search14df, search15df, search16df, search17df, search18df, search19df, search20df, search21df, search22df, search23df, search24df, search25df)
+  #search ends  
   }
-  #loop ends
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
+  #if else here
   duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
   if (duplicates>0) { #remove duplicates if they are present
@@ -175,23 +296,19 @@ FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
   library(rlang)
   library(dplyr)
-  if (missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") #stop running if API key missing
-  }
   count <- CountSpTAK(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
-  if (count > 2000) {
-    print(paste("More than 2000 records found, this will take a while unless you have a nice computer."))
-  }
-  step_size <- 1000 #the number of records to retrieve in each loop
+  #loop if count is under 5000
+  if (count <= 5000) {
+    step_size <- 1000 #the number of records to retrieve in each loop
   start_record <- 0
   datalist = data.frame()
   looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
   #loop starts
-  for (i in 0:4) { 
+  for (i in 0:looprepeat) { 
     print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
     print(paste("Fetching records now."))
-    search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+    search <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\")"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           max_count = step_size,
@@ -201,78 +318,140 @@ FetchSpTAK <- function(genus, species, APIkey) {
     searchdf <- entries_to_citation_df(search$entries)
     list <- data.frame(searchdf)
     datalist <- rbind(datalist, list)
-    print(paste("Retrieved", start_record, "records."))
-  }
-  #loop ends
-  returned <- dim(datalist)[1]
-  print(paste(returned, "records retrived in total."))
-  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
-  print(paste(duplicates, "duplicates found."))
-  if (duplicates>0) { #remove duplicates if they are present
-    print(paste("Removing duplicated records."))
-    datalist <- datalist[!duplicated(datalist$title), ] 
-  }
-  #showing final list of records
-  retrieved <- dim(datalist)[1] #check the number
-  print(paste(retrieved, "unique records successfully fetched."))
-  return(datalist)
-}
-```
-
-```{r, fetch using title+abs+key}
-#this function downloads citation data from scopus
-FetchSpY <- function(genus, species, APIkey) {
-  library(rscopus)
-  library(rlang)
-  library(dplyr)
-  if (missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") #stop running if API key missing
-  }
-  count <- CountSpTAK(genus, species, APIkey) #check the number of records
-  print(paste(count, "records found."))
-  if (count > 2000) {
-    print(paste("More than 2000 records found, this will take a while unless you have a nice computer."))
-  }
+    #loop ends
+  }} else {
   #search begins
-  search1 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 2010"),
+  search1 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 2018"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           wait_time = 3)
   search1df <- entries_to_citation_df(search1$entries)
-  search2 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 2000 AND PUBYEAR < 2011"),
+  search2 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR = 2018"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
-                          wait_time = 3)  
+                          wait_time = 3)
   search2df <- entries_to_citation_df(search2$entries)
-  search3 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1990 AND PUBYEAR < 2001"),
+  search3 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR = 2017"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           wait_time = 3)  
   search3df <- entries_to_citation_df(search3$entries)
-  search4 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1980 AND PUBYEAR < 1991"),
+  search4 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR = 2016"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           wait_time = 3)  
   search4df <- entries_to_citation_df(search4$entries)
-  search5 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1970 AND PUBYEAR < 1981"),
+  search5 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR = 2015"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           wait_time = 3)  
   search5df <- entries_to_citation_df(search5$entries)
-  search6 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1960 AND PUBYEAR < 1971"),
+  search6 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR = 2014"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           wait_time = 3)  
   search6df <- entries_to_citation_df(search6$entries)
-  search7 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR < 1961"),
+  search7 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR = 2013"),
                           api_key = paste0(APIkey),
                           verbose = TRUE,
                           wait_time = 3)  
   search7df <- entries_to_citation_df(search7$entries)
-  datalist <- rbind(search1df, search2df, search3df, search4df, search5df, search6df, search7df)
+  search8 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR = 2012"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search8df <- entries_to_citation_df(search8$entries)
+  search9 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR = 2011"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search9df <- entries_to_citation_df(search9$entries)
+  search10 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR = 2010"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search10df <- entries_to_citation_df(search10$entries)
+  search11 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR = 2009"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search11df <- entries_to_citation_df(search11$entries)
+  search12 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 2006 AND PUBYEAR < 2009"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search12df <- entries_to_citation_df(search12$entries)
+  search13 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 2004 AND PUBYEAR < 2007"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search13df <- entries_to_citation_df(search13$entries)
+  search14 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 2002 AND PUBYEAR < 2005"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search14df <- entries_to_citation_df(search14$entries)
+  search15 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 2000 AND PUBYEAR < 2003"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search15df <- entries_to_citation_df(search15$entries)
+  search16 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1998 AND PUBYEAR < 2001"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search16df <- entries_to_citation_df(search16$entries)
+  search17 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1996 AND PUBYEAR < 1999"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search17df <- entries_to_citation_df(search17$entries)
+  search18 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1994 AND PUBYEAR < 1997"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search18df <- entries_to_citation_df(search18$entries)
+  search19 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1992 AND PUBYEAR < 1995"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search19df <- entries_to_citation_df(search19$entries)
+  search20 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1990 AND PUBYEAR < 1993"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search20df <- entries_to_citation_df(search20$entries)
+  search21 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1985 AND PUBYEAR < 1991"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search21df <- entries_to_citation_df(search21$entries)
+  search22 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1980 AND PUBYEAR < 1986"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search22df <- entries_to_citation_df(search22$entries)
+  search23 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1975 AND PUBYEAR < 1981"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search23df <- entries_to_citation_df(search23$entries)
+  search24 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR > 1970 AND PUBYEAR < 1976"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search24df <- entries_to_citation_df(search24$entries)
+  search25 <- scopus_search(query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND PUBYEAR < 1971"),
+                          api_key = paste0(APIkey),
+                          verbose = TRUE,
+                          wait_time = 3)  
+  search25df <- entries_to_citation_df(search25$entries)
+  datalist <- rbind(search1df, search2df, search3df, search4df, search5df, search6df, search7df, search8df, search9df, search10df, search11df, search12df, search13df, search14df, search15df, search16df, search17df, search18df, search19df, search20df, search21df, search22df, search23df, search24df, search25df)
   #search ends  
+  }
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
+  #if else here
   duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
   if (duplicates>0) { #remove duplicates if they are present
@@ -418,34 +597,6 @@ SpHAfterdate <- function(data, date) {
 }
 ```
 
-```{r, h-index by year}
-#this function calculates the h-index by year
-SpHYear <- function(data) {
-  library(dplyr)
-  data$year <- as.numeric(substr(data$cover_date, 1, 4))
-  yeargroup <- data %>% #group data by year
-    group_by(data$year)
-  splitdf <- split(yeargroup, data$year) #split dfs into smaller dfs according to year
-  splitH <- lapply(splitdf, function(splitdf){SpHindex(splitdf)}) #compute h-index for each year
-  H <- setNames(stack(splitH)[2:1], c('year','h')) #convert list to df and adding column names
-  H$year <- as.integer(levels(H$year))[H$year] #convert from factor to integer class
-  fulldates <- seq(min(H$year), max(H$year)) #fill in the year gaps with no publications
-  fulldates <- data.frame(year = fulldates) #create the df
-  completeH <- merge(fulldates, H, by = "year", all.x = TRUE) #merge to get the complete time scale
-  completeH[is.na(completeH)] <- 0 #replace NA values with 0
-  return(completeH)
-}
-```
-
-```{r, cumulative h-index}
-#this function calculates the cumulative h-index overtime by year
-SpHGrowth <- function(data) {
-  HbyYear <- SpHYear(data)
-  HbyYear$h <- cumsum(HbyYear [,2])
-  return(HbyYear)
-}
-```
-
 ```{r, shows main indices}
 #this function returns a summary of all of the indices
 Allindices <- function(data, genus, species) {
@@ -476,7 +627,7 @@ Allindices <- function(data, genus, species) {
 ```{r, woylie}
 #test done on 10 july
 CountSpTAK("Bettongia", "penicillata", myAPI) #113
-Woylie <- FetchSpTAK("Bettongia", "penicillata", myAPI) #no duplicates
+FetchSpTAK("Bettongia", "penicillata", myAPI) #no duplicates
 
 TotalPub(Woylie) #113
 TotalCite(Woylie) #1897
@@ -620,32 +771,33 @@ CountSpTAK("Panthera", "tigris", myAPI)
 
 dim(tiger[duplicated(tiger$title),])[1]
 
-tiger <- FetchSpTAK("Panthera", "tigris") #shows warning
+tiger <- FetchSpF("Panthera", "tigris", myAPI) #1823 results
 fox <- FetchSpT("Vulpes", "vulpes", myAPI) #1133 results
 
-fox <- FetchSpTAK("Vulpes", "vulpes", myAPI) #3324 results
+foxT <- FetchSpT("Vulpes", "vulpes", myAPI) #1176
+foxTAK <- FetchSpTAK("Vulpes", "vulpes", myAPI) #1176
 drosophila <- FetchSpTAK("Drosophila", "montana", myAPI) #93 results
-drosophila2 <- FetchSpTAK("drosophila", "melanogaster", myAPI) #60904 results, error at 23%
+drosophila2 <- FetchSpF("drosophila", "melanogaster", myAPI) #65140 results
 drosophila3 <- FetchSpTAK("Mus", "musculus", myAPI) 
 
-cat <- CountSpT("felis", "catus", myAPI) #17622 results, error at 26%, current loop can only output 2000 records
+cat <- FetchSpY("felis", "catus", myAPI) #17622 results, error at 26%, current loop can only output 2000 records
 gnr_resolve(names = c("felis", "catus"))
 
-chimps <- FetchSpTAK("pan", "troglodytes", myAPI) #10018 results
-chimps2 <- FetchSpNext("pan", "troglodytes", myAPI)
+chimpsTAK <- FetchSpTAK("pan", "troglodytes", myAPI) #10837
+chimpsT <- FetchSpT("pan", "troglodytes", myAPI) #1439
 chimpsY <- FetchSpY("pan", "troglodytes", myAPI) #10844 results
 gnr_resolve(names = c("pan", "troglodytes"))
 
 elephant <- FetchSpTAK("Loxodonta","africana", myAPI) #1401 results
 dim(elephant[duplicated(elephant$title),])[1]
 
-possum <- FetchSpT("Burramys", "parvus", myAPI) #29
+possum <- FetchSpT("Burramys", "parvus", myAPI) #47
 possum <- FetchSpTAK("Burramys", "parvus", myAPI) #45
 CountSpT("Burramys", "parvus", myAPI)
 
 dim(possum[duplicated(possum$title),])[1]
 
-searchCount("Mus", "musculus", myAPI) #34252 count
+mouse <- FetchSpY("Mus", "musculus", myAPI) #36197 records downloaded
 
 gnr_resolve(names = c("felis catus"))
 

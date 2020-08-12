@@ -22,10 +22,10 @@ Duplicates are removed after fetching the data.
 }
 \examples{
 \dontrun{
-FetchSpT("Bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+FetchSpT("Bettongia", "penicillata", "myAPI")
 
 #lower case letter in genus is also accepted and will return identical results
 
-FetchSpT("bettongia", "penicillata", "442b9048417ef20cf680a0ae26ee4d86")
+FetchSpT("bettongia", "penicillata", "myAPI")
 }
 }

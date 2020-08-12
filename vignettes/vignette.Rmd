@@ -147,18 +147,6 @@ To subset the time with a specific lower limit, you can use `SpHAfterdate()`. Ma
 SpHAfterdate(Woylie, "2000-01-01")
 ```
 
-If you want to know the h-index for every year of publication, you can use `SpHYear()`. It returns a dataframe ready for further analyses.
-
-```{r}
-SpHYear(Woylie)
-```
-
-`SpHGrowth()` calls `SpHYear()` first, and then sums up the h-index overtime by year. 
-
-```{r}
-SpHGrowth(Woylie)
-```
-
 The m-index can be calculated using `SpMindex()`, which first computes the h-index and then divides it by the number of years of activity ($h/years~publishing$).
 
 ```{r}

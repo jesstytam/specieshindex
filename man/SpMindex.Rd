@@ -22,5 +22,5 @@ SpMindex(Woylie)
 
 }
 \references{
-Hirsch, J. (2005). An index to quantify an individual's scientific research output. Proceedings of the National Academy of Sciences of the United States of America, 102(46), 16569-16572.
+University of Pittsburgh (2019). Research Impact and Metrics: Author metrics. Retrieved from https://pitt.libguides.com/bibliometricIndicators/AuthorMetrics.
 }

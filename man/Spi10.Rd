@@ -21,3 +21,6 @@ data(Woylie)
 Spi10(Woylie)
 
 }
+\references{
+Cornell University (2019). i10-index. Retrieved from https://guides.library.cornell.edu/c.php?g=32272&p=203393.
+}

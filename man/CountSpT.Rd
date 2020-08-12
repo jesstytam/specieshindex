@@ -24,5 +24,5 @@ It counts only the publications with the binomial name in their title.
 A check will be conducted via \code{taxize} to validify the genus and species names.
 }
 \references{
-Scott Chamberlain, Eduard Szocs (2013). "taxize - taxonomic search and retrieval in R." F1000Research. http://f1000research.com/articles/2-191/v2.
+Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. F1000Research, 2, 191.
 }
