@@ -21,5 +21,5 @@ SpH5(Woylie)
 
 }
 \references{
-Suzuki, H. (2012). Google Scholar Metrics for Publications. Retrieved from https://scholar.googleblog.com/2012/04/google-scholar-metrics-for-publications.html.
+Suzuki, H. (2012). \emph{Google Scholar Metrics for Publications.} Retrieved from \url{https://scholar.googleblog.com/2012/04/google-scholar-metrics-for-publications.html}.
 }

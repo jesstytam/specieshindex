@@ -1,6 +1,6 @@
 #' This function counts the total number of search results.
 #' It counts only the publications with the binomial name in their title.
-#' A check will be conducted via \code{taxize} to validify the genus and species names.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validify the genus and species names.
 #' 
 #' @title Search count - title only
 #'
@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. F1000Research, 2, 191.
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 #' 
 #' @examples
 #' \dontrun{
@@ -52,7 +52,7 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
 
 #' This function counts the total number of search results.
 #' It counts the publications with the binomial name in the title, abstract and keywords.
-#' A check will be conducted via \code{taxize} to validify the genus and species names.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validify the genus and species names.
 #'
 #' @title Search count - title, abstract and keywords
 #'
@@ -65,7 +65,7 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
 #' @export 
 #' 
 #' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. F1000Research, 2, 191.
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 #'
 #' @examples
 #' \dontrun{
@@ -648,8 +648,8 @@ YearsPublishing <- function(data) {
 #' @export
 #'
 #' @references 
-#' Bertoli-Barsotti, L. & Lando, T. (2015). On a formula for the h-index. Journal of Informetrics, 9(4), 762-776. \cr
-#' Hirsch, J. (2005). An index to quantify an individual's scientific research output. Proceedings of the National Academy of Sciences of the United States of America, 102(46), 16569-16572.
+#' Bertoli-Barsotti, L. & Lando, T. (2015). On a formula for the h-index. \emph{Journal of Informetrics, 9}(4), 762-776. \cr
+#' Hirsch, J. (2005). An index to quantify an individual's scientific research output. \emph{Proceedings of the National Academy of Sciences of the United States of America, 102}(46), 16569-16572.
 #'
 #' @examples
 #' data(Woylie)
@@ -680,7 +680,7 @@ SpHindex <- function(data) {
 #' @export
 #'
 #' @references 
-#' University of Pittsburgh (2019). Research Impact and Metrics: Author metrics. Retrieved from https://pitt.libguides.com/bibliometricIndicators/AuthorMetrics.
+#' University of Pittsburgh (2019). \emph{Research Impact and Metrics: Author metrics.} Retrieved from \url{https://pitt.libguides.com/bibliometricIndicators/AuthorMetrics}.
 #' 
 #' @examples
 #' data(Woylie)
@@ -714,7 +714,7 @@ SpMindex <- function(data) {
 #' @export
 #' 
 #' @references 
-#' Cornell University (2019). i10-index. Retrieved from https://guides.library.cornell.edu/c.php?g=32272&p=203393.
+#' Cornell University (2019). \emph{i10-index.} Retrieved from \url{https://guides.library.cornell.edu/c.php?g=32272&p=203393}.
 #'
 #' @examples
 #' data(Woylie)
@@ -739,7 +739,7 @@ Spi10 <- function(data) {
 #' @export
 #'
 #' @references 
-#' Suzuki, H. (2012). Google Scholar Metrics for Publications. Retrieved from https://scholar.googleblog.com/2012/04/google-scholar-metrics-for-publications.html.
+#' Suzuki, H. (2012). \emph{Google Scholar Metrics for Publications.} Retrieved from \url{https://scholar.googleblog.com/2012/04/google-scholar-metrics-for-publications.html}.
 #'
 #' @examples
 #' data(Woylie)

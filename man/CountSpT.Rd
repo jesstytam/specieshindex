@@ -21,8 +21,8 @@ Search count of the species with the given \code{genus} and \code{species}.
 \description{
 This function counts the total number of search results.
 It counts only the publications with the binomial name in their title.
-A check will be conducted via \code{taxize} to validify the genus and species names.
+A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validify the genus and species names.
 }
 \references{
-Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. F1000Research, 2, 191.
+Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 }

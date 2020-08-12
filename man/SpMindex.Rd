@@ -22,5 +22,5 @@ SpMindex(Woylie)
 
 }
 \references{
-University of Pittsburgh (2019). Research Impact and Metrics: Author metrics. Retrieved from https://pitt.libguides.com/bibliometricIndicators/AuthorMetrics.
+University of Pittsburgh (2019). \emph{Research Impact and Metrics: Author metrics.} Retrieved from \url{https://pitt.libguides.com/bibliometricIndicators/AuthorMetrics}.
 }
