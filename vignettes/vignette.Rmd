@@ -1,6 +1,20 @@
 ---
 title: "Introduction to specieshindex"
-output: rmarkdown::html_vignette
+author: Jessica Tam
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+bibliography: references.bib
+output: 
+  html_document:
+    code_download: true
+    code_folding: show
+    depth: 3
+    number_sections: no
+    theme:  flatly
+    highlight: kate
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
 vignette: >
   %\VignetteIndexEntry{vignette}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,7 +34,9 @@ devtools::load_all(".")
 
 ```{r, include=FALSE}
 library(specieshindex)
+library(citr)
 library(secret)
+library(knitr)
 vault <- file.path("C:/Users/iamje/Jess/UNSW/Honours/Honours", ".vault")
 key_dir <- file.path(system.file(package = "secret"), "user_keys")
 public_key <- file.path(key_dir, "jesst.pub")
@@ -28,149 +44,187 @@ private_key <- file.path(key_dir, "jesst.pem")
 myAPI <- get_secret("myAPI", key = private_key, vault = vault) #loading my hidden API key
 ```
 
-There are many ways to guage research influence. We can simply sum up the number of publications and citations, which is a straight forward way without the need of any complicated mathematical formulae. On the other hand, there are more scientific ways of measurements using statistical indices. Some examples include the h-index, m-index, i10 index, h5 index , etc.
+```{r, echo=FALSE}
+include_graphics("C:/Users/iamje/Jess/UNSW/BEES0006/Animals/Banner.png")
+```
 
-H-index is one of the main methods to measure publication influence objectively. It is calculated using the formula ($h = total~publications~(n)~that~have~EACH~been~cited~(n)~times$), after sorting the publications by their citation counts in a descending order. 
+There are many ways to guage research influence. We can simply sum up the number of publications and citations, which is a straight forward way without the need of any complicated mathematical formulae. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the h-index, m-index, i10 index, h5 index, etc.
 
-Currently, it is only used for authors and institutions to access their influence and productivity. With this package, we can create a similar profile for different living organisms that would show their citation metrics, including total publications, total citations, h-index, etc.
+H-index [@Hirsch2005] is one of the main methods to measure publication influence objectively. It is calculated using the formula *h* = total publications (n) that have at least been cited **n** times, after sorting the publications by their citation counts in a descending order. 
 
-Here, I have created a package to compute species h-index and other indices, to enable comparisons of the productivity of research on different species.
+Currently, h-index is commonly used for assessing influence and academic productivity of authors, research institutions and journals [@Braun2005]. Recently, this index has been also applied to quantify the research effort and influence associated with different species of living organisms [@Fleming2016].
 
-## Workflow
+With this package, we can create a similar profile for different living organisms that would show their citation metrics, including total publications, total citations, h-index, etc. This will allow us to understand which species are receiving more research interest and develop the solutions to rectify the biases. Here, I have created a package to compute species h-index and other indices, to enable comparisons of the productivity of research on different species.
 
-Working with large datasets can be tedious. Having a plan before doing any analysis will help smoothing the process and relieving the stress. To get from data collection to making nice plots, you can follow these suggested steps:
+# Installation
 
-1. Connect to Scopus and download citation data
-2. Compute various indices
+To get this package to work, make sure you have the following packages installed.
 
-### Connecting to Scopus
+```{r, eval=FALSE}
+install.packages("rscopus")
+install.packages("taxize")
+install.packages("XML")
+install.packages("httr")
+install.packages("dplyr")
+install.packages("rlang")
+install.packages("specieshindex")
 
-Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise the functions will not run (and is in fact illegal). You can register your key [here](https://dev.elsevier.com/).
+library("specieshindex")
+```
 
-It is recommend that you run a quick search using `CountSpT()` or `CountSpTAK()` before actually fetching the records. Both functions give a search count of the amount of records found on the Scopus database. 
+# Workflow
 
-In the following functions, the suffixes 'T' is for title and 'TAK' is for title, abstract and keywords. These terms are used to locate where you want your search terms to be found in. While 'T' only targets the publications with the binomial name in its title, 'TAK' targets those with the name in its title, abstract and keywords. Make sure you are using binomial names instead of common names.
+Specieshindex package performs two main steps that simplify calculating h-indices for different species:
 
+1. Connecting to Scopus and download citation data for a given species
+2. Computing various indices (including h-index) for a given species
+
+Below, we outline how to perform these steps using our package.
+
+## Connecting to Scopus
+
+Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise the functions will not run (and is in fact illegal to download the data). You can register your key [here](https://dev.elsevier.com/). In the functions your API key should be used as function parameter myAPI.
+
+The searches in Scopus are performed using species Latin name. The relevant functions take two parts of a Latin binominal species name as their main parameters, e.g. "*Bettongia*", "*penicillata*”. Make sure you are using binomial names instead of common names as required by the code. This is because common names are much less explicit than binomial names. There could be multiple species using the same common name, which will require extra steps to specify which is the particular species that is being studied.
+
+We have implemented functions that check the available number of relevant records (Count) and functions that download these records from Scopus (Fetch). Count and Fetch functions have two versions, with suffixes T and TAK, respectively. In these functions, the suffix ‘T’ is for title and ‘TAK’ is for title+abstract+keywords. These terms are used to indicate where in the Scopus records you want your search terms to be found in. While ‘T’ only finds the publications with the binomial species name in the title, ‘TAK’ will find records with the name in title, abstract or keywords. 
+
+It is recommend that you run a quick search using functions `CountSpT()` or `CountSpTAK()` before actually fetching the records. Both functions give a search count of the number of records found on the Scopus database.
+
+For example, you can run:
 ```{r, eval=FALSE}
 CountSpT("Bettongia", "penicillata", myAPI)
 ```
-
 ```{r, eval=FALSE}
 CountSpTAK("Bettongia", "penicillata", myAPI)
 ```
 
-`CountSpTAK()` yielded more results since it also looked for the binomial name in the abstract and keywords in addition to the title. Now that you know exactly how many publications there are for the search, you can proceed to fetch the data from Scopus.
+`CountSpTAK()` yielded more results since it also looked for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data from Scopus. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
 
-As you will soon discover, some species have been studied more than the others and thus resulting in higher research output. Therefore, if there are more than a few thousand citation records found, it will take a considerably longer time to fetch them all unless you are using a computer with high processing power.
+As you may expect, some species have been studied more than the others [@Simko2015; @Krause2017], resulting in more publications. Therefore, if there are more than a few thousand citation records found on Scopus, it will take a considerably longer time to fetch them all, unless you are using a computer with high processing power and fast internet connection.
 
+For example, you can run:
 ```{r, eval=FALSE}
 FetchSpT("Bettongia", "penicillata", myAPI)
 ```
-
 ```{r, eval=FALSE}
 FetchSpTAK("Bettongia", "penicillata", myAPI)
 ```
 
-In larger datasets, duplicates may appear, although usually in low numbers. `FetchSpT()` and `FetchSpTAK()` will clean up the dataset by removing them if found. The first occurence of the record will be kept, which is normally the original record.
+In larger datasets, duplicates may appear, although usually in low numbers. `FetchSpT()` and `FetchSpTAK()` will clean up the dataset by removing them if found. This is done by locating the publications with identical names and then removing the subsequent entry (or entries). The first occurrence of the record will be kept, which is normally the original record.
 
-#### Possible errors
+### Possible errors
 
-If the error `Bad Request (HTTP 400)` occurs in this step, try connecting to the internet via your institute's provider instead of the one at home. This error might be caused by some authorisation issues.
+If the error `Bad Request (HTTP 400)` occurs in this step, try connecting to the internet via your institute's provider, instead of the one at home. This error might be caused by some authorisation issues.
 
-It is important to make sure you have spelt the genus and species name accurately when entering the function. If unsure, you can go to the [Encyclopedia of Life](https://eol.org/) for verification. This is where the above functions are linked to for checking via the package `Taxize`. If the desired species is not in the encyclopedia, it is possible that it has just been discovered and not officially listed yet.
+It is important to make sure you have spelt the genus and species name accurately when entering the function. If unsure, you can go to the [Global Names Resolver](https://resolver.globalnames.org/data_sources) for verification. This is where the above functions are linked to for checking via the package `Taxize` [@Chamberlain2013]. If the desired species is not in the index, it is possible that it has just been discovered and not officially listed yet, or the name has been changed and is no longer in use. Whether or not old synonyms are accepted depends on if they still exist in the database.
 
-### Simple counts
+## Simple counts
 
-These functions do simple calculations with various parameters. Although they are not statistical figures, they could provide insights into how they affect the indices. 
+These functions do simple calculations with various parameters for the sets of downloaded citations for a given species. This information could provide insights into the behaviour of the other, more complicated, indices.
 
 `TotalPub()` sums up the total publications from the search.
 
+For example:
 ```{r}
 TotalPub(Woylie)
 ```
 
 `TotalCite()` sums up the total citations of all the records from the search.
 
+For example:
 ```{r}
 TotalCite(Woylie)
 ```
 
 `TotalJournals()` counts the number of unique journals that the species have appeared in.
 
+For example:
 ```{r}
 TotalJournals(Woylie)
 ```
 
 `TotalArt()` counts the number of publications that are articles.
 
+For example:
 ```{r}
 TotalArt(Woylie)
 ```
 
 `TotalRev()` counts the number of publications that are reviews.
 
+For example:
 ```{r}
 TotalRev(Woylie)
 ```
 
 `ARRatio()` calculates the percentage ratio of the number of articles:reviews, and rounds the percentage to 4 significant figures.
 
+For example:
 ```{r}
 ARRatio(Woylie)
 ```
 
 `YearsPublishing()` counts the number of years since the first publication of the species.
 
+For example:
 ```{r}
 YearsPublishing(Woylie)
 ```
 
-### Statistical indices
+## Statistical indices
 
-Statistical indices can provide deeper insigts than the counts above. They measure the productivity of publications regarding various species in this case. They take other parameters into consideration, such as time, total citations, total publications, etc., to compute the index.
+Statistical indices can provide deeper insights than the simple counts and ratios described above. They take a few parameters into consideration, such as time, total citations, total publications, and their distributions, to compute the index.
 
-Use `SpHindex()` to compute the h-index. It which sorts the citation count in descending order and then counts the number of publications (n) that have EACH been cited at least n times.
+Use `SpHindex()` to compute the h-index [@Hirsch2005]. It sorts the citation counts in descending order and then finds the largest number of publications (n) that have EACH been cited at least **n** times.
 
+For example:
 ```{r}
 SpHindex(Woylie)
 ```
 
 The h5 index computes the h-index for the past 5 years.
 
+For example:
 ```{r}
 SpH5(Woylie)
 ```
 
-To subset the time with a specific lower limit, you can use `SpHAfterdate()`. Make sure the date parameter is in the exact format of yyyy-mm-dd. Inputting a different format or using slashes `/` or hyphens `-` will return an error.
+You can calculate h-index for publications published after a certain date. To subset the time with a specific lower limit, you can use `SpHAfterdate()`. Make sure the date parameter is in the exact format of yyyy-mm-dd. Using a different format or using slashes or hyphens will return an error.
 
+For example:
 ```{r}
 SpHAfterdate(Woylie, "2000-01-01")
 ```
 
-The m-index can be calculated using `SpMindex()`, which first computes the h-index and then divides it by the number of years of activity ($h/years~publishing$).
+The m-index is an h-index adjusted for the age of publication. The m-index is calculated using the `SpMindex()` function, which first computes the h-index and then divides it by the number of years of publication activity , i.e. number of years since the oldest publication in the dataset was published with the formula: $$m=h/years~publishing$$.
 
+For example:
 ```{r}
 SpMindex(Woylie)
 ```
 
-The i10 index can be calculated using `Spi10()`, which simply counts the publications that has 10 or more citations.
+The i10 index is another variant of the h-index, which only takes into account publications with at least 10 citations. The i10 index can be calculated using `Spi10()`, which simply counts the publications that has 10 or more citations.
 
+For example:
 ```{r}
 Spi10(Woylie)
 ```
 
-### Quick summary of the metrices
+## All indices in one go
 
-The `Allindices()` function conveniently returns a dataframe with most of the above indices. This allows for quick analyses and plotting. If multiple species are being compared against each other, `rbind()` can be used to stitch them together and create an expansive dataframe.
+Rather than calling each function to calculate the indices in turn, you can get them all in one go. The `Allindices()` function conveniently returns a dataframe with most of the above indices. This allows for quick creation of dataframes with multiple species, analyses and plotting.
 
+For example:
 ```{r}
 Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 ```
 
-## Worked examples
+For multiple species, `rbind()` can be used to stitch the outputs together.
 
-To demonstrate how this could be helpful in the real world, I will be comparing the citations of 4 species of marsupials. 
+# Worked examples
 
+To demonstrate how this could be helpful in the real world, I will be comparing the citations of 4 species of marsupials. They are the woylie (*Bettongia penicillata*), quokka (*Setonix brachyurus*), platypus (*Ornithorhynchus anatinus*), and koala (*Phascolarctos cinereus*). The function I used for this step was `FetchSpTAK()` for all of these datasets.
 ```{r}
 dim(Woylie)
 dim(Quokka)
@@ -178,28 +232,27 @@ dim(Platypus)
 dim(Koala)
 ```
 
-As shown here, there were 113 records of the woylie, 242 records of the quokka, 321 records of the platypus, and 773 records of the koala. They all have a total of 20 variables. I have skipped the steps of fetching the data from Scopus since it had already been demonstrated above. The function I used for this step was `FetchSpTAK()`.
+As shown here, there were 113 records (publications) for the woylie, 242 records for the quokka, 321 records for the platypus, and 773 records for the koala. They all have a total of 20 variables, e.g. citations, journals, DOI, etc., representing bibliometric information downloaded from Scopus for each publication. I have skipped the steps of fetching the data from Scopus since it had already been demonstrated above.
 
-### Comparing indices
+## Comparing indices
 
-The function `Allindices()` is a quick way to get all of the indices at once. It adds another column `species` containing the genus and species names. This will be very convenient when making plots.
-
-If you want to compare and analyse them against each other, you can use the function `rbind()` to combine each entry of species into a single dataframe. But first, you will need to assign them separately into their own individual records. 
-
+Next, we calculate our research productivity and influence indices using the `Allindices()` function:
 ```{r}
 W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
 P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
 K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
+```
 
+If you want to compare and analyse them against each other, you can use the function `rbind()` to combine indices for all four species into a single dataframe:
+```{r}
 CombineSp <- rbind(W, Q, P, K) #combining the citation records
 return(CombineSp)
 ```
 
-After preparing the data, we are ready to make some plots. Using the package `ggplot2`, I have arranged the h-index and m-index index on the separate plots. When comparing the indices, it is important to remember that their scales may differ drastically. Therefore, putting the variables in the same plot may generate plots that do not make a lot of sense. Nonetheless, it is worth making such plots if you want to know what the results would be.
+After preparing the data, we are ready to make some plots. For example, using the package `ggplot2`, we can plot the h-index and m-index. When comparing the indices, it is important to remember that their scales may differ drastically. Therefore, putting the variables in the same plot may generate plots that do not make a lot of sense.
 
-Let us first examine the h-index. I have also added the total citations for comparison, since citations is an important factor in accessing this index.
-
+We first plot the h-index:
 ```{r, fig.height=6, fig.width=7, fig.align='center'}
 library(ggplot2)
 
@@ -207,73 +260,82 @@ library(ggplot2)
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = h,
                  colour = "H-index"),
-             size = 6) +
+             size = 4) +
   labs(x = "Species",
        y = "Index Score",
        colour = "Index",
        title = "h-index") +
   scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) +
   scale_colour_manual(values = c("H-index" = "#3498DB")) +
-  theme(plot.title = element_text(size = 24, face = "bold"),
-        axis.title = element_text(size = 18),
-        axis.text = element_text(size = 16),
+  theme(plot.title = element_text(size = 20, face = "bold"),
+        axis.title = element_text(size = 16),
+        axis.text = element_text(size = 12),
         legend.position = "none")
+```
 
+\
+We can also plot the total citations counts for comparison, since citations is an important factor in contributing to h-index.
+```{r, fig.height=6, fig.width=7, fig.align='center'}
 #total citations
 ggplot(CombineSp, aes(x = species)) +
 geom_point(aes(y = citations,
                colour = "Citations"),
-           size = 6) +
+           size = 4) +
 labs(x = "Species",
      y = "Total citations",
      colour = "Index",
      title = "Citations") +
 scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + 
 scale_colour_manual(values = c("Citations"  = "#2874A6")) +
-theme(plot.title = element_text(size = 24, face = "bold"),
-      axis.title = element_text(size = 18),
-      axis.text = element_text(size = 16),
-      legend.position = "none") 
+theme(plot.title = element_text(size = 20, face = "bold"),
+      axis.title = element_text(size = 16),
+      axis.text = element_text(size = 12),
+      legend.position = "none")
 ```
 
 \
-It seems like the h values are quite consistent with the number of citations, i.e. the more the citations, the higher the index score. Therefore, the woylie, with the lowest amount of citations has the lowest h score. On the other hand, the koala, with the highest amount of citations has the highest h score.
+It seems like the h-index values are quite consistent with the total numbers of citations, i.e. the more the citations in total, the higher the h-index score. Therefore, the woylie, with the lowest number of citations has the lowest h-index. On the other hand, the koala, with the highest number of citations has the highest h-index.
 
-Let us now plot the m-index and see how it differs from the h-index. Recalling that m-index is calculated by dividing the h-index by the number of years of activity ($h/years~publishing$), let us have a closer inspection at both the m-index itself and the variable `years_publishing`.
-
+We next plot the m-index to see how it differs from the h-index. Recalling that m-index is calculated by dividing the h-index by the number of years of publication activity ($m=h/years~publishing$), let us have a closer inspection at both the m-index:
 ```{r, fig.height=6, fig.width=7, fig.align='center'}
 #m-index
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = m,
                  colour = "M-index"),
-             size = 6) +
+             size = 4) +
   labs(x = "Species",
        y = "Index Score",
        colour = "Index",
        title = "m-index") +
   scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + 
   scale_colour_manual(values = c("M-index"  = "#E74C3C")) +
-  theme(plot.title = element_text(size = 24, face = "bold"),
-        axis.title = element_text(size = 18),
-        axis.text = element_text(size = 16),
+  theme(plot.title = element_text(size = 20, face = "bold"),
+        axis.title = element_text(size = 16),
+        axis.text = element_text(size = 12),
         legend.position = "none")
+```
 
+\
+We should also have a look at the related variable years_publishing (number of years since first publication for a given species).
+```{r, fig.height=6, fig.width=7, fig.align='center'}
 #years publishing
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = years_publishing,
                  colour = "Years publishing"),
-             size = 6) +
+             size = 4) +
   labs(x = "Species",
        y = "Total years",
        colour = "Index",
        title = "Years publishing") +
   scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + 
-  scale_colour_manual(values = c("Years publishing" = "#17A589")) +
-  theme(plot.title = element_text(size = 24, face = "bold"),
-        axis.title = element_text(size = 18),
-        axis.text = element_text(size = 16),
+  scale_colour_manual(values = c("Years publishing" = "#FF9414")) +
+  theme(plot.title = element_text(size = 20, face = "bold"),
+        axis.title = element_text(size = 16),
+        axis.text = element_text(size = 12),
         legend.position = "none") 
 ```
 
 \
-In order to understand what yields a high m-index score, we can consider the index as a ratio. The combination of a higher `h` value and a lower `years_publishing` value is how a high m-index can be achieved. This explains why koala publications have a much lower score albeit its highest h-index. Its years in activity is more than 3 times that of the woylie. Although the h-index of woylie publications was half of that of the koala, it had only been in the scientific scene for a few decades. Comparing the quokka to the platypus, we can see that their publications have both been around for a similar duration of time. Since the platypus has a higher h-index than the quokka, this is thus consistent with the m score here.
+In order to understand what yields a high m-index score, we should recall that the m-index is a ratio. A high m-index can be achieved by combination of a higher `h` value and a lower `years_publishing` value. This explains why koala publications have a relatively low m-index, albeit highest h-index. Research on koalas has been produced for over 3 times longer than that on the woylie. Although the h-index of woylie publications was half of that of the koala, it had only been in the scientific scene for a few decades. Comparing the quokka to the platypus, we can see that their publications have both been around for a similar duration of time. 66 years for the quokka and 67 years for the platypus respectively. Since the platypus has a higher h-index than the quokka, this is thus consistent with the m-index score here.
+
+# References
