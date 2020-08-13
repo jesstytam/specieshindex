@@ -37,6 +37,7 @@ library(specieshindex)
 library(citr)
 library(secret)
 library(knitr)
+library(ggplot2)
 vault <- file.path("C:/Users/iamje/Jess/UNSW/Honours/Honours", ".vault")
 key_dir <- file.path(system.file(package = "secret"), "user_keys")
 public_key <- file.path(key_dir, "jesst.pub")
@@ -254,8 +255,6 @@ After preparing the data, we are ready to make some plots. For example, using th
 
 We first plot the h-index:
 ```{r, fig.height=6, fig.width=7, fig.align='center'}
-library(ggplot2)
-
 #h-index
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = h,
