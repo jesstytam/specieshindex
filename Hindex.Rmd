@@ -298,6 +298,9 @@ FetchSpTAK <- function(genus, species, APIkey) {
   library(dplyr)
   count <- CountSpTAK(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
+  if (count = 0) {
+    stop("There are no records of", paste(genus), paste(species), "found on Scopus.")
+  }
   #loop if count is under 5000
   if (count <= 5000) {
     step_size <- 1000 #the number of records to retrieve in each loop
@@ -581,8 +584,12 @@ SpH5 <- function(data) { #last 5 years from the current date
   #The easiest thing to do is to convert it into POSIXlt and subtract 5 from the years slot.
   d <- as.POSIXlt(Sys.Date())
   d$year <- d$year-5
+  if (d < 1) { #the index is 0 if there are no records form the past 5 years
+    return(as.numeric("0"))
+  }
   as.Date(d)
-  return(SpHAfterdate(data, d)) #calls HAfterdate function
+  h5 <- SpHAfterdate(data, d)
+  return(h5) #calls HAfterdate function
 }
 ```
 
@@ -591,7 +598,10 @@ SpH5 <- function(data) { #last 5 years from the current date
 SpHAfterdate <- function(data, date) {
   library(dplyr)
   data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") #change format of the date from factor to date
-  subsetdata <- filter(data, cover_date > as.Date(date) )
+  subsetdata <- filter(data, cover_date > as.Date(date))
+  if (count(subsetdata) < 1) { #the index is 0 if there are no records in this time frame
+    return(as.numeric("0"))
+  }
   HAfterdate <- SpHindex(subsetdata) #calls Hindex function
   return(HAfterdate)
 }

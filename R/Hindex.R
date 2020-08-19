@@ -749,8 +749,12 @@ SpH5 <- function(data) {
   current_date <- as.numeric(substr(Sys.Date(), 1, 4)) 
   d <- as.POSIXlt(Sys.Date())
   d$year <- d$year-5
+  if (d < 1) {
+    return(as.numeric("0"))
+  }
   as.Date(d)
-  return(SpHAfterdate(data, d))
+  h5 <- SpHAfterdate(data, d)
+  return(h5)
 }
 
 
@@ -771,7 +775,10 @@ SpH5 <- function(data) {
 #' 
 SpHAfterdate <- function(data, date) {
   data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") 
-  subsetdata <- dplyr::filter(data, cover_date > as.Date(date) )
+  subsetdata <- dplyr::filter(data, cover_date > as.Date(date))
+  if (count(subsetdata) < 1) { 
+    return(as.numeric("0"))
+  }
   HAfterdate <- SpHindex(subsetdata)
   return(HAfterdate)
 }
