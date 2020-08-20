@@ -774,6 +774,7 @@ SpH5 <- function(data) {
 #' SpHAfterdate(Woylie, "2000-01-01")
 #' 
 SpHAfterdate <- function(data, date) {
+  library(dplyr)
   data$cover_date <- as.Date(data$cover_date, format = "%Y-%m-%d") 
   subsetdata <- dplyr::filter(data, cover_date > as.Date(date))
   if (count(subsetdata) < 1) { 
