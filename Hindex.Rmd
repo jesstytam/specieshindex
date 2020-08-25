@@ -610,10 +610,10 @@ SpHAfterdate <- function(data, date) {
 ```{r, shows main indices}
 #this function returns a summary of all of the indices
 Allindices <- function(data, genus, species) {
-  combine <- data.frame(paste0(genus, "_", species), TotalPub(data), TotalCite(data),
+  combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
                         TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
                         SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
-  colnames(combine) <- c("species", "publications", "citations", "journals", "articles",
+  colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles",
                          "reviews", "years_publishing", "h", "m", "i10",
                          "h5")
   cat("\n", genus, species, "\n",
@@ -631,6 +631,32 @@ Allindices <- function(data, genus, species) {
 }
 ```
 
+```{r, add classification levels}
+Addranks <- function(data) {
+  library(taxize)
+  library(dplyr)
+  family <- tax_name(query = paste(data$genus, data$species), get = "family", db = "ncbi") #get family name
+  newdata1 <- data %>%
+    mutate(family = family$family)
+  order <- tax_name(query = paste(data$genus, data$species), get = "order", db = "ncbi") #get order name
+  newdata2 <- newdata1 %>%
+    mutate(order = order$order)
+  class <- tax_name(query = paste(data$genus, data$species), get = "class", db = "ncbi") #get class name
+  newdata3 <- newdata2 %>%
+    mutate(class = class$class)
+  phylum <- tax_name(query = paste(data$genus, data$species), get = "phylum", db = "ncbi") #get phylum name
+  newdata4 <- newdata3 %>%
+    mutate(phylum = phylum$phylum)
+  kingdom <- tax_name(query = paste(data$genus, data$species), get = "kingdom", db = "ncbi") #get kingdom name
+  newdata5 <- newdata4 %>%
+    mutate(kingdom = kingdom$kingdom)
+  col_order <- c("genus_species", "species", "genus", "family", "order", "class", "phylum", "kingdom",
+                 "publications", "citations", "journals", "articles", "reviews", "years_publishing",
+                 "h", "m", "i10", "h5")
+  rankeddata <- newdata5[, col_order]
+  return(rankeddata)
+}
+```
 
 **Tests**
 
@@ -656,6 +682,7 @@ SpHYear(Woylie)
 SpHGrowth(Woylie)
 
 B_penicillata <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
+AddRank(B_penicillata)
 ```
 
 ```{r, quokka}
@@ -733,6 +760,7 @@ P_cinereus <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
 
 ```{r, combining the datasets}
 Combinedata <- rbind(B_penicillata, S_brachyurus, O_anatinus, P_cinereus)
+Addranks(Combinedata)
 
 plot(Combinedata$publications)
 plot(Combinedata$citations)

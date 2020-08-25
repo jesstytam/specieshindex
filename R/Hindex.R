@@ -802,11 +802,12 @@ SpHAfterdate <- function(data, date) {
 #' Allindices(Woylie, genus = "genus_name", species = "species_name")
 #' 
 Allindices <- function(data, genus, species) {
-  combine <- data.frame(paste0(genus, "_", species), TotalPub(data), TotalCite(data),
+  combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
                         TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
                         SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
-  colnames(combine) <- c("species", "publications", "citations", "journals", "articles",
-                         "reviews", "years_publishing", "h", "m", "i10", "h5")
+  colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles",
+                         "reviews", "years_publishing", "h", "m", "i10",
+                         "h5")
   cat("\n", genus, species, "\n",
       TotalPub(data), "publications", "\n",
       TotalCite(data), "citations", "\n",
@@ -819,4 +820,45 @@ Allindices <- function(data, genus, species) {
       "i10:", Spi10(data), "\n",
       "h5:", SpH5(data))
   return(combine)
+}
+
+
+
+#' This function adds classiication levels to the datafrom created from the Index Summary function.
+#' 
+#' @title Add classification levels
+#'
+#' @param data The dataframe generated from \code{\link{Allindices}}.
+#'
+#' @return A datafrom with columns containing classification information, i.e. family, order, class, phylum, kingdom.
+#' @export
+#'
+#' @examples
+#' data(Woylie)
+#' Allindices(Woylie, genus = "genus_name", species = "species_name")
+#' Addranks(Woylie)
+#' 
+Addranks <- function(data) {
+  library(taxize)
+  library(dplyr)
+  family <- tax_name(query = paste(data$genus, data$species), get = "family", db = "ncbi") #get family name
+  newdata1 <- data %>%
+    mutate(family = family$family)
+  order <- tax_name(query = paste(data$genus, data$species), get = "order", db = "ncbi") #get order name
+  newdata2 <- newdata1 %>%
+    mutate(order = order$order)
+  class <- tax_name(query = paste(data$genus, data$species), get = "class", db = "ncbi") #get class name
+  newdata3 <- newdata2 %>%
+    mutate(class = class$class)
+  phylum <- tax_name(query = paste(data$genus, data$species), get = "phylum", db = "ncbi") #get phylum name
+  newdata4 <- newdata3 %>%
+    mutate(phylum = phylum$phylum)
+  kingdom <- tax_name(query = paste(data$genus, data$species), get = "kingdom", db = "ncbi") #get kingdom name
+  newdata5 <- newdata4 %>%
+    mutate(kingdom = kingdom$kingdom)
+  col_order <- c("genus_species", "species", "genus", "family", "order", "class", "phylum", "kingdom",
+                 "publications", "citations", "journals", "articles", "reviews", "years_publishing",
+                 "h", "m", "i10", "h5")
+  rankeddata <- newdata5[, col_order]
+  return(rankeddata)
 }
