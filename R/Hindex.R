@@ -805,6 +805,7 @@ Allindices <- function(data, genus, species) {
   combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
                         TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
                         SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+  combine[is.na(combine)] <- 0
   colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles",
                          "reviews", "years_publishing", "h", "m", "i10",
                          "h5")
