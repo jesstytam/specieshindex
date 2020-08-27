@@ -1,3 +1,5 @@
+![banner](C:/Users/iamje/Jess/UNSW/BEES0006/Animals/Banner.png)
+
 # specieshindex
 
 `specieshindex` is a package that aims to guage scientific influence mainly using the h-index.
