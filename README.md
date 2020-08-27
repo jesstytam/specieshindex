@@ -1,3 +1,7 @@
+---
+output: github_document
+---
+
 ![](C:/Users/iamje/Jess/UNSW/BEES0006/Animals/Banner.png)
 
 # specieshindex
