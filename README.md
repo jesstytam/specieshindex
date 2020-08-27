@@ -1,8 +1,3 @@
-README.rmd
-================
-Jess
-8/27/2020
-
 ![](C:/Users/iamje/Jess/UNSW/BEES0006/Animals/Banner.png)
 
 # specieshindex
