@@ -3,8 +3,8 @@
 
 # specieshindex
 
-`specieshindex` is a package that aims to guage scientific influence
-mainly using the h-index.
+`specieshindex` is a package that aims to guage scientific influence of
+different species mainly using the h-index.
 
 ## Installation
 
