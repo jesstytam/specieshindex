@@ -1,5 +1,5 @@
 
-<img src="C:/Users/iamje/Jess/UNSW/BEES0006/Animals/stickerfile.png?raw=true" alt="hexsticker" height="250px" align="right" />
+<img src="C:/Users/iamje/Jess/UNSW/BEES0006/Honours/README_files/figure-gfm/stickerfile.png" alt="hexsticker" height="250px" align="right" />
 
 # specieshindex
 
@@ -575,16 +575,17 @@ library(ggplot2)
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = h,
                  colour = "H-index"),
-             size = 6) +
+             size = 3) +
   labs(x = "Species",
        y = "Index Score",
        colour = "Index",
        title = "h-index") +
   scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) +
   scale_colour_manual(values = c("H-index" = "#3498DB")) +
-  theme(plot.title = element_text(size = 24, face = "bold"),
-        axis.title = element_text(size = 18),
-        axis.text = element_text(size = 16))
+  theme(plot.title = element_text(size = 14, face = "bold"),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        legend.position = "none")
 ```
 
 <img src="README_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
@@ -594,16 +595,17 @@ ggplot(CombineSp, aes(x = species)) +
 ggplot(CombineSp, aes(x = species)) +
 geom_point(aes(y = citations,
                colour = "Citations"),
-           size = 6) +
+           size = 3) +
 labs(x = "Species",
      y = "Total citations",
      colour = "Index",
      title = "Citations") +
 scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + 
 scale_colour_manual(values = c("Citations"  = "#2874A6")) +
-theme(plot.title = element_text(size = 24, face = "bold"),
-      axis.title = element_text(size = 18),
-      axis.text = element_text(size = 16))
+theme(plot.title = element_text(size = 14, face = "bold"),
+      axis.title = element_text(size = 12),
+      axis.text = element_text(size = 10),
+      legend.position = "none")
 ```
 
 <img src="README_files/figure-gfm/unnamed-chunk-6-2.png" style="display: block; margin: auto;" />
