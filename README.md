@@ -1,5 +1,5 @@
 
-![](C:/Users/iamje/Jess/UNSW/Honours/Honours/README_files/figure-gfm/Banner.png)
+showtext<img src="C:/Users/iamje/Jess/UNSW/BEES0006/Animals/stickerfile.png" alt="showtext" height="300px" align="right" />
 
 # specieshindex
 
