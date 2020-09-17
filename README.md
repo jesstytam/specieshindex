@@ -1,5 +1,5 @@
 
-<img src="C:/Users/iamje/Jess/UNSW/BEES0006/Animals/stickerfile.png" alt="showtext" height="250px" align="right" />
+<img src="C:/Users/iamje/Jess/UNSW/BEES0006/Animals/stickerfile.png?raw=true" alt="hexsticker" height="250px" align="right" />
 
 # specieshindex
 
