@@ -128,6 +128,9 @@ FetchSpT <- function(genus, species, APIkey) {
   requireNamespace("dplyr", quietly = TRUE)  
   count <- CountSpT(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
+  if (count < 1) {
+    stop("There are no records of", paste(genus), paste(species), "found on Scopus.")
+  }
   #loop if count is under 5000
   if (count <= 5000) {
     step_size <- 1000 #the number of records to retrieve in each loop
@@ -322,6 +325,9 @@ FetchSpTAK <- function(genus, species, APIkey) {
   requireNamespace("dplyr", quietly = TRUE)
   count <- CountSpTAK(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
+  if (count < 1) {
+    stop("There are no records of", paste(genus), paste(species), "found on Scopus.")
+  }
   #loop if count is under 5000
   if (count <= 5000) {
     step_size <- 1000 #the number of records to retrieve in each loop
