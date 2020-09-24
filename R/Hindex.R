@@ -129,7 +129,8 @@ FetchSpT <- function(genus, species, APIkey) {
   count <- CountSpT(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
-    stop("There are no records of", paste(genus), paste(species), "found on Scopus.")
+    noCitations <- data.frame(citations = 0)
+    return(noCitations)
   }
   #loop if count is under 5000
   if (count <= 5000) {
@@ -326,7 +327,8 @@ FetchSpTAK <- function(genus, species, APIkey) {
   count <- CountSpTAK(genus, species, APIkey) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
-    stop("There are no records of", paste(genus), paste(species), "found on Scopus.")
+    noCitations <- data.frame(citations = 0)
+    return(noCitations)
   }
   #loop if count is under 5000
   if (count <= 5000) {
@@ -808,6 +810,14 @@ SpHAfterdate <- function(data, date) {
 #' Allindices(Woylie, genus = "genus_name", species = "species_name")
 #' 
 Allindices <- function(data, genus, species) {
+  if (data$citations < 1) {
+    zeroIndex <- data.frame(genus_species = paste0(genus, "_", species),
+                            species = paste0(species),
+                            genus = paste0(genus),
+                            publications = 0, citations = 0, journals = 0, articles = 0, reviews = 0, years_publising = 0,
+                            h = 0, m = 0, i10 = 0, h5 = 0)
+    return(zeroIndex)
+  }
   combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
                         TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
                         SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
