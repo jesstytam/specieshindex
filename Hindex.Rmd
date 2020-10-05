@@ -566,7 +566,7 @@ SpMindex <- function(data) {
   }
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
   years_publishing <- as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year) #time since first publication in years
-  Mindex <- Hindex/years_publishing
+  Mindex <- round(Hindex/years_publishing, digits = 3) #round to 3 decimal places
   return(Mindex)
 }
 ```

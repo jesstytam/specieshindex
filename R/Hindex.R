@@ -705,7 +705,7 @@ SpMindex <- function(data) {
   }
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
   years_publishing <- as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year) 
-  Mindex <- Hindex/years_publishing
+  Mindex <- round(Hindex/years_publishing, digits = 3)
   return(Mindex)
 }
 
