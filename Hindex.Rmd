@@ -645,32 +645,6 @@ Allindices <- function(data, genus, species) {
 }
 ```
 
-```{r, add classification levels}
-Addranks <- function(data) {
-  library(taxize)
-  library(dplyr)
-  family <- tax_name(query = paste(data$genus, data$species), get = "family", db = "itis") #get family name
-  newdata1 <- data %>%
-    mutate(family = family$family)
-  order <- tax_name(query = paste(data$genus, data$species), get = "order", db = "itis") #get order name
-  newdata2 <- newdata1 %>%
-    mutate(order = order$order)
-  class <- tax_name(query = paste(data$genus, data$species), get = "class", db = "itis") #get class name
-  newdata3 <- newdata2 %>%
-    mutate(class = class$class)
-  phylum <- tax_name(query = paste(data$genus, data$species), get = "phylum", db = "itis") #get phylum name
-  newdata4 <- newdata3 %>%
-    mutate(phylum = phylum$phylum)
-  kingdom <- tax_name(query = paste(data$genus, data$species), get = "kingdom", db = "itis") #get kingdom name
-  newdata5 <- newdata4 %>%
-    mutate(kingdom = kingdom$kingdom)
-  col_order <- c("genus_species", "species", "genus", "family", "order", "class", "phylum", "kingdom",
-                 "publications", "citations", "journals", "articles", "reviews", "years_publishing",
-                 "h", "m", "i10", "h5")
-  rankeddata <- newdata5[, col_order]
-  return(rankeddata)
-}
-```
 
 **Tests**
 
@@ -696,7 +670,6 @@ SpHYear(Woylie)
 SpHGrowth(Woylie)
 
 B_penicillata <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
-AddRank(B_penicillata)
 ```
 
 ```{r, quokka}
@@ -774,7 +747,6 @@ P_cinereus <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
 
 ```{r, combining the datasets}
 Combinedata <- rbind(B_penicillata, S_brachyurus, O_anatinus, P_cinereus)
-Addranks(Combinedata)
 
 plot(Combinedata$publications)
 plot(Combinedata$citations)
