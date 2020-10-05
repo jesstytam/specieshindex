@@ -858,19 +858,19 @@ Allindices <- function(data, genus, species) {
 Addranks <- function(data) {
   library(taxize)
   library(dplyr)
-  family <- tax_name(query = paste(data$genus, data$species), get = "family", db = "ncbi") #get family name
+  family <- tax_name(query = paste(data$genus, data$species), get = "family", db = "itis") #get family name
   newdata1 <- data %>%
     mutate(family = family$family)
-  order <- tax_name(query = paste(data$genus, data$species), get = "order", db = "ncbi") #get order name
+  order <- tax_name(query = paste(data$genus, data$species), get = "order", db = "itis") #get order name
   newdata2 <- newdata1 %>%
     mutate(order = order$order)
-  class <- tax_name(query = paste(data$genus, data$species), get = "class", db = "ncbi") #get class name
+  class <- tax_name(query = paste(data$genus, data$species), get = "class", db = "itis") #get class name
   newdata3 <- newdata2 %>%
     mutate(class = class$class)
-  phylum <- tax_name(query = paste(data$genus, data$species), get = "phylum", db = "ncbi") #get phylum name
+  phylum <- tax_name(query = paste(data$genus, data$species), get = "phylum", db = "itis") #get phylum name
   newdata4 <- newdata3 %>%
     mutate(phylum = phylum$phylum)
-  kingdom <- tax_name(query = paste(data$genus, data$species), get = "kingdom", db = "ncbi") #get kingdom name
+  kingdom <- tax_name(query = paste(data$genus, data$species), get = "kingdom", db = "itis") #get kingdom name
   newdata5 <- newdata4 %>%
     mutate(kingdom = kingdom$kingdom)
   col_order <- c("genus_species", "species", "genus", "family", "order", "class", "phylum", "kingdom",
