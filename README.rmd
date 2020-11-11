@@ -53,7 +53,7 @@ Koala <- FetchSpTAK("Phascolarctos", "cinereus", myAPI)
 
 Now that you have the data, you can use the `Allindices()` function to create a dataframe that shows their indices.
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
 P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")

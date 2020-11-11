@@ -56,47 +56,24 @@ create a dataframe that shows their indices.
 
 ``` r
 W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
-```
-
-    ## Warning in if (data$citations < 1) {: the condition has length > 1 and only the
-    ## first element will be used
-
-``` r
 Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
-```
-
-    ## Warning in if (data$citations < 1) {: the condition has length > 1 and only the
-    ## first element will be used
-
-``` r
 P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
-```
-
-    ## Warning in if (data$citations < 1) {: the condition has length > 1 and only the
-    ## first element will be used
-
-``` r
 K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
-```
 
-    ## Warning in if (data$citations < 1) {: the condition has length > 1 and only the
-    ## first element will be used
-
-``` r
 CombineSp <- rbind(W, Q, P, K) #combining the citation records
 CombineSp
 ```
 
     ##              genus_species     species           genus publications citations
-    ## 1    Bettongia_penicillata penicillata       Bettongia            0         0
-    ## 2       Setonix_brachyurus  brachyurus         Setonix            0         0
-    ## 3 Ornithorhynchus_anatinus    anatinus Ornithorhynchus            0         0
-    ## 4   Phascolarctos_cinereus    cinereus   Phascolarctos            0         0
-    ##   journals articles reviews years_publishing h m i10 h5
-    ## 1        0        0       0               NA 0 0   0  0
-    ## 2        0        0       0               NA 0 0   0  0
-    ## 3        0        0       0               NA 0 0   0  0
-    ## 4        0        0       0               NA 0 0   0  0
+    ## 1    Bettongia_penicillata penicillata       Bettongia          113      1903
+    ## 2       Setonix_brachyurus  brachyurus         Setonix          242      3427
+    ## 3 Ornithorhynchus_anatinus    anatinus Ornithorhynchus          321      6365
+    ## 4   Phascolarctos_cinereus    cinereus   Phascolarctos          773     14291
+    ##   journals articles reviews years_publishing  h     m i10 h5
+    ## 1       55      110       3               43 26 0.605  54  7
+    ## 2      107      237       5               66 29 0.439 121  4
+    ## 3      153      308      13               67 41 0.612 177  7
+    ## 4      227      744      29              139 53 0.381 427 14
 
 Once you are happy with your dataset, you can make some nice plots.
 Using `ggplot2`, we can compare the h-index and the total citations.

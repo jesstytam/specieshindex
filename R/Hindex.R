@@ -811,6 +811,16 @@ SpHAfterdate <- function(data, date) {
 #' 
 Allindices <- function(data, genus, species) {
   if (data$citations < 1) {
+    combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
+                          TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
+                          SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+    combine[is.na(combine)] <- 0 #replace NA values with 0
+    colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles",
+                           "reviews", "years_publishing", "h", "m", "i10",
+                           "h5")
+    return(combine)
+    
+  } else {
     zeroIndex <- data.frame(genus_species = paste0(genus, "_", species),
                             species = paste0(species),
                             genus = paste0(genus),
@@ -818,13 +828,6 @@ Allindices <- function(data, genus, species) {
                             h = 0, m = 0, i10 = 0, h5 = 0)
     return(zeroIndex)
   }
-  combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
-                        TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
-                        SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
-  combine[is.na(combine)] <- 0
-  colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles",
-                         "reviews", "years_publishing", "h", "m", "i10",
-                         "h5")
   cat("\n", genus, species, "\n",
       TotalPub(data), "publications", "\n",
       TotalCite(data), "citations", "\n",
@@ -836,5 +839,4 @@ Allindices <- function(data, genus, species) {
       "m:", SpMindex(data), "\n",
       "i10:", Spi10(data), "\n",
       "h5:", SpH5(data))
-  return(combine)
 }
