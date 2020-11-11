@@ -6,7 +6,7 @@ output: github_document
 
 # specieshindex
 
-`specieshindex` is a package that aims to guage scientific influence of different species mainly using the h-index.
+`specieshindex` is a package that aims to gauge scientific influence of different species mainly using the h-index.
 
 ## Installation
 
@@ -63,14 +63,7 @@ CombineSp <- rbind(W, Q, P, K) #combining the citation records
 CombineSp
 ```
 
-If you have a much larger dataset and want to add classification information, you can use `Addranks()` to do this.
-
-```{r}
-CombineSp <- Addranks(CombineSp)
-CombineSp
-```
-
-Once you are happy with your dataset, you can make some nice plots. Here, I will being using `ggplot2` to plot and compare the h-index and the total citations.
+Once you are happy with your dataset, you can make some nice plots. Using `ggplot2`, we can compare the h-index and the total citations.
 
 ```{r, fig.height=4, fig.width=5, fig.align='center'}
 library(ggplot2)
