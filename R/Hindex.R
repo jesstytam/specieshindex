@@ -21,7 +21,7 @@
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#'  CountSpT("bettongia", "penicillata", "
+#' CountSpT("Bettongia", "penicillata", "myAPI")
 #' }
 CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   requireNamespace("httr", quietly = TRUE)
