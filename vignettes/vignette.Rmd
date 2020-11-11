@@ -204,7 +204,7 @@ The h5 index computes the h-index for the past 5 years.
 
 For example:
 
-```{r}
+```{r, message=FALSE}
 SpH5(Woylie)
 ```
 
@@ -238,7 +238,7 @@ Rather than calling each function to calculate the indices in turn, you can get 
 
 For example:
 
-```{r}
+```{r, warning=FALSE}
 Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 ```
 
@@ -261,7 +261,7 @@ As shown here, there were 113 records (publications) for the woylie, 242 records
 
 Next, we calculate our research productivity and influence indices using the `Allindices()` function:
 
-```{r}
+```{r, warning=FALSE}
 W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
 P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
