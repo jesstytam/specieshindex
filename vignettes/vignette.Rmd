@@ -34,7 +34,6 @@ devtools::load_all(".")
 ```
 
 ```{r, include=FALSE}
-library(specieshindex)
 library(citr)
 library(secret)
 library(ggplot2)
@@ -69,11 +68,12 @@ install.packages("httr")
 install.packages("dplyr")
 install.packages("rlang")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = TRUE)
-
-library(taxize)
-library(httr)
-library(XML)
+```
+```{r, load-packages, warning=FALSE}
 library(rscopus)
+library(taxize)
+library(XML)
+library(httr)
 library(specieshindex)
 ```
 
@@ -98,11 +98,11 @@ It is recommend that you run a quick search using functions `CountSpT()` or `Cou
 
 For example, you can run:
 
-```{r, eval=FALSE}
+```{r, cache=TRUE, eval=TRUE, warning=FALSE}
 CountSpT("Bettongia", "penicillata", myAPI)
 ```
 
-```{r, eval=FALSE}
+```{r, cache=TRUE, eval=TRUE, warning=FALSE}
 CountSpTAK("Bettongia", "penicillata", myAPI)
 ```
 
@@ -112,11 +112,11 @@ As you may expect, some species have been studied more than the others [@Simko20
 
 For example, you can run:
 
-```{r, eval=FALSE}
+```{r, cache=TRUE, eval=TRUE, warning=FALSE, message=FALSE}
 FetchSpT("Bettongia", "penicillata", myAPI)
 ```
 
-```{r, eval=FALSE}
+```{r, cache=TRUE, eval=TRUE, warning=FALSE, message=FALSE}
 FetchSpTAK("Bettongia", "penicillata", myAPI)
 ```
 
@@ -279,7 +279,7 @@ After preparing the data, we are ready to make some plots. For example, using th
 
 We first plot the h-index:
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r, cache=TRUE, fig.height=5, fig.width=6, fig.align='center'}
 #h-index
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = h,
@@ -300,7 +300,7 @@ ggplot(CombineSp, aes(x = species)) +
 \
 We can also plot the total citations counts for comparison, since citations is an important factor in contributing to h-index.
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r, cache=TRUE, fig.height=5, fig.width=6, fig.align='center'}
 #total citations
 ggplot(CombineSp, aes(x = species)) +
 geom_point(aes(y = citations,
@@ -323,7 +323,7 @@ It seems like the h-index values are quite consistent with the total numbers of 
 
 We next plot the m-index to see how it differs from the h-index. Recalling that m-index is calculated by dividing the h-index by the number of years of publication activity ($m=h/years~publishing$), let us have a closer inspection at both the m-index:
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r, cache=TRUE, fig.height=5, fig.width=6, fig.align='center'}
 #m-index
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = m,
@@ -344,7 +344,7 @@ ggplot(CombineSp, aes(x = species)) +
 \
 We should also have a look at the related variable years_publishing (number of years since first publication for a given species).
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+```{r, cache=TRUE, fig.height=5, fig.width=6, fig.align='center'}
 #years publishing
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = years_publishing,

@@ -21,10 +21,10 @@ install.packages("dplyr")
 install.packages("rlang")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = TRUE)
 
-library(taxize)
-library(httr)
-library(XML)
 library(rscopus)
+library(taxize)
+library(XML)
+library(httr)
 library(specieshindex)
 ```
 
@@ -65,7 +65,7 @@ CombineSp
 
 Once you are happy with your dataset, you can make some nice plots. Using `ggplot2`, we can compare the h-index and the total citations.
 
-```{r, fig.height=4, fig.width=5, fig.align='center'}
+```{r, cache=TRUE, fig.height=4, fig.width=5, fig.align='center'}
 library(ggplot2)
 #h-index
 ggplot(CombineSp, aes(x = species)) +

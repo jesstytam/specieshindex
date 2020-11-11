@@ -20,10 +20,10 @@ install.packages("dplyr")
 install.packages("rlang")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = TRUE)
 
-library(taxize)
-library(httr)
-library(XML)
 library(rscopus)
+library(taxize)
+library(XML)
+library(httr)
 library(specieshindex)
 ```
 
