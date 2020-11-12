@@ -31,10 +31,13 @@ library(specieshindex)
 
 To connect and download citation information from Scopus legally, you
 will absolutely need an API key. Here are the steps to obtain the key.
-1. Go to <https://dev.elsevier.com/> and click on the button `I want an
-API key`. 2. Create an account and log in. 3. Go to the `My API Key` tab
-on top of the page and click `Create API Key`. 4. Read the legal
-documents and check the boxes.
+
+1.  Go to <https://dev.elsevier.com/> and click on the button `I want an
+    API key`.
+2.  Create an account and log in.
+3.  Go to the `My API Key` tab on top of the page and click `Create API
+    Key`.
+4.  Read the legal documents and check the boxes.
 
 ## Simple example
 
