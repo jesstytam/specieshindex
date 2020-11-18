@@ -115,6 +115,57 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
 }
 ```
 
+```{r}
+CountDomain <- function(genus, species, APIkey) {
+  library(httr)
+  library(XML)
+  library(rlang)
+  library(taxize)
+    if (missing(APIkey)) {
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
+   }
+  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
+  if (findname$submitted_name %in% findname$matched_name) {
+    print(paste("Species found on the Encyclopedia of Life."))
+  } else {
+    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
+  } 
+  #conservation
+  consURL <- GET("http://api.elsevier.com/content/search/scopus",
+              query = list(apiKey = paste0(APIkey),
+                           query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND conserv*"),
+                           httpAccept = "application/xml")) #format the URL to be sent to the API
+  stop_for_status(consURL) #pass any HTTP errors to the R console
+  consData <- content(consURL, as = "text") #extract the content of the response
+  newconsData <- xmlParse(consURL) #parse the data to extract values
+  conservation <- as.numeric(xpathSApply(newconsData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
+  #genomics
+  geneURL <- GET("http://api.elsevier.com/content/search/scopus",
+              query = list(apiKey = paste0(APIkey),
+                           query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND (genom* OR gene*)"),
+                           httpAccept = "application/xml")) #format the URL to be sent to the API
+  stop_for_status(geneURL) #pass any HTTP errors to the R console
+  geneData <- content(geneURL, as = "text") #extract the content of the response
+  newgeneData <- xmlParse(geneURL) #parse the data to extract values
+  genomics <- as.numeric(xpathSApply(newgeneData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
+  #evolution
+  evolURL <- GET("http://api.elsevier.com/content/search/scopus",
+              query = list(apiKey = paste0(APIkey),
+                           query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND evolution*"),
+                           httpAccept = "application/xml")) #format the URL to be sent to the API
+  stop_for_status(evolURL) #pass any HTTP errors to the R console
+  evolData <- content(evolURL, as = "text") #extract the content of the response
+  newevolData <- xmlParse(evolURL) #parse the data to extract values
+  evolution <- as.numeric(xpathSApply(evolData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
+  #displaying all of the counts
+  cat(
+    conservation, "conservation publications", "\n",
+    genemics, "genomics publications", "\n",
+    evolution, "evolution publications"
+  )
+}
+```
+
 ```{r, fetch using title only}
 #this function downloads citation data from scopus
 FetchSpT <- function(genus, species, APIkey) {
