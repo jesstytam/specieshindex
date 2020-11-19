@@ -83,7 +83,8 @@ Using `ggplot2`, we can compare the h-index and the total citations.
 
 ``` r
 #h-index
-ggplot2::ggplot(CombineSp, aes(x = species)) +
+library(ggplot2)
+ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = h,
                  colour = "H-index"),
              size = 3) +
@@ -104,7 +105,7 @@ ggplot2::ggplot(CombineSp, aes(x = species)) +
 
 ``` r
 #total citations
-ggplot2::ggplot(CombineSp, aes(x = species)) +
+ggplot(CombineSp, aes(x = species)) +
 geom_point(aes(y = citations,
                colour = "Citations"),
            size = 3) +
