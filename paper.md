@@ -10,7 +10,7 @@ output:
   pdf_document: default
   html_document:
     df_print: paged
-authors:
+authors: <!-- seems like only first name is shown in the preview - please check? -->
 - name: Jessica Tam
   affiliation: 1
 - name: Malgorzata Lagisz
@@ -31,15 +31,15 @@ affiliations:
 
 # Summary
 
-Conservation efforts of species rely heavily on their existing research. Reintroduction projects, pest eradication, breeding programs, habitat restoration, etc. all require sound scientific knowledge for their proper implementation. Unfortunately, there is serious taxonomic bias [@bonnet_taxonomic_2002] in ecological research, such that certain species receive more research interest [@donaldson_taxonomic_2017; @dos2020drivers; @seddon_taxonomic_2005; @titley_scientific_2017; @troudet_taxonomic_2017]. Over time, it has widened the knowledge gaps of species and increased the patchiness of fundamental knowledge. This issue needs to be addressed by the scientific community as a whole to reduce the disparity of research and ensure its even distribution.
+Nature conservation efforts rely heavily on existing research. Species reintroduction projects, pest eradication, breeding programs, habitat restoration, etc. all require sound scientific knowledge for their proper implementation. Unfortunately, there is a serious taxonomic bias [@bonnet_taxonomic_2002] in ecological research, such that certain species receive more research interest than the others [@donaldson_taxonomic_2017; @dos2020drivers; @seddon_taxonomic_2005; @titley_scientific_2017; @troudet_taxonomic_2017]. Over time, taxonomic bais in research interest has widened the knowledge gaps between species and increased the patchiness of fundamental knowledge. This issue needs to be addressed by the scientific community in order to identify and address knowledge gaps, and to direct research efforts where they are most needed for conservation.  
 
-To remedy the problem of taxonomic bias, we must first quantify research interest in the species' publications. The challenge presented here is the lack of existing methods to quantify species-level research interest. Although this is a well-known problem, the few previous studies had only compared biases between higher taxonomic levels. Results showed that vertebrates in general attracted more research than invertebrates [@donaldson_taxonomic_2017; @eisenhauer2019recognizing; @titley_scientific_2017; @troudet_taxonomic_2017]. While vertebrate clades, i.e. Mammalia and Aves, had more related publications [@donaldson_taxonomic_2017; @titley_scientific_2017; @troudet_taxonomic_2017]. Species-specific investigations are vital in avoiding the over-generalisation of groups since variations in research interest may occur within clades. 
+To remedy the problem of taxonomic bias in research, we must first quantify and characterise existing biases. The challenge presented here is the lack of existing methods to quantify species-level research interest in the body of scientific publications. Although this is a well-known problem, the few previous studies had only compared biases between higher taxonomic levels. Results showed that vertebrates in general attracted more research than invertebrates [@donaldson_taxonomic_2017; @eisenhauer2019recognizing; @titley_scientific_2017; @troudet_taxonomic_2017]. While some vertebrate clades, i.e. Mammalia and Aves, had more publications [@donaldson_taxonomic_2017; @titley_scientific_2017; @troudet_taxonomic_2017]. Within these clades, there is likely to be high variation in research interest among species. However, so far, investigating such species-level remains challenging.  
 
 # Statement of need
 
-The aim of specieshindex is to standardise the use of *h*-index in the context of measuring research popularity of species. The *h*-index was first introduced by Hirsch [@hirsch_index_2005] to compare the influence of academics [@hirsch2014meaning]. It is obtained with the formula *h* = total publications (*n*) that have at least been cited *n* times, after ranking the publications in a descending order by their number of citations. The *h*-index is now also being used to measure the research influence of the publications of different academic disciplines [@banks_extension_2006; @harzing_google_2016], journals [@braun_hirsch-type_2006], countries [@csajbok_hirsch-index_2007], species of animals [@fleming_good_2016; @mckenzie_which_2015; @robertson_scientific_2015] and pathogens [@cox_comparison_2016]. Using the *h*-index, specieshindex calculates the *h*-index of the publication of different species. There are currently 3 published studies [@fleming_good_2016; @mckenzie_which_2015; @robertson_scientific_2015] that adopted the species *h*-index as a measure of the species' research popularity. However, there are no standardised methods to achieve this at the moment.
+The aim of specieshindex is to standardise the use of *h*-index in the context of measuring research popularity of species. The *h*-index was first introduced by Hirsch [@hirsch_index_2005] to compare the influence of academics [@hirsch2014meaning]. It is obtained with the formula *h* = total publications (*n*) that have at least been cited *n* times, after ranking the publications in a descending order by their number of citations. The *h*-index is now also being used to measure the research interest and influence of the publications of different academic disciplines [@banks_extension_2006; @harzing_google_2016], journals [@braun_hirsch-type_2006], countries [@csajbok_hirsch-index_2007], species of animals [@fleming_good_2016; @mckenzie_which_2015; @robertson_scientific_2015] and pathogens [@cox_comparison_2016]. Using the *h*-index, specieshindex calculates the *h*-index of the publication of different species. There are currently 3 published studies [@fleming_good_2016; @mckenzie_which_2015; @robertson_scientific_2015] that adopted the species *h*-index as a measure of the species' research popularity. However, there are no standardised methods to achieve this at the moment.
 
-specieshindex connects to the Scopus database and extracts citation records for analysis. It does it via the Scopus API, and returns information including the publication title, number of citations, publication type, etc. The binomial name of the species name must be used instead of their common names since they are less specific and can refer to larger groups of species. The 2 types of functions that connects to Scopus can be distinguished by their suffixes "T" and "TAK". "T" functions only extracts publications with the species' name in the title whereas "TAK" in the title, abstract and keywords. In the case that the user only wants to know the number of publications of a particular species, the `CountSpT()` and `CountSpTAK()` functions simply returns the total count without extracting any data. Apart from the *h*-index, specieshindex can also compute for other indices such as the *m*-index and the i10 index, which are also used to gauge research influence of authors. In this case, it will be used to gauge the research influence of species publication.
+The package specieshindex connects to the Scopus database (interdisciplinary broad-range database of academic literature) and extracts citation records of relevant publications, as identified via a serch query. It does it via the Scopus API, and returns information including the publication title, number of citations, publication type, etc. The binomial name of the species name must be used in the search query, instead of their common names, since the latter are less specific and can refer to larger groups of species <!-- give example? -->. There are two types of functions that connect to Scopus. They are distinguished by their suffixes "T" and "TAK". "T" function only extracts publications with the species' name in the publication title, whereas "TAK" functions query the title, abstract and keywords. When the user only wants to know the number of publications related to a particular species, the `CountSpT()` and `CountSpTAK()` functions simply return the total publication count without extracting any records from the Scopus database. Apart from the *h*-index, specieshindex can also compute other established influence indices, such as the *m*-index and the i10 index, via function `Allindices()`.  
 
 # Implementation
 
@@ -73,7 +73,7 @@ An API key from Scopus is required to extract citation records from their databa
 
 ## Example
 
-The species' binomial name is required to download the citation records from Scopus.
+The species' binomial name (i.e. Latin name) is required to download the citation records from Scopus:
 
 ```{r}
 # Extract citation data
@@ -110,14 +110,16 @@ CombineSp
 
 \
 
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)
 
-**Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
+
+\center ![](README_files/figure-gfm/unnamed-chunk-5-1.png) 
+
+__Figure 1.__ The *h*-index of the Woylie, Quokka, Platypus, and Koala.
 
 \
 
 # Acknowledgements
 
-I acknowledge the contributions from my supervisors Dr. Malgorzata (Losia) Lagisz, Professor Shinichi Nakagawa, and Associate Professor Will Cornwell.
+I acknowledge the contributions of the authors of the dependance packages: `rscopus`, `taxize`, `XML`, `httr`,`dplyr`,`rlang`.
 
 # References
