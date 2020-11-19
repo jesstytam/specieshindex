@@ -1,32 +1,37 @@
 ---
 title: 'specieshindex: How scientifically popular is a species?'
 tags:
-  - R
-  - h-index
-  - species
-  - ecology
+- R
+- h-index
+- species
+- ecology
+date: "18 November 2020"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 authors:
-  - name: Jessica Tam
-    affiliation: 1
-  - name: Malgorzata Lagisz
-    orcid: 0000-0002-3993-6127
-    affiliation: 1
-  - name: Shinichi Nakagawa
-    orcid: 0000-0002-7765-5182
-    affiliation: 1
-  - name: Will Cornwell
-    orcid: 0000-0003-4080-4073
-    affiliation: 1
-affiliations:
- - name: Evolution & Ecology Research Centre and School of Biological, Earth and Environmental Sciences, University of New South Wales, Sydney, Australia
-   index: 1
-date: 18 November 2020
+- name: Jessica Tam
+  affiliation: 1
+- name: Malgorzata Lagisz
+  orcid: 0000-0002-3993-6127
+  affiliation: 1
+- name: Shinichi Nakagawa
+  orcid: 0000-0002-7765-5182
+  affiliation: 1
+- name: Will Cornwell
+  orcid: 0000-0003-4080-4073
+  affiliation: 1
 bibliography: paper.bib
+affiliations:
+- name: Evolution & Ecology Research Centre and School of Biological, Earth and Environmental
+    Sciences, University of New South Wales, Sydney, Australia
+  index: 1
 ---
 
 # Summary
 
-Conservation efforts of species rely heavily on their existing research. Reintroduction projects, pest eradication, breeding programs, habitat restoration, etc. all require sound scientific knowledge for their proper implementation. Unfortunately, there is serious taxonomic bias [@bonnet_taxonomic_2002] in ecological research, such that certain species receive more research interest [@donaldson_taxonomic_2017; @dos_santos_drivers_2020; @seddon_taxonomic_2005; @titley_scientific_2017; @troudet_taxonomic_2017]. Over time, it has widened the knowledge gaps of species and increased the patchiness of fundamental knowledge. This issue needs to be addressed by the scientific community as a whole to reduce the disparity of research and ensure its even distribution.
+Conservation efforts of species rely heavily on their existing research. Reintroduction projects, pest eradication, breeding programs, habitat restoration, etc. all require sound scientific knowledge for their proper implementation. Unfortunately, there is serious taxonomic bias [@bonnet_taxonomic_2002] in ecological research, such that certain species receive more research interest [@donaldson_taxonomic_2017; @dos2020drivers; @seddon_taxonomic_2005; @titley_scientific_2017; @troudet_taxonomic_2017]. Over time, it has widened the knowledge gaps of species and increased the patchiness of fundamental knowledge. This issue needs to be addressed by the scientific community as a whole to reduce the disparity of research and ensure its even distribution.
 
 To remedy the problem of taxonomic bias, we must first quantify research interest in the species' publications. The challenge presented here is the lack of existing methods to quantify species-level research interest. Although this is a well-known problem, the few previous studies had only compared biases between higher taxonomic levels. Results showed that vertebrates in general attracted more research than invertebrates [@donaldson_taxonomic_2017; @eisenhauer2019recognizing; @titley_scientific_2017; @troudet_taxonomic_2017]. While vertebrate clades, i.e. Mammalia and Aves, had more related publications [@donaldson_taxonomic_2017; @titley_scientific_2017; @troudet_taxonomic_2017]. Species-specific investigations are vital in avoiding the over-generalisation of groups since variations in research interest may occur within clades. 
 
@@ -103,14 +108,15 @@ CombineSp
     ## 3      153      308      13               67 41 0.612 177  7
     ## 4      227      744      29              139 53 0.381 427 14
 
-<p align="center">
-<img src="README_files/figure-gfm/unnamed-chunk-5-1.png" />
-</p>
-<p align="center">
-**Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
-<p/>
+\
 
-<br>
+
+
+\center ![](README_files/figure-gfm/unnamed-chunk-5-1.png) 
+
+__Figure 1.__ The *h*-index of the Woylie, Quokka, Platypus, and Koala.
+
+\
 
 # Acknowledgements
 
