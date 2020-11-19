@@ -82,16 +82,14 @@ Once you are happy with your dataset, you can make some nice plots.
 Using `ggplot2`, we can compare the h-index and the total citations.
 
 ``` r
-library(ggplot2)
 #h-index
-ggplot(CombineSp, aes(x = species)) +
+ggplot2::ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = h,
                  colour = "H-index"),
              size = 3) +
   labs(x = "Species",
        y = "Index Score",
-       colour = "Index",
-       title = "h-index") +
+       colour = "Index") +
   scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) +
   scale_colour_manual(values = c("H-index" = "#3498DB")) +
   theme(plot.title = element_text(size = 14, face = "bold"),
@@ -102,16 +100,17 @@ ggplot(CombineSp, aes(x = species)) +
 
 <img src="README_files/figure-gfm/unnamed-chunk-5-1.png" style="display: block; margin: auto;" />
 
+**Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
+
 ``` r
 #total citations
-ggplot(CombineSp, aes(x = species)) +
+ggplot2::ggplot(CombineSp, aes(x = species)) +
 geom_point(aes(y = citations,
                colour = "Citations"),
            size = 3) +
 labs(x = "Species",
      y = "Total citations",
-     colour = "Index",
-     title = "Citations") +
+     colour = "Index") +
 scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + 
 scale_colour_manual(values = c("Citations"  = "#2874A6")) +
 theme(plot.title = element_text(size = 14, face = "bold"),
@@ -120,4 +119,7 @@ theme(plot.title = element_text(size = 14, face = "bold"),
       legend.position = "none")
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-5-2.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
+
+**Figure 2.** The total number of citations of the publications on the
+Woylie, Quokka, Platypus, and Koala.

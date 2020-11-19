@@ -110,11 +110,9 @@ CombineSp
 
 \
 
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)
 
-
-\center ![](README_files/figure-gfm/unnamed-chunk-5-1.png) 
-
-__Figure 1.__ The *h*-index of the Woylie, Quokka, Platypus, and Koala.
+**Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
 
 \
 
