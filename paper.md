@@ -33,7 +33,8 @@ affiliations:
 # Summary
 
 Conservation efforts rely heavily on existing research. Species reintroduction projects, pest eradication, breeding programs, habitat restoration, etc. all require sound scientific knowledge for their implementations. Unfortunately, there is a serious taxonomic bias [@bonnet_taxonomic_2002] in ecological, evolutionary and conservation research, such that certain species receive more research interest than the others [@donaldson_taxonomic_2017; @dos2020drivers; @seddon_taxonomic_2005; @titley_scientific_2017; @troudet_taxonomic_2017]. Over time, taxonomic bias in research interest has widened the knowledge gaps between species and increased the patchiness of our knowledge on species. The scientific community now need to be able to quantify knowledge gaps to identify and address such gaps, and to direct research efforts where they are most needed for conservation.  
-<!-- Shinihci - I am still changing here - it is a bit incoherent and could be shorter-->
+<!-- Shinihci - I am still changing here - it is a bit incoherent -->
+<!-- Shinihci - the next setence true??? - I thought you are not the first one to prepose species index but it sounds like you did -->
 However, we lack existing methods to quantify species-level research interest in the body of scientific publications. Although this is a well-known problem, the few previous studies had only compared biases between higher taxonomic levels. Results showed that vertebrates in general attracted more research than invertebrates [@donaldson_taxonomic_2017; @eisenhauer2019recognizing; @titley_scientific_2017; @troudet_taxonomic_2017]. While some vertebrate clades, i.e. Mammalia and Aves, had more publications [@donaldson_taxonomic_2017; @titley_scientific_2017; @troudet_taxonomic_2017]. Within these clades, there is likely to be high variation in research interest among species. However, so far, investigating such species-level remains challenging.  
 
 # Statement of need
