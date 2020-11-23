@@ -810,17 +810,15 @@ SpHAfterdate <- function(data, date) {
 #' Allindices(Woylie, genus = "genus_name", species = "species_name")
 #' 
 Allindices <- function(data, genus, species) {
-  if (data$citations < 1) {
-    combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
-                          TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
-                          SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
-    combine[is.na(combine)] <- 0 #replace NA values with 0
-    colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles",
-                           "reviews", "years_publishing", "h", "m", "i10",
-                           "h5")
-    return(combine)
-    
-  } else {
+  combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
+                        TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
+                        SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+  combine[is.na(combine)] <- 0 #replace NA values with 0
+  colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles",
+                         "reviews", "years_publishing", "h", "m", "i10",
+                         "h5")
+  return(combine)
+  if (data$citations == 0) {
     zeroIndex <- data.frame(genus_species = paste0(genus, "_", species),
                             species = paste0(species),
                             genus = paste0(genus),
