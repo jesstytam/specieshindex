@@ -13,7 +13,7 @@ test_that("Woylie_stats", {
   expect_true(SpHindex(Woylie)>=26)
   expect_true(SpMindex(Woylie)>=0.6)
   expect_true(Spi10(Woylie)>=54)
-  expect_true(SpH5(Woylie)>=8)
+  expect_true(SpH5(Woylie)>=7)
   expect_true(SpHAfterdate(Woylie, "2000-01-01")>=20)
   B_penicillata <- Allindices(Woylie,"Bettongia","penicillata")
   expect_true(is.data.frame(B_penicillata))
