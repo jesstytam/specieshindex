@@ -3,6 +3,13 @@
 
 # specieshindex
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/specieshindex)](https://CRAN.R-project.org/package=specieshindex)
+[![R build
+status](https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg)](https://github.com/jessicatytam/specieshindex/actions)
+[![](https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg)](https://codecov.io/gh/jessicatytam/specieshindex)
+[![](https://img.shields.io/badge/download-NA/total-blue.svg)](https://bioconductor.org/packages/stats/bioc/specieshindex)
+
 `specieshindex` is a package that aims to gauge scientific influence of
 different species mainly using the h-index.
 

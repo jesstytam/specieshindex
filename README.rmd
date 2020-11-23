@@ -6,6 +6,11 @@ output: github_document
 
 # specieshindex
 
+[![CRAN status](https://www.r-pkg.org/badges/version/specieshindex)](https://CRAN.R-project.org/package=specieshindex)
+`r badger::badge_github_actions("jessicatytam/specieshindex")`
+`r badger::badge_codecov("jessicatytam/specieshindex")`
+`r badger::badge_bioc_download("specieshindex", "total", "blue", "total")`
+
 `specieshindex` is a package that aims to gauge scientific influence of different species mainly using the h-index.
 
 ## Installation
