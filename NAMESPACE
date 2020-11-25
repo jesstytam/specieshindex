@@ -2,6 +2,7 @@
 
 export(ARRatio)
 export(Allindices)
+export(CountDomain)
 export(CountSpT)
 export(CountSpTAK)
 export(FetchSpT)

@@ -102,6 +102,55 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
 
 
 
+#' Add a keyword in the search string to restrict the domain of a search.
+#' It counts the publications with the binomial name and keyword in the title, abstract and keywords.
+#' 
+#' @title Restricted domain
+#'
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param keyword Restricted domain.
+#' @param APIkey Scopus API key needed to access and download data from their database.
+#' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
+#'
+#' @return Search count of a specific restricted domain of a species with the given \code{genus} and \code{species}.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' CountDomain("Bettongia", "penicillata", "conserv*", "myAPI")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountDomain("bettongia", "penicillata", "conserv*", "myAPI")
+#' }
+CountDomain <- function(genus, species, keyword, APIkey, datatype = "application/xml") {
+  requireNamespace("httr", quietly = TRUE)
+  requireNamespace("XML", quietly = TRUE)
+  requireNamespace("rlang", quietly = TRUE)
+  requireNamespace("taxize", quietly = TRUE)
+  if (missing(APIkey)) {
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
+  }
+  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
+  if (findname$submitted_name %in% findname$matched_name) {
+    print(paste("Species found on the Encyclopedia of Life."))
+  } else {
+    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
+  } 
+  theURL <- GET("http://api.elsevier.com/content/search/scopus",
+                query = list(apiKey = paste0(APIkey),
+                             query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\" AND \"",keyword,"\")"),
+                             httpAccept = "application/xml")) #format the URL to be sent to the API
+  stop_for_status(theURL) #pass any HTTP errors to the R console
+  theData <- content(theURL, as = "text") #extract the content of the response
+  newData <- xmlParse(theURL) #parse the data to extract values
+  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
+  return(resultCount)
+}
+
+
+
 #' This function fetches citation information from Scopus using genus and species name found in the title of the publications.
 #' Duplicates are removed after fetching the data.
 #'
