@@ -69,15 +69,14 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   library(XML)
   library(rlang)
   library(taxize)
+  library(dplyr)
     if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
   findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
-  if (findname$submitted_name %in% findname$matched_name) {
-    print(paste("Species found on the Encyclopedia of Life."))
-  } else {
-    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
-  }
+  case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  )
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
               query = list(apiKey = paste0(APIkey),
                            query = paste0("TITLE(\"",genus," ",species,"\")"),
@@ -97,15 +96,14 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
   library(XML)
   library(rlang)
   library(taxize)
+  library(dplyr)
     if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
    }
   findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
-  if (findname$submitted_name %in% findname$matched_name) {
-    print(paste("Species found on the Encyclopedia of Life."))
-  } else {
-    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
-  } 
+  case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  )
    theURL <- GET("http://api.elsevier.com/content/search/scopus",
               query = list(apiKey = paste0(APIkey),
                            query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\")"),
@@ -124,15 +122,14 @@ CountDomain <- function(genus, species, APIkey, keyword, datatype = "application
   library(XML)
   library(rlang)
   library(taxize)
+  library(dplyr)
     if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
    }
   findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
-  if (findname$submitted_name %in% findname$matched_name) {
-    print(paste("Species found on the Encyclopedia of Life."))
-  } else {
-    stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
-  } 
+  case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  ) 
    theURL <- GET("http://api.elsevier.com/content/search/scopus",
               query = list(apiKey = paste0(APIkey),
                            query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\" AND \"",keyword,"\")"),
@@ -678,8 +675,17 @@ Allindices <- function(data, genus, species) {
 
 **Tests**
 
+```{r}
+vault <- file.path("C:/Users/iamje/Jess/UNSW/BEES0006/specieshindex", ".vault")
+key_dir <- file.path(system.file(package = "secret"), "user_keys")
+public_key <- file.path(key_dir, "jesst.pub")
+private_key <- file.path(key_dir, "jesst.pem")
+myAPI <- get_secret("myAPI", key = private_key, vault = vault) #loading my hidden API key
+```
+
 ```{r, woylie}
 #test done on 10 july
+CountSpT("Bettongia", "penicillata", myAPI) #45
 CountSpTAK("Bettongia", "penicillata", myAPI) #113
 FetchSpTAK("Bettongia", "penicillata", myAPI) #no duplicates
 CountDomain("Bettongia", "penicillata", myAPI, "conserv*") #36
