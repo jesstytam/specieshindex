@@ -62,7 +62,7 @@ pacman::p_load(tidyverse,
 
 
 
-```{r, function to get result count title only}
+```{r, function to get result count title only, message=FALSE}
 #code from Fonti (modified)
 CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
@@ -90,7 +90,7 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
 }
 ```
 
-```{r, function to get result count title+abs+key}
+```{r, function to get result count title+abs+key, message=FALSE}
 #code from Fonti (modified)
 CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
@@ -118,7 +118,7 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
 }
 ```
 
-```{r}
+```{r, message=FALSE}
 CountDomain <- function(genus, species, APIkey, keyword, datatype = "application/xml") {
   library(httr)
   library(XML)
@@ -145,7 +145,7 @@ CountDomain <- function(genus, species, APIkey, keyword, datatype = "application
 }
 ```
 
-```{r, fetch using title only}
+```{r, fetch using title only, message=FALSE}
 #this function downloads citation data from scopus
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
@@ -324,7 +324,7 @@ FetchSpT <- function(genus, species, APIkey) {
 }
 ```
 
-```{r, fetch using title+abs+key}
+```{r, fetch using title+abs+key, message=FALSE}
 #this function downloads citation data from scopus
 FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
