@@ -5,7 +5,7 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/specieshindex)](https://CRAN.R-project.org/package=specieshindex)
-![R-CMD-check](https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg)
+![R-CMD-check](https://github.com/jessicatytam/specieshindex/workflows/CI/badge.svg)
 [![](https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg)](https://codecov.io/gh/jessicatytam/specieshindex)
 [![Github All
 Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg)]()
