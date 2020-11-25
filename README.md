@@ -5,8 +5,7 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/specieshindex)](https://CRAN.R-project.org/package=specieshindex)
-[![R build
-status](https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg)](https://github.com/jessicatytam/specieshindex/actions)
+![R-CMD-check](https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg)
 [![](https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg)](https://codecov.io/gh/jessicatytam/specieshindex)
 [![Github All
 Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg)]()
@@ -35,9 +34,6 @@ library(taxize)
 library(XML)
 library(httr)
 library(specieshindex)
-
-# See vignette for detailed instructions
-vignette("specieshindex")
 ```
 
 ## Scopus
