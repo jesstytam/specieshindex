@@ -8,7 +8,8 @@ status](https://www.r-pkg.org/badges/version/specieshindex)](https://CRAN.R-proj
 [![R build
 status](https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg)](https://github.com/jessicatytam/specieshindex/actions)
 [![](https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg)](https://codecov.io/gh/jessicatytam/specieshindex)
-[![](https://img.shields.io/badge/download-NA/total-blue.svg)](https://bioconductor.org/packages/stats/bioc/specieshindex)
+[![Github All
+Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg)]()
 
 `specieshindex` is a package that aims to gauge scientific influence of
 different species mainly using the h-index.
@@ -19,6 +20,7 @@ To get this package to work, make sure you have the following packages
 installed.
 
 ``` r
+# Installation from GitHub
 install.packages("rscopus")
 install.packages("taxize")
 install.packages("XML")
@@ -27,14 +29,20 @@ install.packages("dplyr")
 install.packages("rlang")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = TRUE)
 
+# Loading the libraries
 library(rscopus)
 library(taxize)
 library(XML)
 library(httr)
 library(specieshindex)
+
+# See vignette for detailed instructions
+vignette("specieshindex")
 ```
 
-## Getting Scopus API key
+## Scopus
+
+### Getting an API key
 
 To connect and download citation information from Scopus legally, you
 will absolutely need an API key. Here are the steps to obtain the key.
@@ -46,7 +54,17 @@ will absolutely need an API key. Here are the steps to obtain the key.
     Key`.
 4.  Read the legal documents and check the boxes.
 
-## Simple example
+### Query string
+
+The function `CountDomain()` allows the addition of a keyword to
+restricted the domain of the publications of the species. Although you
+can simply use keywords such as “conservation”, you will find that using
+“conserv\*” will yield more results. The “\*” (or wildcard) used here
+searches for any words with the prefix “conserv”, e.g. conservation,
+conserve, conservatory, etc. Find out more about search language
+[here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
+
+## Quick example
 
 Here is a quick demonstration of how the package works. Let’s say you
 want to compare the species h-index of a few marsupials. First, you
@@ -55,6 +73,7 @@ would need to download the citation information using either
 title+abstract+keywords. Remember to use binomial names.
 
 ``` r
+# Extract citation data
 Woylie <- FetchSpTAK("Bettongia", "penicillata", myAPI)
 Quokka <- FetchSpTAK("Setonix", "brachyurus", myAPI)
 Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", myAPI)
@@ -65,6 +84,7 @@ Now that you have the data, you can use the `Allindices()` function to
 create a dataframe that shows their indices.
 
 ``` r
+# Calculate indices
 W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
 P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
