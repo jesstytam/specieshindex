@@ -25,7 +25,7 @@ Suggests:
     citr,
     secret
 License: MIT + file LICENSE
-URL: https://github.com/jessicatytam/Honours
+URL: https://github.com/jessicatytam/specieshindex
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Encoding: UTF-8
