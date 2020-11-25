@@ -21,7 +21,9 @@ Suggests:
     roxygen2,
     devtools,
     rmarkdown,
-    ggplot2
+    ggplot2,
+    citr,
+    secret
 License: MIT + file LICENSE
 URL: https://github.com/jessicatytam/Honours
 RoxygenNote: 7.1.1

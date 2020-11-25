@@ -23,43 +23,46 @@ pacman::p_load(tidyverse,
 2. CountSpTAK
   + counts the total number of search results on Scopus
   + title + abstract + keywords
-3. FetchSpT
+3. CountDomain
+  + counts the total number of search results of species plus a keyword
+  + title + abstract + keywords
+4. FetchSpT
   + fetches data from Scopus using genus and species name
   + title only
-4. FetchSpTAK
+5. FetchSpTAK
   + fetches data from Scopus using genus and species name
   + title + abstract + keywords
-5. TotalPub
+6. TotalPub
   + counts the total number of publications
-6. TotalCite
+7. TotalCite
   + counts the total number of citations
-7. TotalJournals
+8. TotalJournals
   + counts the total number of journals
-8. TotalArt
+9. TotalArt
   + counts the total number of articles
-9. TotalRev
+10. TotalRev
   + counts the total number of reviews
-10. ARRatio
+11. ARRatio
   + calculates article:review ratio
-11. SpHindex
+12. SpHindex
   + calculates h-index
-12. YearsPublishing
+13. YearsPublishing
   + calculates the number of years since the first publication
-13. SpMindex
+14. SpMindex
   + calculates m-index (h-index / total years)
-14. Spi10
+15. Spi10
   + counts the publications with 10+ citations
-15. SpH5
+16. SpH5
   + calculates h-index for the past 5 years
-16. SpHAfterdate
+17. SpHAfterdate
   + calculates h-index with a given time frame
-17. Allindices
+18. Allindices
   + shows a summary of the main indices
 
 
 
 
-```{r, function to get result count title only}
+```{r, function to get result count title only, message=FALSE}
 #code from Fonti (modified)
 CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
@@ -87,7 +90,7 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
 }
 ```
 
-```{r, function to get result count title+abs+key}
+```{r, function to get result count title+abs+key, message=FALSE}
 #code from Fonti (modified)
 CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
   library(httr)
@@ -115,8 +118,8 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
 }
 ```
 
-```{r}
-CountDomain <- function(genus, species, APIkey) {
+```{r, message=FALSE}
+CountDomain <- function(genus, species, APIkey, keyword, datatype = "application/xml") {
   library(httr)
   library(XML)
   library(rlang)
@@ -130,38 +133,19 @@ CountDomain <- function(genus, species, APIkey) {
   } else {
     stop("Species not found on the Encyclopedia of Life, please check your spelling.") #stop running if species does not exist
   } 
-  #conservation
-  consURL <- GET("http://api.elsevier.com/content/search/scopus",
+   theURL <- GET("http://api.elsevier.com/content/search/scopus",
               query = list(apiKey = paste0(APIkey),
-                           query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND conserv*"),
+                           query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\" AND \"",keyword,"\")"),
                            httpAccept = "application/xml")) #format the URL to be sent to the API
-  stop_for_status(consURL) #pass any HTTP errors to the R console
-  consData <- content(consURL, as = "text") #extract the content of the response
-  newconsData <- xmlParse(consURL) #parse the data to extract values
-  conservation <- as.numeric(xpathSApply(newconsData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
-  #genomics
-  geneURL <- GET("http://api.elsevier.com/content/search/scopus",
-              query = list(apiKey = paste0(APIkey),
-                           query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND (genom* OR gene*)"),
-                           httpAccept = "application/xml")) #format the URL to be sent to the API
-  stop_for_status(geneURL) #pass any HTTP errors to the R console
-  geneData <- content(geneURL, as = "text") #extract the content of the response
-  newgeneData <- xmlParse(geneURL) #parse the data to extract values
-  genomics <- as.numeric(xpathSApply(newgeneData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
-  #evolution
-  evolURL <- GET("http://api.elsevier.com/content/search/scopus",
-              query = list(apiKey = paste0(APIkey),
-                           query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND evolution*"),
-                           httpAccept = "application/xml")) #format the URL to be sent to the API
-  stop_for_status(evolURL) #pass any HTTP errors to the R console
-  evolData <- content(evolURL, as = "text") #extract the content of the response
-  newevolData <- xmlParse(evolURL) #parse the data to extract values
-  evolution <- as.numeric(xpathSApply(evolData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
-  return(conservation, genomics, evolution)
+  stop_for_status(theURL) #pass any HTTP errors to the R console
+  theData <- content(theURL, as = "text") #extract the content of the response
+  newData <- xmlParse(theURL) #parse the data to extract values
+  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
+  return(resultCount)
 }
 ```
 
-```{r, fetch using title only}
+```{r, fetch using title only, message=FALSE}
 #this function downloads citation data from scopus
 FetchSpT <- function(genus, species, APIkey) {
   library(rscopus)
@@ -340,7 +324,7 @@ FetchSpT <- function(genus, species, APIkey) {
 }
 ```
 
-```{r, fetch using title+abs+key}
+```{r, fetch using title+abs+key, message=FALSE}
 #this function downloads citation data from scopus
 FetchSpTAK <- function(genus, species, APIkey) {
   library(rscopus)
@@ -698,7 +682,7 @@ Allindices <- function(data, genus, species) {
 #test done on 10 july
 CountSpTAK("Bettongia", "penicillata", myAPI) #113
 FetchSpTAK("Bettongia", "penicillata", myAPI) #no duplicates
-CountDomain("Bettongia", "penicillata", myAPI)
+CountDomain("Bettongia", "penicillata", myAPI, "conserv*") #36
 
 TotalPub(Woylie) #113
 TotalCite(Woylie) #1897
@@ -723,6 +707,7 @@ B_penicillata <- Allindices(Woylie, genus = "Bettongia", species = "penicillata"
 #test done on 10 july
 CountSpTAK("Setonix", "brachyurus", myAPI) #242
 Quokka <- FetchSpTAK("Setonix", "brachyurus", myAPI) #no duplicates
+CountDomain("Setonix", "brachyurus", myAPI, "conserv*") #26
 
 TotalPub(Quokka) #242
 TotalCite(Quokka) #3423
@@ -747,6 +732,7 @@ S_brachyurus <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
 #test done on 10 july
 CountSpTAK #321
 Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", myAPI) #no duplicates
+CountDomain("Ornithorhynchus", "anatinus", myAPI, "conserv*") #63
 
 TotalPub(Platypus) #321
 TotalCite(Platypus) #6363
@@ -772,6 +758,7 @@ O_anatinus <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinu
 CountSpTAK("Phascolarctos", "cinereus", myAPI) #777
 #did we not have 930 records?? hmm...
 Koala <- FetchSpTAK("Phascolarctos", "cinereus", myAPI) #4 duplicates
+CountDomain("Phascolarctos", "cinereus", myAPI, "conserv*") #166
 
 TotalPub(Koala) #773
 TotalCite(Koala) #14291
