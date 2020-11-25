@@ -22,7 +22,6 @@ Suggests:
     devtools,
     rmarkdown,
     ggplot2,
-    citr,
     secret
 License: MIT + file LICENSE
 URL: https://github.com/jessicatytam/specieshindex
