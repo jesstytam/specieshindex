@@ -22,7 +22,7 @@ Suggests:
     devtools,
     rmarkdown,
     ggplot2,
-    citr
+    RefManageR
 License: MIT + file LICENSE
 URL: https://github.com/jessicatytam/specieshindex
 RoxygenNote: 7.1.1
