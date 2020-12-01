@@ -5,8 +5,6 @@ date: "`r format(Sys.Date(), '%B %d, %Y')`"
 bibliography: references.bib
 link-citations: true
 output: 
-  pdf_document:
-    toc: yes
   html_document:
     code_download: true
     code_folding: show
@@ -16,6 +14,8 @@ output:
     highlight: kate
     toc: yes
     toc_float: yes
+  pdf_document:
+    toc: no
 vignette: >
   %\VignetteIndexEntry{vignette}
   %\VignetteEncoding{UTF-8}
@@ -42,7 +42,7 @@ library(ggplot2)
 knitr::include_graphics("../vignettes/Banner.png")
 ```
 
-There are many ways to gauge research influence. We can simply sum up the number of publications and citations, which is a straight forward way without the need of any complicated mathematical formulae. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the h-index, m-index, i10 index, h5 index, etc.
+There are many ways to gauge research influence. We can simply sum up the number of publications and citations, which is a straight forward way without the need of any complicated mathematical formulae. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the *h*-index, *m*-index, i10 index, h5 index, etc.
 
 *H*-index [@Hirsch200516569] is one of the main methods to measure publication influence objectively. It is calculated using the formula *h* = total publications (n) that have at least been cited **n** times, after sorting the publications by their citation counts in a descending order. 
 
@@ -78,7 +78,7 @@ library(specieshindex)
 Specieshindex package performs two main steps that simplify calculating *h*-indices for different species:
 
 1. Connecting to Scopus and download citation data for a given species
-2. Computing various indices (including h-index) for a given species
+2. Computing various indices (including *h*-index) for a given species
 
 Below, we outline how to perform these steps using our package.
 
@@ -95,11 +95,11 @@ It is recommend that you run a quick search using functions `CountSpT()` or `Cou
 For example, you can run:
 
 ```{r, eval=FALSE}
-CountSpT("Bettongia", "penicillata", myAPI)
+CountSpT("Bettongia", "penicillata", "API key")
 ```
 
 ```{r, eval=FALSE}
-CountSpTAK("Bettongia", "penicillata", myAPI)
+CountSpTAK("Bettongia", "penicillata", "API key")
 ```
 
 `CountSpTAK()` yielded more results since it also looked for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data from Scopus. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
@@ -109,11 +109,11 @@ As you may expect, some species have been studied more than the others [@Simko20
 For example, you can run:
 
 ```{r, eval=FALSE}
-FetchSpT("Bettongia", "penicillata", myAPI)
+FetchSpT("Bettongia", "penicillata", "API key")
 ```
 
 ```{r, eval=FALSE}
-FetchSpTAK("Bettongia", "penicillata", myAPI)
+FetchSpTAK("Bettongia", "penicillata", "API key")
 ```
 
 In larger datasets, duplicates may appear, although usually in low numbers. `FetchSpT()` and `FetchSpTAK()` will clean up the dataset by removing them if found. This is done by locating the publications with identical names and then removing the subsequent entry (or entries). The first occurrence of the record will be kept, which is normally the original record.
@@ -212,7 +212,7 @@ For example:
 SpHAfterdate(Woylie, "2000-01-01")
 ```
 
-The *m*-index is an *h*-index adjusted for the age of publication. The *m*-index is calculated using the `SpMindex()` function, which first computes the *h*-index and then divides it by the number of years of publication activity , i.e. number of years since the oldest publication in the dataset was published with the formula: $$m=h/years~publishing$$.
+The *m*-index is an *h*-index adjusted for the age of publication. The *m*-index is calculated using the `SpMindex()` function, which first computes the *h*-index and then divides it by the number of years of publication activity , i.e. number of years since the oldest publication in the dataset was published with the formula: $$m=h\, /\, years~publishing$$.
 
 For example:
 
@@ -242,7 +242,7 @@ For multiple species, `rbind()` can be used to stitch the outputs together.
 
 # Worked examples
 
-To demonstrate how this could be helpful in the real world, I will be comparing the citations of 4 species of marsupials. They are the woylie (*Bettongia penicillata*), quokka (*Setonix brachyurus*), platypus (*Ornithorhynchus anatinus*), and koala (*Phascolarctos cinereus*). The function I used for this step was `FetchSpTAK()` for all of these datasets.
+To demonstrate how this could be helpful in the real world, I will be comparing the citations of 4 species of marsupials. They are the woylie (*Bettongia penicillata*), quokka (*Setonix brachyurus*), platypus (*Ornithorhynchus anatinus*), and koala (*Phascolarctos cinereus*). The function I used for this step was `FetchSpTAK()` for all of these datasets. I have included these sets of data in the package but you can also extract them from Scopus for the most updated records.
 
 ```{r}
 dim(Woylie)
@@ -281,16 +281,14 @@ library(ggplot2)
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = h,
                  colour = "H-index"),
-             size = 4) +
+             size = 2.5) +
   labs(x = "Species",
        y = "Index Score",
-       colour = "Index",
-       title = "h-index") +
+       colour = "Index") +
   scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) +
   scale_colour_manual(values = c("H-index" = "#3498DB")) +
-  theme(plot.title = element_text(size = 20, face = "bold"),
-        axis.title = element_text(size = 16),
-        axis.text = element_text(size = 12),
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 9),
         legend.position = "none")
 ```
 
@@ -302,16 +300,14 @@ We can also plot the total citations counts for comparison, since citations is a
 ggplot(CombineSp, aes(x = species)) +
 geom_point(aes(y = citations,
                colour = "Citations"),
-           size = 4) +
+           size = 2.5) +
 labs(x = "Species",
      y = "Total citations",
-     colour = "Index",
-     title = "Citations") +
+     colour = "Index") +
 scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + 
 scale_colour_manual(values = c("Citations"  = "#2874A6")) +
-theme(plot.title = element_text(size = 20, face = "bold"),
-      axis.title = element_text(size = 16),
-      axis.text = element_text(size = 12),
+theme(axis.title = element_text(size = 12),
+      axis.text = element_text(size = 9),
       legend.position = "none")
 ```
 
@@ -325,16 +321,14 @@ We next plot the m-index to see how it differs from the h-index. Recalling that 
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = m,
                  colour = "M-index"),
-             size = 4) +
+             size = 2.5) +
   labs(x = "Species",
        y = "Index Score",
-       colour = "Index",
-       title = "m-index") +
+       colour = "Index") +
   scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + 
   scale_colour_manual(values = c("M-index"  = "#E74C3C")) +
-  theme(plot.title = element_text(size = 20, face = "bold"),
-        axis.title = element_text(size = 16),
-        axis.text = element_text(size = 12),
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 9),
         legend.position = "none")
 ```
 
@@ -346,16 +340,14 @@ We should also have a look at the related variable years_publishing (number of y
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = years_publishing,
                  colour = "Years publishing"),
-             size = 4) +
+             size = 2.5) +
   labs(x = "Species",
        y = "Total years",
-       colour = "Index",
-       title = "Years publishing") +
+       colour = "Index") +
   scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + 
   scale_colour_manual(values = c("Years publishing" = "#950505")) +
-  theme(plot.title = element_text(size = 20, face = "bold"),
-        axis.title = element_text(size = 16),
-        axis.text = element_text(size = 12),
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 9),
         legend.position = "none") 
 ```
 
