@@ -11,7 +11,7 @@ output: github_document
 `r badger::badge_codecov("jessicatytam/specieshindex")`
 [![Github All Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg)]()
 
-`specieshindex` is a package that aims to gauge scientific influence of different species mainly using the h-index.
+`specieshindex` is a package that aims to gauge scientific influence of different species mainly using the *h*-index.
 
 ## Installation
 
