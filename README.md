@@ -52,7 +52,7 @@ will absolutely need an API key. Here are the steps to obtain the key.
 
 ### Query string
 
-The function `CountDomain()` allows the addition of a keyword to
+The function `CountDomain()` allows the addition of 1 keyword to
 restricted the domain of the publications of the species. Although you
 can simply use keywords such as “conservation”, you will find that using
 “conserv\*” will yield more results. The “\*” (or wildcard) used here
