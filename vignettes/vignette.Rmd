@@ -73,6 +73,7 @@ library(httr)
 library(specieshindex)
 
 # Take a look at the vignette for detailed instructions
+vignette(specieshindex)
 ```
 
 # Workflow
