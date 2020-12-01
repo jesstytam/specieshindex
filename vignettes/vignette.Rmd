@@ -5,6 +5,8 @@ date: "`r format(Sys.Date(), '%B %d, %Y')`"
 bibliography: references.bib
 link-citations: true
 output: 
+  pdf_document:
+    toc: yes
   html_document:
     code_download: true
     code_folding: show
@@ -14,12 +16,10 @@ output:
     highlight: kate
     toc: yes
     toc_float: yes
-  pdf_document:
-    toc: yes
 vignette: >
   %\VignetteIndexEntry{vignette}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = FALSE}
@@ -62,7 +62,7 @@ install.packages("XML")
 install.packages("httr")
 install.packages("dplyr")
 install.packages("rlang")
-devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = TRUE)
+devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
 ```
 ```{r, eval=FALSE, load-packages, warning=FALSE}
 # Loading the libraries
