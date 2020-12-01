@@ -35,6 +35,8 @@ library(httr)
 library(specieshindex)
 ```
 
+You can find the vignette [here](https://github.com/jessicatytam/specieshindex/blob/master/vignettes/vignette.pdf) for more detailed instructions.
+
 ## Scopus
 
 ### Getting an API key

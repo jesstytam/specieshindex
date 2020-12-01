@@ -26,7 +26,7 @@ install.packages("XML")
 install.packages("httr")
 install.packages("dplyr")
 install.packages("rlang")
-devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = TRUE)
+devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
 
 # Loading the libraries
 library(rscopus)
@@ -35,6 +35,10 @@ library(XML)
 library(httr)
 library(specieshindex)
 ```
+
+You can find the vignette
+[here](https://github.com/jessicatytam/specieshindex/blob/master/vignettes/vignette.pdf)
+for more detailed instructions.
 
 ## Scopus
 
