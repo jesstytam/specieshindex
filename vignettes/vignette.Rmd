@@ -39,7 +39,7 @@ library(ggplot2)
 ```
 
 ```{r, echo=FALSE}
-knitr::include_graphics("/home/jessicatam/Documents/specieshindex/vignettes/Banner.png")
+knitr::include_graphics("../vignettes/Banner.png")
 ```
 
 There are many ways to gauge research influence. We can simply sum up the number of publications and citations, which is a straight forward way without the need of any complicated mathematical formulae. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the h-index, m-index, i10 index, h5 index, etc.
