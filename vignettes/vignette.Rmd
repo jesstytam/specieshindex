@@ -35,20 +35,14 @@ devtools::load_all(".")
 
 ```{r, include=FALSE}
 library(citr)
-library(secret)
 library(ggplot2)
-vault <- file.path("C:/Users/iamje/Jess/UNSW/BEES0006/specieshindex", ".vault")
-key_dir <- file.path(system.file(package = "secret"), "user_keys")
-public_key <- file.path(key_dir, "jesst.pub")
-private_key <- file.path(key_dir, "jesst.pem")
-myAPI <- get_secret("myAPI", key = private_key, vault = vault) #loading my hidden API key
 ```
 
 ```{r, echo=FALSE}
-knitr::include_graphics("C:/Users/iamje/Jess/UNSW/BEES0006/Animals/Banner.png")
+knitr::include_graphics("C:/Users/iamje/Jess/Jess/BEES0006/Animals/Banner.png")
 ```
 
-There are many ways to guage research influence. We can simply sum up the number of publications and citations, which is a straight forward way without the need of any complicated mathematical formulae. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the h-index, m-index, i10 index, h5 index, etc.
+There are many ways to gauge research influence. We can simply sum up the number of publications and citations, which is a straight forward way without the need of any complicated mathematical formulae. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the h-index, m-index, i10 index, h5 index, etc.
 
 H-index [@Hirsch200516569] is one of the main methods to measure publication influence objectively. It is calculated using the formula *h* = total publications (n) that have at least been cited **n** times, after sorting the publications by their citation counts in a descending order. 
 
@@ -61,6 +55,7 @@ With this package, we can create a similar profile for different living organism
 To get this package to work, make sure you have the following packages installed.
 
 ```{r, eval=FALSE}
+# Installation from GitHub
 install.packages("rscopus")
 install.packages("taxize")
 install.packages("XML")
@@ -70,16 +65,19 @@ install.packages("rlang")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = TRUE)
 ```
 ```{r, load-packages, warning=FALSE}
+# Loading the libraries
 library(rscopus)
 library(taxize)
 library(XML)
 library(httr)
 library(specieshindex)
+
+# Take a look at the vignette for detailed instructions
 ```
 
 # Workflow
 
-Specieshindex package performs two main steps that simplify calculating h-indices for different species:
+Specieshindex package performs two main steps that simplify calculating *h*-indices for different species:
 
 1. Connecting to Scopus and download citation data for a given species
 2. Computing various indices (including h-index) for a given species
@@ -98,11 +96,11 @@ It is recommend that you run a quick search using functions `CountSpT()` or `Cou
 
 For example, you can run:
 
-```{r, cache=TRUE, eval=TRUE, warning=FALSE}
+```{r, eval=FALSE}
 CountSpT("Bettongia", "penicillata", myAPI)
 ```
 
-```{r, cache=TRUE, eval=TRUE, warning=FALSE}
+```{r, eval=FALSE}
 CountSpTAK("Bettongia", "penicillata", myAPI)
 ```
 
@@ -112,11 +110,11 @@ As you may expect, some species have been studied more than the others [@Simko20
 
 For example, you can run:
 
-```{r, cache=TRUE, eval=TRUE, warning=FALSE, message=FALSE}
+```{r, eval=FALSE}
 FetchSpT("Bettongia", "penicillata", myAPI)
 ```
 
-```{r, cache=TRUE, eval=TRUE, warning=FALSE, message=FALSE}
+```{r, eval=FALSE}
 FetchSpTAK("Bettongia", "penicillata", myAPI)
 ```
 
