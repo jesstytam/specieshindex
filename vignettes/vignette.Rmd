@@ -39,16 +39,16 @@ library(ggplot2)
 ```
 
 ```{r, echo=FALSE}
-knitr::include_graphics("C:/Users/Jess/Jess/UNSW/BEES0006/Animals/Banner.png")
+knitr::include_graphics("/home/jessicatam/Documents/specieshindex/vignettes/Banner.png")
 ```
 
 There are many ways to gauge research influence. We can simply sum up the number of publications and citations, which is a straight forward way without the need of any complicated mathematical formulae. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the h-index, m-index, i10 index, h5 index, etc.
 
-H-index [@Hirsch200516569] is one of the main methods to measure publication influence objectively. It is calculated using the formula *h* = total publications (n) that have at least been cited **n** times, after sorting the publications by their citation counts in a descending order. 
+*H*-index [@Hirsch200516569] is one of the main methods to measure publication influence objectively. It is calculated using the formula *h* = total publications (n) that have at least been cited **n** times, after sorting the publications by their citation counts in a descending order. 
 
-Currently, h-index is commonly used for assessing influence and academic productivity of authors, research institutions and journals [@Braun20058]. Recently, this index has been also applied to quantify the research effort and influence associated with different species of living organisms [@Fleming2016241].
+Currently, *h*-index is commonly used for assessing influence and academic productivity of authors, research institutions and journals [@Braun20058]. Recently, this index has been also applied to quantify the research effort and influence associated with different species of living organisms [@Fleming2016241].
 
-With this package, we can create a similar profile for different living organisms that would show their citation metrics, including total publications, total citations, h-index, etc. This will allow us to understand which species are receiving more research interest and develop the solutions to rectify the biases. Here, I have created a package to compute species h-index and other indices, to enable comparisons of the productivity of research on different species.
+With this package, we can create a similar profile for different living organisms that would show their citation metrics, including total publications, total citations, *h*-index, etc. This will allow us to understand which species are receiving more research interest and develop the solutions to rectify the biases. Here, I have created a package to compute species h-index and other indices, to enable comparisons of the productivity of research on different species.
 
 # Installation
 
@@ -64,7 +64,7 @@ install.packages("dplyr")
 install.packages("rlang")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = TRUE)
 ```
-```{r, load-packages, warning=FALSE}
+```{r, eval=FALSE, load-packages, warning=FALSE}
 # Loading the libraries
 library(rscopus)
 library(taxize)
@@ -191,7 +191,7 @@ YearsPublishing(Woylie)
 
 Statistical indices can provide deeper insights than the simple counts and ratios described above. They take a few parameters into consideration, such as time, total citations, total publications, and their distributions, to compute the index.
 
-Use `SpHindex()` to compute the h-index [@Hirsch200516569]. It sorts the citation counts in descending order and then finds the largest number of publications (n) that have EACH been cited at least **n** times.
+Use `SpHindex()` to compute the *h*-index [@Hirsch200516569]. It sorts the citation counts in descending order and then finds the largest number of publications (n) that have EACH been cited at least **n** times.
 
 For example:
 
@@ -199,7 +199,7 @@ For example:
 SpHindex(Woylie)
 ```
 
-The h5 index computes the h-index for the past 5 years.
+The h5 index computes the *h*-index for the past 5 years.
 
 For example:
 
@@ -207,7 +207,7 @@ For example:
 SpH5(Woylie)
 ```
 
-You can calculate h-index for publications published after a certain date. To subset the time with a specific lower limit, you can use `SpHAfterdate()`. Make sure the date parameter is in the exact format of yyyy-mm-dd. Using a different format or using slashes or hyphens will return an error.
+You can calculate *h*-index for publications published after a certain date. To subset the time with a specific lower limit, you can use `SpHAfterdate()`. Make sure the date parameter is in the exact format of yyyy-mm-dd. Using a different format or using slashes or hyphens will return an error.
 
 For example:
 
@@ -215,7 +215,7 @@ For example:
 SpHAfterdate(Woylie, "2000-01-01")
 ```
 
-The m-index is an h-index adjusted for the age of publication. The m-index is calculated using the `SpMindex()` function, which first computes the h-index and then divides it by the number of years of publication activity , i.e. number of years since the oldest publication in the dataset was published with the formula: $$m=h/years~publishing$$.
+The *m*-index is an *h*-index adjusted for the age of publication. The *m*-index is calculated using the `SpMindex()` function, which first computes the *h*-index and then divides it by the number of years of publication activity , i.e. number of years since the oldest publication in the dataset was published with the formula: $$m=h/years~publishing$$.
 
 For example:
 
@@ -223,7 +223,7 @@ For example:
 SpMindex(Woylie)
 ```
 
-The i10 index is another variant of the h-index, which only takes into account publications with at least 10 citations. The i10 index can be calculated using `Spi10()`, which simply counts the publications that has 10 or more citations.
+The i10 index is another variant of the *h*-index, which only takes into account publications with at least 10 citations. The i10 index can be calculated using `Spi10()`, which simply counts the publications that has 10 or more citations.
 
 For example:
 
@@ -271,15 +271,16 @@ If you want to compare and analyse them against each other, you can use the func
 
 ```{r}
 CombineSp <- rbind(W, Q, P, K) #combining the citation records
-return(CombineSp)
+CombineSp
 ```
 
 After preparing the data, we are ready to make some plots. For example, using the package `ggplot2`, we can plot the h-index and m-index. When comparing the indices, it is important to remember that their scales may differ drastically. Therefore, putting the variables in the same plot may generate plots that do not make a lot of sense.
 
 We first plot the h-index:
 
-```{r, cache=TRUE, fig.height=5, fig.width=6, fig.align='center'}
+```{r, fig.height=5, fig.width=6, fig.align='center'}
 #h-index
+library(ggplot2)
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = h,
                  colour = "H-index"),
@@ -299,7 +300,7 @@ ggplot(CombineSp, aes(x = species)) +
 \
 We can also plot the total citations counts for comparison, since citations is an important factor in contributing to h-index.
 
-```{r, cache=TRUE, fig.height=5, fig.width=6, fig.align='center'}
+```{r, fig.height=5, fig.width=6, fig.align='center'}
 #total citations
 ggplot(CombineSp, aes(x = species)) +
 geom_point(aes(y = citations,
@@ -318,11 +319,11 @@ theme(plot.title = element_text(size = 20, face = "bold"),
 ```
 
 \
-It seems like the h-index values are quite consistent with the total numbers of citations, i.e. the more the citations in total, the higher the h-index score. Therefore, the woylie, with the lowest number of citations has the lowest h-index. On the other hand, the koala, with the highest number of citations has the highest h-index.
+It seems like the h-index values are quite consistent with the total numbers of citations, i.e. the more the citations in total, the higher the h-index score. Therefore, the woylie, with the lowest number of citations has the lowest *h*-index. On the other hand, the koala, with the highest number of citations has the highest h-index.
 
 We next plot the m-index to see how it differs from the h-index. Recalling that m-index is calculated by dividing the h-index by the number of years of publication activity ($m=h/years~publishing$), let us have a closer inspection at both the m-index:
 
-```{r, cache=TRUE, fig.height=5, fig.width=6, fig.align='center'}
+```{r, fig.height=5, fig.width=6, fig.align='center'}
 #m-index
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = m,
@@ -343,7 +344,7 @@ ggplot(CombineSp, aes(x = species)) +
 \
 We should also have a look at the related variable years_publishing (number of years since first publication for a given species).
 
-```{r, cache=TRUE, fig.height=5, fig.width=6, fig.align='center'}
+```{r, fig.height=5, fig.width=6, fig.align='center'}
 #years publishing
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = years_publishing,
@@ -362,11 +363,11 @@ ggplot(CombineSp, aes(x = species)) +
 ```
 
 \
-In order to understand what yields a high m-index score, we should recall that the m-index is a ratio. A high m-index can be achieved by combination of a higher `h` value and a lower `years_publishing` value. This explains why koala publications have a relatively low m-index, albeit highest h-index. Research on koalas has been produced for over 3 times longer than that on the woylie. Although the h-index of woylie publications was half of that of the koala, it had only been in the scientific scene for a few decades. Comparing the quokka to the platypus, we can see that their publications have both been around for a similar duration of time. 66 years for the quokka and 67 years for the platypus respectively. Since the platypus has a higher h-index than the quokka, this is thus consistent with the m-index score here.
+In order to understand what yields a high *m*-index score, we should recall that the *m*-index is a ratio. A high *m*-index can be achieved by combination of a higher `h` value and a lower `years_publishing` value. This explains why koala publications have a relatively low *m*-index, albeit highest *h*-index. Research on koalas has been produced for over 3 times longer than that on the woylie. Although the *h*-index of woylie publications was half of that of the koala, it had only been in the scientific scene for a few decades. Comparing the quokka to the platypus, we can see that their publications have both been around for a similar duration of time. 66 years for the quokka and 67 years for the platypus respectively. Since the platypus has a higher h-index than the quokka, this is thus consistent with the *m*-index score here.
 
 # Limitations
 
-Currently, the input option for search requests is limited to species Latin names. Although common names are synonymous with the binomial names, they are compartively much less explicit. There could be multiple species using the same common name, which will require extra steps to specify which is the particular species that is being studied. Moreover, there are other fields of research that uses different species' common names as the titles of their work. For example, a study on childhood health, called the KOALA Birth Cohort Study [@mbakwa2018gut], was found on Scopus. Here, KOALA was the acronym for 'child, parents and health: lifestyle and genetic constitution' in Dutch. Filtering will be required but such occurrences are often easily overlooked in entensive datasets.
+Currently, the input option for search requests is limited to species Latin names. Although common names are synonymous with the binomial names, they are comparatively much less explicit. There could be multiple species using the same common name, which will require extra steps to specify which is the particular species that is being studied. Moreover, there are other fields of research that uses different species' common names as the titles of their work. For example, a study on childhood health, called the KOALA Birth Cohort Study [@mbakwa2018gut], was found on Scopus. Here, KOALA was the acronym for 'child, parents and health: lifestyle and genetic constitution' in Dutch. Filtering will be required but such occurrences are often easily overlooked in extensive datasets.
 
 Another limitation is that only species-level searches are enabled at the moment. This is because of homonymous [@10.3897/zookeys.550.9546] genus names between some plant and animal taxa. For example, the genus *Prunella* represents both a taxon of herbaceous plants and passerines. Additional parameters will have to be added to identify the exact taxon in question.
 
