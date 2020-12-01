@@ -62,7 +62,7 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "16.04"))')
 
       - name: Install dependencies
         run: |
@@ -73,7 +73,7 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
-        run: rcmdcheck::rcmdcheck(args=c("--no-vignettes"),build_args = c("--no-build-vignettes"))
+        run: rcmdcheck::rcmdcheck(args=c("--no-manual"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
       - name: Upload check results
