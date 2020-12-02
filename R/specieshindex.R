@@ -38,7 +38,7 @@ CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
   )
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
                 query = list(apiKey = paste0(APIkey),
-                             query = paste0("TITLE(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+                             query = paste0('TITLE("', genus, ' ', species, '")'),
                              httpAccept = "application/xml")) #format the URL to be sent to the API
   stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- content(theURL, as = "text") #extract the content of the response
@@ -89,7 +89,7 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
   )
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
                 query = list(apiKey = paste0(APIkey),
-                             query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\") AND DOCTYPE(ar OR re)"),
+                             query = paste0('TITLE-ABS-KEY("', genus, ' ', species, '")'),
                              httpAccept = "application/xml")) #format the URL to be sent to the API
   stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- content(theURL, as = "text") #extract the content of the response
@@ -100,44 +100,92 @@ CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
 
 
 
-#' Add a keyword in the search string to restrict the domain of a search.
-#' It counts the publications with the binomial name and keyword in the title, abstract and keywords.
+#' Expansion of \code{\link{CountSpT}}, adds other search terms the search string.
+#' It counts the publications with the binomial name and keyword in the title only.
 #' 
-#' @title Restricted domain
+#' @title Expanded string
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
-#' @param keyword Restricted domain.
+#' @param additionalkeywords Additional search terms.
 #' @param APIkey Scopus API key needed to access and download data from their database.
 #' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
 #'
-#' @return Search count of a specific restricted domain of a species with the given \code{genus} and \code{species}.
+#' @return Search count of a specific search string of a species with the given \code{genus} and \code{species}.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' CountDomain("Bettongia", "penicillata", "conserv*", "myAPI")
+#' CountSpTexp("Bettongia", "penicillata", "conserv*", "myAPI")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' CountDomain("bettongia", "penicillata", "conserv*", "myAPI")
+#' CountSpTexp("bettongia", "penicillata", "conserv*", "myAPI")
 #' }
-CountDomain <- function(genus, species, keyword, APIkey, datatype = "application/xml") {
-  requireNamespace("httr", quietly = TRUE)
-  requireNamespace("XML", quietly = TRUE)
-  requireNamespace("rlang", quietly = TRUE)
-  requireNamespace("taxize", quietly = TRUE)
-  requireNamespace("dplyr", quietly = TRUE)
+CountSpTexp <- function(genus, species, additionalkeywords = " ", APIkey, datatype = "application/xml") {
+  library(httr)
+  library(XML)
+  library(rlang)
+  library(taxize)
+  library(dplyr)
   if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
   findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
   case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
-  )
+  ) 
   theURL <- GET("http://api.elsevier.com/content/search/scopus",
                 query = list(apiKey = paste0(APIkey),
-                             query = paste0("TITLE-ABS-KEY(\"",genus," ",species,"\" AND \"",keyword,"\")"),
+                             query = paste0('TITLE("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')'),
+                             httpAccept = "application/xml")) #format the URL to be sent to the API
+  stop_for_status(theURL) #pass any HTTP errors to the R console
+  theData <- content(theURL, as = "text") #extract the content of the response
+  newData <- xmlParse(theURL) #parse the data to extract values
+  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
+  return(resultCount)
+}
+
+
+
+#' Expansion of \code{\link{CountSpTAK}}, adds other search terms the search string.
+#' It counts the publications with the binomial name and keyword in the title, abstract and keywords.
+#' 
+#' @title Expanded string
+#'
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param additionalkeywords Additional search terms.
+#' @param APIkey Scopus API key needed to access and download data from their database.
+#' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
+#'
+#' @return Search count of a specific search string of a species with the given \code{genus} and \code{species}.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' CountSpTAKexp("Bettongia", "penicillata", "conserv*", "myAPI")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountSpTAKexp("bettongia", "penicillata", "conserv*", "myAPI")
+#' }
+CountSpTAKexp <- function(genus, species, additionalkeywords = " ", APIkey, datatype = "application/xml") {
+  library(httr)
+  library(XML)
+  library(rlang)
+  library(taxize)
+  library(dplyr)
+  if (missing(APIkey)) {
+    stop("You need to register for an API key on Scopus.") #stop running if API key missing
+  }
+  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
+  case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  ) 
+  theURL <- GET("http://api.elsevier.com/content/search/scopus",
+                query = list(apiKey = paste0(APIkey),
+                             query = paste0('TITLE-ABS-KEY("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')'),
                              httpAccept = "application/xml")) #format the URL to be sent to the API
   stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- content(theURL, as = "text") #extract the content of the response

@@ -50,7 +50,7 @@ To connect and download citation information from Scopus legally, you will absol
 
 ### Query string
 
-The function `CountDomain()` allows the addition of 1 keyword to restricted the domain of the publications of the species. Although you can simply use keywords such as "conservation", you will find that using "conserv\*" will yield more results. The "\*" (or wildcard) used here searches for any words with the prefix "conserv", e.g. conservation, conserve, conservatory, etc. Find out more about search language [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
+The function `CountSpTAKexp()` allows the addition of 1 keyword to restricted the domain of the publications of the species. Although you can simply use keywords such as "conservation", you will find that using "conserv\*" will yield more results. The "\*" (or wildcard) used here searches for any words with the prefix "conserv", e.g. conservation, conserve, conservatory, etc. Find out more about search language [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
 
 ## Quick example
 
@@ -81,7 +81,7 @@ CombineSp <- rbind(W, Q, P, K) #combining the citation records
 CombineSp
 ```
 
-Once you are happy with your dataset, you can make some nice plots. Using `ggplot2`, we can compare the h-index and the total citations.
+Once you are happy with your dataset, you can make some nice plots. Using `ggplot2`, we can compare the *h*-index and the total citations.
 
 ```{r, cache=TRUE, fig.align='center'}
 #h-index
