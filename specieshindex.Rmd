@@ -12,8 +12,7 @@ pacman::p_load(tidyverse,
                XML,
                taxize,
                rlang,
-               gtools,
-               secret)
+               gtools)
 ```
 
 **Functions**
@@ -133,10 +132,17 @@ CountSpTexp <- function(genus, species, additionalkeywords, APIkey, datatype = "
   case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
-   theURL <- GET("http://api.elsevier.com/content/search/scopus",
+  if (missing(additionalkeywords)) {
+    theURL <- GET("http://api.elsevier.com/content/search/scopus",
+              query = list(apiKey = paste0(APIkey),
+                           query = paste0('TITLE("', genus, ' ', species, '")'),
+                           httpAccept = "application/xml")) #format the URL to be sent to the API
+  } else {
+    theURL <- GET("http://api.elsevier.com/content/search/scopus",
               query = list(apiKey = paste0(APIkey),
                            query = paste0('TITLE("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')'),
                            httpAccept = "application/xml")) #format the URL to be sent to the API
+  }
   stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- content(theURL, as = "text") #extract the content of the response
   newData <- xmlParse(theURL) #parse the data to extract values
@@ -159,10 +165,17 @@ CountSpTAKexp <- function(genus, species, additionalkeywords, APIkey, datatype =
   case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
-   theURL <- GET("http://api.elsevier.com/content/search/scopus",
+  if (missing(additionalkeywords)) {
+    theURL <- GET("http://api.elsevier.com/content/search/scopus",
+              query = list(apiKey = paste0(APIkey),
+                           query = paste0('TITLE-ABS-KEY("', genus, ' ', species, '")'),
+                           httpAccept = "application/xml")) #format the URL to be sent to the API
+  } else {
+    theURL <- GET("http://api.elsevier.com/content/search/scopus",
               query = list(apiKey = paste0(APIkey),
                            query = paste0('TITLE-ABS-KEY("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')'),
                            httpAccept = "application/xml")) #format the URL to be sent to the API
+  }
   stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- content(theURL, as = "text") #extract the content of the response
   newData <- xmlParse(theURL) #parse the data to extract values
@@ -789,12 +802,24 @@ O_anatinus <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinu
 #test done on 10 july
 CountSpTAK("Phascolarctos", "cinereus", myAPI) #777
 FetchSpTAK("Phascolarctos", "cinereus", myAPI) #4 duplicates
+
+CountSpTexp("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #3
+CountSpTexp("Phascolarctos", "cinereus", additionalkeywords = "(popul* W/5 ecolog*)", "442b9048417ef20cf680a0ae26ee4d86") #0
+CountSpTexp("Phascolarctos", "cinereus", additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", "442b9048417ef20cf680a0ae26ee4d86") #21
+CountSpTexp("Phascolarctos", "cinereus", additionalkeywords = "(popul* AND NOT popular)", "442b9048417ef20cf680a0ae26ee4d86") #49
+CountSpTexp("Phascolarctos", "cinereus", additionalkeywords = "NOT (phylog* OR taxonom*)", "442b9048417ef20cf680a0ae26ee4d86") #447
+
+CountSpT(genus = "Phascolarctos", species = "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #449
+CountSpTexp(genus = "Phascolarctos", species = "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #449
+
 CountSpTAKexp("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #70
 CountSpTAKexp("Phascolarctos", "cinereus", additionalkeywords = "(popul* W/5 ecolog*)", "442b9048417ef20cf680a0ae26ee4d86") #11
 CountSpTAKexp("Phascolarctos", "cinereus", additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", "442b9048417ef20cf680a0ae26ee4d86") #143
 CountSpTAKexp("Phascolarctos", "cinereus", additionalkeywords = "(popul* AND NOT popular)", "442b9048417ef20cf680a0ae26ee4d86") #322
 CountSpTAKexp("Phascolarctos", "cinereus", additionalkeywords = "NOT (phylog* OR taxonom*)", "442b9048417ef20cf680a0ae26ee4d86") #758
-CountSpTAKexp(genus = "Phascolarctos", species = "cinereus", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #no additional search terms; error
+
+CountSpTAK(genus = "Phascolarctos", species = "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #826
+CountSpTAKexp(genus = "Phascolarctos", species = "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #826
 
 TotalPub(Koala) #773
 TotalCite(Koala) #14291
