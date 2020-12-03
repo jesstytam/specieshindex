@@ -11,7 +11,7 @@ status](https://www.r-pkg.org/badges/version/specieshindex)](https://CRAN.R-proj
 Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg)]()
 
 `specieshindex` is a package that aims to gauge scientific influence of
-different species mainly using the h-index.
+different species mainly using the *h*-index.
 
 ## Installation
 
@@ -56,12 +56,13 @@ will absolutely need an API key. Here are the steps to obtain the key.
 
 ### Query string
 
-The function `CountDomain()` allows the addition of 1 keyword to
+The function `CountSpTAKexp()` allows the addition of 1 keyword to
 restricted the domain of the publications of the species. Although you
 can simply use keywords such as “conservation”, you will find that using
 “conserv\*” will yield more results. The “\*” (or wildcard) used here
 searches for any words with the prefix “conserv”, e.g. conservation,
 conserve, conservatory, etc. Find out more about search language
+[here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and
 [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
 
 ## Quick example
@@ -106,10 +107,10 @@ CombineSp
     ## 4      227      744      29              139 53 0.381 427 14
 
 Once you are happy with your dataset, you can make some nice plots.
-Using `ggplot2`, we can compare the h-index and the total citations.
+Using `ggplot2`, we can compare the *h*-index and the total citations.
 
 ``` r
-#h-index
+# h-index
 library(ggplot2)
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = h,
@@ -131,7 +132,7 @@ ggplot(CombineSp, aes(x = species)) +
 **Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
 
 ``` r
-#total citations
+# Total citations
 ggplot(CombineSp, aes(x = species)) +
 geom_point(aes(y = citations,
                colour = "Citations"),

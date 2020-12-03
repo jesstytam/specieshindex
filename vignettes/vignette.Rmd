@@ -5,6 +5,8 @@ date: "`r format(Sys.Date(), '%B %d, %Y')`"
 bibliography: references.bib
 link-citations: true
 output: 
+  pdf_document:
+    toc: no
   html_document:
     code_download: true
     code_folding: show
@@ -14,8 +16,6 @@ output:
     highlight: kate
     toc: yes
     toc_float: yes
-  pdf_document:
-    toc: no
 vignette: >
   %\VignetteIndexEntry{vignette}
   %\VignetteEncoding{UTF-8}
@@ -92,28 +92,90 @@ We have implemented functions that check the available number of relevant record
 
 It is recommend that you run a quick search using functions `CountSpT()` or `CountSpTAK()` before actually fetching the records. Both functions give a search count of the number of records found on the Scopus database.
 
+There is an optional parameter `additionalkeywords` that can be included before the API key to expand the search of publications of the species. This allows you to expand your query string and restrict the search. The input here can be a single word, e.g. "conservation", but better yet, you can parse a string with Boolean operators, e.g. "conserv* OR protect* OR reintrod* OR restor*". The Boolean operator "AND" has already been implemented in the code to link the Latin name and the additional string. To learn more about search language, you can visit [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
+
+Here are some examples of searches including additional keywords:
+
+```{r, eval=FALSE}
+# Title only
+CountSpT(genus = "Bettongia", species = "penicillata",
+         additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", APIkey = "API key")
+CountSpT(genus = "Bettongia", species = "penicillata",
+         additionalkeywords = "(popul* W/5 ecolog*)", APIkey = "API key")
+CountSpT(genus = "Bettongia", species = "penicillata",
+         additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", APIkey = "API key")
+CountSpT(genus = "Bettongia", species = "penicillata",
+         additionalkeywords = "(popul* AND NOT popular)", APIkey = "API key")
+CountSpT(genus = "Bettongia", species = "penicillata",
+         additionalkeywords = "NOT (phylog* OR taxonom*)", APIkey = "API key")
+
+# Title, abstract, and keywords
+CountSpTAK(genus = "Bettongia", species = "penicillata",
+           additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", APIkey = "API key")
+CountSpTAK(genus = "Bettongia", species = "penicillata",
+           additionalkeywords = "(popul* W/5 ecolog*)", APIkey = "API key")
+CountSpTAK(genus = "Bettongia", species = "penicillata", 
+           dditionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", APIkey = "API key")
+CountSpTAK(genus = "Bettongia", species = "penicillata",
+           additionalkeywords = "(popul* AND NOT popular)", APIkey = "API key")
+CountSpTAK(genus = "Bettongia", species = "penicillata",
+           additionalkeywords = "NOT (phylog* OR taxonom*)", APIkey = "API key")
+```
+
+If no arguments are parsed, the extraction will include all publications related to the species. In this case, you MUST include `API key =` when inputting your API key, otherwise your key will be read as an additional keyword and result in an error. 
+
 For example, you can run:
 
 ```{r, eval=FALSE}
-CountSpT("Bettongia", "penicillata", "API key")
-```
+# Title only
+CountSpT(genus = "Bettongia", species = "penicillata", APIkey = "API key")
 
-```{r, eval=FALSE}
-CountSpTAK("Bettongia", "penicillata", "API key")
+#Title, abstract, and keywords
+CountSpTAK(genus = "Bettongia", species = "penicillata", APIkey = "API key")
 ```
 
 `CountSpTAK()` yielded more results since it also looked for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data from Scopus. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
 
-As you may expect, some species have been studied more than the others [@Simko2015; @Krause2017313], resulting in more publications. Therefore, if there are more than a few thousand citation records found on Scopus, it will take a considerably longer time to fetch them all, unless you are using a computer with high processing power and fast internet connection.
+As you may expect, some species have been studied more than the others [@Simko2015; @Krause2017313], resulting in more publications. Therefore, if there are more than a few thousand citation records found on Scopus, it will take a considerably longer time to download them all, unless you are using a computer with high processing power and fast internet connection.
+
+To fetch the citation records, you can run:
+
+```{r, eval=FALSE}
+# Title only
+FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = "API key")
+
+#Title, abstract, and keywords
+FetchSpTAK(genus = "Bettongia", species = "penicillata", APIkey = "API key")
+```
+
+Similar to the Count functions above, Fetch functions also have the argument `additionalkeywords` that allows you to restrict your search.
 
 For example, you can run:
 
 ```{r, eval=FALSE}
-FetchSpT("Bettongia", "penicillata", "API key")
-```
+# Title only
+FetchSpT(genus = "Bettongia", species = "penicillata",
+         additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", APIkey = "API key")
+FetchSpT(genus = "Bettongia", species = "penicillata",
+         additionalkeywords = "(popul* W/5 ecolog*)", APIkey = "API key")
+FetchSpT(genus = "Bettongia", species = "penicillata",
+         additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", APIkey = "API key")
+FetchSpT(genus = "Bettongia", species = "penicillata",
+         additionalkeywords = "(popul* AND NOT popular)", APIkey = "API key")
+FetchSpT(genus = "Bettongia", species = "penicillata",
+         additionalkeywords = "NOT (phylog* OR taxonom*)", APIkey = "API key")
 
-```{r, eval=FALSE}
-FetchSpTAK("Bettongia", "penicillata", "API key")
+# Title, abstract, and keywords
+FetchSpTAK(genus = "Bettongia", species = "penicillata",
+           additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", APIkey = "API key")
+FetchSpTAK(genus = "Bettongia", species = "penicillata",
+           additionalkeywords = "(popul* W/5 ecolog*)", APIkey = "API key")
+FetchSpTAK(genus = "Bettongia", species = "penicillata",
+           additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", APIkey = "API key")
+FetchSpTAK(genus = "Bettongia", species = "penicillata",
+           additionalkeywords = "(popul* AND NOT popular)", APIkey = "API key")
+FetchSpTAK(genus = "Bettongia", species = "penicillata",
+           additionalkeywords = "NOT (phylog* OR taxonom*)", APIkey = "API key")
 ```
 
 In larger datasets, duplicates may appear, although usually in low numbers. `FetchSpT()` and `FetchSpTAK()` will clean up the dataset by removing them if found. This is done by locating the publications with identical names and then removing the subsequent entry (or entries). The first occurrence of the record will be kept, which is normally the original record.
@@ -276,7 +338,7 @@ After preparing the data, we are ready to make some plots. For example, using th
 We first plot the h-index:
 
 ```{r, fig.height=5, fig.width=6, fig.align='center'}
-#h-index
+# h-index
 library(ggplot2)
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = h,
@@ -296,7 +358,7 @@ ggplot(CombineSp, aes(x = species)) +
 We can also plot the total citations counts for comparison, since citations is an important factor in contributing to h-index.
 
 ```{r, fig.height=5, fig.width=6, fig.align='center'}
-#total citations
+# Total citations
 ggplot(CombineSp, aes(x = species)) +
 geom_point(aes(y = citations,
                colour = "Citations"),
@@ -317,7 +379,7 @@ It seems like the h-index values are quite consistent with the total numbers of 
 We next plot the m-index to see how it differs from the h-index. Recalling that m-index is calculated by dividing the h-index by the number of years of publication activity ($m=h/years~publishing$), let us have a closer inspection at both the m-index:
 
 ```{r, fig.height=5, fig.width=6, fig.align='center'}
-#m-index
+# m-index
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = m,
                  colour = "M-index"),
@@ -336,7 +398,7 @@ ggplot(CombineSp, aes(x = species)) +
 We should also have a look at the related variable years_publishing (number of years since first publication for a given species).
 
 ```{r, fig.height=5, fig.width=6, fig.align='center'}
-#years publishing
+# Years publishing
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = years_publishing,
                  colour = "Years publishing"),

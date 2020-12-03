@@ -50,7 +50,7 @@ To connect and download citation information from Scopus legally, you will absol
 
 ### Query string
 
-The function `CountSpTAKexp()` allows the addition of 1 keyword to restricted the domain of the publications of the species. Although you can simply use keywords such as "conservation", you will find that using "conserv\*" will yield more results. The "\*" (or wildcard) used here searches for any words with the prefix "conserv", e.g. conservation, conserve, conservatory, etc. Find out more about search language [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
+The function `CountSpTAKexp()` allows the addition of 1 keyword to restricted the domain of the publications of the species. Although you can simply use keywords such as "conservation", you will find that using "conserv\*" will yield more results. The "\*" (or wildcard) used here searches for any words with the prefix "conserv", e.g. conservation, conserve, conservatory, etc. Find out more about search language [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
 
 ## Quick example
 
@@ -84,7 +84,7 @@ CombineSp
 Once you are happy with your dataset, you can make some nice plots. Using `ggplot2`, we can compare the *h*-index and the total citations.
 
 ```{r, cache=TRUE, fig.align='center'}
-#h-index
+# h-index
 library(ggplot2)
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = h,
@@ -104,7 +104,7 @@ ggplot(CombineSp, aes(x = species)) +
 **Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
 
 ```{r, cache=TRUE, fig.align='center'}
-#total citations
+# Total citations
 ggplot(CombineSp, aes(x = species)) +
 geom_point(aes(y = citations,
                colour = "Citations"),
