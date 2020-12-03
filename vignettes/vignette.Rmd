@@ -122,7 +122,7 @@ CountSpTAK(genus = "Bettongia", species = "penicillata",
            additionalkeywords = "NOT (phylog* OR taxonom*)", APIkey = "API key")
 ```
 
-If no arguments are parsed, the extraction will include all publications related to the species. In this case, you MUST include `API key =` when inputting your API key, otherwise your key will be read as an additional keyword and result in an error. 
+If no arguments are parsed, the extraction will include all publications related to the species. In this case, you MUST include `API key =` to specify your API key, otherwise your key will be read as an additional keyword and result in an error. 
 
 For example, you can run:
 

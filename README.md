@@ -75,10 +75,10 @@ title+abstract+keywords. Remember to use binomial names.
 
 ``` r
 # Extract citation data
-Woylie <- FetchSpTAK("Bettongia", "penicillata", myAPI)
-Quokka <- FetchSpTAK("Setonix", "brachyurus", myAPI)
-Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", myAPI)
-Koala <- FetchSpTAK("Phascolarctos", "cinereus", myAPI)
+Woylie <- FetchSpTAK("Bettongia", "penicillata", APIkey = "API key")
+Quokka <- FetchSpTAK("Setonix", "brachyurus", APIkey = "API key")
+Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", APIkey = "API key")
+Koala <- FetchSpTAK("Phascolarctos", "cinereus", APIkey = "API key")
 ```
 
 Now that you have the data, you can use the `Allindices()` function to

@@ -762,14 +762,14 @@ CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(popul* W/5 ecolog*)
 CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", "442b9048417ef20cf680a0ae26ee4d86") #21
 CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(popul* AND NOT popular)", "442b9048417ef20cf680a0ae26ee4d86") #49
 CountSpT("Phascolarctos", "cinereus", additionalkeywords = "NOT (phylog* OR taxonom*)", "442b9048417ef20cf680a0ae26ee4d86") #447
-CountSpT("Phascolarctos", "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #449
+CountSpT("Phascolarctos", "cinereus", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #449
 
 CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #70
 CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(popul* W/5 ecolog*)", "442b9048417ef20cf680a0ae26ee4d86") #11
 CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", "442b9048417ef20cf680a0ae26ee4d86") #143
 CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(popul* AND NOT popular)", "442b9048417ef20cf680a0ae26ee4d86") #322
 CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "NOT (phylog* OR taxonom*)", "442b9048417ef20cf680a0ae26ee4d86") #758
-CountSpTAK("Phascolarctos", "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #826
+CountSpTAK("Phascolarctos", "cinereus", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #826
 
 TotalPub(Koala) #773
 TotalCite(Koala) #14291
