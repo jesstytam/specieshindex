@@ -115,7 +115,7 @@ CountSpTAK(genus = "Bettongia", species = "penicillata",
 CountSpTAK(genus = "Bettongia", species = "penicillata",
            additionalkeywords = "(popul* W/5 ecolog*)", APIkey = "API key")
 CountSpTAK(genus = "Bettongia", species = "penicillata", 
-           dditionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", APIkey = "API key")
+           additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", APIkey = "API key")
 CountSpTAK(genus = "Bettongia", species = "penicillata",
            additionalkeywords = "(popul* AND NOT popular)", APIkey = "API key")
 CountSpTAK(genus = "Bettongia", species = "penicillata",
