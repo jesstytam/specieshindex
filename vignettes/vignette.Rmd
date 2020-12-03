@@ -1,6 +1,6 @@
 ---
 title: "Introduction to specieshindex"
-author: Jessica Tam
+author: Jessica Tam, Malgorzata (Losia) Lagisz, Shinichi Nakagawa, Will Cornwell
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 bibliography: references.bib
 link-citations: true
@@ -72,6 +72,8 @@ library(XML)
 library(httr)
 library(specieshindex)
 ```
+
+You can find the full list of functions [here](https://github.com/jessicatytam/specieshindex/blob/master/specieshindex_0.0.1.pdf).
 
 # Workflow
 
@@ -427,5 +429,9 @@ Finally, requests must be sent via a subscriber's internet provider. This includ
 # Implications and future uses
 
 Although the development of this package is still in its infancy, it is nonetheless a valuable tool for reserchers looking to examine research biases between species. Some functions that could be added in the future include search requests for higher classification levels, e.g. genus, class, etc., and to include other emerging indices that are being used to calculate research influence. The results of the species h-index will show us the volume of study opportunities each taxon receives. More investigations will then follow to explore the reasons why and how the knowledge gap affected species conservation and the depth of understanding we have for them.
+
+# Acknowledgements
+
+I acknowledge the contributions of the authors of the dependance packages: `rscopus`, `taxize`, `XML`, `httr`, `dplyr`, `rlang`.
 
 # References
