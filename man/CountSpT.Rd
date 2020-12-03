@@ -2,14 +2,22 @@
 % Please edit documentation in R/specieshindex.R
 \name{CountSpT}
 \alias{CountSpT}
-\title{Search count - title only}
+\title{Search count expanded - title only}
 \usage{
-CountSpT(genus, species, APIkey, datatype = "application/xml")
+CountSpT(
+  genus,
+  species,
+  additionalkeywords,
+  APIkey,
+  datatype = "application/xml"
+)
 }
 \arguments{
 \item{genus}{Genus classification from the binomial name.}
 
 \item{species}{Species classification from the binomial name.}
+
+\item{additionalkeywords}{Optional search terms.}
 
 \item{APIkey}{Scopus API key needed to access and download data from their database.}
 
@@ -20,16 +28,23 @@ Search count of the species with the given \code{genus} and \code{species}.
 }
 \description{
 This function counts the total number of search results.
-It counts only the publications with the binomial name in their title.
-A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validify the genus and species names.
+It counts the publications with the binomial name in the title only.
+A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
 }
 \examples{
 \dontrun{
-CountSpT("Bettongia", "penicillata", "myAPI")
+CountSpT("Bettongia", "penicillata", APIkey = "myAPI")
 
 #lower case letter in genus is also accepted and will return identical results
 
-CountSpT("Bettongia", "penicillata", "myAPI")
+CountSpT("bettongia", "penicillata", APIkey = "myAPI")
+}
+\dontrun{
+CountSpT("Bettongia", "penicillata", "conserv*", "myAPI")
+
+#lower case letter in genus is also accepted and will return identical results
+
+CountSpT("bettongia", "penicillata", "conserv*", "myAPI")
 }
 }
 \references{

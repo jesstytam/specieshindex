@@ -22,104 +22,46 @@ pacman::p_load(tidyverse,
 2. CountSpTAK
   + counts the total number of search results on Scopus
   + title + abstract + keywords
-3. CountSpTexp
-  + counts the total number of search results of species plus a keyword
-  + title
-4. CountSpTAKexp
-  + counts the total number of search results of species plus a keyword
-  + title + abstract + keywords
-5. FetchSpT
+3. FetchSpT
   + fetches data from Scopus using genus and species name
   + title only
-6. FetchSpTAK
+4. FetchSpTAK
   + fetches data from Scopus using genus and species name
   + title + abstract + keywords
-7. TotalPub
+5. TotalPub
   + counts the total number of publications
-8. TotalCite
+6. TotalCite
   + counts the total number of citations
-9. TotalJournals
+7. TotalJournals
   + counts the total number of journals
-10. TotalArt
+8. TotalArt
   + counts the total number of articles
-11. TotalRev
+9. TotalRev
   + counts the total number of reviews
-12. ARRatio
+10. ARRatio
   + calculates article:review ratio
-13. SpHindex
+11. SpHindex
   + calculates h-index
-14. YearsPublishing
+12. YearsPublishing
   + calculates the number of years since the first publication
-15. SpMindex
+13. SpMindex
   + calculates m-index (h-index / total years)
-16. Spi10
+14. Spi10
   + counts the publications with 10+ citations
-17. SpH5
+15. SpH5
   + calculates h-index for the past 5 years
-18. SpHAfterdate
+16. SpHAfterdate
   + calculates h-index with a given time frame
-19. Allindices
+17. Allindices
   + shows a summary of the main indices
+
 
 
 
 
 ```{r, function to get result count title only, message=FALSE}
 #code from Fonti (modified)
-CountSpT <- function(genus, species, APIkey, datatype = "application/xml") {
-  library(httr)
-  library(XML)
-  library(rlang)
-  library(taxize)
-  library(dplyr)
-    if (missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") #stop running if API key missing
-  }
-  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
-  case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
-  )
-  theURL <- GET("http://api.elsevier.com/content/search/scopus",
-              query = list(apiKey = paste0(APIkey),
-                           query = paste0('TITLE("', genus, ' ', species, '")'),
-                           httpAccept = "application/xml")) #format the URL to be sent to the API
-  stop_for_status(theURL) #pass any HTTP errors to the R console
-  theData <- content(theURL, as = "text") #extract the content of the response
-  newData <- xmlParse(theURL) #parse the data to extract values
-  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
-  return(resultCount)
-}
-```
-
-```{r, function to get result count title+abs+key, message=FALSE}
-#code from Fonti (modified)
-CountSpTAK <- function(genus, species, APIkey, datatype = "application/xml") {
-  library(httr)
-  library(XML)
-  library(rlang)
-  library(taxize)
-  library(dplyr)
-    if (missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") #stop running if API key missing
-   }
-  findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
-  case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
-  )
-   theURL <- GET("http://api.elsevier.com/content/search/scopus",
-              query = list(apiKey = paste0(APIkey),
-                           query = paste0('TITLE-ABS-KEY("', genus, ' ', species, '")'),
-                           httpAccept = "application/xml")) #format the URL to be sent to the API
-  stop_for_status(theURL) #pass any HTTP errors to the R console
-  theData <- content(theURL, as = "text") #extract the content of the response
-  newData <- xmlParse(theURL) #parse the data to extract values
-  resultCount <- as.numeric(xpathSApply(newData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
-  return(resultCount)
-}
-```
-
-```{r, message=FALSE}
-CountSpTexp <- function(genus, species, additionalkeywords, APIkey, datatype = "application/xml") {
+CountSpT <- function(genus, species, additionalkeywords, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
   library(rlang)
@@ -151,8 +93,9 @@ CountSpTexp <- function(genus, species, additionalkeywords, APIkey, datatype = "
 }
 ```
 
-```{r, message=FALSE}
-CountSpTAKexp <- function(genus, species, additionalkeywords, APIkey, datatype = "application/xml") {
+```{r, function to get result count title+abs+key, message=FALSE}
+#code from Fonti (modified)
+CountSpTAK <- function(genus, species, additionalkeywords, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
   library(rlang)
@@ -803,23 +746,19 @@ O_anatinus <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinu
 CountSpTAK("Phascolarctos", "cinereus", myAPI) #777
 FetchSpTAK("Phascolarctos", "cinereus", myAPI) #4 duplicates
 
-CountSpTexp("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #3
-CountSpTexp("Phascolarctos", "cinereus", additionalkeywords = "(popul* W/5 ecolog*)", "442b9048417ef20cf680a0ae26ee4d86") #0
-CountSpTexp("Phascolarctos", "cinereus", additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", "442b9048417ef20cf680a0ae26ee4d86") #21
-CountSpTexp("Phascolarctos", "cinereus", additionalkeywords = "(popul* AND NOT popular)", "442b9048417ef20cf680a0ae26ee4d86") #49
-CountSpTexp("Phascolarctos", "cinereus", additionalkeywords = "NOT (phylog* OR taxonom*)", "442b9048417ef20cf680a0ae26ee4d86") #447
+CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #3
+CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(popul* W/5 ecolog*)", "442b9048417ef20cf680a0ae26ee4d86") #0
+CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", "442b9048417ef20cf680a0ae26ee4d86") #21
+CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(popul* AND NOT popular)", "442b9048417ef20cf680a0ae26ee4d86") #49
+CountSpT("Phascolarctos", "cinereus", additionalkeywords = "NOT (phylog* OR taxonom*)", "442b9048417ef20cf680a0ae26ee4d86") #447
+CountSpT("Phascolarctos", "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #449
 
-CountSpT(genus = "Phascolarctos", species = "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #449
-CountSpTexp(genus = "Phascolarctos", species = "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #449
-
-CountSpTAKexp("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #70
-CountSpTAKexp("Phascolarctos", "cinereus", additionalkeywords = "(popul* W/5 ecolog*)", "442b9048417ef20cf680a0ae26ee4d86") #11
-CountSpTAKexp("Phascolarctos", "cinereus", additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", "442b9048417ef20cf680a0ae26ee4d86") #143
-CountSpTAKexp("Phascolarctos", "cinereus", additionalkeywords = "(popul* AND NOT popular)", "442b9048417ef20cf680a0ae26ee4d86") #322
-CountSpTAKexp("Phascolarctos", "cinereus", additionalkeywords = "NOT (phylog* OR taxonom*)", "442b9048417ef20cf680a0ae26ee4d86") #758
-
-CountSpTAK(genus = "Phascolarctos", species = "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #826
-CountSpTAKexp(genus = "Phascolarctos", species = "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #826
+CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #70
+CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(popul* W/5 ecolog*)", "442b9048417ef20cf680a0ae26ee4d86") #11
+CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", "442b9048417ef20cf680a0ae26ee4d86") #143
+CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(popul* AND NOT popular)", "442b9048417ef20cf680a0ae26ee4d86") #322
+CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "NOT (phylog* OR taxonom*)", "442b9048417ef20cf680a0ae26ee4d86") #758
+CountSpTAK("Phascolarctos", "cinereus",  APIkey = "442b9048417ef20cf680a0ae26ee4d86") #826
 
 TotalPub(Koala) #773
 TotalCite(Koala) #14291

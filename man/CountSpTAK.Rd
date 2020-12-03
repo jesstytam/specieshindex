@@ -2,14 +2,22 @@
 % Please edit documentation in R/specieshindex.R
 \name{CountSpTAK}
 \alias{CountSpTAK}
-\title{Search count - title, abstract and keywords}
+\title{Search count expanded - title, abstract, and keywords}
 \usage{
-CountSpTAK(genus, species, APIkey, datatype = "application/xml")
+CountSpTAK(
+  genus,
+  species,
+  additionalkeywords,
+  APIkey,
+  datatype = "application/xml"
+)
 }
 \arguments{
 \item{genus}{Genus classification from the binomial name.}
 
 \item{species}{Species classification from the binomial name.}
+
+\item{additionalkeywords}{Optional search terms.}
 
 \item{APIkey}{Scopus API key needed to access and download data from their database.}
 
@@ -20,16 +28,23 @@ Search count of the species with the given \code{genus} and \code{species}.
 }
 \description{
 This function counts the total number of search results.
-It counts the publications with the binomial name in the title, abstract and keywords.
-A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validify the genus and species names.
+It counts the publications with the binomial name in the title, abstract, and keywords.
+A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
 }
 \examples{
 \dontrun{
-CountSpTAK("Bettongia", "penicillata", "myAPI")
+CountSpTAK("Bettongia", "penicillata", APIkey = "myAPI")
 
 #lower case letter in genus is also accepted and will return identical results
 
-CountSpTAK("bettongia", "penicillata", "myAPI")
+CountSpTAK("bettongia", "penicillata", APIkey = "myAPI")
+}
+\dontrun{
+CountSpTAK("Bettongia", "penicillata", "conserv*", "myAPI")
+
+#lower case letter in genus is also accepted and will return identical results
+
+CountSpTAK("bettongia", "penicillata", "conserv*", "myAPI")
 }
 }
 \references{
