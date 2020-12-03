@@ -4,12 +4,14 @@
 \alias{FetchSpT}
 \title{Fetch data - title only}
 \usage{
-FetchSpT(genus, species, APIkey)
+FetchSpT(genus, species, additionalkeywords, APIkey)
 }
 \arguments{
 \item{genus}{Genus classification from the binomial name.}
 
 \item{species}{Species classification from the binomial name.}
+
+\item{additionalkeywords}{Optional search terms.}
 
 \item{APIkey}{Scopus API key needed to access and download data from their database.}
 }
@@ -22,10 +24,17 @@ Duplicates are removed after fetching the data.
 }
 \examples{
 \dontrun{
-FetchSpT("Bettongia", "penicillata", "myAPI")
+FetchSpT("Bettongia", "penicillata", APIkey = "myAPI")
 
 #lower case letter in genus is also accepted and will return identical results
 
-FetchSpT("bettongia", "penicillata", "myAPI")
+FetchSpT("bettongia", "penicillata", APIkey = "myAPI")
+}
+\dontrun{
+FetchSpT("Bettongia", "penicillata", "conserv*", "myAPI")
+
+#lower case letter in genus is also accepted and will return identical results
+
+FetchSpT("bettongia", "penicillata", "conserv*", "myAPI")
 }
 }
