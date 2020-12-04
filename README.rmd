@@ -49,6 +49,10 @@ To connect and download citation information from Scopus legally, you will **abs
 3. Go to the `My API Key` tab on top of the page and click `Create API Key`.
 4. Read the legal documents and check the boxes. 
 
+### Connecting to Scopus
+
+Make sure you are connected to the internet via your institute's provider or acquire a VPN from them if you are working from home. Alternatively, the functions will also run if you are already a subscriber of Scopus.
+
 ### Query string
 
 The function `CountSpTAKexp()` allows the addition of 1 keyword to restricted the domain of the publications of the species. Although you can simply use keywords such as "conservation", you will find that using "conserv\*" will yield more results. The "\*" (or wildcard) used here searches for any words with the prefix "conserv", e.g. conservation, conserve, conservatory, etc. Find out more about search language [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).

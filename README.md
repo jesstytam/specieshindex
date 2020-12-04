@@ -57,6 +57,13 @@ key.
     Key`.
 4.  Read the legal documents and check the boxes.
 
+### Connecting to Scopus
+
+Make sure you are connected to the internet via your institute’s
+provider or acquire a VPN from them if you are working from home.
+Alternatively, the functions will also run if you are already a
+subscriber of Scopus.
+
 ### Query string
 
 The function `CountSpTAKexp()` allows the addition of 1 keyword to
