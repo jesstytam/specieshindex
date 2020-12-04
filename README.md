@@ -33,6 +33,7 @@ library(rscopus)
 library(taxize)
 library(XML)
 library(httr)
+library(dplyr)
 library(specieshindex)
 ```
 
@@ -46,7 +47,8 @@ for more detailed instructions and the full list of functions
 ### Getting an API key
 
 To connect and download citation information from Scopus legally, you
-will absolutely need an API key. Here are the steps to obtain the key.
+will **absolutely** need an API key. Here are the steps to obtain the
+key.
 
 1.  Go to <https://dev.elsevier.com/> and click on the button `I want an
     API key`.
@@ -120,7 +122,7 @@ ggplot(CombineSp, aes(x = species)) +
   labs(x = "Species",
        y = "Index Score",
        colour = "Index") +
-  scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) +
+  scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) +
   scale_colour_manual(values = c("H-index" = "#3498DB")) +
   theme(plot.title = element_text(size = 14, face = "bold"),
         axis.title = element_text(size = 12),
@@ -141,7 +143,7 @@ geom_point(aes(y = citations,
 labs(x = "Species",
      y = "Total citations",
      colour = "Index") +
-scale_x_discrete(labels = c("Woylie", "Quokka", "Platypus", "Koala")) + 
+scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) + 
 scale_colour_manual(values = c("Citations"  = "#2874A6")) +
 theme(plot.title = element_text(size = 14, face = "bold"),
       axis.title = element_text(size = 12),
