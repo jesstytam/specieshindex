@@ -95,6 +95,16 @@ We have implemented functions that check the available number of relevant record
 
 It is recommend that you run a quick search using functions `CountSpT()` or `CountSpTAK()` before actually fetching the records since this can be a tedious process. Both functions give a search count of the number of records found on the Scopus database.
 
+For example, you can run:
+
+```{r, eval=FALSE}
+# Title only
+CountSpT(genus = "Bettongia", species = "penicillata", APIkey = "API key")
+
+#Title, abstract, and keywords
+CountSpTAK(genus = "Bettongia", species = "penicillata", APIkey = "API key")
+```
+
 There is an optional parameter `additionalkeywords` that can be included to make your search more precise. This is achieved by expanding your query string and restrict the search to records that include specified combination of the additional keywords. The additional keywords can be a single word, e.g. "conservation", but better yet, you can parse a string with Boolean operators, e.g. "conserv\* OR protect\* OR reintrod\* OR restor\*". The Boolean operator "AND" has already been implemented in the code to link the Latin name and the additional string. To learn more about search language, you can visit [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
 
 Here are some examples of searches including additional keywords:
@@ -126,16 +136,6 @@ CountSpTAK(genus = "Bettongia", species = "penicillata",
 ```
 
 If no additional keywords are parsed, the extraction will include all publications related to the species. In this case, you MUST include `API key =` to specify your API key, otherwise your key will be read as an additional keyword and result in an error. 
-
-For example, you can run:
-
-```{r, eval=FALSE}
-# Title only
-CountSpT(genus = "Bettongia", species = "penicillata", APIkey = "API key")
-
-#Title, abstract, and keywords
-CountSpTAK(genus = "Bettongia", species = "penicillata", APIkey = "API key")
-```
 
 `CountSpTAK()` should yield more results since it also looked for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data from Scopus. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
 
