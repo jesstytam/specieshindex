@@ -348,7 +348,7 @@ ggplot(CombineSp, aes(x = species)) +
                  colour = "H-index"),
              size = 2.5) +
   labs(x = "Species",
-       y = "Index Score",
+       y = "h-index",
        colour = "Index") +
   scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) +
   scale_colour_manual(values = c("H-index" = "#3498DB")) +
@@ -388,7 +388,7 @@ ggplot(CombineSp, aes(x = species)) +
                  colour = "M-index"),
              size = 2.5) +
   labs(x = "Species",
-       y = "Index Score",
+       y = "m-index",
        colour = "Index") +
   scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) + 
   scale_colour_manual(values = c("M-index"  = "#E74C3C")) +
@@ -421,15 +421,15 @@ In order to understand what yields a high *m*-index score, we should recall that
 
 # Limitations
 
-Currently, the input option for search requests is limited to species Latin names. Although common names are synonymous with the binomial names, they are comparatively much less explicit. There could be multiple species using the same common name, which will require extra steps to specify which is the particular species that is being studied. Moreover, there are other fields of research that uses different species' common names as the titles of their work. For example, a study on childhood health, called the KOALA Birth Cohort Study [@mbakwa2018gut], was found on Scopus. Here, KOALA was the acronym for 'child, parents and health: lifestyle and genetic constitution' in Dutch. Filtering will be required but such occurrences are often easily overlooked in extensive datasets.
+Currently, the input option for search requests is limited to species Latin names. Although common names are synonymous with the binomial names, they are comparatively much less explicit. There could be multiple species using the same common name, which will require extra steps to specify which is the particular species that is being studied. Moreover, there are other fields of research that use species' common names in the titles of their work without meaning the actual species, e.g. as a product/project name. 
 
-Another limitation is that only species-level searches are enabled at the moment. This is because of homonymous [@10.3897/zookeys.550.9546] genus names between some plant and animal taxa. For example, the genus *Prunella* represents both a taxon of herbaceous plants and passerines. Additional parameters will have to be added to identify the exact taxon in question.
+Another limitation is that only species-level searches using binomial names are enabled at the moment. This is because of homonymous [@10.3897/zookeys.550.9546] genus names between some plant and animal taxa. For example, the genus *Prunella* represents both a taxon of herbaceous plants and passerines. Additional parameters will have to be added to identify the exact taxon in question.
 
-Finally, requests must be sent via a subscriber's internet provider. This include universities and individuals who have paid for annual subscription. This is easily addressed by connecting to your institution's network. Hence, it might not work at all if you are working from home. The error `Bad Request (HTTP 400)` will be returned in this case as a reminder.
+Finally, requests must be sent via a subscriber's internet provider. This include universities and individuals who have paid for annual Scopus subscription. This is easily addressed by connecting to your institution's network. Hence, it might not work at all if you are working from home. The error `Bad Request (HTTP 400)` will be returned in this case.
 
 # Implications and future uses
 
-Although the development of this package is still in its infancy, it is nonetheless a valuable tool for reserchers looking to examine research biases between species. Some functions that could be added in the future include search requests for higher classification levels, e.g. genus, class, etc., and to include other emerging indices that are being used to calculate research influence. The results of the species h-index will show us the volume of study opportunities each taxon receives. More investigations will then follow to explore the reasons why and how the knowledge gap affected species conservation and the depth of understanding we have for them.
+Although the development of this package is still in its infancy, it is nonetheless a valuable tool for reserchers looking to examine research biases between species. Some functions that could be added in the future include search requests for higher classification levels, e.g. genus, class, etc., and to include other emerging indices that are being used to calculate research influence. The results of the species h-index will show us the research interest each taxon receives. More investigations will then follow to explore the reasons why and how the knowledge gap affected species conservation and the depth of understanding we have for them.
 
 # Acknowledgements
 
