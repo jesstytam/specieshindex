@@ -59,8 +59,8 @@ key.
 
 ### Connecting to Scopus
 
-Make sure you are connected to the internet via your institute’s
-provider or acquire a VPN from them if you are working from home.
+Make sure you are connected to the internet via institutional access or
+acquire a VPN from your institution if you are working from home.
 Alternatively, the functions will also run if you are already a
 subscriber of Scopus.
 
