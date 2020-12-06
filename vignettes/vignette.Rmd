@@ -42,7 +42,7 @@ library(ggplot2)
 knitr::include_graphics("../vignettes/Banner.png")
 ```
 
-There are many ways to gauge research influence. We can simply sum up the number of publications or citations, which is a straight forward way without the need of any complicated mathematical formulae. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the *h*-index, *m*-index, i10 index, h5 index, etc.
+There are many ways to gauge research influence. We can simply sum up the number of publications or citations, which is a straight forward way without the need of any complicated mathematical formulas. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the *h*-index, *m*-index, i10 index, h5 index, etc.
 
 *H*-index [@Hirsch200516569] is one of the main methods to measure publication influence objectively. It is calculated using the formula *h* = total publications (n) that have at least been cited **n** times, after sorting the publications by their citation counts in a descending order. 
 
@@ -87,7 +87,7 @@ Below, we outline how to perform these steps using our package.
 
 ## Connecting to Scopus
 
-Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise the functions will not run (and is in fact illegal to download the data). You can register your key [$\text{\underline{here}$](https://dev.elsevier.com/). Use your API key as the function parameter "myAPI".
+Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise, the functions will not run (and is in fact illegal to download the data). You can register your key [$\text{\underline{here}$](https://dev.elsevier.com/). Use your API key as the function parameter "myAPI".
 
 The searches in Scopus are performed using species Latin name. The relevant functions take two parts of a Latin binominal species name as their main parameters, e.g. "*Bettongia*", "*penicillata*”. Make sure you are using binomial names instead of common names as required by the code.
 
@@ -187,7 +187,7 @@ In larger datasets, duplicates may appear, although usually in low numbers. `Fet
 
 If the error `Bad Request (HTTP 400)` occurs in this step, try connecting to the internet via institutional access, instead of the one at home. This error might be caused by some authorisation issues.
 
-It is important to make sure you have spelt the genus and species name accurately when entering the function. If unsure, you can go to the [$\text{\underline{Global Names Resolver}$](https://resolver.globalnames.org/data_sources) for verification. This is where the above functions are linked to for checking via the package `Taxize` [@Chamberlain2013]. If the desired species is not in the index, it is possible that it has just been discovered and not officially listed yet, or the name has been changed and is no longer in use. Whether or not old synonyms are accepted depends on if they still exist in the database.
+It is important to make sure you have spelt the genus and species name accurately when entering the function. If unsure, you can go to the [$\text{\underline{Global Names Resolver}$](https://resolver.globalnames.org/data_sources) for verification. This is where the above functions are linked to for checking via the package `taxize` [@Chamberlain2013]. If the desired species is not in the index, it is possible that it has just been discovered and not officially listed yet, or the name has been changed and is no longer in use. Whether or not old synonyms are accepted depends on if they still exist in the database.
 
 ## Simple counts
 
@@ -433,6 +433,6 @@ Although the development of this package is still in its infancy, it is nonethel
 
 # Acknowledgements
 
-I acknowledge the contributions of the authors of the dependance packages: `rscopus`, `taxize`, `XML`, `httr`, `dplyr`, `rlang`.
+I acknowledge the contributions of the authors of the dependency packages: `rscopus`, `taxize`, `XML`, `httr`, `dplyr`, `rlang`.
 
 # References
