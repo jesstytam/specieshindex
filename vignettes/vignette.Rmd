@@ -74,7 +74,7 @@ library(dplyr)
 library(specieshindex)
 ```
 
-You can find the full list of functions [here](https://github.com/jessicatytam/specieshindex/blob/master/specieshindex_0.0.1.pdf).
+You can find the full list of functions [$\text{\underline{here}$](https://github.com/jessicatytam/specieshindex/blob/master/specieshindex_0.0.1.pdf).
 
 # Workflow
 
@@ -87,7 +87,7 @@ Below, we outline how to perform these steps using our package.
 
 ## Connecting to Scopus
 
-Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise the functions will not run (and is in fact illegal to download the data). You can register your key [here](https://dev.elsevier.com/). Use your API key as the function parameter "myAPI".
+Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise the functions will not run (and is in fact illegal to download the data). You can register your key [$\text{\underline{here}$](https://dev.elsevier.com/). Use your API key as the function parameter "myAPI".
 
 The searches in Scopus are performed using species Latin name. The relevant functions take two parts of a Latin binominal species name as their main parameters, e.g. "*Bettongia*", "*penicillata*”. Make sure you are using binomial names instead of common names as required by the code.
 
@@ -105,7 +105,7 @@ CountSpT(genus = "Bettongia", species = "penicillata", APIkey = "API key")
 CountSpTAK(genus = "Bettongia", species = "penicillata", APIkey = "API key")
 ```
 
-There is an optional parameter `additionalkeywords` that can be included to make your search more precise. This is achieved by expanding your query string and restrict the search to records that include specified combination of the additional keywords. The additional keywords can be a single word, e.g. "conservation", but better yet, you can parse a string with Boolean operators, e.g. "conserv\* OR protect\* OR reintrod\* OR restor\*". The Boolean operator "AND" has already been implemented in the code to link the Latin name and the additional string. To learn more about search language, you can visit [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
+There is an optional parameter `additionalkeywords` that can be included to make your search more precise. This is achieved by expanding your query string and restrict the search to records that include specified combination of the additional keywords. The additional keywords can be a single word, e.g. "conservation", but better yet, you can parse a string with Boolean operators, e.g. "conserv\* OR protect\* OR reintrod\* OR restor\*". The Boolean operator "AND" has already been implemented in the code to link the Latin name and the additional string. To learn more about search language, you can visit [$\text{\underline{here}$](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and [$\text{\underline{here}$](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
 
 Here are some examples of searches including additional keywords:
 
@@ -187,7 +187,7 @@ In larger datasets, duplicates may appear, although usually in low numbers. `Fet
 
 If the error `Bad Request (HTTP 400)` occurs in this step, try connecting to the internet via institutional access, instead of the one at home. This error might be caused by some authorisation issues.
 
-It is important to make sure you have spelt the genus and species name accurately when entering the function. If unsure, you can go to the [Global Names Resolver](https://resolver.globalnames.org/data_sources) for verification. This is where the above functions are linked to for checking via the package `Taxize` [@Chamberlain2013]. If the desired species is not in the index, it is possible that it has just been discovered and not officially listed yet, or the name has been changed and is no longer in use. Whether or not old synonyms are accepted depends on if they still exist in the database.
+It is important to make sure you have spelt the genus and species name accurately when entering the function. If unsure, you can go to the [$\text{\underline{Global Names Resolver}$](https://resolver.globalnames.org/data_sources) for verification. This is where the above functions are linked to for checking via the package `Taxize` [@Chamberlain2013]. If the desired species is not in the index, it is possible that it has just been discovered and not officially listed yet, or the name has been changed and is no longer in use. Whether or not old synonyms are accepted depends on if they still exist in the database.
 
 ## Simple counts
 
