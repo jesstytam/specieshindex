@@ -2,7 +2,9 @@
 title: "Honours methods"
 author: "Jess"
 date: "2/21/2020"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r, setup}
@@ -83,7 +85,7 @@ create_query_string_TAK <- function(genus, species, additionalkeywords){
 }
 ```
 
-```{r, function to get result count title only, message=FALSE}
+```{r, function to get result count title only, message=FALSE, warning=FALSE}
 #code from Fonti (modified)
 CountSpT <- function(genus, species, additionalkeywords, APIkey, datatype = "application/xml") {
   library(httr)
@@ -110,7 +112,7 @@ CountSpT <- function(genus, species, additionalkeywords, APIkey, datatype = "app
 }
 ```
 
-```{r, function to get result count title+abs+key, message=FALSE}
+```{r, function to get result count title+abs+key, message=FALSE, warning=FALSE}
 #code from Fonti (modified)
 CountSpTAK <- function(genus, species, additionalkeywords, APIkey, datatype = "application/xml") {
   library(httr)
@@ -669,14 +671,6 @@ Allindices <- function(data, genus, species) {
 
 
 **Tests**
-
-```{r}
-vault <- file.path("C:/Users/iamje/Jess/UNSW/BEES0006/specieshindex", ".vault")
-key_dir <- file.path(system.file(package = "secret"), "user_keys")
-public_key <- file.path(key_dir, "jesst.pub")
-private_key <- file.path(key_dir, "jesst.pem")
-myAPI <- get_secret("myAPI", key = private_key, vault = vault) #loading my hidden API key
-```
 
 ```{r, woylie}
 #test done on 10 july
