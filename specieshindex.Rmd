@@ -673,8 +673,6 @@ SpMindex(Woylie) #0.6046512
 Spi10(Woylie) #54
 SpH5(Woylie) #8
 SpHAfterdate(Woylie, "2000-01-01") #20
-SpHYear(Woylie)
-SpHGrowth(Woylie)
 
 B_penicillata <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 ```
@@ -697,8 +695,6 @@ SpMindex(Quokka) #0.4393939
 Spi10(Quokka) #121
 SpH5(Quokka) #3
 SpHAfterdate(Quokka, "2000-01-01") #17
-SpHYear(Quokka)
-SpHGrowth(Quokka)
 
 S_brachyurus <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
 ```
@@ -721,8 +717,6 @@ SpMindex(Platypus) #0.6119403
 Spi10(Platypus) #177
 SpH5(Platypus) #7
 SpHAfterdate(Platypus, "2000-01-01") #32
-SpHYear(Platypus)
-SpHGrowth(Platypus)
 
 O_anatinus <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
 ```
@@ -730,8 +724,8 @@ O_anatinus <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinu
 ```{r, koala}
 #test done on 10 july
 CountSpTAK("Phascolarctos", "cinereus", myAPI) #777
-FetchSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86")
-FetchSpT("Phascolarctos", "cinereus", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #4 duplicates
+FetchSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #3
+FetchSpT("Phascolarctos", "cinereus", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #446; 3 duplicates
 
 CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #3
 CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(popul* W/5 ecolog*)", "442b9048417ef20cf680a0ae26ee4d86") #0
@@ -760,8 +754,6 @@ SpMindex(Koala) #0.381295
 Spi10(Koala) #427
 SpH5(Koala) #15
 SpHAfterdate(Koala, "2000-01-01") #44
-SpHYear(Koala)
-SpHGrowth(Koala)
 
 P_cinereus <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
 ```
