@@ -46,7 +46,7 @@ CountSpT <- function(genus, species, additionalkeywords, APIkey, datatype = "app
   httr::stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- httr::content(theURL, as = "text") #extract the content of the response
   newData <- XML::xmlParse(theURL) #parse the data to extract values
-  resultCount <- as.numeric(XML::xpathSApply(newData,"//opensearch:totalResults", xmlValue)) #get the total number of search results for the string
+  resultCount <- as.numeric(XML::xpathSApply(newData,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
   return(resultCount)
 }
 
