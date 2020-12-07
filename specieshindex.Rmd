@@ -95,7 +95,7 @@ CountSpT <- function(genus, species, additionalkeywords, APIkey, datatype = "app
   suppressPackageStartupMessages(library(dplyr))
     if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
-   }
+    }
   findname <- gnr_resolve(names = c(genus, species)) #check if the species exist
   case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
