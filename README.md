@@ -38,17 +38,17 @@ for more detailed instructions and the full list of functions
 
 ## Scopus
 
-#### :mega: Connecting to Scopus
+### :mega: Connecting to Scopus
 
 **Make sure you are connected to the internet via institutional access
 or acquire a VPN from your institution if you are working from home.**
 Alternatively, the functions will also run if you are already a
 subscriber of Scopus.
 
-#### :key: Getting an API key
+### :key: Getting an API key
 
 To connect and download citation information from Scopus legally, you
-will **absolutely** need an API key. Here are the steps to obtain the
+will **absolutely need** an API key. Here are the steps to obtain the
 key.
 
 1.  Go to <https://dev.elsevier.com/> and click on the button `I want an
