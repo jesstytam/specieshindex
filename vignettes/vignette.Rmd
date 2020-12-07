@@ -61,7 +61,6 @@ install.packages("taxize")
 install.packages("XML")
 install.packages("httr")
 install.packages("dplyr")
-install.packages("rlang")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
 ```
 ```{r, eval=FALSE, load-packages, warning=FALSE}

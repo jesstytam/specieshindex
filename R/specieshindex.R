@@ -338,9 +338,6 @@ FetchSpT <- function(genus, species, additionalkeywords, APIkey) {
 #' FetchSpTAK("bettongia", "penicillata", "conserv*", "myAPI")
 #' }
 FetchSpTAK <- function(genus, species, additionalkeywords, APIkey) {
-  requireNamespace("rscopus", quietly = TRUE)
-  requireNamespace("rlang", quietly = TRUE)
-  requireNamespace("dplyr", quietly = TRUE)
   count <- CountSpTAK(genus, species, additionalkeywords, APIkey) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {

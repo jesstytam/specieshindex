@@ -13,7 +13,6 @@ pacman::p_load(tidyverse,
                httr,
                XML,
                taxize,
-               rlang,
                gtools)
 ```
 
