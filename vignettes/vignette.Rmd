@@ -427,6 +427,6 @@ Although the development of this package is still in its infancy, it is nonethel
 
 # Acknowledgements
 
-I acknowledge the contributions of the authors of the dependency packages: `rscopus`, `taxize`, `XML`, `httr`, `dplyr`, `rlang`.
+I acknowledge the contributions of the authors of the dependency packages: `rscopus`, `taxize`, `XML`, `httr`, `dplyr`.
 
 # References

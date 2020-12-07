@@ -54,11 +54,7 @@ install.packages("dplyr")
 install.packages("rlang")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = TRUE)
 
-# Loading the libraries
-library(rscopus)
-library(taxize)
-library(XML)
-library(httr)
+# Load the library
 library(specieshindex)
 ```
 
@@ -117,6 +113,6 @@ CombineSp
 
 # Acknowledgements
 
-I acknowledge the contributions of the authors of the dependance packages: `rscopus`, `taxize`, `XML`, `httr`, `dplyr`, `rlang`.
+I acknowledge the contributions of the authors of the dependance packages: `rscopus`, `taxize`, `XML`, `httr`, `dplyr`.
 
 # References
