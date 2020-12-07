@@ -85,14 +85,14 @@ create_query_string_TAK <- function(genus, species, additionalkeywords){
 }
 ```
 
-```{r, function to get result count title only, message=FALSE, warning=FALSE}
+```{r, function to get result count title only}
 #code from Fonti (modified)
 CountSpT <- function(genus, species, additionalkeywords, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
   library(rlang)
-  library(taxize)
-  library(dplyr)
+  suppressWarnings(suppressMessages(library(taxize)))
+  suppressPackageStartupMessages(library(dplyr))
     if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
    }
@@ -112,14 +112,14 @@ CountSpT <- function(genus, species, additionalkeywords, APIkey, datatype = "app
 }
 ```
 
-```{r, function to get result count title+abs+key, message=FALSE, warning=FALSE}
+```{r, function to get result count title+abs+key}
 #code from Fonti (modified)
 CountSpTAK <- function(genus, species, additionalkeywords, APIkey, datatype = "application/xml") {
   library(httr)
   library(XML)
   library(rlang)
-  library(taxize)
-  library(dplyr)
+  suppressWarnings(suppressMessages(library(taxize)))
+  suppressPackageStartupMessages(library(dplyr))
     if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
    }
