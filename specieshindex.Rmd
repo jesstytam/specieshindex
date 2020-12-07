@@ -94,10 +94,10 @@ CountSpT <- function(genus, species, additionalkeywords, APIkey, datatype = "app
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
-  theURL <- GET("http://api.elsevier.com/content/search/scopus",
-              query = list(apiKey = paste0(APIkey),
-                           query = create_query_string_T(genus, species, additionalkeywords),
-                           httpAccept = "application/xml")) #format the URL to be sent to the API
+  theURL <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                      query = list(apiKey = paste0(APIkey),
+                                   query = create_query_string_T(genus, species, additionalkeywords),
+                                   httpAccept = "application/xml")) #format the URL to be sent to the API
   httr::stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- httr::content(theURL, as = "text") #extract the content of the response
   newData <- XML::xmlParse(theURL) #parse the data to extract values
@@ -116,10 +116,10 @@ CountSpTAK <- function(genus, species, additionalkeywords, APIkey, datatype = "a
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
-  theURL <- GET("http://api.elsevier.com/content/search/scopus",
-              query = list(apiKey = paste0(APIkey),
-                           query = create_query_string_TAK(genus, species, additionalkeywords),
-                           httpAccept = "application/xml")) #format the URL to be sent to the API
+  theURL <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                      query = list(apiKey = paste0(APIkey),
+                                   query = create_query_string_TAK(genus, species, additionalkeywords),
+                                   httpAccept = "application/xml")) #format the URL to be sent to the API
   httr::stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- httr::content(theURL, as = "text") #extract the content of the response
   newData <- XML::xmlParse(theURL) #parse the data to extract values
