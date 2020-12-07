@@ -24,15 +24,9 @@ install.packages("taxize")
 install.packages("XML")
 install.packages("httr")
 install.packages("dplyr")
-install.packages("rlang")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
 
-# Loading the libraries
-library(rscopus)
-library(taxize)
-library(XML)
-library(httr)
-library(dplyr)
+# Load the library
 library(specieshindex)
 ```
 

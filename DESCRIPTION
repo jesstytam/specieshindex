@@ -13,8 +13,7 @@ Imports:
     taxize,
     dplyr,
     httr,
-    XML,
-    rlang
+    XML
 Suggests: 
     testthat,
     knitr,
