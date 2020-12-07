@@ -35,7 +35,7 @@ CountSpT <- function(genus, species, additionalkeywords, APIkey, datatype = "app
   if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
-  findname <- taxize::gnr_resolve(names = c(genus, species)) #check if the species exist
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
@@ -89,7 +89,7 @@ CountSpTAK <- function(genus, species, additionalkeywords, APIkey, datatype = "a
   if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
-  findname <- taxize::gnr_resolve(names = c(genus, species)) #check if the species exist
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
