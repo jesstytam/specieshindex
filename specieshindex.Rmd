@@ -14,6 +14,9 @@ pacman::p_load(tidyverse,
                XML,
                taxize,
                gtools)
+
+devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
+library(specieshindex)
 ```
 
 **Functions**
@@ -789,9 +792,7 @@ Spi10(dummy1) #12
 
 
 ```{r, rscopus}
-myAPI <- secret::get_secret("myAPI", key = private_key, vault = vault) #loading my hidden API key
-
-#some tests
+FetchSpTAK("Psora", "decipiens", "biocrust", "442b9048417ef20cf680a0ae26ee4d86") #2
 
 test <- scopus_search(query = "TITLE-ABS-KEY(\"pan troglodytes\") AND PUBYEAR AFT 2010",
                           api_key = myAPI,

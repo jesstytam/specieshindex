@@ -81,6 +81,8 @@ Below, we outline how to perform these steps using our package.
 
 ## Connecting to Scopus
 
+**Make sure you are connected to the internet via institutional access or acquire a VPN from your institution if you are working from home.** Alternatively, the functions will also run if you are already a subscriber of Scopus.
+
 Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise, the functions will not run (and is in fact illegal to download the data). You can register your key [here](https://dev.elsevier.com/). Use your API key as the function parameter "myAPI".
 
 The searches in Scopus are performed using species Latin name. The relevant functions take two parts of a Latin binominal species name as their main parameters, e.g. "*Bettongia*", "*penicillata*”. Make sure you are using binomial names instead of common names as required by the code.
