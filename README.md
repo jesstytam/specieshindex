@@ -58,11 +58,11 @@ key.
     Key`.
 4.  Read the legal documents and check the boxes.
 
-### Query string
+### :dart: Query string
 
-The function `CountSpTAKexp()` allows the addition of 1 keyword to
-restricted the domain of the publications of the species. Although you
-can simply use keywords such as “conservation”, you will find that using
+The function `CountSpTAKexp()` allows the addition of keywords to
+restrict the domain of the publications of the species. Although you can
+simply use keywords such as “conservation”, you will find that using
 “conserv\*” will yield more results. The “\*” (or wildcard) used here
 searches for any words with the prefix “conserv”, e.g. conservation,
 conserve, conservatory, etc. Find out more about search language
