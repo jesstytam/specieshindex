@@ -42,8 +42,8 @@ for more detailed instructions and the full list of functions
 
 **Make sure you are connected to the internet via institutional access
 or acquire a VPN from your institution if you are working from home.**
-Alternatively, the functions will also run if you are already a
-subscriber of Scopus.
+Alternatively, if you are a subscriber of Scopus already, you can ignore
+this step.
 
 ### :key: Getting an API key
 
