@@ -59,7 +59,7 @@ Here is a quick demonstration of how the package works.
 devtools::load_all(".")
 ```
 
-### Counting citation records
+### :abuscus: Count the citation records
 
 If you are only interested in knowing how many publications there are on Scopus, you can run the Count functions.
 
@@ -73,7 +73,7 @@ CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect*
 CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "API key")
 ```
 
-### Extracting citaiton records
+### :fishing_pole_and_fish: Extract the citaiton records
 
 In order to calculate the indices, you will need to download the citation records. Let's say you want to compare the species h-index of a few marsupials. First, you would need to download the citation information using either `FetchSpT()` for title only or `FetchSpTAK()` for title+abstract+keywords. Remember to use binomial names.
 
@@ -85,7 +85,7 @@ Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", APIkey = "API key")
 Koala <- FetchSpTAK("Phascolarctos", "cinereus", APIkey = "API key")
 ```
 
-### Index calculation and plotting
+### :bar_chart: Index calculation and plotting
 
 Now that you have the data, you can use the `Allindices()` function to create a dataframe that shows their indices.
 

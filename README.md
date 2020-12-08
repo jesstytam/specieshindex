@@ -73,7 +73,7 @@ conserve, conservatory, etc. Find out more about search language
 
 Here is a quick demonstration of how the package works.
 
-### Counting citation records
+### :abuscus: Count the citation records
 
 If you are only interested in knowing how many publications there are on
 Scopus, you can run the Count functions.
@@ -88,7 +88,7 @@ CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect*
 CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "API key")
 ```
 
-### Extracting citaiton records
+### :fishing\_pole\_and\_fish: Extract the citaiton records
 
 In order to calculate the indices, you will need to download the
 citation records. Let’s say you want to compare the species h-index of a
@@ -104,7 +104,7 @@ Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", APIkey = "API key")
 Koala <- FetchSpTAK("Phascolarctos", "cinereus", APIkey = "API key")
 ```
 
-### Index calculation and plotting
+### :bar\_chart: Index calculation and plotting
 
 Now that you have the data, you can use the `Allindices()` function to
 create a dataframe that shows their indices.
