@@ -60,22 +60,41 @@ key.
 
 ### :dart: Query string
 
-The function `CountSpTAKexp()` allows the addition of keywords to
-restrict the domain of the publications of the species. Although you can
-simply use keywords such as “conservation”, you will find that using
+The function Count and Fetch functions allows the addition of keywords
+to restrict the domain of the publications of the species. Although you
+can simply use keywords such as “conservation”, you will find that using
 “conserv\*” will yield more results. The “\*” (or wildcard) used here
 searches for any words with the prefix “conserv”, e.g. conservation,
 conserve, conservatory, etc. Find out more about search language
 [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and
 [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
 
-## Quick example
+## Examples
 
-Here is a quick demonstration of how the package works. Let’s say you
-want to compare the species h-index of a few marsupials. First, you
-would need to download the citation information using either
-`FetchSpT()` for title only or `FetchSpTAK()` for
-title+abstract+keywords. Remember to use binomial names.
+Here is a quick demonstration of how the package works.
+
+### Counting citation records
+
+If you are only interested in knowing how many publications there are on
+Scopus, you can run the Count functions.
+
+``` r
+# Count citation data
+CountSpT("Bettongia", "penicillata", APIkey = "API key")
+CountSpTAK("Bettongia", "penicillata", APIkey = "API key")
+
+# Examples including additional keywords
+CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "API key")
+CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "API key")
+```
+
+### Extracting citaiton records
+
+In order to calculate the indices, you will need to download the
+citation records. Let’s say you want to compare the species h-index of a
+few marsupials. First, you would need to download the citation
+information using either `FetchSpT()` for title only or `FetchSpTAK()`
+for title+abstract+keywords. Remember to use binomial names.
 
 ``` r
 # Extract citation data
@@ -84,6 +103,8 @@ Quokka <- FetchSpTAK("Setonix", "brachyurus", APIkey = "API key")
 Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", APIkey = "API key")
 Koala <- FetchSpTAK("Phascolarctos", "cinereus", APIkey = "API key")
 ```
+
+### Index calculation and plotting
 
 Now that you have the data, you can use the `Allindices()` function to
 create a dataframe that shows their indices.
@@ -131,7 +152,7 @@ ggplot(CombineSp, aes(x = species)) +
         legend.position = "none")
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-5-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
 
 **Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
 
@@ -152,7 +173,7 @@ theme(plot.title = element_text(size = 14, face = "bold"),
       legend.position = "none")
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
 **Figure 2.** The total number of citations of the publications on the
 Woylie, Quokka, Platypus, and Koala.
