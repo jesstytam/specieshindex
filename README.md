@@ -73,7 +73,7 @@ conserve, conservatory, etc. Find out more about search language
 
 Here is a quick demonstration of how the package works.
 
-### :abuscus: Count the citation records
+### :abacus: Count the citation records
 
 If you are only interested in knowing how many publications there are on
 Scopus, you can run the Count functions.
