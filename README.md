@@ -36,7 +36,7 @@ You can find the vignette
 for more detailed instructions and the full list of functions
 [here](https://github.com/jessicatytam/specieshindex/blob/master/specieshindex_0.0.1.pdf).
 
-## Scopus
+## Before you start
 
 ### :mega: Connecting to Scopus
 
