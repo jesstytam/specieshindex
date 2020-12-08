@@ -49,7 +49,7 @@ To connect and download citation information from Scopus legally, you will **abs
 
 ### :dart: Query string
 
-The Count and Fetch functions allow the addition of keywords using Boolean operators to restrict the domain of the publications of the species. Although you can simply use keywords such as "conservation", you will find that using "conserv\*" will yield more results. The "\*" (or wildcard) used here searches for any words with the prefix "conserv", e.g. conservation, conserve, conservatory, etc. Find out more about search language [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
+The Count and Fetch functions allow the addition of keywords using Boolean operators to restrict the domain of the search. Although you can simply use keywords such as "conservation", you will find that using "conserv\*" will yield more results. The "\*" (or wildcard) used here searches for any words with the prefix "conserv", e.g. conservation, conserve, conservatory, etc. Find out more about search language [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
 
 ## Examples
 
