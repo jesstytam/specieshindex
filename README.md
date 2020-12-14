@@ -76,12 +76,16 @@ Here is a quick demonstration of how the package works.
 ### :abacus: Count the citation records
 
 If you are only interested in knowing how many publications there are on
-Scopus, you can run the Count functions.
+Scopus, you can run the Count functions. Use `CountSpT()` for title only
+or `CountSpTAK()` for title+abstract+keywords.
 
 ``` r
+#API key
+API <- "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
 # Count citation data
-CountSpT("Bettongia", "penicillata", APIkey = "API key")
-CountSpTAK("Bettongia", "penicillata", APIkey = "API key")
+CountSpT("Bettongia", "penicillata", APIkey = API)
+CountSpTAK("Bettongia", "penicillata", APIkey = API)
 
 # Examples including additional keywords
 CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "API key")
@@ -98,10 +102,10 @@ for title+abstract+keywords. Remember to use binomial names.
 
 ``` r
 # Extract citation data
-Woylie <- FetchSpTAK("Bettongia", "penicillata", APIkey = "API key")
-Quokka <- FetchSpTAK("Setonix", "brachyurus", APIkey = "API key")
-Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", APIkey = "API key")
-Koala <- FetchSpTAK("Phascolarctos", "cinereus", APIkey = "API key")
+Woylie <- FetchSpTAK("Bettongia", "penicillata", APIkey = API)
+Quokka <- FetchSpTAK("Setonix", "brachyurus", APIkey = API)
+Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", APIkey = API)
+Koala <- FetchSpTAK("Phascolarctos", "cinereus", APIkey = API)
 ```
 
 ### :bar\_chart: Index calculation and plotting
@@ -154,7 +158,7 @@ ggplot(CombineSp, aes(x = species)) +
 
 <img src="README_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
 
-**Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
+**Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala. 
 
 ``` r
 # Total citations
