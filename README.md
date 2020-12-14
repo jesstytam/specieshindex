@@ -88,8 +88,8 @@ CountSpT("Bettongia", "penicillata", APIkey = API)
 CountSpTAK("Bettongia", "penicillata", APIkey = API)
 
 # Examples including additional keywords
-CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "API key")
-CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "API key")
+CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", API)
+CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", API)
 ```
 
 ### :fishing\_pole\_and\_fish: Extract the citaiton records
@@ -158,7 +158,9 @@ ggplot(CombineSp, aes(x = species)) +
 
 <img src="README_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
 
-**Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala. 
+**Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
+
+<br/>
 
 ``` r
 # Total citations
