@@ -130,10 +130,10 @@ CombineSp
     ## 3 Ornithorhynchus_anatinus    anatinus Ornithorhynchus          321      6365
     ## 4   Phascolarctos_cinereus    cinereus   Phascolarctos          773     14291
     ##   journals articles reviews years_publishing  h     m i10 h5
-    ## 1       55      110       3               43 26 0.605  54  7
-    ## 2      107      237       5               66 29 0.439 121  4
-    ## 3      153      308      13               67 41 0.612 177  7
-    ## 4      227      744      29              139 53 0.381 427 14
+    ## 1       55      110       3               44 26 0.591  54  7
+    ## 2      107      237       5               67 29 0.433 121  3
+    ## 3      153      308      13               68 41 0.603 177  7
+    ## 4      227      744      29              140 53 0.379 427 13
 
 Once you are happy with your dataset, you can make some nice plots.
 Using `ggplot2`, we can compare the *h*-index and the total citations.
@@ -183,3 +183,10 @@ theme(plot.title = element_text(size = 14, face = "bold"),
 
 **Figure 2.** The total number of citations of the publications on the
 Woylie, Quokka, Platypus, and Koala.
+
+<br/>
+
+## :paw\_prints: Roadmap
+
+\[ \] Add functions to query Web of Science \[ \] Add functions to query
+Lens

@@ -145,3 +145,9 @@ theme(plot.title = element_text(size = 14, face = "bold"),
 ```
 
 **Figure 2.** The total number of citations of the publications on the Woylie, Quokka, Platypus, and Koala.
+
+<br/>
+
+## :paw_prints: Roadmap
+[ ] Add functions to query Web of Science
+[ ] Add functions to query Lens
