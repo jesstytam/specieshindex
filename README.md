@@ -188,5 +188,5 @@ Woylie, Quokka, Platypus, and Koala.
 
 ## :paw\_prints: Roadmap
 
-\[ \] Add functions to query Web of Science \[ \] Add functions to query
-Lens
+  - [ ] Add functions to query Web of Science
+  - [ ] Add functions to query Lens

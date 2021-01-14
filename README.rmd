@@ -149,5 +149,5 @@ theme(plot.title = element_text(size = 14, face = "bold"),
 <br/>
 
 ## :paw_prints: Roadmap
-[ ] Add functions to query Web of Science
-[ ] Add functions to query Lens
+- [ ] Add functions to query Web of Science
+- [ ] Add functions to query Lens
