@@ -60,6 +60,7 @@ CountSpT <- function(genus, species, additionalkeywords, APIkey, datatype = "app
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
+#' @param synonyms Alternate species names
 #' @param additionalkeywords Optional search terms.
 #' @param APIkey Scopus API key needed to access and download data from their database.
 #' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
@@ -85,7 +86,7 @@ CountSpT <- function(genus, species, additionalkeywords, APIkey, datatype = "app
 #' 
 #' CountSpTAK("bettongia", "penicillata", "conserv*", "myAPI")
 #' }
-CountSpTAK <- function(genus, species, additionalkeywords, APIkey, datatype = "application/xml") {
+CountSpTAK <- function(genus, species, synonyms, additionalkeywords, APIkey, datatype = "application/xml") {
   if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
@@ -95,7 +96,7 @@ CountSpTAK <- function(genus, species, additionalkeywords, APIkey, datatype = "a
   ) 
   theURL <- httr::GET("http://api.elsevier.com/content/search/scopus",
                       query = list(apiKey = paste0(APIkey),
-                                   query = create_query_string_TAK(genus, species, additionalkeywords),
+                                   query = create_query_string_TAK(genus, species, synonyms, additionalkeywords),
                                    httpAccept = "application/xml")) #format the URL to be sent to the API
   httr::stop_for_status(theURL) #pass any HTTP errors to the R console
   theData <- httr::content(theURL, as = "text") #extract the content of the response
@@ -316,6 +317,7 @@ FetchSpT <- function(genus, species, additionalkeywords, APIkey) {
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
+#' @param synonyms Alternate species names
 #' @param additionalkeywords Optional search terms.
 #' @param APIkey Scopus API key needed to access and download data from their database.
 #'
@@ -338,7 +340,7 @@ FetchSpT <- function(genus, species, additionalkeywords, APIkey) {
 #' FetchSpTAK("bettongia", "penicillata", "conserv*", "myAPI")
 #' }
 FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, APIkey) {
-  count <- CountSpTAK(genus, species, additionalkeywords, APIkey) #check the number of records
+  count <- CountSpTAK(genus, species, synonyms, additionalkeywords, APIkey) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)

@@ -13,6 +13,9 @@ Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/tot
 `specieshindex` is a package that aims to gauge scientific influence of
 different species mainly using the *h*-index.
 
+*Synonyms are currently being added to the Fetch & Count functions, they
+may or may not work depending on your query.*
+
 ## Installation
 
 To get this package to work, make sure you have the following packages
