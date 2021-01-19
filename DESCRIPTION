@@ -1,7 +1,7 @@
 Package: specieshindex
 Type: Package
 Title: How (scientifically) popular is a given species?
-Version: 0.0.1
+Version: 0.1.0
 Date: 2020-07-10
 Author: Jessica Tam
 Maintainer: Jessica Tam <tamtinying@gmail.com>
