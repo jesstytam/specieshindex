@@ -4,7 +4,7 @@
 \alias{FetchSpTAK}
 \title{Fetch data - title, abstract and keywords}
 \usage{
-FetchSpTAK(genus, species, additionalkeywords, APIkey)
+FetchSpTAK(genus, species, synonyms, additionalkeywords, APIkey)
 }
 \arguments{
 \item{genus}{Genus classification from the binomial name.}
