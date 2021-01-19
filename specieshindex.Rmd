@@ -856,5 +856,15 @@ h5 <- SpH5(tiger) #15
 datexdf <- HAfterdate(xdf, "2000-01-01") #47
 ALL <- Allindices(tiger)
 
+
+create_query_string_TAK(genus = "Abrothrix", species = "manni", synonyms = "Abrothrix GDE-2015")
+cat(create_query_string_TAK(genus = "Abrothrix", species = "manni", synonyms = "Abrothrix GDE-2015"))
+
+FetchSpTAK(genus = "Abrothrix", species = "manni", synonyms = "'Abrothrix GDE-2015'", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #this is where it returns a NA dataframe
+FetchSpTAK(genus = "Abrothrix", species = "sanborni", synonyms = '"Akodon sanborni"', APIkey = "442b9048417ef20cf680a0ae26ee4d86")
+
+ 
+ 
+
 ```
 
