@@ -4,12 +4,14 @@
 \alias{FetchSpT}
 \title{Fetch data - title only}
 \usage{
-FetchSpT(genus, species, additionalkeywords, APIkey)
+FetchSpT(genus, species, synonyms, additionalkeywords, APIkey)
 }
 \arguments{
 \item{genus}{Genus classification from the binomial name.}
 
 \item{species}{Species classification from the binomial name.}
+
+\item{synonyms}{Alternate species names.}
 
 \item{additionalkeywords}{Optional search terms.}
 

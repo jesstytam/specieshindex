@@ -11,7 +11,7 @@ FetchSpTAK(genus, species, synonyms, additionalkeywords, APIkey)
 
 \item{species}{Species classification from the binomial name.}
 
-\item{synonyms}{Alternate species names}
+\item{synonyms}{Alternate species names.}
 
 \item{additionalkeywords}{Optional search terms.}
 
