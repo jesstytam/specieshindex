@@ -11,6 +11,8 @@ FetchSpTAK(genus, species, synonyms, additionalkeywords, APIkey)
 
 \item{species}{Species classification from the binomial name.}
 
+\item{synonyms}{Alternate species names}
+
 \item{additionalkeywords}{Optional search terms.}
 
 \item{APIkey}{Scopus API key needed to access and download data from their database.}

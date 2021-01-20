@@ -7,6 +7,7 @@
 CountSpTAK(
   genus,
   species,
+  synonyms,
   additionalkeywords,
   APIkey,
   datatype = "application/xml"
@@ -16,6 +17,8 @@ CountSpTAK(
 \item{genus}{Genus classification from the binomial name.}
 
 \item{species}{Species classification from the binomial name.}
+
+\item{synonyms}{Alternate species names}
 
 \item{additionalkeywords}{Optional search terms.}
 
