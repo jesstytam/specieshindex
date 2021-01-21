@@ -723,7 +723,7 @@ cat(create_query_string_TAK(genus = "Abrothrix", species = "manni", synonyms = "
 FetchSpTAK(genus = "Abrothrix", species = "manni", synonyms = '"Abrothrix GDE-2015"', APIkey = "442b9048417ef20cf680a0ae26ee4d86") #this is where it returns a NA dataframe
 FetchSpTAK(genus = "Abrothrix", species = "sanborni", synonyms = "Akodon sanborni", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #9 results
 
-FetchSpTAK(genus = "Abrothrix", species = "sanborni", synonyms = "Akodon sanborni", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #10 results
+FetchSpTAK(genus = "Peromyscus", species = "megalops", synonyms = '"Peromyscus auritus"', APIkey = "442b9048417ef20cf680a0ae26ee4d86") #10 results
  
 cows <- FetchSpTAK(genus = "Bos", species = "taurus", APIkey = "442b9048417ef20cf680a0ae26ee4d86")
 
