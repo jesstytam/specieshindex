@@ -63,7 +63,7 @@ Here is a quick demonstration of how the package works.
 devtools::load_all(".")
 ```
 
-### :abacus: Count the citation records
+### :abacus: Counting citation records
 
 If you are only interested in knowing how many publications there are on Scopus, you can run the Count functions. Use `CountSpT()` for title only or `CountSpTAK()` for title+abstract+keywords.
 
@@ -84,7 +84,7 @@ CountSpT("Osphranter", "rufus", synonyms = '"Macropus rufus"', additionalkeyword
 #search string: TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*)
 ```
 
-### :fishing_pole_and_fish: Extract the citaiton records
+### :fishing_pole_and_fish: Extracting citaiton records
 
 In order to calculate the indices, you will need to download the citation records. The parameters of the Count and Fetch functions are exactly the same. Let's say you want to compare the species h-index of a few marsupials. First, you would need to download the citation information using either `FetchSpT()` for title only or `FetchSpTAK()` for title+abstract+keywords. Remember to use binomial names.
 

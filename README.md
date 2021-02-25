@@ -82,7 +82,7 @@ demonstrate how to put double quotation marks in the character string.
 
 Here is a quick demonstration of how the package works.
 
-### :abacus: Count the citation records
+### :abacus: Counting citation records
 
 If you are only interested in knowing how many publications there are on
 Scopus, you can run the Count functions. Use `CountSpT()` for title only
@@ -105,7 +105,7 @@ CountSpT("Osphranter", "rufus", synonyms = '"Macropus rufus"', additionalkeyword
 #search string: TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*)
 ```
 
-### :fishing\_pole\_and\_fish: Extract the citaiton records
+### :fishing\_pole\_and\_fish: Extracting citaiton records
 
 In order to calculate the indices, you will need to download the
 citation records. The parameters of the Count and Fetch functions are
