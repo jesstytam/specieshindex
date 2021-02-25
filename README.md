@@ -96,7 +96,7 @@ API <- "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 CountSpT("Bettongia", "penicillata", APIkey = API)
 CountSpTAK("Bettongia", "penicillata", APIkey = API)
 
-# Examples including additional keywords
+# Example including additional keywords
 CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", API)
 #search string: TITLE-ABS-KEY("Phascolarctos cinereus" AND (consrv* OR protect* OR reintrod* OR restor*))
 
@@ -155,18 +155,26 @@ Using `ggplot2`, we can compare the *h*-index and the total citations.
 ``` r
 # h-index
 library(ggplot2)
-ggplot(CombineSp, aes(x = species)) +
-  geom_point(aes(y = h,
-                 colour = "H-index"),
-             size = 3) +
+ggplot(CombineSp, aes(x = species,
+                      y = h)) +
+  geom_point(size = 3,
+             colour = "#6fc6f8") +
   labs(x = "Species",
-       y = "Index Score",
-       colour = "Index") +
+       y = "h-index") +
   scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) +
-  scale_colour_manual(values = c("H-index" = "#3498DB")) +
-  theme(plot.title = element_text(size = 14, face = "bold"),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
+  ylim(25, 55) +
+  theme(axis.title = element_text(size = 12,
+                                  colour = "white"),
+        axis.text = element_text(size = 10,
+                                 colour = "white"),
+        axis.line.x = element_line(colour = "grey80"),
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"),
+        panel.grid.major.y = element_line(colour = "grey50"),
+        panel.grid.minor.y = element_line(colour = "grey50",
+                                          linetype = "longdash"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
         legend.position = "none")
 ```
 
@@ -178,19 +186,26 @@ ggplot(CombineSp, aes(x = species)) +
 
 ``` r
 # Total citations
-ggplot(CombineSp, aes(x = species)) +
-geom_point(aes(y = citations,
-               colour = "Citations"),
-           size = 3) +
-labs(x = "Species",
-     y = "Total citations",
-     colour = "Index") +
-scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) + 
-scale_colour_manual(values = c("Citations"  = "#2874A6")) +
-theme(plot.title = element_text(size = 14, face = "bold"),
-      axis.title = element_text(size = 12),
-      axis.text = element_text(size = 10),
-      legend.position = "none")
+ggplot(CombineSp, aes(x = species,
+                      y = citations)) +
+  geom_point(size = 3,
+             colour = "#f976bb") +
+  labs(x = "Species",
+       y = "Total citations") +
+  scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) + 
+  theme(axis.title = element_text(size = 12,
+                                  colour = "white"),
+        axis.text = element_text(size = 10,
+                                 colour = "white"),
+        axis.line.x = element_line(colour = "grey80"),
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"),
+        panel.grid.major.y = element_line(colour = "grey50"),
+        panel.grid.minor.y = element_line(colour = "grey50",
+                                          linetype = "longdash"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        legend.position = "none")
 ```
 
 <img src="README_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
