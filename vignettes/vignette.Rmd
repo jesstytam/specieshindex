@@ -38,7 +38,7 @@ library(RefManageR)
 library(ggplot2)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("../vignettes/Banner.png")
 ```
 
@@ -104,6 +104,8 @@ CountSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
 CountSpTAK(genus = "Bettongia", species = "penicillata", APIkey = API)
 ```
 
+### Additional keywords
+
 There is an optional parameter `additionalkeywords` that can be included to make your search more precise. This is achieved by expanding your query string and restrict the search to records that include specified combination of the additional keywords. The additional keywords can be a single word, e.g. "conservation", but better yet, you can parse a string with Boolean operators, e.g. "conserv\* OR protect\* OR reintrod\* OR restor\*". The Boolean operator "AND" has already been implemented in the code to link the Latin name and the additional string. To learn more about search language, you can visit [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
 
 Here are some examples of searches including additional keywords:
@@ -135,6 +137,18 @@ CountSpTAK(genus = "Bettongia", species = "penicillata",
 ```
 
 If no additional keywords are parsed, the extraction will include all publications related to the species. In this case, you MUST include `API key =` to specify your API key, otherwise your key will be read as an additional keyword and result in an error. 
+
+### Synonyms
+
+Some species have had their classification changed in the past, resulting in multiple binomial names and synonyms. Synonyms can be added to the search strings to get the maximum hits. Remember to add **double** quotation marks to the synonyms, otherwise you might run into getting the error `Bad Request (HTTP 400)`.
+
+```{r, eval=FALSE}
+CountSpT("Osphranter", "rufus", synonyms = '"Macropus rufus"', additionalkeywords = "conserv*", API)
+```
+
+The search string generated with the above code will be TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*).
+
+### Extracting citation records
 
 `CountSpTAK()` should yield more results since it also looked for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data from Scopus. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
 
@@ -182,7 +196,7 @@ FetchSpTAK(genus = "Bettongia", species = "penicillata",
 
 In larger datasets, duplicates may appear, although usually in low numbers. `FetchSpT()` and `FetchSpTAK()` will clean up the dataset by removing them if found. This is done by locating the publications with identical names and then removing the subsequent entry (or entries). The first occurrence of the record will be kept, which is normally the original record.
 
-### Possible errors
+#### Possible errors
 
 If the error `Bad Request (HTTP 400)` occurs in this step, try connecting to the internet via institutional access, instead of the one at home. This error might be caused by some authorisation issues.
 
