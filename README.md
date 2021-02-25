@@ -13,9 +13,6 @@ Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/tot
 `specieshindex` is a package that aims to gauge scientific influence of
 different species mainly using the *h*-index.
 
-*Synonyms are currently being added to the Fetch & Count functions, they
-may or may not work depending on your query.*
-
 ## Installation
 
 To get this package to work, make sure you have the following packages
@@ -61,7 +58,7 @@ key.
     Key`.
 4.  Read the legal documents and check the boxes.
 
-### :dart: Query string
+### :dart: Additional keywords
 
 The Count and Fetch functions allow the addition of keywords using
 Boolean operators to restrict the domain of the search. Although you can
@@ -71,6 +68,15 @@ searches for any words with the prefix “conserv”, e.g. conservation,
 conserve, conservatory, etc. Find out more about search language
 [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and
 [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
+
+### :boar: Synonyms
+
+Some species have had their classification changed in the past,
+resulting in multiple binomial names and synonyms. Synonyms can be added
+to the search strings to get the maximum hits. Remember to add
+**double** quotation marks to the synonyms, otherwise you might run into
+getting the error `Bad Request (HTTP 400)`. An example is shown below to
+demonstrate how to put double quotation marks in the character string.
 
 ## Examples
 
@@ -91,14 +97,19 @@ CountSpT("Bettongia", "penicillata", APIkey = API)
 CountSpTAK("Bettongia", "penicillata", APIkey = API)
 
 # Examples including additional keywords
-CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", API)
 CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", API)
+#search string: TITLE-ABS-KEY("Phascolarctos cinereus" AND (consrv* OR protect* OR reintrod* OR restor*))
+
+# Example including synonyms
+CountSpT("Osphranter", "rufus", synonyms = '"Macropus rufus"', additionalkeywords = "conserv*", API)
+#search string: TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*)
 ```
 
 ### :fishing\_pole\_and\_fish: Extract the citaiton records
 
 In order to calculate the indices, you will need to download the
-citation records. Let’s say you want to compare the species h-index of a
+citation records. The parameters of the Count and Fetch functions are
+exactly the same. Let’s say you want to compare the species h-index of a
 few marsupials. First, you would need to download the citation
 information using either `FetchSpT()` for title only or `FetchSpTAK()`
 for title+abstract+keywords. Remember to use binomial names.
