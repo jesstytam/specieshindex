@@ -90,18 +90,18 @@ or `CountSpTAK()` for title+abstract+keywords.
 
 ``` r
 #API key
-API <- "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+API <- "your_api_key_from_scopus"
 
 # Count citation data
 CountSpT("Bettongia", "penicillata", APIkey = API)
 CountSpTAK("Bettongia", "penicillata", APIkey = API)
 
 # Example including additional keywords
-CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", API)
+CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", APIkey = API)
 #search string: TITLE-ABS-KEY("Phascolarctos cinereus" AND (consrv* OR protect* OR reintrod* OR restor*))
 
 # Example including synonyms
-CountSpT("Osphranter", "rufus", synonyms = '"Macropus rufus"', additionalkeywords = "conserv*", API)
+CountSpT("Osphranter", "rufus", synonyms = '"Macropus rufus"', additionalkeywords = "conserv*", APIkey = API)
 #search string: TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*)
 ```
 
