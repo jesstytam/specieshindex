@@ -212,11 +212,11 @@ FetchSpT <- function(genus, species, synonyms, additionalkeywords, APIkey) {
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
   #if else here
-  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
+  duplicates <- dim(datalist[duplicated(datalist$doi),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
   if (duplicates>0) { #remove duplicates if they are present
     print(paste("Removing duplicated records."))
-    datalist <- datalist[!duplicated(datalist$title), ] 
+    datalist <- datalist[!duplicated(datalist$doi), ] 
   }
   #showing final list of records
   retrieved <- dim(datalist)[1] #check the number
@@ -330,11 +330,11 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, APIkey) {
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
   #if else here
-  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
+  duplicates <- dim(datalist[duplicated(datalist$doi),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
   if (duplicates>0) { #remove duplicates if they are present
     print(paste("Removing duplicated records."))
-    datalist <- datalist[!duplicated(datalist$title), ] 
+    datalist <- datalist[!duplicated(datalist$doi), ] 
   }
   #showing final list of records
   retrieved <- dim(datalist)[1] #check the number

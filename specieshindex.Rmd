@@ -240,11 +240,11 @@ FetchSpT <- function(genus, species, synonyms, additionalkeywords, APIkey) {
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
   #if else here
-  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
+  duplicates <- dim(datalist[duplicated(datalist$doi),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
   if (duplicates>0) { #remove duplicates if they are present
     print(paste("Removing duplicated records."))
-    datalist <- datalist[!duplicated(datalist$title), ] 
+    datalist <- datalist[!duplicated(datalist$doi), ] 
   }
   #showing final list of records
   retrieved <- dim(datalist)[1] #check the number
@@ -330,17 +330,89 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, APIkey) {
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
   #if else here
-  duplicates <- dim(datalist[duplicated(datalist$title),])[1] #check for duplicates
+  duplicates <- dim(datalist[duplicated(datalist$doi),])[1] #check for duplicates
   print(paste(duplicates, "duplicates found."))
   if (duplicates>0) { #remove duplicates if they are present
     print(paste("Removing duplicated records."))
-    datalist <- datalist[!duplicated(datalist$title), ] 
+    datalist <- datalist[!duplicated(datalist$doi), ] 
   }
   #showing final list of records
   retrieved <- dim(datalist)[1] #check the number
   print(paste(retrieved, "unique records successfully fetched."))
   return(datalist)
 }
+```
+
+```{r}
+FetchTest <- function(genus, species, synonyms, additionalkeywords, APIkey) {
+  count <- CountSpT(genus, species, synonyms, additionalkeywords, APIkey) #check the number of records
+  print(paste(count, "records found."))
+  if (count < 1) {
+    noCitations <- data.frame(citations = 0)
+    return(noCitations)
+  }
+  lang <- read.csv(file = "data/languages.csv", header = T)[-c(1)]
+  for (j in 1:length(lang$language)) { #use while?
+    #search begins
+    search2020 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 2019 AND LANGUAGE(", lang$language[j], ")")),
+                                         api_key = paste0(APIkey),
+                                         verbose = TRUE,
+                                         wait_time = 3)
+    search2020df <- rscopus::entries_to_citation_df(search2020$entries)
+    searchloopdf = data.frame()
+    for (i in 2019:1990) {
+      searchloop <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR = ", i, " AND LANGUAGE(", lang$language[j], ")")),
+                                           api_key = paste0(APIkey),
+                                           verbose = TRUE,
+                                           wait_time = 3)
+      searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
+      searchloopdf <- rbind(searchloopdf, searchlooplist)
+      }
+    search1985 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1984 AND PUBYEAR < 1990 AND LANGUAGE(", lang$language[j], ")")),
+                                         api_key = paste0(APIkey),
+                                         verbose = TRUE,
+                                         wait_time = 3)
+    search1985df <- rscopus::entries_to_citation_df(search1985$entries)
+    search1980 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1979 AND PUBYEAR < 1985 AND LANGUAGE(", lang$language[j], ")")),
+                                         api_key = paste0(APIkey),
+                                         verbose = TRUE,
+                                         wait_time = 3)
+    search1980df <- rscopus::entries_to_citation_df(search1980$entries)
+    search1975 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1974 AND PUBYEAR < 1980 AND LANGUAGE(", lang$language[j], ")")),
+                                         api_key = paste0(APIkey),
+                                         verbose = TRUE,
+                                         wait_time = 3)  
+    search1975df <- rscopus::entries_to_citation_df(search1975$entries)
+    search1970 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1969 AND PUBYEAR < 1975 AND LANGUAGE(", lang$language[j], ")")),
+                                         api_key = paste0(APIkey),
+                                         verbose = TRUE,
+                                         wait_time = 3)  
+    search1970df <- rscopus::entries_to_citation_df(search1970$entries)
+    search_old <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR < 1970 AND LANGUAGE(", lang$language[j], ")")),
+                                         api_key = paste0(APIkey),
+                                         verbose = TRUE,
+                                         wait_time = 3)
+    search_olddf <- rscopus::entries_to_citation_df(search_old$entries)
+    datalist <- rbind(search2020df, searchloopdf, search1985df, search1980df, search1975df, search1970df, search_olddf)
+    datalist$language <- lang$language[j]
+    #search ends
+    }
+  returned <- dim(datalist)[1]
+  print(paste(returned, "records retrived in total."))
+  #if else here
+  duplicates <- dim(datalist[duplicated(datalist$doi),])[1] #check for duplicates
+  print(paste(duplicates, "duplicates found."))
+  if (duplicates>0) { #remove duplicates if they are present
+    print(paste("Removing duplicated records."))
+    datalist <- datalist[!duplicated(datalist$doi), ] 
+  }
+  #showing final list of records
+  retrieved <- dim(datalist)[1] #check the number
+  print(paste(retrieved, "unique records successfully fetched."))
+  return(datalist)
+}
+
+#Error in rbind(deparse.level, ...) : numbers of columns of arguments do not match
 ```
 
 ```{r, total publications}
@@ -653,79 +725,8 @@ Spi10(dummy1) #12
 
 
 ```{r, rscopus}
-FetchSpTAK("Psora", "decipiens", "biocrust", "442b9048417ef20cf680a0ae26ee4d86") #2
-
-test <- scopus_search(query = "TITLE-ABS-KEY(\"pan troglodytes\") AND PUBYEAR AFT 2010",
-                          api_key = myAPI,
-                          verbose = TRUE,
-                          wait_time = 3)
-test2 <- scopus_search(query = "TITLE-ABS-KEY(\"pan troglodytes\") AND PUBYEAR BEF 2010 AND PUBYEAR AFT 2000",
-                          api_key = myAPI,
-                          verbose = TRUE,
-                          wait_time = 3)
-testdf <- entries_to_citation_df(test$entries)
-
-tiger <- FetchSpT("Panthera", "tigris", myAPI) #402 results
-CountSpTAK("Panthera", "tigris", myAPI)
-
-dim(tiger[duplicated(tiger$title),])[1]
-
-tiger <- FetchSpF("Panthera", "tigris", myAPI) #1823 results
-fox <- FetchSpT("Vulpes", "vulpes", myAPI) #1133 results
-
-foxT <- FetchSpT("Vulpes", "vulpes", myAPI) #1176
-foxTAK <- FetchSpTAK("Vulpes", "vulpes", myAPI) #1176
-drosophila <- FetchSpTAK("Drosophila", "montana", myAPI) #93 results
-drosophila2 <- FetchSpF("drosophila", "melanogaster", myAPI) #65140 results
-drosophila3 <- FetchSpTAK("Mus", "musculus", myAPI) 
-
-cat <- FetchSpY("felis", "catus", myAPI) #17622 results, error at 26%, current loop can only output 2000 records
-gnr_resolve(names = c("felis", "catus"))
-
-chimpsTAK <- FetchSpTAK("pan", "troglodytes", myAPI) #10837
-chimpsT <- FetchSpT("pan", "troglodytes", myAPI) #1439
-chimpsY <- FetchSpY("pan", "troglodytes", myAPI) #10844 results
-gnr_resolve(names = c("pan", "troglodytes"))
-
-elephant <- FetchSpTAK("Loxodonta","africana", myAPI) #1401 results
-dim(elephant[duplicated(elephant$title),])[1]
-
-possum <- FetchSpT("Burramys", "parvus", myAPI) #47
-possum <- FetchSpTAK("Burramys", "parvus", myAPI) #45
-CountSpT("Burramys", "parvus", myAPI)
-
-dim(possum[duplicated(possum$title),])[1]
-
-mouse <- FetchSpY("Mus", "musculus", myAPI) #36197 records downloaded
-
-gnr_resolve(names = c("felis catus"))
-
-Pub <- TotalPub(tiger) #402
-Cite <- TotalCite(tiger) #5244
-Journal <- TotalJournals(tiger) #168
-Article <- TotalArt(tiger)
-Review <- TotalRev(tiger)
-Ratio <- ARRatio(tiger) #97.5124378109453 : 2.48756218905473
-class(Article)
-
-H <- SpHindex(tiger) #53
-years <- YearsPublishing(tiger) #139
-M <- SpMindex(tiger) #0.381294964028777
-i10 <- Spi10(tiger) #467
-h5 <- SpH5(tiger) #15
-datexdf <- HAfterdate(xdf, "2000-01-01") #47
-ALL <- Allindices(tiger)
-
-
-create_query_string_TAK(genus = "Abrothrix", species = "manni", synonyms = "Abrothrix GDE-2015")
-cat(create_query_string_TAK(genus = "Abrothrix", species = "manni", synonyms = "Abrothrix GDE-2015"))
-
-FetchSpTAK(genus = "Abrothrix", species = "manni", synonyms = '"Abrothrix GDE-2015"', APIkey = "442b9048417ef20cf680a0ae26ee4d86") #this is where it returns a NA dataframe
-FetchSpTAK(genus = "Abrothrix", species = "sanborni", synonyms = "Akodon sanborni", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #9 results
-
-FetchSpTAK(genus = "Peromyscus", species = "megalops", synonyms = '"Peromyscus auritus"', APIkey = "442b9048417ef20cf680a0ae26ee4d86") #10 results
  
-cows <- FetchSpTAK(genus = "Bos", species = "taurus", APIkey = "442b9048417ef20cf680a0ae26ee4d86")
+panda <- FetchTest(genus = "Ailuropoda", species = "melanoleuca", APIkey = "442b9048417ef20cf680a0ae26ee4d86")
 
 ```
 
