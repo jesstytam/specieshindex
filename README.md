@@ -211,8 +211,7 @@ ggplot(CombineSp, aes(x = species,
 
 <img src="README_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
-**Figure 2.** The total number of citations of the publications on the
-Woylie, Quokka, Platypus, and Koala.
+**Figure 2.** The *m*-index of the Woylie, Quokka, Platypus, and Koala.
 
 <br/>
 
