@@ -51,11 +51,12 @@ To connect and download citation information from Scopus legally, you
 will **absolutely need** an API key. Here are the steps to obtain the
 key.
 
-1.  Go to <https://dev.elsevier.com/> and click on the button `I want an
-    API key`.
+1.  Go to
+    <a href="https://dev.elsevier.com/" class="uri">https://dev.elsevier.com/</a>
+    and click on the button `I want an API key`.
 2.  Create an account and log in.
-3.  Go to the `My API Key` tab on top of the page and click `Create API
-    Key`.
+3.  Go to the `My API Key` tab on top of the page and click
+    `Create API Key`.
 4.  Read the legal documents and check the boxes.
 
 ### :dart: Additional keywords
@@ -144,9 +145,9 @@ CombineSp
     ## 3 Ornithorhynchus_anatinus    anatinus Ornithorhynchus          321      6365
     ## 4   Phascolarctos_cinereus    cinereus   Phascolarctos          773     14291
     ##   journals articles reviews years_publishing  h     m i10 h5
-    ## 1       55      110       3               44 26 0.591  54  7
+    ## 1       55      110       3               44 26 0.591  54  6
     ## 2      107      237       5               67 29 0.433 121  3
-    ## 3      153      308      13               68 41 0.603 177  7
+    ## 3      153      308      13               68 41 0.603 177  6
     ## 4      227      744      29              140 53 0.379 427 13
 
 Once you are happy with your dataset, you can make some nice plots.
@@ -157,7 +158,7 @@ Using `ggplot2`, we can compare the *h*-index and the total citations.
 library(ggplot2)
 ggplot(CombineSp, aes(x = species,
                       y = h)) +
-  geom_point(size = 3,
+  geom_point(size = 4,
              colour = "#6fc6f8") +
   labs(x = "Species",
        y = "h-index") +
@@ -188,7 +189,7 @@ ggplot(CombineSp, aes(x = species,
 # Total citations
 ggplot(CombineSp, aes(x = species,
                       y = citations)) +
-  geom_point(size = 3,
+  geom_point(size = 4,
              colour = "#f976bb") +
   labs(x = "Species",
        y = "Total citations") +
@@ -217,5 +218,5 @@ Woylie, Quokka, Platypus, and Koala.
 
 ## :paw\_prints: Roadmap
 
-  - [ ] Add functions to query Web of Science
-  - [ ] Add functions to query Lens
+-   [ ] Add functions to query Web of Science
+-   [ ] Add functions to query Lens

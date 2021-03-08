@@ -118,7 +118,7 @@ Once you are happy with your dataset, you can make some nice plots. Using `ggplo
 library(ggplot2)
 ggplot(CombineSp, aes(x = species,
                       y = h)) +
-  geom_point(size = 3,
+  geom_point(size = 4,
              colour = "#6fc6f8") +
   labs(x = "Species",
        y = "h-index") +
@@ -147,7 +147,7 @@ ggplot(CombineSp, aes(x = species,
 # Total citations
 ggplot(CombineSp, aes(x = species,
                       y = citations)) +
-  geom_point(size = 3,
+  geom_point(size = 4,
              colour = "#f976bb") +
   labs(x = "Species",
        y = "Total citations") +
