@@ -188,11 +188,11 @@ ggplot(CombineSp, aes(x = species,
 ``` r
 # Total citations
 ggplot(CombineSp, aes(x = species,
-                      y = citations)) +
+                      y = m)) +
   geom_point(size = 4,
              colour = "#f976bb") +
   labs(x = "Species",
-       y = "Total citations") +
+       y = "m-index") +
   scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) + 
   theme(axis.title = element_text(size = 12,
                                   colour = "white"),
