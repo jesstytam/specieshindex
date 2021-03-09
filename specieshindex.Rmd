@@ -164,7 +164,6 @@ CountSpTAK <- function(genus, species, synonyms, additionalkeywords, APIkey, dat
 ```
 
 ```{r, fetch using title only, message=FALSE}
-#this function downloads citation data from scopus
 FetchSpT <- function(genus, species, synonyms, additionalkeywords, language = 0, APIkey) {
   count <- CountSpT(genus, species, synonyms, additionalkeywords, APIkey) #check the number of records
   print(paste(count, "records found."))
@@ -172,7 +171,7 @@ FetchSpT <- function(genus, species, synonyms, additionalkeywords, language = 0,
     noCitations <- data.frame(citations = 0)
     return(noCitations)
   }
-  if (language = 1) {
+  if (language == 1) {
     lang <- read.csv(file = "data/languages.csv", header = T)[-c(1)]
     datalist <- data.frame()
     for (j in 1:length(lang$language)) {
@@ -792,7 +791,7 @@ Spi10(dummy1) #12
 panda <- FetchTest(genus = "Ailuropoda", species = "melanoleuca", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #1.5 mins
 panda_normal <- FetchSpT(genus = "Ailuropoda", species = "melanoleuca", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #10 seconds
 
-panda_test <- panda[!is.na(panda$title), ]
+panda_test <- FetchSpT(genus = "Ailuropoda", species = "melanoleuca", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #run this
 
 
 for (i in 1:length(panda$title)) {
