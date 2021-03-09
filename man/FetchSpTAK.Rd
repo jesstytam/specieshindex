@@ -4,7 +4,7 @@
 \alias{FetchSpTAK}
 \title{Fetch data - title, abstract and keywords}
 \usage{
-FetchSpTAK(genus, species, synonyms, additionalkeywords, APIkey)
+FetchSpTAK(genus, species, synonyms, additionalkeywords, language = 0, APIkey)
 }
 \arguments{
 \item{genus}{Genus classification from the binomial name.}
@@ -14,6 +14,8 @@ FetchSpTAK(genus, species, synonyms, additionalkeywords, APIkey)
 \item{synonyms}{Alternate species names.}
 
 \item{additionalkeywords}{Optional search terms.}
+
+\item{language}{Language of the paper; default is 0, enter 1 to retrieve the variable.}
 
 \item{APIkey}{Scopus API key needed to access and download data from their database.}
 }
