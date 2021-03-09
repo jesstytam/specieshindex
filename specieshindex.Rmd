@@ -165,77 +165,140 @@ CountSpTAK <- function(genus, species, synonyms, additionalkeywords, APIkey, dat
 
 ```{r, fetch using title only, message=FALSE}
 #this function downloads citation data from scopus
-FetchSpT <- function(genus, species, synonyms, additionalkeywords, APIkey) {
+FetchSpT <- function(genus, species, synonyms, additionalkeywords, language = 0, APIkey) {
   count <- CountSpT(genus, species, synonyms, additionalkeywords, APIkey) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
     return(noCitations)
   }
-  #loop if count is under 5000
-  if (count <= 5000) {
-    step_size <- 1000 #the number of records to retrieve in each loop
-    start_record <- 0
-    datalist = data.frame()
-    looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
-    #loop starts
-    for (i in 0:looprepeat) { 
-      print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
-      print(paste("Fetching records now."))
-      search <- rscopus::scopus_search(query = create_query_string_T(genus, species, synonyms, additionalkeywords),
-                                       api_key = paste0(APIkey),
-                                       verbose = TRUE,
-                                       max_count = step_size,
-                                       start = step_size*i,
-                                       wait_time = 3)
-      start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
-      searchdf <- rscopus::entries_to_citation_df(search$entries)
-      list <- data.frame(searchdf)
-      datalist <- rbind(datalist, list)
-      #loop ends
-    }} else {
-      #search begins
-      search2020 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 2019")),
-                                        api_key = paste0(APIkey),
-                                        verbose = TRUE,
-                                        wait_time = 3)
-      search2020df <- rscopus::entries_to_citation_df(search2020$entries)
-      searchloopdf = data.frame()
-      for (i in 2019:1990) {
-        searchloop <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR = ", i)),
+  if (language = 1) {
+    lang <- read.csv(file = "data/languages.csv", header = T)[-c(1)]
+    datalist <- data.frame()
+    for (j in 1:length(lang$language)) {
+      theURL <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                          query = list(apiKey = paste0(APIkey),
+                                       query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords),
+                                                      " AND LANGUAGE(", lang$language[j], ")"),
+                                       httpAccept = "application/xml")) #format the URL to be sent to the API
+      httr::stop_for_status(theURL) #pass any HTTP errors to the R console
+      theData <- httr::content(theURL, as = "text") #extract the content of the response
+      newData <- XML::xmlParse(theURL) #parse the data to extract values
+      resultCount <- as.numeric(XML::xpathSApply(newData,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
+      if (resultCount > 0) {
+        #search begins
+        search2020 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 2019 AND LANGUAGE(", lang$language[j], ")")),
                                              api_key = paste0(APIkey),
                                              verbose = TRUE,
                                              wait_time = 3)
-        searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
-        searchloopdf <- rbind(searchloopdf, searchlooplist)
+        search2020df <- rscopus::entries_to_citation_df(search2020$entries)
+        searchloopdf = data.frame()
+        for (i in 2019:1990) {
+          searchloop <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR = ", i, " AND LANGUAGE(", lang$language[j], ")")),
+                                               api_key = paste0(APIkey),
+                                               verbose = TRUE,
+                                               wait_time = 3)
+          searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
+          searchloopdf <- dplyr::bind_rows(searchloopdf, searchlooplist)
+          }
+        search1985 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1984 AND PUBYEAR < 1990 AND LANGUAGE(", lang$language[j], ")")),
+                                             api_key = paste0(APIkey),
+                                             verbose = TRUE,
+                                             wait_time = 3)
+        search1985df <- rscopus::entries_to_citation_df(search1985$entries)
+        search1980 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1979 AND PUBYEAR < 1985 AND LANGUAGE(", lang$language[j], ")")),
+                                             api_key = paste0(APIkey),
+                                             verbose = TRUE,
+                                             wait_time = 3)
+        search1980df <- rscopus::entries_to_citation_df(search1980$entries)
+        search1975 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1974 AND PUBYEAR < 1980 AND LANGUAGE(", lang$language[j], ")")),
+                                             api_key = paste0(APIkey),
+                                             verbose = TRUE,
+                                             wait_time = 3)
+        search1975df <- rscopus::entries_to_citation_df(search1975$entries)
+        search1970 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1969 AND PUBYEAR < 1975 AND LANGUAGE(", lang$language[j], ")")),
+                                             api_key = paste0(APIkey),
+                                             verbose = TRUE,
+                                             wait_time = 3)  
+        search1970df <- rscopus::entries_to_citation_df(search1970$entries)
+        search_old <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR < 1970 AND LANGUAGE(", lang$language[j], ")")),
+                                             api_key = paste0(APIkey),
+                                             verbose = TRUE,
+                                             wait_time = 3)
+        search_olddf <- rscopus::entries_to_citation_df(search_old$entries)
+        langlist <- dplyr::bind_rows(search2020df, searchloopdf, search1985df, search1980df, search1975df, search1970df, search_olddf)
+        langlist$language <- lang$language[j]
+        #search ends
+        datalist <- dplyr::bind_rows(datalist, langlist)
       }
-      search1985 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1984 AND PUBYEAR < 1990")),
-                                        api_key = paste0(APIkey),
-                                        verbose = TRUE,
-                                        wait_time = 3)
-      search1985df <- rscopus::entries_to_citation_df(search1985$entries)
-      search1980 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1979 AND PUBYEAR < 1985")),
-                                        api_key = paste0(APIkey),
-                                        verbose = TRUE,
-                                        wait_time = 3)
-      search1980df <- rscopus::entries_to_citation_df(search1980$entries)
-      search1975 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1974 AND PUBYEAR < 1980")),
+      }
+    datalist <- datalist[!is.na(datalist$title), ] #remove NA papers
+  } else {
+    #loop if count is under 5000
+    if (count <= 5000) {
+      step_size <- 1000 #the number of records to retrieve in each loop
+      start_record <- 0
+      datalist = data.frame()
+      looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
+      #loop starts
+      for (i in 0:looprepeat) { 
+        print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
+        print(paste("Fetching records now."))
+        search <- rscopus::scopus_search(query = create_query_string_T(genus, species, synonyms, additionalkeywords),
                                          api_key = paste0(APIkey),
                                          verbose = TRUE,
-                                         wait_time = 3)  
-      search1975df <- rscopus::entries_to_citation_df(search1975$entries)
-      search1970 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1969 AND PUBYEAR < 1975")),
-                                         api_key = paste0(APIkey),
-                                         verbose = TRUE,
-                                         wait_time = 3)  
-      search1970df <- rscopus::entries_to_citation_df(search1970$entries)
-      search_old <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR < 1970")),
-                                         api_key = paste0(APIkey),
-                                         verbose = TRUE,
-                                         wait_time = 3)  
-      search_olddf <- rscopus::entries_to_citation_df(search_old$entries)
-      datalist <- rbind(search2020df, searchloopdf, search1985df, search1980df, search1975df, search1970df, search_olddf)
-      #search ends  
+                                         max_count = step_size,
+                                         start = step_size*i,
+                                         wait_time = 3)
+        start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
+        searchdf <- rscopus::entries_to_citation_df(search$entries)
+        list <- data.frame(searchdf)
+        datalist <- rbind(datalist, list)
+        #loop ends
+        }} else {
+          #search begins
+          search2020 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 2019")),
+                                               api_key = paste0(APIkey),
+                                               verbose = TRUE,
+                                               wait_time = 3)
+          search2020df <- rscopus::entries_to_citation_df(search2020$entries)
+          searchloopdf = data.frame()
+          for (i in 2019:1990) {
+            searchloop <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR = ", i)),
+                                                 api_key = paste0(APIkey),
+                                                 verbose = TRUE,
+                                                 wait_time = 3)
+            searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
+            searchloopdf <- rbind(searchloopdf, searchlooplist)
+            }
+          search1985 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1984 AND PUBYEAR < 1990")),
+                                               api_key = paste0(APIkey),
+                                               verbose = TRUE,
+                                               wait_time = 3)
+          search1985df <- rscopus::entries_to_citation_df(search1985$entries)
+          search1980 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1979 AND PUBYEAR < 1985")),
+                                               api_key = paste0(APIkey),
+                                               verbose = TRUE,
+                                               wait_time = 3)
+          search1980df <- rscopus::entries_to_citation_df(search1980$entries)
+          search1975 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1974 AND PUBYEAR < 1980")),
+                                               api_key = paste0(APIkey),
+                                               verbose = TRUE,
+                                               wait_time = 3)  
+          search1975df <- rscopus::entries_to_citation_df(search1975$entries)
+          search1970 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1969 AND PUBYEAR < 1975")),
+                                               api_key = paste0(APIkey),
+                                               verbose = TRUE,
+                                               wait_time = 3)  
+          search1970df <- rscopus::entries_to_citation_df(search1970$entries)
+          search_old <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR < 1970")),
+                                               api_key = paste0(APIkey),
+                                               verbose = TRUE,
+                                               wait_time = 3)  
+          search_olddf <- rscopus::entries_to_citation_df(search_old$entries)
+          datalist <- rbind(search2020df, searchloopdf, search1985df, search1980df, search1975df, search1970df, search_olddf)
+          #search ends  
+        }
     }
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
