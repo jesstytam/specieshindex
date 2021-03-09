@@ -403,6 +403,9 @@ FetchTest <- function(genus, species, synonyms, additionalkeywords, APIkey) {
       datalist <- dplyr::bind_rows(datalist, langlist)
     }
   }
+  #remove NA papers
+  datalist <- datalist[!is.na(datalist$title), ]
+  #removing done
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
   #showing final list of records
@@ -410,8 +413,6 @@ FetchTest <- function(genus, species, synonyms, additionalkeywords, APIkey) {
   print(paste(retrieved, "unique records successfully fetched."))
   return(datalist)
 }
-
-#Error in rbind(deparse.level, ...) : numbers of columns of arguments do not match
 ```
 
 ```{r, total publications}
@@ -725,8 +726,19 @@ Spi10(dummy1) #12
 
 ```{r, rscopus}
  
-panda <- FetchTest(genus = "Ailuropoda", species = "melanoleuca", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #15 mins
+panda <- FetchTest(genus = "Ailuropoda", species = "melanoleuca", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #1.5 mins
 panda_normal <- FetchSpT(genus = "Ailuropoda", species = "melanoleuca", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #10 seconds
+
+panda_test <- panda[!is.na(panda$title), ]
+
+
+for (i in 1:length(panda$title)) {
+  if (panda$title[i] %in% panda_normal$title) {
+    print(panda$title[i])
+  }
+} 
+
+#there is 1 duplicate
 
 ```
 
