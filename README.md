@@ -34,7 +34,7 @@ library(specieshindex)
 You can find the vignette
 [here](https://github.com/jessicatytam/specieshindex/blob/master/vignettes/vignette.pdf)
 for more detailed instructions and the full list of functions
-[here](https://github.com/jessicatytam/specieshindex/blob/master/specieshindex_0.0.1.pdf).
+[here](https://github.com/jessicatytam/specieshindex/blob/master/specieshindex_0.1.1.pdf).
 
 ## Before you start
 
@@ -51,12 +51,11 @@ To connect and download citation information from Scopus legally, you
 will **absolutely need** an API key. Here are the steps to obtain the
 key.
 
-1.  Go to
-    <a href="https://dev.elsevier.com/" class="uri">https://dev.elsevier.com/</a>
-    and click on the button `I want an API key`.
+1.  Go to <https://dev.elsevier.com/> and click on the button `I want an
+    API key`.
 2.  Create an account and log in.
-3.  Go to the `My API Key` tab on top of the page and click
-    `Create API Key`.
+3.  Go to the `My API Key` tab on top of the page and click `Create API
+    Key`.
 4.  Read the legal documents and check the boxes.
 
 ### :dart: Additional keywords
@@ -160,12 +159,12 @@ ggplot(CombineSp, aes(x = species,
                       y = h)) +
   geom_point(size = 4,
              colour = "#6fc6f8") +
-  labs(x = "Species",
-       y = "h-index") +
+  labs(y = "h-index") +
   scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) +
   ylim(25, 55) +
   theme(axis.title = element_text(size = 12,
                                   colour = "white"),
+        axis.title.x = element_blank(),
         axis.text = element_text(size = 10,
                                  colour = "white"),
         axis.line.x = element_line(colour = "grey80"),
@@ -191,11 +190,11 @@ ggplot(CombineSp, aes(x = species,
                       y = m)) +
   geom_point(size = 4,
              colour = "#f976bb") +
-  labs(x = "Species",
-       y = "m-index") +
+  labs(y = "m-index") +
   scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) + 
   theme(axis.title = element_text(size = 12,
                                   colour = "white"),
+        axis.title.x = element_blank(),
         axis.text = element_text(size = 10,
                                  colour = "white"),
         axis.line.x = element_line(colour = "grey80"),
@@ -217,5 +216,4 @@ ggplot(CombineSp, aes(x = species,
 
 ## :paw\_prints: Roadmap
 
--   [ ] Add functions to query Web of Science
--   [ ] Add functions to query Lens
+  - [ ] Add functions to query Lens
