@@ -17,6 +17,8 @@ pacman::p_load(tidyverse,
 
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
 library(specieshindex)
+library(lens2r)
+library(httr)
 ```
 
 **Functions**
@@ -764,20 +766,41 @@ Spi10(dummy1) #12
 
 
 
-```{r, rscopus}
- 
-panda <- FetchTest(genus = "Ailuropoda", species = "melanoleuca", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #1.5 mins
-panda_normal <- FetchSpT(genus = "Ailuropoda", species = "melanoleuca", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #10 seconds
+```{r, testing}
+token <- "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb"
 
-panda_test <- FetchSpT(genus = "Ailuropoda", species = "melanoleuca", language = 1, APIkey = "442b9048417ef20cf680a0ae26ee4d86") #325
-panda_test0 <- FetchSpT(genus = "Ailuropoda", species = "melanoleuca", language = 0, APIkey = "442b9048417ef20cf680a0ae26ee4d86") #324
+query1 <- '{
+	"query": {
+		"bool": {
+			"must": [{
+				"query_string": {
+					"query": "Ailuropoda melanoleuca",
+					"fields": ["title"]
+				}
+			}]
+		}
+	}
+}'
 
-panda_test1TAK <- FetchSpTAK(genus = "Ailuropoda", species = "melanoleuca", language = 1, APIkey = "442b9048417ef20cf680a0ae26ee4d86") #1112
-panda_test0TAK <- FetchSpTAK(genus = "Ailuropoda", species = "melanoleuca", language = 0, APIkey = "442b9048417ef20cf680a0ae26ee4d86") #1110
+query2 <- '{
+	"query": {
+		"bool": {
+			"must": [{
+				"query_string": {
+					"query": "title:Ailuropoda melanoleuca"
+				}
+			}]
+		}
+	}
+}' #extra open.access_colour field
 
 
+lens_test1 <- get_scholarly_df(query = query1,
+                               token = token)
 
-#there is 1 duplicate
+lens_test2 <- get_scholarly_df(query = query2,
+                               token = token)
+
 
 ```
 
