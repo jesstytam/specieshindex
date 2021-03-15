@@ -779,20 +779,24 @@ query1 <- '{
 				}
 			}]
 		}
-	}
-}'
+	},
+	"size": 1000
+}' #756 records
 
 query2 <- '{
 	"query": {
 		"bool": {
 			"must": [{
 				"query_string": {
-					"query": "title:Ailuropoda melanoleuca"
+					"query": "Ailuropoda melanoleuca",
+					"fields": ["title", "abstract", "keywords"],
+					"default_operator": "and"
 				}
 			}]
 		}
-	}
-}' #extra open.access_colour field
+	},
+	"size": 1000
+}' #1,000+ records
 
 
 lens_test1 <- get_scholarly_df(query = query1,
@@ -801,6 +805,28 @@ lens_test1 <- get_scholarly_df(query = query1,
 lens_test2 <- get_scholarly_df(query = query2,
                                token = token)
 
+
+
+theURL <- httr::GET("https://api.lens.org/scholarly/search",
+                    query = list(apiKey = paste0(token),
+                                 query = '{
+                                 "query": {
+                                  "bool": {
+                                    "must": [{
+                                      "query_string": {
+                                        "query": "Ailuropoda melanoleuca",
+                                        "fields": ["title"]
+                                        }
+                                      }]
+                                     }
+                                    }
+                                 }',
+                                 httpAccept = "application/xml")) #format the URL to be sent to the API
+httr::stop_for_status(theURL) #pass any HTTP errors to the R console
+theData <- httr::content(theURL, as = "text") #extract the content of the response
+newData <- XML::xmlParse(theURL) #parse the data to extract values
+resultCount <- as.numeric(XML::xpathSApply(newData,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
+  
 
 ```
 
