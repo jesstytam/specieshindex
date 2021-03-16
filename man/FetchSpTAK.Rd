@@ -2,7 +2,7 @@
 % Please edit documentation in R/specieshindex.R
 \name{FetchSpTAK}
 \alias{FetchSpTAK}
-\title{Fetch data - title, abstract and keywords}
+\title{Fetch data from Scopus- title, abstract and keywords}
 \usage{
 FetchSpTAK(genus, species, synonyms, additionalkeywords, language = 0, APIkey)
 }
@@ -24,7 +24,7 @@ A dataframe of the species' citation records with the given \code{genus} and \co
 }
 \description{
 This function fetches citation information from Scopus using genus and species name found in the title, abstract and keywords of the publications.
-Duplicates are removed after fetching the data.
+Duplicates are to be removed by the user after fetching the data.
 }
 \examples{
 \dontrun{

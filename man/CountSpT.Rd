@@ -2,7 +2,7 @@
 % Please edit documentation in R/specieshindex.R
 \name{CountSpT}
 \alias{CountSpT}
-\title{Search count expanded - title only}
+\title{Search count from Scopus - title only}
 \usage{
 CountSpT(
   genus,

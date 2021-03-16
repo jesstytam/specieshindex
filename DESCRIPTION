@@ -10,6 +10,7 @@ Depends: R (>= 3.5.0)
 LazyData: true
 Imports: 
     rscopus,
+    lens2r,
     taxize,
     dplyr,
     httr,

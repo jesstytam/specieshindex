@@ -2,7 +2,7 @@
 #' It counts the publications with the binomial name in the title only.
 #' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
 #' 
-#' @title Search count expanded - title only
+#' @title Search count from Scopus - title only
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
@@ -57,7 +57,7 @@ CountSpT <- function(genus, species, synonyms, additionalkeywords, APIkey, datat
 #' It counts the publications with the binomial name in the title, abstract, and keywords.
 #' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
 #' 
-#' @title Search count expanded - title, abstract, and keywords
+#' @title Search count from Scopus - title, abstract, and keywords
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
@@ -111,7 +111,7 @@ CountSpTAK <- function(genus, species, synonyms, additionalkeywords, APIkey, dat
 #' This function fetches citation information from Scopus using genus and species name found in the title of the publications.
 #' Duplicates are to be removed by the user after fetching the data.
 #'
-#' @title Fetch data - title only
+#' @title Fetch data from Scopus - title only
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
@@ -286,7 +286,7 @@ FetchSpT <- function(genus, species, synonyms, additionalkeywords, language = 0,
 #' This function fetches citation information from Scopus using genus and species name found in the title, abstract and keywords of the publications.
 #' Duplicates are to be removed by the user after fetching the data.
 #'
-#' @title Fetch data - title, abstract and keywords
+#' @title Fetch data from Scopus- title, abstract and keywords
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
@@ -461,7 +461,7 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
 #' This function fetches citation information from Lens using genus and species name found in the title of the publications.
 #' Duplicates are to be removed by the user after fetching the data.
 #'
-#' @title Fetch data - title only
+#' @title Fetch data from Lens - title only
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
@@ -473,6 +473,20 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' FetchSpT_lens("Bettongia", "penicillata", token = "mytoken")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' FetchSpT_lens("bettongia", "penicillata", token = "mytoken")
+#' }
+#' \dontrun{
+#' FetchSpT_lens("Bettongia", "penicillata", "conserv*", token = "mytoken")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' FetchSpT_lens("bettongia", "penicillata", "conserv*", token = "mytoken")
+#' }
 FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
   results <- lens2r::get_scholarly_df(query = create_query_string_T_lens(genus, species, synonyms, additionalkeywords),
                                       token = token)
@@ -497,7 +511,7 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
 #' This function fetches citation information from Lens using genus and species name found in the title, abstract, and keywords of the publications.
 #' Duplicates are to be removed by the user after fetching the data.
 #'
-#' @title Fetch data - title, abstract, and keywords.
+#' @title Fetch data from Lens - title, abstract, and keywords.
 #'
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
@@ -509,6 +523,20 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' FetchSpTAK_lens("Bettongia", "penicillata", token = "mytoken")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' FetchSpTAK_lens("bettongia", "penicillata", token = "mytoken")
+#' }
+#' \dontrun{
+#' FetchSpTAK_lens("Bettongia", "penicillata", "conserv*", token = "mytoken")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' FetchSpTAK_lens("bettongia", "penicillata", "conserv*", token = "mytoken")
+#' }
 FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token) {
   results <- lens2r::get_scholarly_df(query = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords),
                                       token = token)
@@ -980,7 +1008,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, '" AND ', additionalkeywords, ',
+					  "query": "', genus, ' ', species, ' AND ', additionalkeywords, '",
 					  "fields": ["title"]
 				  }
 			  }]
@@ -995,7 +1023,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, '" OR ', synonyms[1], ',
+					  "query": "', genus, ' ', species, ' OR ', synonyms[1], '",
 					  "fields": ["title"]
 				  }
 			  }]
@@ -1008,7 +1036,19 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
     }
     else {
       for (i in 2:length(synonyms)){
-        temp_string <- paste0(temp_string, ' OR ', synonyms[i])
+        temp_string <- paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "', genus, ' ', species, ' OR ', synonyms[i], '",
+					  "fields": ["title"]
+				  }
+			  }]
+		  }
+	  },
+	  "size": 50000
+  }')
       }
       return(paste0(temp_string))
     }
@@ -1019,7 +1059,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": ("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ',
+					  "query": ("', genus, ' ', species, ' OR ', synonyms, ') AND ', additionalkeywords, '",
 					  "fields": ["title"]
 				  }
 			  }]
@@ -1050,7 +1090,8 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  "must": [{
 				  "query_string": {
 					  "query": "', genus, ' ', species, '",
-					  "fields": ["title", "abstract", "keywords"]
+					  "fields": ["title", "abstract", "keywords"],
+					  "default_operator": "and"
 				  }
 			  }]
 		  }
@@ -1064,8 +1105,9 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, '" AND ', additionalkeywords, ',
-					  "fields": ["title", "abstract", "keywords"]
+					  "query": "', genus, ' ', species, ' AND ', additionalkeywords, '",
+					  "fields": ["title", "abstract", "keywords"],
+					"default_operator": "and"
 				  }
 			  }]
 		  }
@@ -1079,8 +1121,9 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, '" OR ', synonyms[1], ',
-					  "fields": ["title", "abstract", "keywords"]
+					  "query": "', genus, ' ', species, ' OR ', synonyms[1], '",
+					  "fields": ["title", "abstract", "keywords"],
+					"default_operator": "and"
 				  }
 			  }]
 		  }
@@ -1092,7 +1135,19 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
     }
     else {
       for (i in 2:length(synonyms)){
-        temp_string <- paste0(temp_string, ' OR ', synonyms[i])
+        temp_string <- paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "', genus, ' ', species, ' OR ', synonyms[i], '",
+					  "fields": ["title"]
+				  }
+			  }]
+		  }
+	  },
+	  "size": 50000
+  }')
       }
       return(paste0(temp_string))
     }
@@ -1103,8 +1158,9 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": ("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ',
-					  "fields": ["title", "abstract", "keywords"]
+					  "query": ("', genus, ' ', species, ' OR ', synonyms, ') AND ', additionalkeywords, '",
+					  "fields": ["title", "abstract", "keywords"],
+					"default_operator": "and"
 				  }
 			  }]
 		  }

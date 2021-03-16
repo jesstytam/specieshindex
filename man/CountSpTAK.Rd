@@ -2,7 +2,7 @@
 % Please edit documentation in R/specieshindex.R
 \name{CountSpTAK}
 \alias{CountSpTAK}
-\title{Search count expanded - title, abstract, and keywords}
+\title{Search count from Scopus - title, abstract, and keywords}
 \usage{
 CountSpTAK(
   genus,
