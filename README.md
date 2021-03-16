@@ -217,3 +217,4 @@ ggplot(CombineSp, aes(x = species,
 ## :paw\_prints: Roadmap
 
   - [ ] Add functions to query Lens
+      - [ ] Get m-index and years\_publishing to work
