@@ -269,9 +269,9 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 }
 ```
 
-```{r, function to get result count title only}
+```{r, function to get result count from scopus title only}
 #code from Fonti (modified)
-CountT_scopus <- function(genus, species, synonyms, additionalkeywords, APIkey, datatype = "application/xml") {
+CountSpT <- function(genus, species, synonyms, additionalkeywords, APIkey, datatype = "application/xml") {
   if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
@@ -291,9 +291,9 @@ CountT_scopus <- function(genus, species, synonyms, additionalkeywords, APIkey, 
 }
 ```
 
-```{r, function to get result count title+abs+key}
+```{r, function to get result count from scopus title+abs+key}
 #code from Fonti (modified)
-CountTAK_scopus <- function(genus, species, synonyms, additionalkeywords, APIkey, datatype = "application/xml") {
+CountSpTAK <- function(genus, species, synonyms, additionalkeywords, APIkey, datatype = "application/xml") {
   if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
@@ -313,10 +313,10 @@ CountTAK_scopus <- function(genus, species, synonyms, additionalkeywords, APIkey
 }
 ```
 
-```{r, fetch using title only, message=FALSE}
+```{r, fetch from scopus using title only, message=FALSE}
 #this function downloads citation data from scopus
-FetchT_scopus <- function(genus, species, synonyms, additionalkeywords, language = 0, APIkey) {
-  count <- CountT_scopus(genus, species, synonyms, additionalkeywords, APIkey) #check the number of records
+FetchSpT <- function(genus, species, synonyms, additionalkeywords, language = 0, APIkey) {
+  count <- CountSpT(genus, species, synonyms, additionalkeywords, APIkey) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
@@ -459,10 +459,10 @@ FetchT_scopus <- function(genus, species, synonyms, additionalkeywords, language
 }
 ```
 
-```{r, fetch using title+abs+key, message=FALSE}
+```{r, fetch from scopus using title+abs+key, message=FALSE}
 #this function downloads citation data from scopus
-FetchTAK_scopus <- function(genus, species, synonyms, additionalkeywords, language = 0, APIkey) {
-  count <- CountTAK_scopus(genus, species, synonyms, additionalkeywords, APIkey) #check the number of records
+FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 0, APIkey) {
+  count <- CountSpTAK(genus, species, synonyms, additionalkeywords, APIkey) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
@@ -605,15 +605,15 @@ FetchTAK_scopus <- function(genus, species, synonyms, additionalkeywords, langua
 }
 ```
 
-```{r}
-FetchT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+```{r, fetch from lens using title, message=FALSE}
+#this function downloads citation data from lens
+FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
   results <- lens2r::get_scholarly_df(query = create_query_string_T_lens(genus, species, synonyms, additionalkeywords),
                                       token = token)
   #renaming columns
   names(results)[names(results) == "scholarly_citations_count"] <- "citations"
   names(results)[names(results) == "source.title"] <- "journal"
   names(results)[names(results) == "publication_type"] <- "description"
-  names(results)[names(results) == "year_published"] <- "year"
   names(results)[names(results) == "date_published"] <- "cover_date"
   #replacing NA with 0
   for (i in 1:nrow(results)) {
@@ -621,6 +621,30 @@ FetchT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
       results$citations[i] <- 0
     }
   }
+  #clean cover_date
+  results$cover_date <- substr(results$cover_date, 1, 10)
+  return(results)
+}
+```
+
+```{r, fetch from lens using title+abs+key, message=FALSE}
+#this function downloads citation data from lens
+FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+  results <- lens2r::get_scholarly_df(query = create_query_string_T_lens(genus, species, synonyms, additionalkeywords),
+                                      token = token)
+  #renaming columns
+  names(results)[names(results) == "scholarly_citations_count"] <- "citations"
+  names(results)[names(results) == "source.title"] <- "journal"
+  names(results)[names(results) == "publication_type"] <- "description"
+  names(results)[names(results) == "date_published"] <- "cover_date"
+  #replacing NA with 0
+  for (i in 1:nrow(results)) {
+    if (is.na(results$citations[i])) {
+      results$citations[i] <- 0
+    }
+  }
+  #clean cover_date
+  results$cover_date <- substr(results$cover_date, 1, 10)
   return(results)
 }
 ```
