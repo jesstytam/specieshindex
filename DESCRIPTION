@@ -10,9 +10,11 @@ Depends: R (>= 3.5.0)
 LazyData: true
 Imports: 
     rscopus,
+    wosr,
     lens2r,
     taxize,
     dplyr,
+    data.table,
     httr,
     XML
 Suggests: 

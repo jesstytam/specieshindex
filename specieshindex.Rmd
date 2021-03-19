@@ -9,7 +9,9 @@ output:
 
 ```{r, setup}
 pacman::p_load(tidyverse,
+               data.table,
                rscopus,
+               wosr,
                lens2r,
                httr,
                XML,
@@ -633,6 +635,16 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
 }
 ```
 
+```{r, fetch from wos using title, message=FALSE}
+#this function downloads citation data from wos
+FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
+  query <- wosr::pull_wos(query = 'TS = "Bettongia penicillata"',
+                          sid = sid) 
+  results <- wosr::rbindlist(query, fill = TRUE)
+  results <- data.table::setDT(test_df2)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
+}
+```
+
 ```{r, fetch from lens using title, message=FALSE}
 #this function downloads citation data from lens
 FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
@@ -986,66 +998,18 @@ Spi10(dummy1) #12
 
 
 ```{r, testing}
-token <- "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb"
+sid <- auth(username = NULL, password = NULL)
 
-query1 <- '{
-	"query": {
-		"bool": {
-			"must": [{
-				"query_string": {
-					"query": "Ailuropoda melanoleuca AND conserv*",
-					"fields": ["title"]
-				}
-			}]
-		}
-	},
-	"size": 1000
-}' #756 records
+test <- pull_wos(query = 'TS = "Bettongia penicillata"',
+                 sid = sid)
+query_wos(query = 'TS = "Bettongia penicillata"',
+          sid = sid) #121 matching records
+test_df <- as.data.frame(test$publication)
 
-query2 <- '{
-	"query": {
-		"bool": {
-			"must": [{
-				"query_string": {
-					"query": "Ailuropoda melanoleuca AND conserv*",
-					"fields": ["title", "abstract", "keywords"],
-					"default_operator": "and"
-				}
-			}]
-		}
-	},
-	"size": 1000
-}' #1,000+ records
+test_df2 <- rbindlist(test, fill = TRUE)
+test_df2_collapse <- setDT(test_df2)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
 
-
-lens_test1 <- get_scholarly_df(query = query1,
-                               token = token)
-
-lens_test2 <- get_scholarly_df(query = query2,
-                               token = token)
-
-
-
-theURL <- httr::GET("https://api.lens.org/scholarly/search",
-                    query = list(apiKey = token,
-                                 query = '{
-                                 "query": {
-                                  "bool": {
-                                    "must": [{
-                                      "query_string": {
-                                        "query": "Ailuropoda melanoleuca",
-                                        "fields": ["title"]
-                                        }
-                                      }]
-                                     }
-                                    }
-                                 }',
-                                 httpAccept = "application/xml")) #format the URL to be sent to the API
-httr::stop_for_status(theURL) #pass any HTTP errors to the R console
-theData <- httr::content(theURL, as = "text") #extract the content of the response
-newData <- XML::xmlParse(theURL) #parse the data to extract values
-resultCount <- as.numeric(XML::xpathSApply(newData,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
-  
+#loop
 
 ```
 
