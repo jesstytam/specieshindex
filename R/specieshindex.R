@@ -458,6 +458,88 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
 
 
 
+#' This function counts the total number of search results.
+#' It counts the publications with the binomial name in the title only.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
+#' 
+#' @title Search count from Web of Science - title only
+#'
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param synonyms Alternate species names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @return Search count of the species with the given \code{genus} and \code{species}.
+#' @export
+#' 
+#' @references 
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
+#'
+#' @examples
+#' \dontrun{
+#' CountSpT_wos("Bettongia", "penicillata")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountSpT_wos("bettongia", "penicillata")
+#' }
+#' \dontrun{
+#' CountSpT_wos("Bettongia", "penicillata", "conserv*")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountSpT_wos("bettongia", "penicillata", "conserv*")
+#' }
+CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
+  count <- wosr::query_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
+                           sid = sid) 
+  return(count)
+}
+
+
+
+#' This function fetches citation information from Web of Science using genus and species name found in the title of the publications.
+#' Duplicates are to be removed by the user after fetching the data.
+#'
+#' @title Fetch data from Web of Science - title only
+#'
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param synonyms Alternate species names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' FetchSpT_wos("Bettongia", "penicillata")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' FetchSpT_wos("bettongia", "penicillata")
+#' }
+#' \dontrun{
+#' FetchSpT_wos("Bettongia", "penicillata", "conserv*")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' FetchSpT_wos("bettongia", "penicillata", "conserv*")
+#' }
+FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
+  query <- wosr::pull_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
+                          sid = sid) 
+  results <- data.table::rbindlist(query, fill = TRUE)
+  results <- data.table::setDT(test_df2)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
+  #renaming columns
+  names(results)[names(results) == "tot_cites"] <- "citations"
+  names(results)[names(results) == "doc_type"] <- "description"
+  names(results)[names(results) == "date"] <- "cover_date"
+  return(results)
+}
+
+
+
 #' This function fetches citation information from Lens using genus and species name found in the title of the publications.
 #' Duplicates are to be removed by the user after fetching the data.
 #'
@@ -976,7 +1058,43 @@ create_query_string_TAK <- function(genus, species, synonyms, additionalkeywords
 
 
 
-#' Creates a query string for lens to make functions with a query cleaner.
+#' Creates a query string for Web of Science to make functions with a query cleaner.
+#' Title only.
+#'
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param synonyms Alternate species names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @noRd
+#' 
+create_query_string_T_wos <- function(genus, species, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TI = "', genus, ' ', species, '"'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TI = "', genus, ' ', species, '"', ' AND ', additionalkeywords))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('TI = "', genus, ' ', species, '"', ' OR ', synonyms[1])
+    if (length(synonyms)==1) {
+      return(paste0(temp_string))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0(temp_string, ' OR ', synonyms[i])
+      }
+      return(paste0(temp_string))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('TI = ("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords))
+  } 
+}
+
+
+
+#' Creates a query string for Lens to make functions with a query cleaner.
 #' Title only.
 #'
 #' @param genus Genus classification from the binomial name.
@@ -1072,7 +1190,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 
 
 
-#' Creates a query string for lens to make functions with a query cleaner.
+#' Creates a query string for Lens to make functions with a query cleaner.
 #' Title, abstract, and keywords.
 #'
 #' @param genus Genus classification from the binomial name.

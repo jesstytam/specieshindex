@@ -24,10 +24,22 @@ library(httr)
 ```
 
 **Functions**
-0.1. create_query_string
+0.1. create_query_string_T
   + creates a query string to make functions with a query cleaner
   + title only
-0.2. create_query_string
+0.2. create_query_string_TAK
+  + creates a query string to make functions with a query cleaner
+  + title + abstract + keywords
+0.3. create_query_string_T_wos (not working yet)
+  + creates a query string to make functions with a query cleaner
+  + title only
+0.4. create_query_string_TAK_wos (not working yet)
+  + creates a query string to make functions with a query cleaner
+  + title + abstract + keywords
+0.5. create_query_string_T_lens
+  + creates a query string to make functions with a query cleaner
+  + title only
+0.6. create_query_string_TAK_lens
   + creates a query string to make functions with a query cleaner
   + title + abstract + keywords
 1. CountSpT
@@ -119,6 +131,32 @@ create_query_string_TAK <- function(genus, species, synonyms, additionalkeywords
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
     return(paste0('TITLE-ABS-KEY(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
+  } 
+}
+```
+
+```{r, wos query for title only searches}
+create_query_string_T_wos <- function(genus, species, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TI = "', genus, ' ', species, '"'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TI = "', genus, ' ', species, '"', ' AND ', additionalkeywords))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('TI = "', genus, ' ', species, '"', ' OR ', synonyms[1])
+    if (length(synonyms)==1) {
+      return(paste0(temp_string))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0(temp_string, ' OR ', synonyms[i])
+      }
+      return(paste0(temp_string))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('TI = ("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords))
   } 
 }
 ```
@@ -635,13 +673,26 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
 }
 ```
 
+```{r, function to get result count from scopus title only}
+CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
+  count <- wosr::query_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
+                           sid = sid) 
+  return(count)
+}
+```
+
 ```{r, fetch from wos using title, message=FALSE}
 #this function downloads citation data from wos
 FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
-  query <- wosr::pull_wos(query = 'TS = "Bettongia penicillata"',
+  query <- wosr::pull_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
                           sid = sid) 
-  results <- wosr::rbindlist(query, fill = TRUE)
+  results <- data.table::rbindlist(query, fill = TRUE)
   results <- data.table::setDT(test_df2)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
+  #renaming columns
+  names(results)[names(results) == "tot_cites"] <- "citations"
+  names(results)[names(results) == "doc_type"] <- "description"
+  names(results)[names(results) == "date"] <- "cover_date"
+  return(results)
 }
 ```
 
@@ -1002,14 +1053,15 @@ sid <- auth(username = NULL, password = NULL)
 
 test <- pull_wos(query = 'TS = "Bettongia penicillata"',
                  sid = sid)
-query_wos(query = 'TS = "Bettongia penicillata"',
-          sid = sid) #121 matching records
+query_wos(query = 'TI = "Bettongia penicillata"',
+          sid = sid) #42 matching records
+CountSpT_wos(genus = "Bettongia", species = "penicillata")
 test_df <- as.data.frame(test$publication)
 
 test_df2 <- rbindlist(test, fill = TRUE)
 test_df2_collapse <- setDT(test_df2)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
 
-#loop
+woylie_wos <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
 
 ```
 
