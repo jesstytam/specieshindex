@@ -1116,7 +1116,7 @@ test_df2 <- rbindlist(test, fill = TRUE)
 test_df2_collapse <- setDT(test_df2)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
 
 woylie_wos <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
-woylie_wos_tak <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
+woylie_wos_tak <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*") #not working with keyword
 Allindices(woylie_wos_tak, genus = "Bettongia", species = "penicillata")
 
 ```
