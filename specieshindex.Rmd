@@ -161,6 +161,36 @@ create_query_string_T_wos <- function(genus, species, synonyms, additionalkeywor
 }
 ```
 
+```{r, wos query for title only searches}
+create_query_string_TAK_wos <- function(genus, species, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TI = "', genus, ' ', species,
+                  '" OR AB = "', genus, ' ', species,
+                  '" OR AK = "', genus, ' ', species, '"'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TI = "', genus, ' ', species, '"', ' AND ', additionalkeywords,
+                  '" OR AB = "', genus, ' ', species, '"', ' AND ', additionalkeywords,
+                  '" OR AK = "', genus, ' ', species, '"', ' AND ', additionalkeywords))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('TI = "', genus, ' ', species, '"', ' OR ', synonyms[1])
+    if (length(synonyms)==1) {
+      return(paste0(temp_string))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0(temp_string, ' OR ', synonyms[i])
+      }
+      return(paste0(temp_string))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('TI = ("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords))
+  } 
+}
+```
+
 ```{r, lens query for title only searches}
 create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywords){
   if (missing(additionalkeywords) & missing(synonyms)) {
@@ -681,13 +711,37 @@ CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 }
 ```
 
+```{r, function to get result count from scopus title+abs+key}
+#still not working
+CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
+  count <- wosr::query_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
+                           sid = sid) 
+  return(count)
+}
+```
+
 ```{r, fetch from wos using title, message=FALSE}
 #this function downloads citation data from wos
 FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
   query <- wosr::pull_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(test_df2)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
+  results <- data.table::setDT(results)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
+  #renaming columns
+  names(results)[names(results) == "tot_cites"] <- "citations"
+  names(results)[names(results) == "doc_type"] <- "description"
+  names(results)[names(results) == "date"] <- "cover_date"
+  return(results)
+}
+```
+
+```{r, fetch from wos using title, message=FALSE}
+#this function downloads citation data from wos
+FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
+  query <- wosr::pull_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
+                          sid = sid) 
+  results <- data.table::rbindlist(query, fill = TRUE)
+  results <- data.table::setDT(results)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
@@ -1062,6 +1116,8 @@ test_df2 <- rbindlist(test, fill = TRUE)
 test_df2_collapse <- setDT(test_df2)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
 
 woylie_wos <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
+woylie_wos_tak <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
+Allindices(woylie_wos_tak, genus = "Bettongia", species = "penicillata")
 
 ```
 
