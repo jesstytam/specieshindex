@@ -141,10 +141,10 @@ create_query_string_T_wos <- function(genus, species, synonyms, additionalkeywor
     return(paste0('TI = "', genus, ' ', species, '"'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TI = "', genus, ' ', species, '"', ' AND ', additionalkeywords))
+    return(paste0('TI = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TI = "', genus, ' ', species, '"', ' OR ', synonyms[1])
+    temp_string <- paste0('TI = ("', genus, ' ', species, '"', ' OR ', synonyms[1], ')')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
     }
@@ -156,7 +156,7 @@ create_query_string_T_wos <- function(genus, species, synonyms, additionalkeywor
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TI = ("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords))
+    return(paste0('TI = (("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
   } 
 }
 ```
@@ -169,9 +169,9 @@ create_query_string_TAK_wos <- function(genus, species, synonyms, additionalkeyw
                   '" OR AK = "', genus, ' ', species, '"'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TI = "', genus, ' ', species, '"', ' AND ', additionalkeywords,
-                  '" OR AB = "', genus, ' ', species, '"', ' AND ', additionalkeywords,
-                  '" OR AK = "', genus, ' ', species, '"', ' AND ', additionalkeywords))
+    return(paste0('TI = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')',
+                  '" OR AB = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')',
+                  '" OR AK = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
     temp_string <- paste0('TI = "', genus, ' ', species, '"', ' OR ', synonyms[1])
@@ -1115,7 +1115,18 @@ test_df <- as.data.frame(test$publication)
 test_df2 <- rbindlist(test, fill = TRUE)
 test_df2_collapse <- setDT(test_df2)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
 
+CountSpT_wos(genus = "Osphranter", species = "rufus")
+CountSpT_wos(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"')
+CountSpT_wos(genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*")
+CountSpT_wos(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"', additionalkeywords = "conserv*")
+
+CountSpTAK_wos(genus = "Osphranter", species = "rufus")
+CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"')
+CountSpTAK_wos(genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*")
+CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"', additionalkeywords = "conserv*")
+
 woylie_wos <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
+CountSpTAK_wos(genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*")
 woylie_wos_tak <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*") #not working with keyword
 Allindices(woylie_wos_tak, genus = "Bettongia", species = "penicillata")
 
