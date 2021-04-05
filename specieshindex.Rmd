@@ -169,9 +169,9 @@ create_query_string_TAK_wos <- function(genus, species, synonyms, additionalkeyw
                   '" OR AK = "', genus, ' ', species, '"'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TI = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')',
-                  '" OR AB = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')',
-                  '" OR AK = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')'))
+    return(paste0('(TI = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, '))',
+                  '" OR (AB = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, '))',
+                  '" OR (AK = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, '))'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
     temp_string <- paste0('TI = "', genus, ' ', species, '"', ' OR ', synonyms[1])
