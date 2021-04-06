@@ -20,7 +20,6 @@ pacman::p_load(tidyverse,
 
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
 library(specieshindex)
-library(httr)
 ```
 
 **Functions**
@@ -183,8 +182,8 @@ create_query_string_TAK_wos <- function(genus, species, synonyms, additionalkeyw
     else {
       for (i in 2:length(synonyms)){
         temp_string <- paste0('TI = ("', genus, ' ', species, '"', ' OR ', synonyms[i], ')',
-                          ' OR AB = ("', genus, ' ', species, '"', ' OR ', synonyms[i], ')',
-                          ' OR AK = ("', genus, ' ', species, '"', ' OR ', synonyms[i], ')')
+                              ' OR AB = ("', genus, ' ', species, '"', ' OR ', synonyms[i], ')',
+                              ' OR AK = ("', genus, ' ', species, '"', ' OR ', synonyms[i], ')')
       }
       return(paste0(temp_string))
     }

@@ -40,26 +40,6 @@ for more detailed instructions and the full list of functions
 
 ## Before you start
 
-### :mega: Connecting to Scopus
-
-**Make sure you are connected to the internet via institutional access
-or acquire a VPN from your institution if you are working from home.**
-Alternatively, if you are a subscriber of Scopus already, you can ignore
-this step.
-
-### :key: Getting an API key
-
-To connect and download citation information from Scopus legally, you
-will **absolutely need** an API key. Here are the steps to obtain the
-key.
-
-1.  Go to <https://dev.elsevier.com/> and click on the button `I want an
-    API key`.
-2.  Create an account and log in.
-3.  Go to the `My API Key` tab on top of the page and click `Create API
-    Key`.
-4.  Read the legal documents and check the boxes.
-
 ### :dart: Additional keywords
 
 The Count and Fetch functions allow the addition of keywords using
@@ -79,6 +59,39 @@ to the search strings to get the maximum hits. Remember to add
 **double** quotation marks to the synonyms, otherwise you might run into
 getting the error `Bad Request (HTTP 400)`. An example is shown below to
 demonstrate how to put double quotation marks in the character string.
+
+### :mega: Connecting to Scopus
+
+**Make sure you are connected to the internet via institutional access
+or acquire a VPN from your institution if you are working from home.**
+Alternatively, if you are a subscriber of Scopus already, you can ignore
+this step.
+
+#### :key: Getting an API key
+
+To connect and download citation information from Scopus legally, you
+will **absolutely need** an API key. Here are the steps to obtain the
+key.
+
+1.  Go to <https://dev.elsevier.com/> and click on the button `I want an
+    API key`.
+2.  Create an account and log in.
+3.  Go to the `My API Key` tab on top of the page and click `Create API
+    Key`.
+4.  Read the legal documents and check the boxes.
+
+### :mega: Connecting to Web of Science
+
+You will need to set up your session ID before gaining access to the Web
+of Science database. Type the following line of code to do so.
+
+``` r
+sid <- auth(username = NULL, password = NULL)
+```
+
+You won’t have to set your ID again until your next session. You are
+required to be at your institution for this to work since the API is
+accessed via the IP address.
 
 ## Examples
 
@@ -180,7 +193,7 @@ ggplot(CombineSp, aes(x = species,
         legend.position = "none")
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
 **Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
 
@@ -210,7 +223,7 @@ ggplot(CombineSp, aes(x = species,
         legend.position = "none")
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
 **Figure 2.** The *m*-index of the Woylie, Quokka, Platypus, and Koala.
 
