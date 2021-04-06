@@ -21,6 +21,8 @@ installed.
 ``` r
 # Installation from GitHub
 install.packages("rscopus")
+install.packages("wosr")
+install.packages("lens2r")
 install.packages("taxize")
 install.packages("XML")
 install.packages("httr")
@@ -147,7 +149,7 @@ CombineSp
     ## 1       55      110       3               44 26 0.591  54  6
     ## 2      107      237       5               67 29 0.433 121  3
     ## 3      153      308      13               68 41 0.603 177  6
-    ## 4      227      744      29              140 53 0.379 427 13
+    ## 4      227      744      29              140 53 0.379 427 12
 
 Once you are happy with your dataset, you can make some nice plots.
 Using `ggplot2`, we can compare the *h*-index and the total citations.
