@@ -2,7 +2,7 @@
 % Please edit documentation in R/specieshindex.R
 \name{FetchSpTAK}
 \alias{FetchSpTAK}
-\title{Fetch data from Scopus- title, abstract and keywords}
+\title{Fetch data from Scopus - title, abstract and keywords}
 \usage{
 FetchSpTAK(genus, species, synonyms, additionalkeywords, language = 0, APIkey)
 }
