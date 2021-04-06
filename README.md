@@ -231,5 +231,15 @@ ggplot(CombineSp, aes(x = species,
 
 ## :paw\_prints: Roadmap
 
-  - [ ] Add functions to query Lens
-      - [ ] Get m-index and years\_publishing to work
+  - Web of Science
+      - [x] Count functions working
+      - [x] Fetch functions working
+      - [x] All indices working
+  - BASE
+      - [ ] Count functions working
+      - [ ] Fetch functions working
+      - [ ] All indices working
+  - Lens
+      - [ ] Count functions working
+      - [x] Fetch functions working
+      - [ ] All indices working
