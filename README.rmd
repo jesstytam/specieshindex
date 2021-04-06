@@ -59,7 +59,7 @@ To connect and download citation information from Scopus legally, you will **abs
 
 ### :mega: Connecting to Web of Science
 
-You will need to set up your session ID before gaining access to the Web of Science database. Type the following line of code to do so. 
+You will need to set up your session ID before gaining access to the Web of Science database. Run the following line of code to do so. 
 
 ```{r, eval=FALSE}
 sid <- auth(username = NULL, password = NULL)

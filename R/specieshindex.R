@@ -1081,10 +1081,10 @@ create_query_string_T <- function(genus, species, synonyms, additionalkeywords){
     return(paste0('TITLE("', genus, ' ', species, '")'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TITLE("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')'))
+    return(paste0('TITLE("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TITLE("', genus, ' ', species, '"', ' OR ', synonyms[1])
+    temp_string <- paste0('TITLE("', genus, ' ', species, '" OR ', synonyms[1])
     if (length(synonyms)==1) {
       return(paste0(temp_string, ')'))
     }
@@ -1096,7 +1096,7 @@ create_query_string_T <- function(genus, species, synonyms, additionalkeywords){
     }
   }
   if (!missing(additionalkeywords)&!missing(synonyms)) {
-    return(paste0('TITLE(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
+    return(paste0('TITLE(("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
   } 
 }
 
@@ -1119,10 +1119,10 @@ create_query_string_TAK <- function(genus, species, synonyms, additionalkeywords
     return(paste0('TITLE-ABS-KEY("', genus, ' ', species, '")'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TITLE-ABS-KEY("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')'))
+    return(paste0('TITLE-ABS-KEY("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TITLE-ABS-KEY("', genus, ' ', species, '"', ' OR ', synonyms[1])
+    temp_string <- paste0('TITLE-ABS-KEY("', genus, ' ', species, '" OR ', synonyms[1])
     if (length(synonyms)==1) {
       return(paste0(temp_string, ')'))
     }
@@ -1134,7 +1134,7 @@ create_query_string_TAK <- function(genus, species, synonyms, additionalkeywords
     }
   }
   if (!missing(additionalkeywords)&!missing(synonyms)) {
-    return(paste0('TITLE-ABS-KEY(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
+    return(paste0('TITLE-ABS-KEY(("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
   } 
 }
 
@@ -1157,22 +1157,22 @@ create_query_string_T_wos <- function(genus, species, synonyms, additionalkeywor
     return(paste0('TI = "', genus, ' ', species, '"'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TI = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')'))
+    return(paste0('TI = ("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TI = ("', genus, ' ', species, '"', ' OR ', synonyms[1], ')')
+    temp_string <- paste0('TI = ("', genus, ' ', species, '" OR ', synonyms[1], ')')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
     }
     else {
       for (i in 2:length(synonyms)){
-        temp_string <- paste0('TI = ("', genus, ' ', species, '"', ' OR ', synonyms[i], ')')
+        temp_string <- paste0('TI = ("', genus, ' ', species, '" OR ', synonyms[i], ')')
       }
       return(paste0(temp_string))
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TI = (("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
+    return(paste0('TI = (("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
   } 
 }
 
@@ -1197,30 +1197,116 @@ create_query_string_TAK_wos <- function(genus, species, synonyms, additionalkeyw
                   '" OR AK = "', genus, ' ', species, '"'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TI = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')',
-                  ' OR AB = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')',
-                  ' OR AK = ("', genus, ' ', species, '"', ' AND ', additionalkeywords, ')'))
+    return(paste0('TI = ("', genus, ' ', species, '" AND ', additionalkeywords, ')',
+                  ' OR AB = ("', genus, ' ', species, '" AND ', additionalkeywords, ')',
+                  ' OR AK = ("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TI = ("', genus, ' ', species, '"', ' OR ', synonyms[1], ')',
-                          ' OR AB = ("', genus, ' ', species, '"', ' OR ', synonyms[1], ')',
-                          ' OR AK = ("', genus, ' ', species, '"', ' OR ', synonyms[1], ')')
+    temp_string <- paste0('TI = ("', genus, ' ', species, '" OR ', synonyms[1], ')',
+                          ' OR AB = ("', genus, ' ', species, '" OR ', synonyms[1], ')',
+                          ' OR AK = ("', genus, ' ', species, '" OR ', synonyms[1], ')')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
     }
     else {
       for (i in 2:length(synonyms)){
-        temp_string <- paste0('TI = ("', genus, ' ', species, '"', ' OR ', synonyms[i], ')',
-                              ' OR AB = ("', genus, ' ', species, '"', ' OR ', synonyms[i], ')',
-                              ' OR AK = ("', genus, ' ', species, '"', ' OR ', synonyms[i], ')')
+        temp_string <- paste0('TI = ("', genus, ' ', species, '" OR ', synonyms[i], ')',
+                              ' OR AB = ("', genus, ' ', species, '" OR ', synonyms[i], ')',
+                              ' OR AK = ("', genus, ' ', species, '" OR ', synonyms[i], ')')
       }
       return(paste0(temp_string))
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TI = (("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
-                  ' OR AB = (("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
-                  ' OR AK = (("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
+    return(paste0('TI = (("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')',
+                  ' OR AB = (("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')',
+                  ' OR AK = (("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
+  } 
+}
+
+
+
+#' Creates a query string for BASE to make functions with a query cleaner.
+#' Title only.
+#'
+#' @title Query string for BASE
+#' 
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param synonyms Alternate species names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @noRd
+#' 
+create_query_string_T_base <- function(genus, species, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:"', genus, ' ', species, '"'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[1])
+    if (length(synonyms)==1) {
+      return(paste0(temp_string, ')'))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0(temp_string, ' OR ', synonyms[i])
+      }
+      return(paste0(temp_string, ')'))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('dctitle:(("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
+  } 
+}
+
+
+
+#' Creates a query string for BASE to make functions with a query cleaner.
+#' Title, abstract, and keywords.
+#'
+#' @title Query string for BASE
+#' 
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param synonyms Alternate species names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @noRd
+#' 
+create_query_string_TAK_base <- function(genus, species, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:"', genus, ' ', species, '"',
+                  ' OR dcdescription:"', genus, ' ', species, '"',
+                  ' OR dcsubject:"', genus, ' ', species, '"'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:("', genus, ' ', species, '" AND ', additionalkeywords, ')',
+                  ' OR dcdescription:("', genus, ' ', species, '" AND ', additionalkeywords, ')',
+                  ' OR dcsubject:("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[1], ')',
+                          ' OR dcdescription:("', genus, ' ', species, '" OR ', synonyms[1], ')',
+                          ' OR dcsubject:("', genus, ' ', species, '" OR ', synonyms[1], ')')
+    if (length(synonyms)==1) {
+      return(paste0(temp_string))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[i], ')',
+                              ' OR dcdescription:("', genus, ' ', species, '" OR ', synonyms[i], ')',
+                              ' OR dcsubject:("', genus, ' ', species, '" OR ', synonyms[i], ')')
+      }
+      return(paste0(temp_string))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('dctitle:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
+                  ' OR dcdescription:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
+                  ' OR dcsubject:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
   } 
 }
 

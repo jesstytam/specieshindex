@@ -83,7 +83,7 @@ key.
 ### :mega: Connecting to Web of Science
 
 You will need to set up your session ID before gaining access to the Web
-of Science database. Type the following line of code to do so.
+of Science database. Run the following line of code to do so.
 
 ``` r
 sid <- auth(username = NULL, password = NULL)
