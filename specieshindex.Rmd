@@ -16,6 +16,7 @@ pacman::p_load(tidyverse,
                lens2r,
                httr,
                XML,
+               jsonlite,
                taxize,
                gtools)
 
@@ -817,13 +818,26 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 }
 ```
 
+```{r}
+CountSpT_base <- function(genus, species, synonyms, additionalkeywords) {
+  theURL <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
+                      query = list(query = create_query_string_T_base(genus, species, synonyms, additionalkeywords),
+                                   httpAccept = "application/xml")) #format the URL to be sent to the API
+  httr::stop_for_status(theURL) #pass any HTTP errors to the R console
+  theData <- httr::content(theURL, as = "text") #extract the content of the response
+  newData <- XML::xmlParse(theURL) #parse the data to extract values
+  resultCount <- as.numeric(XML::xpathSApply(newData,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
+  return(resultCount)
+}
+```
+
 ```{r, fetch from base using title, message=FALSE}
 #this function downloads citation data from base
 FetchSpT_base <- function(genus, species, synonyms, additionalkeywords) {
   #loop
   results <- data.frame()
   start <- 1
-  for (i in start:(start+124)) { #where to put i?
+  for (i in start:(start+124)) { #number of loops to be determined by the count of the documents
     print(paste("Fetching documents", start, "to", start+124))
     query <- rbace::bs_search(query = create_query_string_T_base(genus, species, synonyms, additionalkeywords),
                               hits = 125,
@@ -1242,7 +1256,17 @@ kangaroo2_base <- FetchSpT_base(genus = "Osphranter", species = "rufus", synonym
 kangaroo3_base <- FetchSpTAK_base(genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*") #4
 kangaroo4_base <- FetchSpTAK_base(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"', additionalkeywords = "conserv*") #22
 
-base_test_df <- rbindlist(base_test)
+CountSpT_base(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"')
+
+
+
+base <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
+                      query = list(query = 'dctitle:("Osphranter rufus" OR "Macropus rufus")',
+                                   httpAccept = "application/json")) #format the URL to be sent to the API
+theData <- httr::content(base, as = "text") #access denied
+rawToChar(base$content) #access denied
+
+
 
 
 ```
