@@ -1267,7 +1267,22 @@ theData <- httr::content(base, as = "text") #access denied
 rawToChar(base$content) #access denied
 
 
+lens <- GET("https://api.lens.org/scholarly/search",
+            query = list(Authorization = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb",
+                         query = create_query_string_T_lens(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"')))
+rawToChar(lens$content)
 
+
+
+url <- 'https://api.lens.org/scholarly/search'
+headers <- c('Authorization' = token, 'Content-Type' = 'application/json')
+httr::POST(url = url, add_headers(.headers=headers), body = query)
+
+dat <- POST(url = "https://api.lens.org/scholarly/search",
+     add_headers(.headers = c('Authorization' = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb",
+                              'Content-Type' = 'application/json')),
+     body = create_query_string_T_lens(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"')) #this works
+rawToChar(dat$content) #this doesn't
 
 ```
 
