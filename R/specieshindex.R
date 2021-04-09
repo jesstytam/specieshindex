@@ -491,6 +491,10 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
 #' CountSpT_wos("bettongia", "penicillata", "conserv*")
 #' }
 CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  )
   count <- wosr::query_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
                            sid = sid) 
   return(count)
@@ -531,6 +535,10 @@ CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' CountSpTAK_wos("bettongia", "penicillata", "conserv*")
 #' }
 CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  )
   count <- wosr::query_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
                            sid = sid) 
   return(count)
@@ -567,6 +575,10 @@ CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' FetchSpT_wos("bettongia", "penicillata", "conserv*")
 #' }
 FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  )
   query <- wosr::pull_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
@@ -609,6 +621,10 @@ FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' FetchSpTAK_wos("bettongia", "penicillata", "conserv*")
 #' }
 FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  )
   query <- wosr::pull_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
@@ -618,6 +634,110 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
   names(results)[names(results) == "doc_type"] <- "description"
   names(results)[names(results) == "date"] <- "cover_date"
   return(results)
+}
+
+
+
+#' This function counts the total number of search results.
+#' It counts the publications with the binomial name in the title only.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
+#' 
+#' @title Search count from Lens - title only
+#'
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param synonyms Alternate species names.
+#' @param additionalkeywords Optional search terms.
+#' @param token Lens token needed to access and download data from their database.
+#'
+#' @return Search count of the species with the given \code{genus} and \code{species}.
+#' @export
+#' 
+#' @references 
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
+#'
+#' @examples
+#' \dontrun{
+#' CountSpT_lens("Bettongia", "penicillata")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountSpT_lens("bettongia", "penicillata")
+#' }
+#' \dontrun{
+#' CountSpT_lens("Bettongia", "penicillata", "conserv*")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountSpT_lens("bettongia", "penicillata", "conserv*")
+#' }
+CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+  if (missing(token)) {
+    stop("You need to register for a token on Lens.") #stop running if token missing
+  }
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  ) 
+  theURL <- httr::POST(url = "https://api.lens.org/scholarly/search",
+                       add_headers(.headers = c("Authorization" = token,
+                                                "Content-Type" = "application/json")),
+                       body = create_query_string_T_lens(genus, species, synonyms, additionalkeywords))
+  lens_content <- jsonlite::fromJSON(rawToChar(theURL$content))
+  resultCount <- as.numeric(lens_content$total)
+  return(resultCount)
+}
+
+
+
+#' This function counts the total number of search results.
+#' It counts the publications with the binomial name in the title, abstract and author keywords.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
+#' 
+#' @title Search count from Lens - title, abstract and author keywords
+#'
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param synonyms Alternate species names.
+#' @param additionalkeywords Optional search terms.
+#' @param token Lens token needed to access and download data from their database.
+#'
+#' @return Search count of the species with the given \code{genus} and \code{species}.
+#' @export
+#' 
+#' @references 
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
+#'
+#' @examples
+#' \dontrun{
+#' CountSpTAK_lens("Bettongia", "penicillata")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountSpTAK_lens("bettongia", "penicillata")
+#' }
+#' \dontrun{
+#' CountSpTAK_lens("Bettongia", "penicillata", "conserv*")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountSpTAK_lens("bettongia", "penicillata", "conserv*")
+#' }
+CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+  if (missing(token)) {
+    stop("You need to register for a token on Lens.") #stop running if token missing
+  }
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  ) 
+  theURL <- httr::POST(url = "https://api.lens.org/scholarly/search",
+                       add_headers(.headers = c("Authorization" = token,
+                                                "Content-Type" = "application/json")),
+                       body = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords))
+  lens_content <- jsonlite::fromJSON(rawToChar(theURL$content))
+  resultCount <- as.numeric(lens_content$total)
+  return(resultCount)
 }
 
 
@@ -652,6 +772,13 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' FetchSpT_lens("bettongia", "penicillata", "conserv*", token = "mytoken")
 #' }
 FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+  if (missing(token)) {
+    stop("You need to register for a token on Lens.") #stop running if token missing
+  }
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  )
   results <- lens2r::get_scholarly_df(query = create_query_string_T_lens(genus, species, synonyms, additionalkeywords),
                                       token = token)
   #renaming columns
@@ -702,6 +829,13 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
 #' FetchSpTAK_lens("bettongia", "penicillata", "conserv*", token = "mytoken")
 #' }
 FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+  if (missing(token)) {
+    stop("You need to register for a token on Lens.") #stop running if token missing
+  }
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  )
   results <- lens2r::get_scholarly_df(query = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords),
                                       token = token)
   #renaming columns
