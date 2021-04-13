@@ -193,6 +193,6 @@ ggplot(CombineSp, aes(x = species,
   - [ ] Fetch functions working
   - [ ] All indices working
 - Lens
-  - [ ] Count functions working
-  - [ ] Fetch functions working
+  - [x] Count functions working
+  - [x] Fetch functions working
   - [ ] All indices working
