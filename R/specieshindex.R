@@ -1465,11 +1465,11 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, '",
+					  "query": "\\"', genus, ' ', species, '\\"",
 					  "fields": ["title"]
 				  }
 			  }]
-		  }
+		  }1
 	  },
 	  "size": 50000
   }'))
@@ -1480,7 +1480,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, ' AND ', additionalkeywords, '",
+					  "query": "\\"', genus, ' ', species, '\\" AND ', additionalkeywords, '",
 					  "fields": ["title"]
 				  }
 			  }]
@@ -1495,7 +1495,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, ' OR ', synonyms[1], '",
+					  "query": "\\"', genus, ' ', species, '\\" OR \\"', synonyms[1], '\\"",
 					  "fields": ["title"]
 				  }
 			  }]
@@ -1513,7 +1513,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, ' OR ', synonyms[i], '",
+					  "query": "\\"', genus, ' ', species, '\\" OR \\"', synonyms[i], '\\"",
 					  "fields": ["title"]
 				  }
 			  }]
@@ -1531,7 +1531,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": ("', genus, ' ', species, ' OR ', synonyms, ') AND ', additionalkeywords, '",
+					  "query": "(\\"', genus, ' ', species, '\\" OR \\"', synonyms, '\\") AND ', additionalkeywords, '",
 					  "fields": ["title"]
 				  }
 			  }]
@@ -1563,9 +1563,9 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, '",
-					  "fields": ["title", "abstract", "keywords"],
-					  "default_operator": "and"
+					  "query": "\\"', genus, ' ', species, '\\"",
+					  "fields": ["title", "abstract", "keyword"],
+					  "default_operator": "or"
 				  }
 			  }]
 		  }
@@ -1579,9 +1579,9 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, ' AND ', additionalkeywords, '",
-					  "fields": ["title", "abstract", "keywords"],
-					"default_operator": "and"
+					  "query": "\\"', genus, ' ', species, '\\" AND ', additionalkeywords, '",
+					  "fields": ["title", "abstract", "keyword"],
+					"default_operator": "or"
 				  }
 			  }]
 		  }
@@ -1589,15 +1589,15 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 	  "size": 50000
   }'))
   }
-  if (missing(additionalkeywords)&!missing(synonyms)) {
+  if (missing(additionalkeywords) & !missing(synonyms)) {
     temp_string <- paste0('{
     "query": {
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, ' OR ', synonyms[1], '",
-					  "fields": ["title", "abstract", "keywords"],
-					"default_operator": "and"
+					  "query": "\\"', genus, ' ', species, '\\" OR \\"', synonyms[1], '\\"",
+					  "fields": ["title", "abstract", "keyword"],
+					"default_operator": "or"
 				  }
 			  }]
 		  }
@@ -1614,8 +1614,9 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": "', genus, ' ', species, ' OR ', synonyms[i], '",
-					  "fields": ["title"]
+					  "query": "\\"', genus, ' ', species, '\\" OR \\"', synonyms[i], '\\"",
+					  "fields": ["title", "abstract", "keyword"],
+					"default_operator": "or"
 				  }
 			  }]
 		  }
@@ -1632,9 +1633,9 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 		  "bool": {
 			  "must": [{
 				  "query_string": {
-					  "query": ("', genus, ' ', species, ' OR ', synonyms, ') AND ', additionalkeywords, '",
-					  "fields": ["title", "abstract", "keywords"],
-					"default_operator": "and"
+					  "query": "(\\"', genus, ' ', species, '\\" OR \\"', synonyms, '\\") AND ', additionalkeywords, '",
+					  "fields": ["title", "abstract", "keyword"],
+					"default_operator": "or"
 				  }
 			  }]
 		  }
