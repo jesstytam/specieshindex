@@ -1363,11 +1363,6 @@ length(lens_content$data$lens_id)
 names(lens_content)
 lens_content$total
 
-"https://api.lens.org/scholarly/search?token=KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb&query=title(%22Macropus%20rufus%22)"
-"https://api.lens.org/scholarly/search?token=KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb&query=title(%22Macropus%20rufus%22%20OR%20%22Osphranter%20rufus%22)"
-"https://api.lens.org/scholarly/search?token=KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb&query=title(%22Bettongia%20penicillata%22)"
-"https://api.lens.org/scholarly/search?token=KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb&query=title(%22Bettongia%20penicillata%22%20AND%20conserv*)"
-
 theURL <- httr::GET("http://api.elsevier.com/content/search/scopus",
                       query = list(apiKey = "442b9048417ef20cf680a0ae26ee4d86",
                                    query = 'TITLE("Bettongia penicillata")',

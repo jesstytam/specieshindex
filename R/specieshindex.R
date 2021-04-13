@@ -1446,7 +1446,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }1
 	  },
-	  "size": 50000
+	  "size": 1000
   }'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
@@ -1461,7 +1461,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": 1000
   }'))
   }
   if (missing(additionalkeywords)&!missing(synonyms)) {
@@ -1476,7 +1476,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": 1000
   }')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
@@ -1494,7 +1494,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": 1000
   }')
       }
       return(paste0(temp_string))
@@ -1512,7 +1512,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": 1000
   }'))
   } 
 }
@@ -1545,7 +1545,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": 1000
   }'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
@@ -1561,7 +1561,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": 1000
   }'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
@@ -1577,7 +1577,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": 1000
   }')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
@@ -1596,7 +1596,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": 1000
   }')
       }
       return(paste0(temp_string))
@@ -1615,7 +1615,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": 1000
   }'))
   } 
 }
