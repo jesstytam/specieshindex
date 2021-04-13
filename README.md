@@ -55,10 +55,9 @@ conserve, conservatory, etc. Find out more about search language
 
 Some species have had their classification changed in the past,
 resulting in multiple binomial names and synonyms. Synonyms can be added
-to the search strings to get the maximum hits. Remember to add
-**double** quotation marks to the synonyms, otherwise you might run into
-getting the error `Bad Request (HTTP 400)`. An example is shown below to
-demonstrate how to put double quotation marks in the character string.
+to the search strings to get the maximum hits. If you have more than 1
+synonym, you can parse the list (the list should be named “synonyms”)
+into the argument.
 
 ### :mega: Connecting to Scopus
 
@@ -248,4 +247,7 @@ ggplot(CombineSp, aes(x = species,
 
 `specieshindex` is enabled by Scopus, Web of Science, and [The
 Lens](https://www.lens.org/).
-<iframe src="https://lens.org/lens/embed/attribution" scrolling="no" height="30px" width="100%"></iframe>
+
+<iframe src="https://lens.org/lens/embed/attribution" scrolling="no" height="30px" width="100%">
+
+</iframe>
