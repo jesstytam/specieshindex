@@ -1049,8 +1049,11 @@ TotalJournals <- function(data) {
 
 ```{r}
 SourceType <- function(data) {
-  source_type <- table(data$description)
-  return(source_type)
+  source_type <- data.frame(table(data$description))
+  source_type_transpose <- as.data.frame(t(source_type))
+  names(source_type_transpose) <- as.matrix(source_type_transpose[1,])
+  source_type_transpose <- source_type_transpose[-1,]
+  return(source_type_transpose)
 }
 ```
 
@@ -1181,9 +1184,10 @@ Allindices <- function(data, genus, species) {
                         TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
                         SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
     combine[is.na(combine)] <- 0 #replace NA values with 0
-    colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles", "reviews",
+    combine_sourcetype <- cbind(combine, SourceType(data))
+    colnames(combine_sourcetype) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles", "reviews",
                            "years_publishing", "h", "m", "i10", "h5")
-    return(combine)
+    return(combine_sourcetype)
   }
   cat("\n", genus, species, "\n",
       TotalPub(data), "publications", "\n",
@@ -1432,7 +1436,10 @@ woylie_lens_T <- FetchSpT_lens(genus = "Bettongia", species = "penicillata", tok
 CountSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
 CountSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
 Allindices(woylie_lens_T, genus = "Bettongia", species = "penicillata")
-SourceType(woylie_lens)
+st <- SourceType(woylie_lens_T)
+st <- as.data.frame(t(st))
+names(st) <- as.matrix(st[1,])
+st_2 <- st[-1,]
 
 ```
 
