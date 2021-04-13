@@ -19,7 +19,7 @@ To get this package to work, make sure you have the following packages
 installed.
 
 ``` r
-# Installation from GitHub
+#Installation from GitHub
 install.packages("rscopus")
 install.packages("wosr")
 install.packages("lens2r")
@@ -29,7 +29,7 @@ install.packages("httr")
 install.packages("dplyr")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
 
-# Load the library
+#Load the library
 library(specieshindex)
 ```
 
@@ -116,17 +116,17 @@ them, the suffix of the Count and Fetch functions have been labeled with
 the database’s name, with the exception of Scopus.
 
 ``` r
-#scopus requests
+#Scopus requests
 API <- "your_api_key_from_scopus"
 CountSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
 FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
 
-#web of science requests
-#no tokens or api keys needed if session ID has been set as shown previously
+#Web of science requests
+#No tokens or api keys needed if session ID has been set as shown previously
 CountSpT_wos(genus = "Bettongia", species = "penicillata")
 FetchSpT_wos(genus = "Bettongia", species = "penicillata")
 
-#lens requests
+#Lens requests
 token <- "your_lens_token"
 CountSpT_lens(genus = "Bettongia", species = "penicillata", token = token)
 FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = token)
@@ -142,15 +142,15 @@ or `CountSpTAK()` for title+abstract+keywords.
 #API key
 API <- "your_api_key_from_scopus"
 
-# Count citation data
+#Count citation data
 CountSpT("Bettongia", "penicillata", APIkey = API)
 CountSpTAK("Bettongia", "penicillata", APIkey = API)
 
-# Example including additional keywords
+#Example including additional keywords
 CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", APIkey = API)
 #search string: TITLE-ABS-KEY("Phascolarctos cinereus" AND (consrv* OR protect* OR reintrod* OR restor*))
 
-# Example including synonyms
+#Example including synonyms
 CountSpT("Osphranter", "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*", APIkey = API)
 #search string: TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*)
 ```
@@ -165,7 +165,7 @@ information using either `FetchSpT()` for title only or `FetchSpTAK()`
 for title+abstract+keywords. Remember to use binomial names.
 
 ``` r
-# Extract citation data
+#Extract citation data
 Woylie <- FetchSpTAK("Bettongia", "penicillata", APIkey = API)
 Quokka <- FetchSpTAK("Setonix", "brachyurus", APIkey = API)
 Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", APIkey = API)
@@ -203,7 +203,7 @@ Once you are happy with your dataset, you can make some nice plots.
 Using `ggplot2`, we can compare the *h*-index and the total citations.
 
 ``` r
-# h-index
+#h-index
 library(ggplot2)
 ggplot(CombineSp, aes(x = species,
                       y = h)) +
@@ -235,7 +235,7 @@ ggplot(CombineSp, aes(x = species,
 <br/>
 
 ``` r
-# Total citations
+#Total citations
 ggplot(CombineSp, aes(x = species,
                       y = m)) +
   geom_point(size = 4,
