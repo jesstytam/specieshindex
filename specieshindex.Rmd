@@ -622,9 +622,6 @@ FetchSpT <- function(genus, species, synonyms, additionalkeywords, language = 0,
     }
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
-  #showing final list of records
-  retrieved <- dim(datalist)[1] #check the number
-  print(paste(retrieved, "records successfully fetched."))
   return(datalist)
 }
 ```
@@ -768,9 +765,6 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
     }
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
-  #showing final list of records
-  retrieved <- dim(datalist)[1] #check the number
-  print(paste(retrieved, "records successfully fetched."))
   return(datalist)
 }
 ```
@@ -1312,28 +1306,30 @@ Spi10(dummy1) #12
 ```{r, testing}
 sid <- auth(username = NULL, password = NULL)
 
-test <- pull_wos(query = 'TS = "Bettongia penicillata"',
-                 sid = sid)
-query_wos(query = 'TI = "Bettongia penicillata"',
-          sid = sid) #42 matching records
-CountSpT_wos(genus = "Bettongia", species = "penicillata")
-test_df <- as.data.frame(test$publication)
-
-test_df2 <- rbindlist(test, fill = TRUE)
-test_df2_collapse <- setDT(test_df2)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
 
 CountSpT_wos(genus = "Osphranter", species = "rufus") #3
-CountSpT_wos(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"') #115
+CountSpT_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus") #115
 CountSpT_wos(genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*") #0
-CountSpT_wos(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"', additionalkeywords = "conserv*") #1
+CountSpT_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*") #1
 
 CountSpTAK_wos(genus = "Osphranter", species = "rufus") #8
-CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"') #199
+CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus") #199
 CountSpTAK_wos(genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*") #1
-CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = '"Macropus rufus"', additionalkeywords = "conserv*") #11
+CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*") #11
 
-woylie_wosT <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
+woylie_wosTAK <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
 Allindices(woylie_wosT, genus = "Bettongia", species = "penicillata")
+
+
+woylie_lens <- FetchSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
+woylie_lens_T <- FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
+woylie_lens_T_scopus <- FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = "442b9048417ef20cf680a0ae26ee4d86")
+woylie_lens_T_wos <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
+
+CountSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
+CountSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
+Allindices(woylie_lens_T_wos, genus = "Bettongia", species = "penicillata")
+
 
 
 
@@ -1354,59 +1350,6 @@ base <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.f
                                    httpAccept = "application/json")) #format the URL to be sent to the API
 theData <- httr::content(base, as = "text") #access denied
 rawToChar(base$content) #access denied
-
-
-lens <- GET("https://api.lens.org/scholarly/search?token=KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb&query=title(%22Macropus%20rufus%22)")
-rawToChar(lens$content)
-lens_content <- fromJSON(rawToChar(lens$content))
-length(lens_content$data$lens_id)
-names(lens_content)
-lens_content$total
-
-theURL <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                      query = list(apiKey = "442b9048417ef20cf680a0ae26ee4d86",
-                                   query = 'TITLE("Bettongia penicillata")',
-                                   httpAccept = "application/xml")) #format the URL to be sent to the API
-theData <- httr::content(theURL, as = "text") #extract the content of the response
-newData <- XML::xmlParse(theURL)
-resultCount <- as.numeric(XML::xpathSApply(newData,"//opensearch:totalResults", XML::xmlValue))
-
-
-url <- 'https://api.lens.org/scholarly/search'
-headers <- c('Authorization' = token, 'Content-Type' = 'application/json')
-httr::POST(url = url, add_headers(.headers=headers), body = query)
-
-dat <- POST(url = "https://api.lens.org/scholarly/search",
-            add_headers(.headers = c("Authorization" = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb",
-                                     "Content-Type" = "application/json")),
-            body = create_query_string_T_lens(genus = "Osphranter", species = "rufus")) #http 400
-rawdata <- jsonlite::fromJSON(rawToChar(dat$content))
-rawdata$total
-
-
-CountSpT_lens(genus = "Osphranter", species = "rufus", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb") #4
-CountSpT_lens(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb") #146
-CountSpT_lens(genus = "Macropus", species = "rufus", additionalkeywords = "conserv*", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb") #2
-CountSpT_lens(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb") #2
-
-CountSpTAK_lens(genus = "Osphranter", species = "rufus", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb") #10
-CountSpTAK_lens(genus = "Macropus", species = "rufus", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb") #285
-CountSpTAK_lens(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb") #295
-CountSpTAK_lens(genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb") #2
-CountSpTAK_lens(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb") #16
-
-woylie_lens <- FetchSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
-woylie_lens_T <- FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
-woylie_lens_T_scopus <- FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = "442b9048417ef20cf680a0ae26ee4d86")
-woylie_lens_T_wos <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
-
-CountSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
-CountSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
-Allindices(woylie_lens_T_wos, genus = "Bettongia", species = "penicillata")
-st <- SourceType(woylie_lens_T)
-st <- as.data.frame(t(st))
-names(st) <- as.matrix(st[1,])
-st_2 <- st[-1,]
 
 ```
 

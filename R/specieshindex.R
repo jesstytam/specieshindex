@@ -275,9 +275,6 @@ FetchSpT <- function(genus, species, synonyms, additionalkeywords, language = 0,
   }
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
-  #showing final list of records
-  retrieved <- dim(datalist)[1] #check the number
-  print(paste(retrieved, "records successfully fetched."))
   return(datalist)
 }
 
@@ -450,9 +447,6 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
   }
   returned <- dim(datalist)[1]
   print(paste(returned, "records retrived in total."))
-  #showing final list of records
-  retrieved <- dim(datalist)[1] #check the number
-  print(paste(retrieved, "records successfully fetched."))
   return(datalist)
 }
 
