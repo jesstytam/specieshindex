@@ -1317,7 +1317,7 @@ CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus ruf
 CountSpTAK_wos(genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*") #1
 CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*") #11
 
-woylie_wosTAK <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
+FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
 Allindices(woylie_wosT, genus = "Bettongia", species = "penicillata")
 
 

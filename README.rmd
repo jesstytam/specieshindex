@@ -69,7 +69,7 @@ You won't have to set your ID again until your next session. You are required to
 
 ### :mega: Connecting to Lens
 
-An individual token is required to extract data from Lens. You will only be able to select the `Free Frial Scholarly API Plan` if your institution is not a subscriber of Lens. The token will only be valid for 14 days, which can be renewed afterwards.
+An individual token is required to extract data from Lens. You will not be able to use the Count and Fetch functions if your institution is not a subscriber of Lens. 
 
 1. Create an account with Lens.
 2. Go to https://www.lens.org/lens/user/subscriptions#scholar and select your desired Scholarly API.
@@ -215,7 +215,7 @@ ggplot(CombineSp, aes(x = species,
 ## :paw_prints: Roadmap
 - Web of Science
   - [x] Count functions working
-  - [x] Fetch functions working
+  - [ ] Fetch functions working
   - [x] All indices working
 - BASE
   - [ ] Count functions working

@@ -94,10 +94,9 @@ accessed via the IP address.
 
 ### :mega: Connecting to Lens
 
-An individual token is required to extract data from Lens. You will only
-be able to select the `Free Frial Scholarly API Plan` if your
-institution is not a subscriber of Lens. The token will only be valid
-for 14 days, which can be renewed afterwards.
+An individual token is required to extract data from Lens. You will not
+be able to use the Count and Fetch functions if your institution is not
+a subscriber of Lens.
 
 1.  Create an account with Lens.
 2.  Go to <https://www.lens.org/lens/user/subscriptions#scholar> and
@@ -193,11 +192,11 @@ CombineSp
     ## 2       Setonix_brachyurus  brachyurus         Setonix          242      3427
     ## 3 Ornithorhynchus_anatinus    anatinus Ornithorhynchus          321      6365
     ## 4   Phascolarctos_cinereus    cinereus   Phascolarctos          773     14291
-    ##   journals articles reviews years_publishing  h     m i10 h5
-    ## 1       55      110       3               44 26 0.591  54  6
-    ## 2      107      237       5               67 29 0.433 121  3
-    ## 3      153      308      13               68 41 0.603 177  6
-    ## 4      227      744      29              140 53 0.379 427 12
+    ##   journals years_publishing  h     m i10 h5
+    ## 1       55               44 26 0.591  54  6
+    ## 2      107               67 29 0.433 121  3
+    ## 3      153               68 41 0.603 177  6
+    ## 4      227              140 53 0.379 427 12
 
 Once you are happy with your dataset, you can make some nice plots.
 Using `ggplot2`, we can compare the *h*-index and the total citations.
@@ -268,7 +267,7 @@ ggplot(CombineSp, aes(x = species,
 
   - Web of Science
       - [x] Count functions working
-      - [x] Fetch functions working
+      - [ ] Fetch functions working
       - [x] All indices working
   - BASE
       - [ ] Count functions working
