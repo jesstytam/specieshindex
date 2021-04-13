@@ -1444,7 +1444,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 					  "fields": ["title"]
 				  }
 			  }]
-		  }1
+		  }
 	  },
 	  "size": 1000
   }'))
