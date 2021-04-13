@@ -290,30 +290,6 @@ For example:
 SourceType(Woylie)
 ```
 
-`TotalArt()` counts the number of publications that are articles.
-
-For example:
-
-```{r}
-TotalArt(Woylie)
-```
-
-`TotalRev()` counts the number of publications that are reviews.
-
-For example:
-
-```{r}
-TotalRev(Woylie)
-```
-
-`ARRatio()` calculates the percentage ratio of the number of articles:reviews, and rounds the percentage to 4 significant figures.
-
-For example:
-
-```{r}
-ARRatio(Woylie)
-```
-
 `YearsPublishing()` counts the number of years since the first publication of the species.
 
 For example:

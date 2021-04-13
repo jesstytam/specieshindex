@@ -69,25 +69,19 @@ library(specieshindex)
   + counts the total number of journals
 8. SourceType
   + counts the total number of items for each document type
-9. TotalArt
-  + counts the total number of articles
-10. TotalRev
-  + counts the total number of reviews
-11. ARRatio
-  + calculates article:review ratio
-12. SpHindex
+9. SpHindex
   + calculates h-index
-13. YearsPublishing
+10. YearsPublishing
   + calculates the number of years since the first publication
-14. SpMindex
+11. SpMindex
   + calculates m-index (h-index / total years)
-15. Spi10
+12. Spi10
   + counts the publications with 10+ citations
-16. SpH5
+13. SpH5
   + calculates h-index for the past 5 years
-17. SpHAfterdate
+14. SpHAfterdate
   + calculates h-index with a given time frame
-18. Allindices
+15. Allindices
   + shows a summary of the main indices
 
 
@@ -954,7 +948,11 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token)
                                                 "Content-Type" = "application/json")),
                        body = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords))
   lens_content <- jsonlite::fromJSON(rawToChar(theURL$content))
-  resultCount <- as.numeric(lens_content$total)
+  if (!is.null(lens_content$total)) {
+    resultCount <- as.numeric(lens_content$total)
+  } else {
+    resultCount <- 0
+  }
   return(resultCount)
 }
 ```
@@ -1060,34 +1058,6 @@ SourceType <- function(data) {
 }
 ```
 
-```{r, total articles}
-#this function calculates the total number of articles
-TotalArt <- function(data) {
-  Article <- sum(data$description == "Article") #calculates the number of articles
-  return(Article)
-}
-```
-
-```{r, total reviews}
-#this function calculates the total number of reviews
-TotalRev <- function(data) {
-  Review <- sum(data$description == "Review") #calculates the number of reviews
-  return(Review)
-}
-```
-
-```{r, article:review ratio}
-#this function calculates the ratio of articles:rerviews
-ARRatio <- function(data) {
-  Article <- sum(data$description == "Article") #calculates the number of articles
-  Review <- sum(data$description == "Review") #calculates the number of reviews
-  ArticleRatio <- signif(Article/(Article+Review)*100, digits = 4) #percentage of articles, rounded to 4 sf
-  ReviewRatio <- signif(Review/(Article+Review)*100, digits = 4) #percentage of reviews, rounded to 4 sf
-  Ratio <- paste(ArticleRatio, ":", ReviewRatio) #prints ratio
-  return(Ratio)
-}
-```
-
 ```{r, species h-index}
 #this function calculates the h-index
 SpHindex <- function(data) {
@@ -1179,13 +1149,11 @@ Allindices <- function(data, genus, species) {
     zeroIndex <- data.frame(genus_species = paste0(genus, "_", species),
                             species = paste0(species),
                             genus = paste0(genus),
-                            publications = 0, citations = 0, journals = 0, articles = 0, reviews = 0, years_publishing = NA,
-                            h = 0, m = 0, i10 = 0, h5 = 0)
+                            publications = 0, citations = 0, journals = 0, years_publishing = NA, h = 0, m = 0, i10 = 0, h5 = 0)
     return(zeroIndex)
   } else {
     combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
-                        TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
-                        SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+                        TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
     combine[is.na(combine)] <- 0 #replace NA values with 0
     combine_sourcetype <- cbind(combine, SourceType(data))
     colnames(combine_sourcetype) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles", "reviews",
@@ -1196,8 +1164,6 @@ Allindices <- function(data, genus, species) {
       TotalPub(data), "publications", "\n",
       TotalCite(data), "citations", "\n",
       TotalJournals(data), "journals", "\n",
-      TotalArt(data), "articles", "\n",
-      TotalRev(data), "reviews", "\n",
       YearsPublishing(data), "years of publishing", "\n",
       "h:", SpHindex(data), "\n",
       "m:", SpMindex(data), "\n",
@@ -1418,7 +1384,7 @@ httr::POST(url = url, add_headers(.headers=headers), body = query)
 dat <- POST(url = "https://api.lens.org/scholarly/search",
             add_headers(.headers = c("Authorization" = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb",
                                      "Content-Type" = "application/json")),
-            body = test_query(genus = "Macropus", species = "rufus", additionalkeywords = "conserv*")) #http 400
+            body = create_query_string_T_lens(genus = "Macropus", species = "rufus", additionalkeywords = "conserv*")) #http 400
 rawdata <- jsonlite::fromJSON(rawToChar(dat$content))
 rawdata$total
 

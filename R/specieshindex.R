@@ -690,7 +690,11 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
                                                 "Content-Type" = "application/json")),
                        body = create_query_string_T_lens(genus, species, synonyms, additionalkeywords))
   lens_content <- jsonlite::fromJSON(rawToChar(theURL$content))
-  resultCount <- as.numeric(lens_content$total)
+  if (!is.null(lens_content$total)) {
+    resultCount <- as.numeric(lens_content$total)
+  } else {
+    resultCount <- 0
+  }
   return(resultCount)
 }
 
@@ -742,7 +746,11 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token)
                                                 "Content-Type" = "application/json")),
                        body = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords))
   lens_content <- jsonlite::fromJSON(rawToChar(theURL$content))
-  resultCount <- as.numeric(lens_content$total)
+  if (!is.null(lens_content$total)) {
+    resultCount <- as.numeric(lens_content$total)
+  } else {
+    resultCount <- 0
+  }
   return(resultCount)
 }
 
@@ -954,70 +962,6 @@ SourceType <- function(data) {
 
 
 
-#' This function calculates the total number of articles.
-#'
-#' @title Total Article
-#'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
-#'
-#' @return An integer of the total number of articles.
-#' @export
-#'
-#' @examples
-#' data(Woylie)
-#' TotalArt(Woylie)
-#' 
-TotalArt <- function(data) {
-  Article <- sum(data$description == "Article")
-  return(Article)
-}
-
-
-
-#' This function calculates the total number of reviews.
-#'
-#' @title Total reviews
-#'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
-#'
-#' @return An integer of the total number of reviews.
-#' @export
-#'
-#' @examples
-#' data(Woylie)
-#' TotalRev(Woylie)
-#' 
-TotalRev <- function(data) {
-  Review <- sum(data$description == "Review") 
-  return(Review)
-}
-
-
-
-#' This function calculates the percentage ratio of article:rerview.
-#'
-#' @title Article:Review ratio
-#'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
-#'
-#' @return A character value of the percentage ratio of the number of articles and reviews.
-#' @export
-#'
-#' @examples
-#' data(Woylie)
-#' ARRatio(Woylie)
-#' 
-ARRatio <- function(data) {
-  Article <- sum(data$description == "Article") 
-  Review <- sum(data$description == "Review") 
-  ArticleRatio <- signif(Article/(Article+Review)*100, digits = 4)
-  ReviewRatio <- signif(Review/(Article+Review)*100, digits = 4)
-  Ratio <- paste(ArticleRatio, ":", ReviewRatio)
-  return(Ratio)
-}
-
-
-
 #' The number of years since the first publication in relation to the species.
 #'
 #' @title Years since first publication
@@ -1207,24 +1151,19 @@ Allindices <- function(data, genus, species) {
     zeroIndex <- data.frame(genus_species = paste0(genus, "_", species),
                             species = paste0(species),
                             genus = paste0(genus),
-                            publications = 0, citations = 0, journals = 0, articles = 0, reviews = 0, years_publishing = NA,
-                            h = 0, m = 0, i10 = 0, h5 = 0)
+                            publications = 0, citations = 0, journals = 0, years_publishing = NA, h = 0, m = 0, i10 = 0, h5 = 0)
     return(zeroIndex)
   } else {
     combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
-                        TotalJournals(data),TotalArt(data),TotalRev(data), YearsPublishing(data),
-                        SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+                        TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
   combine[is.na(combine)] <- 0 #replace NA values with 0
-  colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles", "reviews",
-                         "years_publishing", "h", "m", "i10", "h5")
+  colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing", "h", "m", "i10", "h5")
   return(combine)
   }
   cat("\n", genus, species, "\n",
       TotalPub(data), "publications", "\n",
       TotalCite(data), "citations", "\n",
       TotalJournals(data), "journals", "\n",
-      TotalArt(data), "articles", "\n",
-      TotalRev(data), "reviews", "\n",
       YearsPublishing(data), "years of publishing", "\n",
       "h:", SpHindex(data), "\n",
       "m:", SpMindex(data), "\n",
