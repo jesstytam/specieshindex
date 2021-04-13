@@ -57,8 +57,11 @@ To get this package to work, make sure you have the following packages installed
 ```{r, eval=FALSE}
 # Installation from GitHub
 install.packages("rscopus")
+install.packages("wosr")
+install.packages("lens2r")
 install.packages("taxize")
 install.packages("XML")
+install.packages("jsonlite")
 install.packages("httr")
 install.packages("dplyr")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
@@ -74,7 +77,7 @@ You can find the full list of functions here: https://github.com/jessicatytam/sp
 
 Specieshindex package performs two main steps that simplify calculating *h*-indices for different species:
 
-1. Connecting to Scopus and downloading citation data for a given species
+1. Connecting to a literature database and downloading citation data for a given species
 2. Computing various indices (including *h*-index) for a given species
 
 Below, we outline how to perform these steps using our package.
@@ -103,6 +106,26 @@ CountSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
 #Title, abstract, and keywords
 CountSpTAK(genus = "Bettongia", species = "penicillata", APIkey = API)
 ```
+
+## Connecting to Web of Science
+
+No key is need to extract data from Web of Science if you are using this package from your institution's location. You will need to set up your session ID before gaining access to the Web of Science database. Run the following line of code to do so. 
+
+```{r, eval=FALSE}
+sid <- auth(username = NULL, password = NULL)
+```
+
+You won't have to set your ID again until your next session. You are required to be at your institution for this to work since the API is accessed via the IP address.
+
+## Connecting to The Lens
+
+An individual token is required to extract data from Lens. You will only be able to select the `Free Frial Scholarly API Plan` if your institution is not a subscriber of Lens. The token will only be available for 14 days, which can be renewed afterwards.
+
+1. Create an account with Lens.
+2. Go to https://www.lens.org/lens/user/subscriptions#scholar and select your desired Scholarly API.
+3. Request access.
+
+## Other arguments and syntax
 
 ### Additional keywords
 
@@ -140,15 +163,34 @@ If no additional keywords are parsed, the extraction will include all publicatio
 
 ### Synonyms
 
-Some species have had their classification changed in the past, resulting in multiple binomial names and synonyms. Synonyms can be added to the search strings to get the maximum hits. Remember to add **double** quotation marks to the synonyms, otherwise you might run into getting the error `Bad Request (HTTP 400)`.
+Some species have had their classification changed in the past, resulting in multiple binomial names and synonyms. Synonyms can be added to the search strings to get the maximum hits. If you have more than 1 synonym, you can parse a list (the list should be named "synonyms") into the argument.
 
 ```{r, eval=FALSE}
-CountSpT("Osphranter", "rufus", synonyms = '"Macropus rufus"', additionalkeywords = "conserv*", API)
+CountSpT("Osphranter", "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*", API)
 ```
 
-The search string generated with the above code will be TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*).
+### Count and Fetch Syntax
 
-### Extracting citation records
+Multiple databases have been incorporated into `specieshindex`, including Scopus, Web of Science, and Lens. To differentiate between them, the suffix of the Count and Fetch functions have been labeled with the database's name, with Scopus being the exception.
+
+```{r, eval=FALSE}
+#scopus requests
+API <- "your_api_key_from_scopus"
+CountSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
+FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
+
+#web of science requests
+#no tokens or api keys needed if session ID has been set as shown previously
+CountSpT_wos(genus = "Bettongia", species = "penicillata")
+FetchSpT_wos(genus = "Bettongia", species = "penicillata")
+
+#lens requests
+token <- "your_lens_token"
+CountSpT_lens(genus = "Bettongia", species = "penicillata", token = token)
+FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = token)
+```
+
+## Extracting citation records
 
 `CountSpTAK()` should yield more results since it also looked for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data from Scopus. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
 
@@ -196,7 +238,7 @@ FetchSpTAK(genus = "Bettongia", species = "penicillata",
 
 In larger datasets, duplicates may appear, although usually in low numbers. It is up to the user to decide which documents to keep or remove.
 
-#### Adding language as a variable
+### Adding language as a variable (Scopus only)
 
 The default of the parameter `language` is set to 0. To retrieve the language for each document, set `language = 1`. This will create an extra variable called 'language' in the output. Since it adds language as an extra field to the scopus query, it will take longer to download the records as opposed to the default. This will also create a few duplicated records. Again, it is up to the user to decide which documents to exclude afterwards.
 
@@ -206,7 +248,7 @@ For example, if you want to retrieve documents with the language variable, you c
 FetchSpT(genus = "Ailuropoda", species = "melanoleuca", language = 1, APIkey = API)
 ```
 
-#### Possible errors
+### Possible errors
 
 If the error `Bad Request (HTTP 400)` occurs in this step, try connecting to the internet via institutional access, instead of the one at home. This error might be caused by some authorisation issues.
 
@@ -238,6 +280,14 @@ For example:
 
 ```{r}
 TotalJournals(Woylie)
+```
+
+`SourceType` counts the total number of items for each document type.
+
+For example:
+
+```{r}
+SourceType(Woylie)
 ```
 
 `TotalArt()` counts the number of publications that are articles.
@@ -328,7 +378,7 @@ Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 
 For multiple species, `rbind()` can be used to stitch the outputs together, which will be used below.
 
-# Worked examples
+# Worked examples with Scopus
 
 To demonstrate how the specieshindex package could be helpful in the real world, I will be comparing the citations of 4 species of marsupials. They are the woylie (*Bettongia penicillata*), quokka (*Setonix brachyurus*), platypus (*Ornithorhynchus anatinus*), and koala (*Phascolarctos cinereus*). I used `FetchSpTAK()` for all of these datasets. I have included these sets of data in the package but you can also extract the data from Scopus for the most updated records.
 
@@ -492,6 +542,7 @@ Although the development of this package is still in its infancy, it is nonethel
 
 # Acknowledgements
 
-I acknowledge the contributions of the authors of the dependency packages: `rscopus`, `taxize`, `XML`, `httr`, `dplyr`.
+I acknowledge the contributions of the authors of the dependency packages: `rscopus`, `wosr`, `lens2r`, `taxize`, `XML`, `jsonlite`, `httr`, `dplyr`.
+`specieshindex` is enabled by Scopus, Web of Science, and [The Lens](https://www.lens.org/).
 
 # References

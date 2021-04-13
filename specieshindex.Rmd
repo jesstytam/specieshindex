@@ -67,25 +67,27 @@ library(specieshindex)
   + counts the total number of citations
 7. TotalJournals
   + counts the total number of journals
-8. TotalArt
+8. SourceType
+  + counts the total number of items for each document type
+9. TotalArt
   + counts the total number of articles
-9. TotalRev
+10. TotalRev
   + counts the total number of reviews
-10. ARRatio
+11. ARRatio
   + calculates article:review ratio
-11. SpHindex
+12. SpHindex
   + calculates h-index
-12. YearsPublishing
+13. YearsPublishing
   + calculates the number of years since the first publication
-13. SpMindex
+14. SpMindex
   + calculates m-index (h-index / total years)
-14. Spi10
+15. Spi10
   + counts the publications with 10+ citations
-15. SpH5
+16. SpH5
   + calculates h-index for the past 5 years
-16. SpHAfterdate
+17. SpHAfterdate
   + calculates h-index with a given time frame
-17. Allindices
+18. Allindices
   + shows a summary of the main indices
 
 

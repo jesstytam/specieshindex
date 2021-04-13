@@ -56,8 +56,8 @@ conserve, conservatory, etc. Find out more about search language
 Some species have had their classification changed in the past,
 resulting in multiple binomial names and synonyms. Synonyms can be added
 to the search strings to get the maximum hits. If you have more than 1
-synonym, you can parse the list (the list should be named “synonyms”)
-into the argument.
+synonym, you can parse a list (the list should be named “synonyms”) into
+the argument.
 
 ### :mega: Connecting to Scopus
 
@@ -91,6 +91,18 @@ sid <- auth(username = NULL, password = NULL)
 You won’t have to set your ID again until your next session. You are
 required to be at your institution for this to work since the API is
 accessed via the IP address.
+
+### :mega: Connecting to Lens
+
+An individual token is required to extract data from Lens. You will only
+be able to select the `Free Frial Scholarly API Plan` if your
+institution is not a subscriber of Lens. The token will only be
+available for 14 days, which can be renewed afterwards.
+
+1.  Create an account with Lens.
+2.  Go to <https://www.lens.org/lens/user/subscriptions#scholar> and
+    select your desired Scholarly API.
+3.  Request access.
 
 ## Examples
 
