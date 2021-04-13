@@ -628,7 +628,7 @@ FetchSpT <- function(genus, species, synonyms, additionalkeywords, language = 0,
   print(paste(returned, "records retrived in total."))
   #showing final list of records
   retrieved <- dim(datalist)[1] #check the number
-  print(paste(retrieved, "unique records successfully fetched."))
+  print(paste(retrieved, "records successfully fetched."))
   return(datalist)
 }
 ```
@@ -774,7 +774,7 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
   print(paste(returned, "records retrived in total."))
   #showing final list of records
   retrieved <- dim(datalist)[1] #check the number
-  print(paste(retrieved, "unique records successfully fetched."))
+  print(paste(retrieved, "records successfully fetched."))
   return(datalist)
 }
 ```
@@ -818,6 +818,9 @@ FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
   names(results)[names(results) == "date"] <- "cover_date"
+  #showing final list of records
+  returned <- nrow(results)
+  print(paste(returned, "records retrived in total."))
   return(results)
 }
 ```
@@ -837,6 +840,9 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
   names(results)[names(results) == "date"] <- "cover_date"
+  #showing final list of records
+  returned <- nrow(results)
+  print(paste(returned, "records retrived in total."))
   return(results)
 }
 ```
@@ -881,6 +887,9 @@ FetchSpT_base <- function(genus, species, synonyms, additionalkeywords) {
   #names(results)[names(results) == "tot_cites"] <- "citations"
   #names(results)[names(results) == "doc_type"] <- "description"
   #names(results)[names(results) == "date"] <- "cover_date"
+  #showing final list of records
+  returned <- nrow(results)
+  print(paste(returned, "records retrived in total."))
   return(results)
 }
 ```
@@ -899,6 +908,9 @@ FetchSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
   #names(results)[names(results) == "tot_cites"] <- "citations"
   #names(results)[names(results) == "doc_type"] <- "description"
   #names(results)[names(results) == "date"] <- "cover_date"
+  #showing final list of records
+  returned <- nrow(results)
+  print(paste(returned, "records retrived in total."))
   return(results)
 }
 ```
@@ -961,7 +973,7 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
   names(results)[names(results) == "scholarly_citations_count"] <- "citations"
   names(results)[names(results) == "source.title"] <- "journal"
   names(results)[names(results) == "publication_type"] <- "description"
-  names(results)[names(results) == "date_published"] <- "cover_date"
+  names(results)[names(results) == "year_published"] <- "cover_date"
   #replacing NA with 0
   for (i in 1:nrow(results)) {
     if (is.na(results$citations[i])) {
@@ -970,6 +982,9 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
   }
   #clean cover_date
   results$cover_date <- substr(results$cover_date, 1, 10)
+  #showing final list of records
+  returned <- nrow(results)
+  print(paste(returned, "records retrived in total."))
   return(results)
 }
 ```
@@ -990,7 +1005,7 @@ FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token)
   names(results)[names(results) == "scholarly_citations_count"] <- "citations"
   names(results)[names(results) == "source.title"] <- "journal"
   names(results)[names(results) == "publication_type"] <- "description"
-  names(results)[names(results) == "date_published"] <- "cover_date"
+  names(results)[names(results) == "year_published"] <- "cover_date"
   #replacing NA with 0
   for (i in 1:nrow(results)) {
     if (is.na(results$citations[i])) {
@@ -999,6 +1014,9 @@ FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token)
   }
   #clean cover_date
   results$cover_date <- substr(results$cover_date, 1, 10)
+  #showing final list of records
+  returned <- nrow(results)
+  print(paste(returned, "records retrived in total."))
   return(results)
 }
 ```
@@ -1026,6 +1044,13 @@ TotalJournals <- function(data) {
   filter <- unique(data$journal) #filters data to pick out each journal
   total <- length(filter) #counts the number of journals
   return(total)
+}
+```
+
+```{r}
+SourceType <- function(data) {
+  source_type <- table(data$description)
+  return(source_type)
 }
 ```
 
@@ -1403,9 +1428,11 @@ CountSpTAK_lens(genus = "Osphranter", species = "rufus", additionalkeywords = "c
 CountSpTAK_lens(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb") #16
 
 woylie_lens <- FetchSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
+woylie_lens_T <- FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
 CountSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
 CountSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
-Allindices(woylie_lens, genus = "Bettongia", species = "penicillata")
+Allindices(woylie_lens_T, genus = "Bettongia", species = "penicillata")
+SourceType(woylie_lens)
 
 ```
 
