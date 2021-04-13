@@ -1,7 +1,7 @@
 ---
 title: "Introduction to specieshindex"
 author: Jessica Tam, Malgorzata (Losia) Lagisz, Shinichi Nakagawa, Will Cornwell
-date: "`r format(Sys.Date(), '%B %d, %Y')`"
+date: "April 13, 2021"
 bibliography: references.bib
 link-citations: true
 output: 
@@ -22,25 +22,14 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
-```{r, include=FALSE}
-devtools::load_all(".")
-```
 
-```{r, include=FALSE}
-library(RefManageR)
-library(ggplot2)
-```
 
-```{r, echo=FALSE, out.width="100%"}
-knitr::include_graphics("../vignettes/Banner.png")
-```
+
+
+
+
+\includegraphics[width=1\linewidth]{../vignettes/Banner} 
 
 There are many ways to gauge research influence. We can simply sum up the number of publications or citations, which is a straight forward way without the need of any complicated mathematical formulas. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the *h*-index, *m*-index, i10 index, h5 index, etc.
 
@@ -54,7 +43,8 @@ With this package, we can create a similar profile for different living organism
 
 To get this package to work, make sure you have the following packages installed.
 
-```{r, eval=FALSE}
+
+```r
 # Installation from GitHub
 install.packages("rscopus")
 install.packages("wosr")
@@ -66,7 +56,8 @@ install.packages("httr")
 install.packages("dplyr")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
 ```
-```{r, eval=FALSE, load-packages, warning=FALSE}
+
+```r
 # Load the library
 library(specieshindex)
 ```
@@ -96,7 +87,8 @@ It is recommend that you run a quick search using functions `CountSpT()` or `Cou
 
 For example, you can run:
 
-```{r, eval=FALSE}
+
+```r
 #API key
 API <- "your_api_key_from_scopus"
 
@@ -111,7 +103,8 @@ CountSpTAK(genus = "Bettongia", species = "penicillata", APIkey = API)
 
 No key is need to extract data from Web of Science if you are using this package from your institution's location. You will need to set up your session ID before gaining access to the Web of Science database. Run the following line of code to do so. 
 
-```{r, eval=FALSE}
+
+```r
 sid <- auth(username = NULL, password = NULL)
 ```
 
@@ -133,7 +126,8 @@ There is an optional parameter `additionalkeywords` that can be included to make
 
 Here are some examples of searches including additional keywords:
 
-```{r, eval=FALSE}
+
+```r
 # Title only
 CountSpT(genus = "Bettongia", species = "penicillata",
          additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", APIkey = API)
@@ -165,15 +159,17 @@ If no additional keywords are parsed, the extraction will include all publicatio
 
 Some species have had their classification changed in the past, resulting in multiple binomial names and synonyms. Synonyms can be added to the search strings to get the maximum hits. If you have more than 1 synonym, you can parse a list (the list should be named "synonyms") into the argument.
 
-```{r, eval=FALSE}
+
+```r
 CountSpT("Osphranter", "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*", API)
 ```
 
-### Count and Fetch Syntax
+### :pencil2: Count and Fetch Syntax
 
 Multiple databases have been incorporated into `specieshindex`, including Scopus, Web of Science, and Lens. To differentiate between them, the suffix of the Count and Fetch functions have been labeled with the database's name, with the exception of Scopus.
 
-```{r, eval=FALSE}
+
+```r
 #scopus requests
 API <- "your_api_key_from_scopus"
 CountSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
@@ -198,7 +194,8 @@ As you may expect, some species have been studied more than the others [@Simko20
 
 To fetch the citation records, you can run:
 
-```{r, eval=FALSE}
+
+```r
 # Title only
 FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
 
@@ -210,7 +207,8 @@ Similar to the Count functions above, Fetch functions also have the argument `ad
 
 For example, you can run:
 
-```{r, eval=FALSE}
+
+```r
 # Title only
 FetchSpT(genus = "Bettongia", species = "penicillata",
          additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", APIkey = API)
@@ -244,7 +242,8 @@ The default of the parameter `language` is set to 0. To retrieve the language fo
 
 For example, if you want to retrieve documents with the language variable, you can run:
 
-```{r, eval=FALSE}
+
+```r
 FetchSpT(genus = "Ailuropoda", species = "melanoleuca", language = 1, APIkey = API)
 ```
 
@@ -262,64 +261,81 @@ These functions do simple calculations with various parameters for the sets of d
 
 For example:
 
-```{r}
+
+```r
 TotalPub(Woylie)
+#> [1] 113
 ```
 
 `TotalCite()` sums up the total citations of all the records from the search.
 
 For example:
 
-```{r}
+
+```r
 TotalCite(Woylie)
+#> [1] 1903
 ```
 
 `TotalJournals()` counts the number of unique journals that the species have appeared in.
 
 For example:
 
-```{r}
+
+```r
 TotalJournals(Woylie)
+#> [1] 55
 ```
 
 `SourceType` counts the total number of items for each document type.
 
 For example:
 
-```{r}
+
+```r
 SourceType(Woylie)
+#>   Article Review
+#> 1     110      3
 ```
 
 `TotalArt()` counts the number of publications that are articles.
 
 For example:
 
-```{r}
+
+```r
 TotalArt(Woylie)
+#> [1] 110
 ```
 
 `TotalRev()` counts the number of publications that are reviews.
 
 For example:
 
-```{r}
+
+```r
 TotalRev(Woylie)
+#> [1] 3
 ```
 
 `ARRatio()` calculates the percentage ratio of the number of articles:reviews, and rounds the percentage to 4 significant figures.
 
 For example:
 
-```{r}
+
+```r
 ARRatio(Woylie)
+#> [1] "97.35 : 2.655"
 ```
 
 `YearsPublishing()` counts the number of years since the first publication of the species.
 
 For example:
 
-```{r}
+
+```r
 YearsPublishing(Woylie)
+#> [1] 44
 ```
 
 ## Statistical indices
@@ -330,40 +346,50 @@ Use `SpHindex()` to compute the *h*-index [@Hirsch200516569] for a given set of 
 
 For example:
 
-```{r}
+
+```r
 SpHindex(Woylie)
+#> [1] 26
 ```
 
 The h5 index computes the *h*-index for the past 5 years.
 
 For example:
 
-```{r, message=FALSE}
+
+```r
 SpH5(Woylie)
+#> [1] 6
 ```
 
 You can calculate *h*-index for publications published after a certain date. To subset the time with a specific lower limit, you can use `SpHAfterdate()`. Make sure the date parameter is in the exact format of yyyy-mm-dd. Using a different format or using slashes or hyphens will return an error.
 
 For example:
 
-```{r}
+
+```r
 SpHAfterdate(Woylie, "2000-01-01")
+#> [1] 20
 ```
 
 The *m*-index is an *h*-index adjusted for the age of publication. The *m*-index is calculated using the `SpMindex()` function, which first computes the *h*-index and then divides it by the number of years of publication activity , i.e. number of years since the oldest publication in the dataset was published: $$m=h\, /\, years~publishing$$
 
 For example:
 
-```{r}
+
+```r
 SpMindex(Woylie)
+#> [1] 0.591
 ```
 
 The i10 index is another variant of the *h*-index, which only takes into account publications with at least 10 citations. The i10 index can be calculated using `Spi10()`, which simply counts the publications that has 10 or more citations.
 
 For example:
 
-```{r}
+
+```r
 Spi10(Woylie)
+#> [1] 54
 ```
 
 ## All indices in one go
@@ -372,8 +398,13 @@ Rather than calling each function to calculate the indices in turn, you can get 
 
 For example:
 
-```{r, warning=FALSE}
+
+```r
 Allindices(Woylie, genus = "Bettongia", species = "penicillata")
+#>           genus_species     species     genus publications citations journals
+#> 1 Bettongia_penicillata penicillata Bettongia          113      1903       55
+#>   articles reviews years_publishing  h     m i10 h5
+#> 1      110       3               44 26 0.591  54  6
 ```
 
 For multiple species, `rbind()` can be used to stitch the outputs together, which will be used below.
@@ -382,11 +413,16 @@ For multiple species, `rbind()` can be used to stitch the outputs together, whic
 
 To demonstrate how the specieshindex package could be helpful in the real world, I will be comparing the citations of 4 species of marsupials. They are the woylie (*Bettongia penicillata*), quokka (*Setonix brachyurus*), platypus (*Ornithorhynchus anatinus*), and koala (*Phascolarctos cinereus*). I used `FetchSpTAK()` for all of these datasets. I have included these sets of data in the package but you can also extract the data from Scopus for the most updated records.
 
-```{r}
+
+```r
 dim(Woylie)
+#> [1] 113  20
 dim(Quokka)
+#> [1] 242  20
 dim(Platypus)
+#> [1] 321  20
 dim(Koala)
+#> [1] 773  20
 ```
 
 As shown here, there were 113 records (publications) for the woylie, 242 records for the quokka, 321 records for the platypus, and 773 records for the koala. They all have a total of 20 variables, e.g. citations, journals, DOI, etc., representing bibliometric information downloaded from Scopus for each publication. I have skipped the steps of fetching the data from Scopus since it had already been demonstrated above.
@@ -395,7 +431,8 @@ As shown here, there were 113 records (publications) for the woylie, 242 records
 
 Next, we calculate research productivity and influence indices using the `Allindices()` function:
 
-```{r, warning=FALSE}
+
+```r
 W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
 Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
 P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
@@ -404,16 +441,28 @@ K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
 
 If you want to compare and analyse them against each other, you can use the function `rbind()` to combine indices for all four species into a single dataframe:
 
-```{r}
+
+```r
 CombineSp <- rbind(W, Q, P, K) #combining the citation records
 CombineSp
+#>              genus_species     species           genus publications citations
+#> 1    Bettongia_penicillata penicillata       Bettongia          113      1903
+#> 2       Setonix_brachyurus  brachyurus         Setonix          242      3427
+#> 3 Ornithorhynchus_anatinus    anatinus Ornithorhynchus          321      6365
+#> 4   Phascolarctos_cinereus    cinereus   Phascolarctos          773     14291
+#>   journals articles reviews years_publishing  h     m i10 h5
+#> 1       55      110       3               44 26 0.591  54  6
+#> 2      107      237       5               67 29 0.433 121  3
+#> 3      153      308      13               68 41 0.603 177  6
+#> 4      227      744      29              140 53 0.379 427 12
 ```
 
 After preparing the data, we are ready to make some plots. For example, using the package `ggplot2`, we can plot the h-index and m-index. When comparing the indices, it is important to remember that their scales may differ drastically. Therefore, putting the variables in the same plot may generate plots that do not make a lot of sense.
 
 We first plot the h-index:
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+
+```r
 # h-index
 library(ggplot2)
 ggplot(CombineSp, aes(x = species)) +
@@ -439,10 +488,15 @@ ggplot(CombineSp, aes(x = species)) +
         legend.position = "none")
 ```
 
+
+
+\begin{center}\includegraphics{/tmp/RtmpFybH7u/preview-14ed4f4176db.dir/vignette_files/figure-latex/unnamed-chunk-31-1} \end{center}
+
 \
 We can also plot the total citations counts for comparison, since citations is an important factor in contributing to h-index.
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+
+```r
 # Total citations
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = citations,
@@ -467,12 +521,17 @@ ggplot(CombineSp, aes(x = species)) +
         legend.position = "none")
 ```
 
+
+
+\begin{center}\includegraphics{/tmp/RtmpFybH7u/preview-14ed4f4176db.dir/vignette_files/figure-latex/unnamed-chunk-32-1} \end{center}
+
 \
 It seems like the h-index values are quite consistent with the total numbers of citations, i.e. the more the citations in total, the higher the h-index score. Therefore, the woylie, with the lowest number of citations has the lowest *h*-index. On the other hand, the koala, with the highest number of citations has the highest h-index.
 
 We next plot the m-index to see how it differs from the h-index. Recalling that m-index is calculated by dividing the h-index by the number of years of publication activity ($m=h/years~publishing$), let us have a closer inspection at both the m-index:
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+
+```r
 # m-index
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = m,
@@ -497,10 +556,15 @@ ggplot(CombineSp, aes(x = species)) +
         legend.position = "none")
 ```
 
+
+
+\begin{center}\includegraphics{/tmp/RtmpFybH7u/preview-14ed4f4176db.dir/vignette_files/figure-latex/unnamed-chunk-33-1} \end{center}
+
 \
 We should also have a look at the related variable years_publishing (number of years since first publication for a given species).
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
+
+```r
 # Years publishing
 ggplot(CombineSp, aes(x = species)) +
   geom_point(aes(y = years_publishing,
@@ -524,6 +588,10 @@ ggplot(CombineSp, aes(x = species)) +
         panel.grid.minor = element_blank(),
         legend.position = "none") 
 ```
+
+
+
+\begin{center}\includegraphics{/tmp/RtmpFybH7u/preview-14ed4f4176db.dir/vignette_files/figure-latex/unnamed-chunk-34-1} \end{center}
 
 \
 In order to understand what yields a high *m*-index score, we should recall that the *m*-index is a ratio. A high *m*-index can be achieved by combination of a higher *h*-index and a lower `years_publishing` value. This explains why koala publications have a relatively low *m*-index, albeit highest *h*-index. Research on koalas has been produced for over 3 times longer than that on the woylie. Although the *h*-index of woylie publications was half of that of the koala, it had only been in the scientific scene for a few decades. Comparing the quokka to the platypus, we can see that their publications have both been around for a similar duration of time. 66 years for the quokka and 67 years for the platypus respectively. Since the platypus has a higher h-index than the quokka, this is thus consistent with the higher *m*-index score here.

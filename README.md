@@ -96,8 +96,8 @@ accessed via the IP address.
 
 An individual token is required to extract data from Lens. You will only
 be able to select the `Free Frial Scholarly API Plan` if your
-institution is not a subscriber of Lens. The token will only be
-available for 14 days, which can be renewed afterwards.
+institution is not a subscriber of Lens. The token will only be valid
+for 14 days, which can be renewed afterwards.
 
 1.  Create an account with Lens.
 2.  Go to <https://www.lens.org/lens/user/subscriptions#scholar> and
@@ -107,6 +107,30 @@ available for 14 days, which can be renewed afterwards.
 ## Examples
 
 Here is a quick demonstration of how the package works.
+
+### :pencil2: Count and Fetch Syntax
+
+Multiple databases have been incorporated into `specieshindex`,
+including Scopus, Web of Science, and Lens. To differentiate between
+them, the suffix of the Count and Fetch functions have been labeled with
+the database’s name, with the exception of Scopus.
+
+``` r
+#scopus requests
+API <- "your_api_key_from_scopus"
+CountSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
+FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
+
+#web of science requests
+#no tokens or api keys needed if session ID has been set as shown previously
+CountSpT_wos(genus = "Bettongia", species = "penicillata")
+FetchSpT_wos(genus = "Bettongia", species = "penicillata")
+
+#lens requests
+token <- "your_lens_token"
+CountSpT_lens(genus = "Bettongia", species = "penicillata", token = token)
+FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = token)
+```
 
 ### :abacus: Counting citation records
 
@@ -204,7 +228,7 @@ ggplot(CombineSp, aes(x = species,
         legend.position = "none")
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
 **Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
 
@@ -234,7 +258,7 @@ ggplot(CombineSp, aes(x = species,
         legend.position = "none")
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
 
 **Figure 2.** The *m*-index of the Woylie, Quokka, Platypus, and Koala.
 

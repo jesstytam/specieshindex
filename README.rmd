@@ -69,7 +69,7 @@ You won't have to set your ID again until your next session. You are required to
 
 ### :mega: Connecting to Lens
 
-An individual token is required to extract data from Lens. You will only be able to select the `Free Frial Scholarly API Plan` if your institution is not a subscriber of Lens. The token will only be available for 14 days, which can be renewed afterwards.
+An individual token is required to extract data from Lens. You will only be able to select the `Free Frial Scholarly API Plan` if your institution is not a subscriber of Lens. The token will only be valid for 14 days, which can be renewed afterwards.
 
 1. Create an account with Lens.
 2. Go to https://www.lens.org/lens/user/subscriptions#scholar and select your desired Scholarly API.
@@ -81,6 +81,27 @@ Here is a quick demonstration of how the package works.
 
 ```{r, include=FALSE}
 devtools::load_all(".")
+```
+
+### :pencil2: Count and Fetch Syntax
+
+Multiple databases have been incorporated into `specieshindex`, including Scopus, Web of Science, and Lens. To differentiate between them, the suffix of the Count and Fetch functions have been labeled with the database's name, with the exception of Scopus.
+
+```{r, eval=FALSE}
+#scopus requests
+API <- "your_api_key_from_scopus"
+CountSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
+FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
+
+#web of science requests
+#no tokens or api keys needed if session ID has been set as shown previously
+CountSpT_wos(genus = "Bettongia", species = "penicillata")
+FetchSpT_wos(genus = "Bettongia", species = "penicillata")
+
+#lens requests
+token <- "your_lens_token"
+CountSpT_lens(genus = "Bettongia", species = "penicillata", token = token)
+FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = token)
 ```
 
 ### :abacus: Counting citation records
