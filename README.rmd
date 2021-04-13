@@ -92,7 +92,7 @@ CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protec
 #search string: TITLE-ABS-KEY("Phascolarctos cinereus" AND (consrv* OR protect* OR reintrod* OR restor*))
 
 # Example including synonyms
-CountSpT("Osphranter", "rufus", synonyms = '"Macropus rufus"', additionalkeywords = "conserv*", APIkey = API)
+CountSpT("Osphranter", "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*", APIkey = API)
 #search string: TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*)
 ```
 
@@ -195,4 +195,8 @@ ggplot(CombineSp, aes(x = species,
 - Lens
   - [x] Count functions working
   - [x] Fetch functions working
-  - [ ] All indices working
+  - [x] All indices working
+  
+## :rocket: Acknowledgements
+`specieshindex` is enabled by Scopus, Web of Science, and [The Lens](https://www.lens.org/).
+<iframe src="https://lens.org/lens/embed/attribution" scrolling="no" height="30px" width="100%"></iframe>

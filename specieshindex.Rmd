@@ -99,19 +99,19 @@ create_query_string_T <- function(genus, species, synonyms, additionalkeywords){
     return(paste0('TITLE("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TITLE("', genus, ' ', species, '" OR ', synonyms[1])
+    temp_string <- paste0('TITLE("', genus, ' ', species, '" OR "', synonyms[1], '"')
     if (length(synonyms)==1) {
       return(paste0(temp_string, ')'))
     }
     else {
       for (i in 2:length(synonyms)){
-        temp_string <- paste0(temp_string, ' OR ', synonyms[i])
+        temp_string <- paste0(temp_string, ' OR "', synonyms[i], '"')
       }
       return(paste0(temp_string, ')'))
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TITLE(("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
+    return(paste0('TITLE(("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
   } 
 }
 ```
@@ -125,19 +125,19 @@ create_query_string_TAK <- function(genus, species, synonyms, additionalkeywords
     return(paste0('TITLE-ABS-KEY("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TITLE-ABS-KEY("', genus, ' ', species, '" OR ', synonyms[1])
+    temp_string <- paste0('TITLE-ABS-KEY("', genus, ' ', species, '" OR "', synonyms[1], '"')
     if (length(synonyms)==1) {
       return(paste0(temp_string, ')'))
     }
     else {
       for (i in 2:length(synonyms)){
-         temp_string <- paste0(temp_string, ' OR ', synonyms[i])
+         temp_string <- paste0(temp_string, ' OR "', synonyms[i], '"')
       }
       return(paste0(temp_string, ')'))
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TITLE-ABS-KEY(("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
+    return(paste0('TITLE-ABS-KEY(("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
   } 
 }
 ```
@@ -151,19 +151,19 @@ create_query_string_T_wos <- function(genus, species, synonyms, additionalkeywor
     return(paste0('TI = ("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TI = ("', genus, ' ', species, '" OR ', synonyms[1], ')')
+    temp_string <- paste0('TI = ("', genus, ' ', species, '" OR "', synonyms[1], '")')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
     }
     else {
       for (i in 2:length(synonyms)){
-        temp_string <- paste0('TI = ("', genus, ' ', species, '" OR ', synonyms[i], ')')
+        temp_string <- paste0('TI = ("', genus, ' ', species, '" OR "', synonyms[i], '")')
       }
       return(paste0(temp_string))
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TI = (("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
+    return(paste0('TI = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
   } 
 }
 ```
@@ -181,25 +181,25 @@ create_query_string_TAK_wos <- function(genus, species, synonyms, additionalkeyw
                   ' OR AK = ("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TI = ("', genus, ' ', species, '" OR ', synonyms[1], ')',
-                          ' OR AB = ("', genus, ' ', species, '" OR ', synonyms[1], ')',
-                          ' OR AK = ("', genus, ' ', species, '" OR ', synonyms[1], ')')
+    temp_string <- paste0('TI = ("', genus, ' ', species, '" OR "', synonyms[1], '")',
+                          ' OR AB = ("', genus, ' ', species, '" OR "', synonyms[1], '")',
+                          ' OR AK = ("', genus, ' ', species, '" OR "', synonyms[1], '")')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
     }
     else {
       for (i in 2:length(synonyms)){
-        temp_string <- paste0('TI = ("', genus, ' ', species, '" OR ', synonyms[i], ')',
-                              ' OR AB = ("', genus, ' ', species, '" OR ', synonyms[i], ')',
-                              ' OR AK = ("', genus, ' ', species, '" OR ', synonyms[i], ')')
+        temp_string <- paste0('TI = ("', genus, ' ', species, '" OR "', synonyms[i], '")',
+                              ' OR AB = ("', genus, ' ', species, '" OR "', synonyms[i], '")',
+                              ' OR AK = ("', genus, ' ', species, '" OR "', synonyms[i], '")')
       }
       return(paste0(temp_string))
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TI = (("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')',
-                  ' OR AB = (("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')',
-                  ' OR AK = (("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
+    return(paste0('TI = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')',
+                  ' OR AB = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')',
+                  ' OR AK = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
   } 
 }
 ```
@@ -1053,6 +1053,7 @@ SourceType <- function(data) {
   source_type_transpose <- as.data.frame(t(source_type))
   names(source_type_transpose) <- as.matrix(source_type_transpose[1,])
   source_type_transpose <- source_type_transpose[-1,]
+  row.names(source_type_transpose) <- NULL
   return(source_type_transpose)
 }
 ```
@@ -1186,7 +1187,7 @@ Allindices <- function(data, genus, species) {
     combine[is.na(combine)] <- 0 #replace NA values with 0
     combine_sourcetype <- cbind(combine, SourceType(data))
     colnames(combine_sourcetype) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles", "reviews",
-                           "years_publishing", "h", "m", "i10", "h5")
+                           "years_publishing", "h", "m", "i10", "h5", names(SourceType(data)))
     return(combine_sourcetype)
   }
   cat("\n", genus, species, "\n",
@@ -1433,9 +1434,12 @@ CountSpTAK_lens(genus = "Osphranter", species = "rufus", synonyms = "Macropus ru
 
 woylie_lens <- FetchSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
 woylie_lens_T <- FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
+woylie_lens_T_scopus <- FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = "442b9048417ef20cf680a0ae26ee4d86")
+woylie_lens_T_wos <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
+
 CountSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
 CountSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
-Allindices(woylie_lens_T, genus = "Bettongia", species = "penicillata")
+Allindices(woylie_lens_T_wos, genus = "Bettongia", species = "penicillata")
 st <- SourceType(woylie_lens_T)
 st <- as.data.frame(t(st))
 names(st) <- as.matrix(st[1,])
