@@ -64,6 +64,7 @@ install.packages("XML")
 install.packages("jsonlite")
 install.packages("httr")
 install.packages("dplyr")
+install.packages("data.table")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
 ```
 ```{r, eval=FALSE, load-packages, warning=FALSE}
@@ -518,7 +519,7 @@ Although the development of this package is still in its infancy, it is nonethel
 
 # Acknowledgements
 
-I acknowledge the contributions of the authors of the dependency packages: `rscopus`, `wosr`, `lens2r`, `taxize`, `XML`, `jsonlite`, `httr`, `dplyr`.
+I acknowledge the contributions of the authors of the dependency packages: `rscopus`, `wosr`, `lens2r`, `taxize`, `XML`, `jsonlite`, `httr`, `dplyr`, `data.table`.
 `specieshindex` is enabled by Scopus, Web of Science, and [The Lens](https://www.lens.org/).
 
 # References

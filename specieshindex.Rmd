@@ -9,11 +9,11 @@ output:
 
 ```{r, setup}
 pacman::p_load(tidyverse,
-               data.table,
                rscopus,
                wosr,
                rbace,
                lens2r,
+               data.table,
                httr,
                XML,
                jsonlite,
@@ -1317,10 +1317,16 @@ CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus ruf
 CountSpTAK_wos(genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*") #1
 CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*") #11
 
-FetchSpT_wos(genus = "Bettongia", species = "penicillata")
-FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
+test <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
+CountSpT_wos(genus = "Bettongia", species = "penicillata")
+test_TAK <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
 Allindices(woylie_wosT, genus = "Bettongia", species = "penicillata")
 
+data.table::setDT(test)[, lapply(.SD, function(x) x[!is.na(x)][1L], by = ut)]
+test_lapply <- data.frame(lapply(test, function(x) x[!is.na(x)]))
+test[!is.na(test)]
+
+setDT(test)[, name:= name[!is.na(name)][1L], by = ut]
 
 woylie_lens <- FetchSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
 woylie_lens_T <- FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
@@ -1332,7 +1338,7 @@ CountSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V
 Allindices(woylie_lens_T_wos, genus = "Bettongia", species = "penicillata")
 
 
-
+#BASE tests
 
 base_test <- bs_search(query = "dctitle:Bettongia penicillata", hits = 125) #108
 base_test <- bs_search(query = 'dctitle:"Bettongia penicillata"', hits = 125) #99

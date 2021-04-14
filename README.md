@@ -25,8 +25,10 @@ install.packages("wosr")
 install.packages("lens2r")
 install.packages("taxize")
 install.packages("XML")
+install.packages("jsonlite")
 install.packages("httr")
 install.packages("dplyr")
+install.packages("data.table")
 devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
 
 #Load the library
