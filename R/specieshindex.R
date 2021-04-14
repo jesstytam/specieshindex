@@ -972,7 +972,7 @@ SourceType <- function(data) {
 YearsPublishing <- function(data) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
   as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year) 
-  years_publishing <- as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year) 
+  years_publishing <- as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year, na.rm = TRUE) 
   return(years_publishing)
 }
 
@@ -1036,7 +1036,7 @@ SpMindex <- function(data) {
     }
   }
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
-  years_publishing <- as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year) 
+  years_publishing <- as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year, na.rm = TRUE) 
   Mindex <- round(Hindex/years_publishing, digits = 3)
   return(Mindex)
 }
@@ -1149,10 +1149,12 @@ Allindices <- function(data, genus, species) {
     return(zeroIndex)
   } else {
     combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
-                        TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
-  combine[is.na(combine)] <- 0 #replace NA values with 0
-  colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing", "h", "m", "i10", "h5")
-  return(combine)
+                          TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+    combine[is.na(combine)] <- 0 #replace NA values with 0
+    combine_sourcetype <- cbind(combine, SourceType(data))
+    colnames(combine_sourcetype) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing",
+                                      "h", "m", "i10", "h5", names(SourceType(data)))
+    return(combine_sourcetype)
   }
   cat("\n", genus, species, "\n",
       TotalPub(data), "publications", "\n",
@@ -1162,7 +1164,7 @@ Allindices <- function(data, genus, species) {
       "h:", SpHindex(data), "\n",
       "m:", SpMindex(data), "\n",
       "i10:", Spi10(data), "\n",
-      "h5:", SpH5(data))
+      "h5:", SpH5(data), "\n")
 }
 
 

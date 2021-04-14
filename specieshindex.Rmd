@@ -967,7 +967,7 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
   names(results)[names(results) == "scholarly_citations_count"] <- "citations"
   names(results)[names(results) == "source.title"] <- "journal"
   names(results)[names(results) == "publication_type"] <- "description"
-  names(results)[names(results) == "year_published"] <- "cover_date"
+  names(results)[names(results) == "date_published"] <- "cover_date"
   #replacing NA with 0
   for (i in 1:nrow(results)) {
     if (is.na(results$citations[i])) {
@@ -1072,7 +1072,7 @@ SpHindex <- function(data) {
 YearsPublishing <- function(data) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
   as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year) #time since first publication in years
-  years_publishing <- as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year) #time since first publication in years
+  years_publishing <- as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year, na.rm = TRUE) #time since first publication in years
   return(years_publishing)
 }
 ```
@@ -1090,7 +1090,7 @@ SpMindex <- function(data) {
     }
   }
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
-  years_publishing <- as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year) #time since first publication in years
+  years_publishing <- as.numeric(substr(Sys.Date(), 1, 4)) - min(data$year, na.rm = TRUE) #time since first publication in years
   Mindex <- round(Hindex/years_publishing, digits = 3) #round to 3 decimal places
   return(Mindex)
 }
@@ -1147,11 +1147,11 @@ Allindices <- function(data, genus, species) {
     return(zeroIndex)
   } else {
     combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
-                        TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+                          TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
     combine[is.na(combine)] <- 0 #replace NA values with 0
     combine_sourcetype <- cbind(combine, SourceType(data))
-    colnames(combine_sourcetype) <- c("genus_species", "species", "genus","publications", "citations", "journals", "articles", "reviews",
-                           "years_publishing", "h", "m", "i10", "h5", names(SourceType(data)))
+    colnames(combine_sourcetype) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing",
+                                      "h", "m", "i10", "h5", names(SourceType(data)))
     return(combine_sourcetype)
   }
   cat("\n", genus, species, "\n",
@@ -1162,7 +1162,7 @@ Allindices <- function(data, genus, species) {
       "h:", SpHindex(data), "\n",
       "m:", SpMindex(data), "\n",
       "i10:", Spi10(data), "\n",
-      "h5:", SpH5(data))
+      "h5:", SpH5(data), "\n")
 }
 ```
 
@@ -1322,20 +1322,14 @@ CountSpT_wos(genus = "Bettongia", species = "penicillata")
 test_TAK <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
 Allindices(woylie_wosT, genus = "Bettongia", species = "penicillata")
 
-data.table::setDT(test)[, lapply(.SD, function(x) x[!is.na(x)][1L], by = ut)]
-test_lapply <- data.frame(lapply(test, function(x) x[!is.na(x)]))
-test[!is.na(test)]
-
-setDT(test)[, name:= name[!is.na(name)][1L], by = ut]
 
 woylie_lens <- FetchSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
-woylie_lens_T <- FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
+woylie_lens_T_lens <- FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
 woylie_lens_T_scopus <- FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = "442b9048417ef20cf680a0ae26ee4d86")
 woylie_lens_T_wos <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
 
-CountSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
-CountSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
-Allindices(woylie_lens_T_wos, genus = "Bettongia", species = "penicillata")
+Allindices(woylie_lens_T_scopus, genus = "Bettongia", species = "penicillata")
+Allindices(woylie_lens_T_lens, genus = "Bettongia", species = "penicillata")
 
 
 #BASE tests
