@@ -150,7 +150,7 @@ Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
 P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
 K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
 
-CombineSp <- rbind(W, Q, P, K) #combining the citation records
+CombineSp <- dplyr::bind_rows(W, Q, P, K) #combining the citation records
 CombineSp
 ```
 

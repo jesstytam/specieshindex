@@ -185,7 +185,7 @@ Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
 P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
 K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
 
-CombineSp <- rbind(W, Q, P, K) #combining the citation records
+CombineSp <- dplyr::bind_rows(W, Q, P, K) #combining the citation records
 CombineSp
 ```
 
@@ -194,11 +194,11 @@ CombineSp
     ## 2       Setonix_brachyurus  brachyurus         Setonix          242      3427
     ## 3 Ornithorhynchus_anatinus    anatinus Ornithorhynchus          321      6365
     ## 4   Phascolarctos_cinereus    cinereus   Phascolarctos          773     14291
-    ##   journals years_publishing  h     m i10 h5
-    ## 1       55               44 26 0.591  54  6
-    ## 2      107               67 29 0.433 121  3
-    ## 3      153               68 41 0.603 177  6
-    ## 4      227              140 53 0.379 427 12
+    ##   journals years_publishing  h     m i10 h5 Article Review
+    ## 1       55               44 26 0.591  54  6     110      3
+    ## 2      107               67 29 0.433 121  3     237      5
+    ## 3      153               68 41 0.603 177  6     308     13
+    ## 4      227              140 53 0.379 427 12     744     29
 
 Once you are happy with your dataset, you can make some nice plots.
 Using `ggplot2`, we can compare the *h*-index and the total citations.

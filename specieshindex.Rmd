@@ -1328,8 +1328,9 @@ woylie_lens_T_lens <- FetchSpT_lens(genus = "Bettongia", species = "penicillata"
 woylie_lens_T_scopus <- FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = "442b9048417ef20cf680a0ae26ee4d86")
 woylie_lens_T_wos <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
 
-Allindices(woylie_lens_T_scopus, genus = "Bettongia", species = "penicillata")
-Allindices(woylie_lens_T_lens, genus = "Bettongia", species = "penicillata")
+a <- Allindices(woylie_lens_T_scopus, genus = "Bettongia", species = "penicillata")
+b <- Allindices(woylie_lens_T_lens, genus = "Bettongia", species = "penicillata")
+bind_rows(a, b)
 
 
 #BASE tests

@@ -89,12 +89,6 @@ Below, we outline how to perform these steps using our package.
 
 Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise, the functions will not run (and is in fact illegal to download the data). You can register your key [here](https://dev.elsevier.com/). Use your API key as the function parameter "myAPI".
 
-The searches in Scopus are performed using species Latin name. The relevant functions take two parts of a Latin binominal species name as their main parameters, e.g. "*Bettongia*", "*penicillata*”. Make sure you are using binomial names instead of common names as required by the code.
-
-We have implemented functions that check the available number of relevant records (Count) and functions that download these records from Scopus (Fetch) for a given species. Count and Fetch functions have two versions, with suffixes T and TAK, respectively. In these functions, the suffix ‘T’ is for title and ‘TAK’ is for title+abstract+keywords. These terms are used to indicate where in the Scopus records you want your search terms to be found in. While ‘T’ only finds the publications with the binomial species name in the title, ‘TAK’ will find records with the name in title, abstract or keywords. 
-
-It is recommend that you run a quick search using functions `CountSpT()` or `CountSpTAK()` before actually fetching the records since this can be a tedious process. Both functions give a search count of the number of records found on the Scopus database.
-
 For example, you can run:
 
 ```{r, eval=FALSE}
@@ -172,7 +166,13 @@ CountSpT("Osphranter", "rufus", synonyms = "Macropus rufus", additionalkeywords 
 
 ### Count and Fetch Syntax
 
-Multiple databases have been incorporated into `specieshindex`, including Scopus, Web of Science, and Lens. To differentiate between them, the suffix of the Count and Fetch functions have been labeled with the database's name, with the exception of Scopus.
+The searches are performed using species Latin name. The relevant functions take two parts of a Latin binominal species name as their main parameters, e.g. "*Bettongia*", "*penicillata*”. Make sure you are using binomial names instead of common names as required by the code.
+
+We have implemented functions that check the available number of relevant records (Count) and functions that download these records (Fetch) for a given species. Count and Fetch functions have two versions, with suffixes T and TAK, respectively. In these functions, the suffix ‘T’ is for title and ‘TAK’ is for title, abstract, or keywords. These terms are used to indicate where in the records you want your search terms to be found in. While ‘T’ only finds the publications with the binomial species name in the title, ‘TAK’ will find records with the name in title, abstract or keywords. 
+
+It is recommend that you run a quick search using functions `CountSpT()` or `CountSpTAK()` before actually fetching the records since this can be a tedious process. Both functions give a search count of the number of records found on the databases.
+
+`specieshindex` supports multiple databases, including Scopus, Web of Science, and Lens. To differentiate between them, the suffix of the Count and Fetch functions have been labeled with the database's name, with the exception of Scopus.
 
 ```{r, eval=FALSE}
 #scopus requests
@@ -193,9 +193,9 @@ FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = token)
 
 ## Extracting citation records
 
-`CountSpTAK()` should yield more results since it also looked for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data from Scopus. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
+`CountSpTAK()` should yield more results since it also looked for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
 
-As you may expect, some species have been studied more than the others [@Simko2015; @Krause2017313], resulting in more publications. Therefore, if there are more than a few thousand citation records found on Scopus, it will take a considerably longer time to download them all, unless you are using a computer with high processing power and fast internet connection.
+As you may expect, some species have been studied more than the others [@Simko2015; @Krause2017313], resulting in more publications. Therefore, if there are more than a few thousand citation records found, it will take a considerably longer time to download them all, unless you are using a computer with high processing power and fast internet connection.
 
 To fetch the citation records, you can run:
 
@@ -241,7 +241,7 @@ In larger datasets, duplicates may appear, although usually in low numbers. It i
 
 ### Adding language as a variable (Scopus only)
 
-The default of the parameter `language` is set to 0. To retrieve the language for each document, set `language = 1`. This will create an extra variable called 'language' in the output. Since it adds language as an extra field to the scopus query, it will take longer to download the records as opposed to the default. This will also create a few duplicated records. Again, it is up to the user to decide which documents to exclude afterwards.
+The default of the parameter `language` is set to 0. To retrieve the language for each document, set `language = 1`. This will create an extra variable called 'language' in the output. Since it adds language as an extra field to the Scopus query, it will take longer to download the records as opposed to the default. This will also create a few duplicated records. Again, it is up to the user to decide which documents to exclude afterwards.
 
 For example, if you want to retrieve documents with the language variable, you can run:
 
@@ -382,7 +382,7 @@ K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
 If you want to compare and analyse them against each other, you can use the function `rbind()` to combine indices for all four species into a single dataframe:
 
 ```{r}
-CombineSp <- rbind(W, Q, P, K) #combining the citation records
+CombineSp <- dplyr::bind_rows(W, Q, P, K) #combining the citation records
 CombineSp
 ```
 
@@ -511,7 +511,7 @@ Currently, the input option for search requests is limited to species Latin name
 
 Another limitation is that only species-level searches using binomial names are enabled at the moment. This is because of homonymous [@10.3897/zookeys.550.9546] genus names between some plant and animal taxa. For example, the genus *Prunella* represents both a taxon of herbaceous plants and passerines. Additional parameters will have to be added to identify the exact taxon in question.
 
-Finally, requests must be sent via a subscriber's internet provider. This include universities and individuals who have paid for annual Scopus subscription. This is easily addressed by connecting to your institution's network. Hence, it might not work at all if you are working from home. The error `Bad Request (HTTP 400)` will be returned in this case.
+Finally, access to databases depends on location and whether or not your institution is a subscriber of said database. Scopus requests must be sent via a subscriber's internet provider. This include universities and individuals who have paid for annual Scopus subscription. This is easily addressed by connecting to your institution's network. Hence, it might not work at all if you are working from home. The error `Bad Request (HTTP 400)` will be returned in this case. Web of Science requests must be sent from the IP address of your institution, else the user is required to register for an account. Lens requests can only be made by users who's institution is a subscriber.
 
 # Implications and future uses
 
