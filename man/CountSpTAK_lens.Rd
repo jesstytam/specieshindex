@@ -4,7 +4,14 @@
 \alias{CountSpTAK_lens}
 \title{Search count from Lens - title, abstract and author keywords}
 \usage{
-CountSpTAK_lens(genus, species, synonyms, additionalkeywords, token)
+CountSpTAK_lens(
+  genus,
+  species,
+  synonyms,
+  additionalkeywords,
+  token,
+  size = 50000
+)
 }
 \arguments{
 \item{genus}{Genus classification from the binomial name.}
@@ -16,6 +23,8 @@ CountSpTAK_lens(genus, species, synonyms, additionalkeywords, token)
 \item{additionalkeywords}{Optional search terms.}
 
 \item{token}{Lens token needed to access and download data from their database.}
+
+\item{size}{Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.}
 }
 \value{
 Search count of the species with the given \code{genus} and \code{species}.

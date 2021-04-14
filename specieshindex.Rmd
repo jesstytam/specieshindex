@@ -263,7 +263,7 @@ create_query_string_TAK_base <- function(genus, species, synonyms, additionalkey
 ```
 
 ```{r, lens query for title only searches}
-create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywords){
+create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000){
   if (missing(additionalkeywords) & missing(synonyms)) {
     return(paste0('{
     "query": {
@@ -276,7 +276,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 1000
+	  "size": ', size, '
   }'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
@@ -291,7 +291,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 1000
+	  "size": ', size, '
   }'))
   }
   if (missing(additionalkeywords)&!missing(synonyms)) {
@@ -306,7 +306,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 1000
+	  "size": ', size, '
   }')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
@@ -324,7 +324,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 1000
+	  "size": ', size, '
   }')
       }
       return(paste0(temp_string))
@@ -342,14 +342,14 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 1000
+	  "size": ', size, '
   }'))
   } 
 }
 ```
 
 ```{r, lens query for title, abstract, and keywords searches}
-create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkeywords){
+create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000){
   if (missing(additionalkeywords) & missing(synonyms)) {
     return(paste0('{
     "query": {
@@ -363,7 +363,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 1000
+	  "size": ', size, '
   }'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
@@ -379,7 +379,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 1000
+	  "size": ', size, '
   }'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
@@ -395,7 +395,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 1000
+	  "size": ', size, '
   }')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
@@ -414,7 +414,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 1000
+	  "size": ', size, '
   }')
       }
       return(paste0(temp_string))
@@ -433,7 +433,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 1000
+	  "size": ', size, '
   }'))
   } 
 }
@@ -906,7 +906,7 @@ FetchSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
 ```
 
 ```{r, function to get result count from lens title only}
-CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
   if (missing(token)) {
     stop("You need to register for a token on Lens.") #stop running if token missing
   }
@@ -917,7 +917,7 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
   theURL <- httr::POST(url = "https://api.lens.org/scholarly/search",
                        add_headers(.headers = c("Authorization" = token,
                                                 "Content-Type" = "application/json")),
-                       body = create_query_string_T_lens(genus, species, synonyms, additionalkeywords))
+                       body = create_query_string_T_lens(genus, species, synonyms, additionalkeywords, size))
   lens_content <- jsonlite::fromJSON(rawToChar(theURL$content))
   if (!is.null(lens_content$total)) {
     resultCount <- as.numeric(lens_content$total)
@@ -929,7 +929,7 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
 ```
 
 ```{r, function to get result count from lens title, abstract, and keywords only}
-CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
   if (missing(token)) {
     stop("You need to register for a token on Lens.") #stop running if token missing
   }
@@ -940,7 +940,7 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token)
   theURL <- httr::POST(url = "https://api.lens.org/scholarly/search",
                        add_headers(.headers = c("Authorization" = token,
                                                 "Content-Type" = "application/json")),
-                       body = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords))
+                       body = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords, size))
   lens_content <- jsonlite::fromJSON(rawToChar(theURL$content))
   if (!is.null(lens_content$total)) {
     resultCount <- as.numeric(lens_content$total)
@@ -953,7 +953,7 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token)
 
 ```{r, fetch from lens using title, message=FALSE}
 #this function downloads citation data from lens
-FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
   if (missing(token)) {
     stop("You need to register for a token on Lens.") #stop running if API key missing
   }
@@ -961,7 +961,7 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   )
-  results <- lens2r::get_scholarly_df(query = create_query_string_T_lens(genus, species, synonyms, additionalkeywords),
+  results <- lens2r::get_scholarly_df(query = create_query_string_T_lens(genus, species, synonyms, additionalkeywords, size),
                                       token = token)
   #renaming columns
   names(results)[names(results) == "scholarly_citations_count"] <- "citations"
@@ -985,7 +985,7 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
 
 ```{r, fetch from lens using title+abs+key, message=FALSE}
 #this function downloads citation data from lens
-FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
   if (missing(token)) {
     stop("You need to register for a token on Lens.") #stop running if API key missing
   }
@@ -993,7 +993,7 @@ FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token)
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
-  results <- lens2r::get_scholarly_df(query = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords),
+  results <- lens2r::get_scholarly_df(query = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords, size),
                                       token = token)
   #renaming columns
   names(results)[names(results) == "scholarly_citations_count"] <- "citations"
@@ -1323,7 +1323,7 @@ test_TAK <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
 Allindices(woylie_wosT, genus = "Bettongia", species = "penicillata")
 
 
-woylie_lens <- FetchSpTAK_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
+CountSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb", size = 1000)
 woylie_lens_T_lens <- FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
 woylie_lens_T_scopus <- FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = "442b9048417ef20cf680a0ae26ee4d86")
 woylie_lens_T_wos <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")

@@ -649,6 +649,7 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
 #' @param token Lens token needed to access and download data from their database.
+#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
 #' @export
@@ -671,7 +672,7 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' CountSpT_lens("bettongia", "penicillata", "conserv*")
 #' }
-CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
   if (missing(token)) {
     stop("You need to register for a token on Lens.") #stop running if token missing
   }
@@ -682,7 +683,7 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
   theURL <- httr::POST(url = "https://api.lens.org/scholarly/search",
                        add_headers(.headers = c("Authorization" = token,
                                                 "Content-Type" = "application/json")),
-                       body = create_query_string_T_lens(genus, species, synonyms, additionalkeywords))
+                       body = create_query_string_T_lens(genus, species, synonyms, additionalkeywords, size))
   lens_content <- jsonlite::fromJSON(rawToChar(theURL$content))
   if (!is.null(lens_content$total)) {
     resultCount <- as.numeric(lens_content$total)
@@ -705,6 +706,7 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
 #' @param token Lens token needed to access and download data from their database.
+#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
 #' @export
@@ -727,7 +729,7 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
 #' 
 #' CountSpTAK_lens("bettongia", "penicillata", "conserv*")
 #' }
-CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
   if (missing(token)) {
     stop("You need to register for a token on Lens.") #stop running if token missing
   }
@@ -738,7 +740,7 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token)
   theURL <- httr::POST(url = "https://api.lens.org/scholarly/search",
                        add_headers(.headers = c("Authorization" = token,
                                                 "Content-Type" = "application/json")),
-                       body = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords))
+                       body = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords, size))
   lens_content <- jsonlite::fromJSON(rawToChar(theURL$content))
   if (!is.null(lens_content$total)) {
     resultCount <- as.numeric(lens_content$total)
@@ -760,6 +762,7 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token)
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
 #' @param token Lens token needed to access and download data from their database.
+#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
 #'
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 #' @export
@@ -779,7 +782,7 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token)
 #' 
 #' FetchSpT_lens("bettongia", "penicillata", "conserv*", token = "mytoken")
 #' }
-FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
   if (missing(token)) {
     stop("You need to register for a token on Lens.") #stop running if token missing
   }
@@ -787,7 +790,7 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   )
-  results <- lens2r::get_scholarly_df(query = create_query_string_T_lens(genus, species, synonyms, additionalkeywords),
+  results <- lens2r::get_scholarly_df(query = create_query_string_T_lens(genus, species, synonyms, additionalkeywords, size),
                                       token = token)
   #renaming columns
   names(results)[names(results) == "scholarly_citations_count"] <- "citations"
@@ -820,6 +823,7 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
 #' @param token Lens token needed to access and download data from their database.
+#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
 #'
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 #' @export
@@ -839,7 +843,7 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token) {
 #' 
 #' FetchSpTAK_lens("bettongia", "penicillata", "conserv*", token = "mytoken")
 #' }
-FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token) {
+FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
   if (missing(token)) {
     stop("You need to register for a token on Lens.") #stop running if token missing
   }
@@ -847,7 +851,7 @@ FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token)
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   )
-  results <- lens2r::get_scholarly_df(query = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords),
+  results <- lens2r::get_scholarly_df(query = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords, size),
                                       token = token)
   #renaming columns
   names(results)[names(results) == "scholarly_citations_count"] <- "citations"
@@ -1426,10 +1430,11 @@ create_query_string_TAK_base <- function(genus, species, synonyms, additionalkey
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
+#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
 #'
 #' @noRd
 #' 
-create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywords){
+create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000){
   if (missing(additionalkeywords) & missing(synonyms)) {
     return(paste0('{
     "query": {
@@ -1442,7 +1447,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": ', size, '
   }'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
@@ -1457,7 +1462,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": ', size, '
   }'))
   }
   if (missing(additionalkeywords)&!missing(synonyms)) {
@@ -1472,7 +1477,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": ', size, '
   }')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
@@ -1490,7 +1495,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": ', size, '
   }')
       }
       return(paste0(temp_string))
@@ -1508,7 +1513,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": ', size, '
   }'))
   } 
 }
@@ -1524,10 +1529,11 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
+#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
 #'
 #' @noRd
 #' 
-create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkeywords){
+create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000){
   if (missing(additionalkeywords) & missing(synonyms)) {
     return(paste0('{
     "query": {
@@ -1541,7 +1547,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": ', size, '
   }'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
@@ -1557,7 +1563,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": ', size, '
   }'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
@@ -1573,7 +1579,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": ', size, '
   }')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
@@ -1592,7 +1598,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": ', size, '
   }')
       }
       return(paste0(temp_string))
@@ -1611,7 +1617,7 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  }]
 		  }
 	  },
-	  "size": 50000
+	  "size": ', size, '
   }'))
   } 
 }

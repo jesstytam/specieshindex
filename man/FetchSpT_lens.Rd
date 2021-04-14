@@ -4,7 +4,14 @@
 \alias{FetchSpT_lens}
 \title{Fetch data from Lens - title only}
 \usage{
-FetchSpT_lens(genus, species, synonyms, additionalkeywords, token)
+FetchSpT_lens(
+  genus,
+  species,
+  synonyms,
+  additionalkeywords,
+  token,
+  size = 50000
+)
 }
 \arguments{
 \item{genus}{Genus classification from the binomial name.}
@@ -16,6 +23,8 @@ FetchSpT_lens(genus, species, synonyms, additionalkeywords, token)
 \item{additionalkeywords}{Optional search terms.}
 
 \item{token}{Lens token needed to access and download data from their database.}
+
+\item{size}{Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.}
 }
 \value{
 A dataframe of the species' citation records with the given \code{genus} and \code{species}.
