@@ -1323,6 +1323,12 @@ test_TAK <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
 Allindices(woylie_wosT, genus = "Bettongia", species = "penicillata")
 
 
+query <- wosr::pull_wos(query = create_query_string_T_wos(genus = "Osphranter", species = "rufus"),
+                        sid = sid) 
+results <- data.table::rbindlist(query, fill = TRUE)
+results <- data.table::setDT(results)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
+
+
 CountSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb", size = 1000)
 woylie_lens_T_lens <- FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb")
 woylie_lens_T_scopus <- FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = "442b9048417ef20cf680a0ae26ee4d86")
