@@ -1325,8 +1325,28 @@ Allindices(woylie_wosT, genus = "Bettongia", species = "penicillata")
 
 query <- wosr::pull_wos(query = create_query_string_T_wos(genus = "Osphranter", species = "rufus"),
                         sid = sid) 
-results <- data.table::rbindlist(query, fill = TRUE)
-results <- data.table::setDT(results)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut]
+
+results <- map_dfr(query, as.list)
+results <- data.table::rbindlist(query, fill = TRUE) #does the same thing as the line above
+
+results <- data.table::setDT(results)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut] #this is not working
+results <- setDT(results)[, list(names(results)[-c(1)] = paste(names(results)[-c(1)], collapse = ",")), ut]
+results <- aggregate(results, by = results$ut, FUN = paste, collapse = ",")
+
+results <- results %>%
+  group_by(ut) %>%
+  summarise_all(funs(na.omit(.)[1])) #this got rid of some other info
+
+results <- results %>%
+  group_by(ut) %>%
+  summarise(names(results)[-c(1)] = paste(names(results)[-c(1)], collapse = ",")) #nope
+
+
+
+for (i in 2:length(names(results))) {
+  setDT(results)[, list(names(results)[i] = paste(names(results)[i], collapse = ",")), ut]
+}
+
 
 
 CountSpT_lens(genus = "Bettongia", species = "penicillata", token = "KeQCynn4V050fJZwOmaPIzUpAe7Fn5Y4rOkk79jb2IgUTSBwBBOb", size = 1000)
