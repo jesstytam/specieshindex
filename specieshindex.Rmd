@@ -589,7 +589,7 @@ FetchSpT <- function(genus, species, synonyms, additionalkeywords, language = 0,
                                                  verbose = TRUE,
                                                  wait_time = 3)
             searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
-            searchloopdf <- rbind(searchloopdf, searchlooplist)
+            searchloopdf <- dplyr::bind_rows(searchloopdf, searchlooplist)
             }
           search1985 <- rscopus::scopus_search(query = paste0(create_query_string_T(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1984 AND PUBYEAR < 1990")),
                                                api_key = paste0(APIkey),
@@ -732,7 +732,7 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
                                                  verbose = TRUE,
                                                  wait_time = 3)
             searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
-            searchloopdf <- rbind(searchloopdf, searchlooplist)
+            searchloopdf <- dplyr::bind_rows(searchloopdf, searchlooplist)
             }
           search1985 <- rscopus::scopus_search(query = paste0(create_query_string_TAK(genus, species, synonyms, additionalkeywords), paste0(" AND PUBYEAR > 1984 AND PUBYEAR < 1990")),
                                                api_key = paste0(APIkey),
