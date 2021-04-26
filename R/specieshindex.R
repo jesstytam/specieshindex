@@ -1136,16 +1136,25 @@ SpHAfterdate <- function(data, date) {
 #' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
+#' @param sourcetype Source type; default is 0, enter 1 to add SourceType variables.
 #'
 #' @return A datarame of all of the indices in the package.
 #' @export
 #'
 #' @examples
 #' data(Woylie)
-#' Allindices(Woylie, genus = "genus_name", species = "species_name")
+#' Allindices(Woylie, genus = "genus_name", species = "species_name", sourcetype = 0)
 #' 
-Allindices <- function(data, genus, species) {
-  if (all.equal(0, data$citations) == TRUE) {
+Allindices <- function(data, genus, species, sourcetype = 0) {
+  if (sourcetype == 1 & all.equal(0, data$citations) == FALSE) {
+    combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
+                          TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+    combine[is.na(combine)] <- 0 #replace NA values with 0
+    combine_st <- cbind(combine, SourceType(data))
+    colnames(combine_st) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing",
+                              "h", "m", "i10", "h5", names(SourceType(data)))
+    return(combine_st)
+  } else if (sourcetype == 0 & all.equal(0, data$citations) == TRUE) {
     zeroIndex <- data.frame(genus_species = paste0(genus, "_", species),
                             species = paste0(species),
                             genus = paste0(genus),
@@ -1155,11 +1164,10 @@ Allindices <- function(data, genus, species) {
     combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
                           TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
     combine[is.na(combine)] <- 0 #replace NA values with 0
-    combine_sourcetype <- cbind(combine, SourceType(data))
-    colnames(combine_sourcetype) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing",
-                                      "h", "m", "i10", "h5", names(SourceType(data)))
-    return(combine_sourcetype)
-  }
+    colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing",
+                           "h", "m", "i10", "h5")
+    return(combine)
+  } 
   cat("\n", genus, species, "\n",
       TotalPub(data), "publications", "\n",
       TotalCite(data), "citations", "\n",

@@ -4,7 +4,7 @@
 \alias{Allindices}
 \title{Index summary}
 \usage{
-Allindices(data, genus, species)
+Allindices(data, genus, species, sourcetype = 0)
 }
 \arguments{
 \item{data}{The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.}
@@ -12,6 +12,8 @@ Allindices(data, genus, species)
 \item{genus}{Genus classification from the binomial name.}
 
 \item{species}{Species classification from the binomial name.}
+
+\item{sourcetype}{Source type; default is 0, enter 1 to add SourceType variables.}
 }
 \value{
 A datarame of all of the indices in the package.
@@ -21,6 +23,6 @@ This function returns a dataframe of the summary of all of the indices.
 }
 \examples{
 data(Woylie)
-Allindices(Woylie, genus = "genus_name", species = "species_name")
+Allindices(Woylie, genus = "genus_name", species = "species_name", sourcetype = 0)
 
 }
