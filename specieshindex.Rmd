@@ -573,7 +573,7 @@ FetchSpT <- function(genus, species, synonyms, additionalkeywords, language = 0,
         start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
         searchdf <- rscopus::entries_to_citation_df(search$entries)
         list <- data.frame(searchdf)
-        datalist <- rbind(datalist, list)
+        datalist <- dplyr::bind_rows(datalist, list)
         #loop ends
         }} else {
           #search begins
@@ -616,7 +616,7 @@ FetchSpT <- function(genus, species, synonyms, additionalkeywords, language = 0,
                                                verbose = TRUE,
                                                wait_time = 3)  
           search_olddf <- rscopus::entries_to_citation_df(search_old$entries)
-          datalist <- rbind(search2020df, searchloopdf, search1985df, search1980df, search1975df, search1970df, search_olddf)
+          datalist <- dplyr::bind_rows(search2020df, searchloopdf, search1985df, search1980df, search1975df, search1970df, search_olddf)
           #search ends  
         }
     }
@@ -716,7 +716,7 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
         start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
         searchdf <- rscopus::entries_to_citation_df(search$entries)
         list <- data.frame(searchdf)
-        datalist <- rbind(datalist, list)
+        datalist <- dplyr::bind_rows(datalist, list)
         #loop ends
         }} else {
           #search begins
@@ -759,7 +759,7 @@ FetchSpTAK <- function(genus, species, synonyms, additionalkeywords, language = 
                                                verbose = TRUE,
                                                wait_time = 3)  
           search_olddf <- rscopus::entries_to_citation_df(search_old$entries)
-          datalist <- rbind(search2020df, searchloopdf, search1985df, search1980df, search1975df, search1970df, search_olddf)
+          datalist <- dplyr::bind_rows(search2020df, searchloopdf, search1985df, search1980df, search1975df, search1970df, search_olddf)
           #search ends  
         }
     }
