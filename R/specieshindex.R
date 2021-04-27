@@ -1156,7 +1156,7 @@ Allindices <- function(data, genus, species, sourcetype = 0) {
     colnames(combine_st) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing",
                               "h", "m", "i10", "h5", names(SourceType(data)))
     return(combine_st)
-  } else if (sourcetype == 0 & all.equal(0, data$citations) == TRUE) {
+  } else if (all.equal(0, data$citations) == TRUE) {
     zeroIndex <- data.frame(genus_species = paste0(genus, "_", species),
                             species = paste0(species),
                             genus = paste0(genus),
