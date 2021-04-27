@@ -1328,21 +1328,27 @@ test <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
 CountSpT_wos(genus = "Bettongia", species = "penicillata")
 woylie_wos <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
 Allindices(woylie_wosT, genus = "Bettongia", species = "penicillata")
+FetchSpTAK_wos(genus = "Osphranter", species = "rufus")
+
 
 
 query <- wosr::pull_wos(query = create_query_string_T_wos(genus = "Osphranter", species = "rufus"),
                         sid = sid) 
+results <- data.table::rbindlist(query, fill = TRUE) 
+results <- setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
 
-unnest_query <- query %>% unnest_auto()
-unnest_query <- query %>% unnest_wider(cols = list(publication, author, address, author_address, jsc, keyword, keywords_plus, grant, doc_type))
-unnest_query <- query %>%
-  bind_rows() %>%
-  mutate_if(is.list, simplify_all) %>%
-  unnest_wider(cols = c(publication, author, address, author_address, jsc, keyword, 
-    keywords_plus, grant, doc_type))
+genus <- "Osphranter"
+species <- "rufus"
+query <- wosr::pull_wos(query = create_query_string_TAK_wos(genus, species),
+                          sid = sid) 
+results <- data.table::rbindlist(query, fill = TRUE)
+results <- data.table::setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
+  
+
+
 
 results <- map_dfr(query, as.list)
-results <- data.table::rbindlist(query, fill = TRUE) #does the same thing as the line above
+
 
 apply(results$author_no, 1, paste, collapse = " ")
 
