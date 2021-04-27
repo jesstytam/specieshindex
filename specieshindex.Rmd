@@ -20,7 +20,7 @@ pacman::p_load(tidyverse,
                taxize,
                gtools)
 
-devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = FALSE)
+devtools::install_github("jessicatytam/specieshindex", force = TRUE)
 library(specieshindex)
 ```
 
