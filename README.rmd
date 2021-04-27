@@ -71,7 +71,7 @@ You won't have to set your ID again until your next session. You are required to
 
 ### :mega: Connecting to Lens
 
-An individual token is required to extract data from Lens. You will not be able to use the Count and Fetch functions if your institution is not a subscriber of Lens. 
+An individual token is required to extract data from Lens. If your institution is not a subscriber of Lens, you will only be able to register for a 14-day token, which can be renewed. In addition, you might not be able to use the Fetch functions if the search results exceeds 1,000 records. 
 
 1. Create an account with Lens.
 2. Go to https://www.lens.org/lens/user/subscriptions#scholar and select your desired Scholarly API.
@@ -102,9 +102,11 @@ FetchSpT_wos(genus = "Bettongia", species = "penicillata")
 
 #Lens requests
 token <- "your_lens_token"
-CountSpT_lens(genus = "Bettongia", species = "penicillata", token = token)
-FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = token)
+CountSpT_lens(genus = "Bettongia", species = "penicillata", token = token, size = 50000)
+FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = token, size = 50000)
 ```
+
+Set `size = 1000` if you are using a 14-day token. The default is set to `size = 50000`.
 
 ### :abacus: Counting citation records
 
