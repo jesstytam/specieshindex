@@ -803,7 +803,7 @@ FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
   query <- wosr::pull_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
+  results <- data.table::setDT(results)[, lapply(data.table:::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
@@ -825,7 +825,7 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
   query <- wosr::pull_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
+  results <- data.table::setDT(results)[, lapply(data.table:::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
@@ -1328,7 +1328,7 @@ test <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
 CountSpT_wos(genus = "Bettongia", species = "penicillata")
 woylie_wos <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
 Allindices(woylie_wosT, genus = "Bettongia", species = "penicillata")
-FetchSpTAK_wos(genus = "Osphranter", species = "rufus")
+FetchSpT_wos(genus = "Osphranter", species = "rufus")
 
 
 
@@ -1340,7 +1340,7 @@ results <- setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = 
 genus <- "Osphranter"
 species <- "rufus"
 query <- wosr::pull_wos(query = create_query_string_TAK_wos(genus, species),
-                          sid = sid) 
+                        sid = sid) 
 results <- data.table::rbindlist(query, fill = TRUE)
 results <- data.table::setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
   

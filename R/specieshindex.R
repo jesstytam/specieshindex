@@ -576,7 +576,7 @@ FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
   query <- wosr::pull_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
+  results <- data.table::setDT(results)[, lapply(data.table:::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
@@ -625,7 +625,7 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
   query <- wosr::pull_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
+  results <- data.table::setDT(results)[, lapply(data.table:::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
