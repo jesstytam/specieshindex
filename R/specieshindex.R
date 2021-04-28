@@ -1149,7 +1149,7 @@ SpHAfterdate <- function(data, date) {
 #' 
 Allindices <- function(data, genus, species, sourcetype = 0) {
   if (sourcetype == 1 & all.equal(0, data$citations) == FALSE) {
-    combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
+    combine <- data.frame(paste0(genus, " ", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
                           TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
     combine[is.na(combine)] <- 0 #replace NA values with 0
     combine_st <- cbind(combine, SourceType(data))
@@ -1157,13 +1157,13 @@ Allindices <- function(data, genus, species, sourcetype = 0) {
                               "h", "m", "i10", "h5", names(SourceType(data)))
     return(combine_st)
   } else if (all.equal(0, data$citations) == TRUE) {
-    zeroIndex <- data.frame(genus_species = paste0(genus, "_", species),
+    zeroIndex <- data.frame(genus_species = paste0(genus, " ", species),
                             species = paste0(species),
                             genus = paste0(genus),
                             publications = 0, citations = 0, journals = 0, years_publishing = NA, h = 0, m = 0, i10 = 0, h5 = 0)
     return(zeroIndex)
   } else {
-    combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
+    combine <- data.frame(paste0(genus, " ", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
                           TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
     combine[is.na(combine)] <- 0 #replace NA values with 0
     colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing",
@@ -1179,6 +1179,69 @@ Allindices <- function(data, genus, species, sourcetype = 0) {
       "m:", SpMindex(data), "\n",
       "i10:", Spi10(data), "\n",
       "h5:", SpH5(data), "\n")
+}
+
+
+
+#' Plots the data of a single species or combined.
+#' 
+#' @title Plot
+#'
+#' @param data The dataframe generated from \code{\link{Allindices}}.
+#'
+#' @return ggplot
+#' @export
+#'
+#' @examples
+#' W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
+#' Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
+#' P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
+#' K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
+#' CombineSp <- dplyr::bind_rows(W, Q, P, K)
+#' plotAllindices(CombineSp)
+#' 
+plotAllindices <- function(data) {
+  #h-index
+  h_plot <- ggplot2::ggplot(data = data,
+                            ggplot2::aes(x = genus_species,
+                                y = h,
+                                colour = genus_species)) +
+    ggplot2::geom_point() +
+    ggplot2::labs(title = "h-index",
+                  colour = "Species") +
+    spindex_plots_theme()
+  #m-index
+  m_plot <- ggplot2::ggplot(data = data,
+                            ggplot2::aes(x = genus_species,
+                                         y = m,
+                                         colour = genus_species)) +
+    ggplot2::geom_point() +
+    ggplot2::labs(title = "m-index",
+                  colour = "Species") +
+    spindex_plots_theme()
+  #i10
+  i10_plot <- ggplot2::ggplot(data = data,
+                              ggplot2::aes(x = genus_species,
+                                           y = i10,
+                                           colour = genus_species)) +
+    ggplot2::geom_point() +
+    ggplot2::labs(title = "i10 index",
+                  colour = "Species") +
+    spindex_plots_theme()
+  #h5
+  h5_plot <- ggplot2::ggplot(data = data,
+                             ggplot2::aes(x = genus_species,
+                                          y = h5,
+                                          colour = genus_species)) +
+    ggplot2::geom_point() +
+    ggplot2::labs(title = "h5 index",
+                  colour = "Species") +
+    spindex_plots_theme()
+  #combining the plots
+  combine_plot <- ggpubr::ggarrange(h_plot, m_plot, i10_plot, h5_plot,
+                                    common.legend = TRUE,
+                                    legend = "right")
+  return(combine_plot)
 }
 
 
@@ -1340,92 +1403,6 @@ create_query_string_TAK_wos <- function(genus, species, synonyms, additionalkeyw
     return(paste0('TI = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')',
                   ' OR AB = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')',
                   ' OR AK = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
-  } 
-}
-
-
-
-#' Creates a query string for BASE to make functions with a query cleaner.
-#' Title only.
-#'
-#' @title Query string for BASE
-#' 
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#'
-#' @noRd
-#' 
-create_query_string_T_base <- function(genus, species, synonyms, additionalkeywords){
-  if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('dctitle:"', genus, ' ', species, '"'))
-  } 
-  if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('dctitle:("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
-  }
-  if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[1])
-    if (length(synonyms)==1) {
-      return(paste0(temp_string, ')'))
-    }
-    else {
-      for (i in 2:length(synonyms)){
-        temp_string <- paste0(temp_string, ' OR ', synonyms[i])
-      }
-      return(paste0(temp_string, ')'))
-    }
-  }
-  if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('dctitle:(("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
-  } 
-}
-
-
-
-#' Creates a query string for BASE to make functions with a query cleaner.
-#' Title, abstract, and keywords.
-#'
-#' @title Query string for BASE
-#' 
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#'
-#' @noRd
-#' 
-create_query_string_TAK_base <- function(genus, species, synonyms, additionalkeywords){
-  if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('dctitle:"', genus, ' ', species, '"',
-                  ' OR dcdescription:"', genus, ' ', species, '"',
-                  ' OR dcsubject:"', genus, ' ', species, '"'))
-  } 
-  if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('dctitle:("', genus, ' ', species, '" AND ', additionalkeywords, ')',
-                  ' OR dcdescription:("', genus, ' ', species, '" AND ', additionalkeywords, ')',
-                  ' OR dcsubject:("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
-  }
-  if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[1], ')',
-                          ' OR dcdescription:("', genus, ' ', species, '" OR ', synonyms[1], ')',
-                          ' OR dcsubject:("', genus, ' ', species, '" OR ', synonyms[1], ')')
-    if (length(synonyms)==1) {
-      return(paste0(temp_string))
-    }
-    else {
-      for (i in 2:length(synonyms)){
-        temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[i], ')',
-                              ' OR dcdescription:("', genus, ' ', species, '" OR ', synonyms[i], ')',
-                              ' OR dcsubject:("', genus, ' ', species, '" OR ', synonyms[i], ')')
-      }
-      return(paste0(temp_string))
-    }
-  }
-  if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('dctitle:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
-                  ' OR dcdescription:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
-                  ' OR dcsubject:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
   } 
 }
 
@@ -1630,4 +1607,33 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 	  "size": ', size, '
   }'))
   } 
+}
+
+
+
+#' Theme for \code{\link{plotAllindices}}
+#'
+#' @title Theme for plot
+#' 
+#' @importFrom ggplot2 element_blank element_grob element_line element_rect element_render element_text
+#'
+#' @noRd
+#' 
+spindex_plots_theme <- function() {
+  ggplot2::theme(title = element_text(size = 12,
+                                      face = "bold"),
+                 axis.title.x = element_blank(),
+                 axis.text.x = element_blank(),
+                 axis.ticks.x = element_blank(),
+                 axis.line.x = element_line(colour = "grey20"),
+                 axis.title.y = element_blank(),
+                 axis.text.y = element_text(size = 10),
+                 legend.key = element_rect(fill = "white"),
+                 plot.background = element_rect(fill = "white"),
+                 panel.background = element_rect(fill = "white"),
+                 panel.grid.major.y = element_line(colour = "grey90"),
+                 panel.grid.minor.y = element_line(colour = "grey90",
+                                                   linetype = "longdash"),
+                 panel.grid.major.x = element_blank(),
+                 panel.grid.minor.x = element_blank())
 }

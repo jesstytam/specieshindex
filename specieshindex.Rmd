@@ -18,7 +18,8 @@ pacman::p_load(tidyverse,
                XML,
                jsonlite,
                taxize,
-               gtools)
+               gtools,
+               ggpubr)
 
 devtools::install_github("jessicatytam/specieshindex", force = TRUE)
 library(specieshindex)
@@ -436,6 +437,28 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 	  "size": ', size, '
   }'))
   } 
+}
+```
+
+```{r}
+#theme for ggplot
+spindex_plots_theme <- function() {
+  ggplot2::theme(title = element_text(size = 12,
+                                               face = "bold"),
+                 axis.title.x = element_blank(),
+                 axis.text.x = element_blank(),
+                 axis.ticks.x = element_blank(),
+                 axis.line.x = element_line(colour = "grey20"),
+                 axis.title.y = element_blank(),
+                 axis.text.y = element_text(size = 10),
+                 legend.key = element_rect(fill = "white"),
+                 plot.background = element_rect(fill = "white"),
+                 panel.background = element_rect(fill = "white"),
+                 panel.grid.major.y = element_line(colour = "grey90"),
+                 panel.grid.minor.y = element_line(colour = "grey90",
+                                                            linetype = "longdash"),
+                 panel.grid.major.x = ggplot2::element_blank(),
+                 panel.grid.minor.x = ggplot2::element_blank())
 }
 ```
 
@@ -1140,7 +1163,7 @@ SpHAfterdate <- function(data, date) {
 #this function returns a summary of all of the indices
 Allindices <- function(data, genus, species, sourcetype = 0) {
   if (sourcetype == 1 & all.equal(0, data$citations) == FALSE) {
-    combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
+    combine <- data.frame(paste0(genus, " ", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
                           TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
     combine[is.na(combine)] <- 0 #replace NA values with 0
     combine_st <- cbind(combine, SourceType(data))
@@ -1148,13 +1171,13 @@ Allindices <- function(data, genus, species, sourcetype = 0) {
                                       "h", "m", "i10", "h5", names(SourceType(data)))
     return(combine_st)
   } else if (all.equal(0, data$citations) == TRUE) {
-    zeroIndex <- data.frame(genus_species = paste0(genus, "_", species),
+    zeroIndex <- data.frame(genus_species = paste0(genus, " ", species),
                             species = paste0(species),
                             genus = paste0(genus),
                             publications = 0, citations = 0, journals = 0, years_publishing = NA, h = 0, m = 0, i10 = 0, h5 = 0)
     return(zeroIndex)
   } else {
-    combine <- data.frame(paste0(genus, "_", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
+    combine <- data.frame(paste0(genus, " ", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
                           TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
     combine[is.na(combine)] <- 0 #replace NA values with 0
     colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing",
@@ -1170,6 +1193,53 @@ Allindices <- function(data, genus, species, sourcetype = 0) {
       "m:", SpMindex(data), "\n",
       "i10:", Spi10(data), "\n",
       "h5:", SpH5(data), "\n")
+}
+```
+
+```{r}
+#plotting data from Allindices()
+plotAllindices <- function(data) {
+  #h-index
+  h_plot <- ggplot2::ggplot(data = data,
+                            ggplot2::aes(x = genus_species,
+                                         y = h,
+                                         colour = genus_species)) +
+  ggplot2::geom_point() +
+  ggplot2::labs(title = "h-index",
+                colour = "Species") +
+    spindex_plots_theme()
+  #m-index
+  m_plot <- ggplot2::ggplot(data = data,
+                            ggplot2::aes(x = genus_species,
+                                         y = m,
+                                         colour = genus_species)) +
+    ggplot2::geom_point() +
+    ggplot2::labs(title = "m-index",
+                  colour = "Species") +
+    spindex_plots_theme()
+  #i10
+  i10_plot <- ggplot2::ggplot(data = data,
+                              ggplot2::aes(x = genus_species,
+                                           y = i10,
+                                           colour = genus_species)) +
+    ggplot2::geom_point() +
+    ggplot2::labs(title = "i10 index",
+                  colour = "Species") +
+    spindex_plots_theme()
+  #h5
+  h5_plot <- ggplot2::ggplot(data = data,
+                             ggplot2::aes(x = genus_species,
+                                          y = h5,
+                                          colour = genus_species)) +
+    ggplot2::geom_point() +
+    ggplot2::labs(title = "h5 index",
+                  colour = "Species") +
+    spindex_plots_theme()
+  #combining the plots
+  combine_plot <- ggpubr::ggarrange(h_plot, m_plot, i10_plot, h5_plot,
+                                    common.legend = TRUE,
+                                    legend = "right")
+  return(combine_plot)
 }
 ```
 
@@ -1357,38 +1427,6 @@ results <- setDT(results)[, lapply(.SD, na.omit), by = ut]
 results <- setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
 results <- setDT(results)[, list(names(results)[-c(1)] = paste(names(results)[-c(1)], collapse = ",")), ut]
 
-results <- results %>%
-  group_by(ut) %>%
-  summarise_all(funs(na.omit(.)[1])) #this got rid of some other info
-
-results <- results %>%
-  group_by(ut) %>%
-  summarise(names(results)[-c(1)] = paste(names(results)[-c(1)], collapse = ",")) #nope
-
-
-for (i in 2:ncol(results)) {
-  results <- results %>%
-    group_by(ut) %>%
-    summarise(results[i] = paste(results[i], collapse = ","))
-}
-
-
-
-
-
-#a double loop
-
-for (j in 2:ncol(results)) {
-  for (i in 1:nrow(results)) {
-    results <- results %>%
-      dplyr::arrange(ut)
-    if (results$ut[j] %in% results$ut[j+1]) {
-      results[i][j] <- toString(c(results[i][j], results[i][j+1]))
-    }
-  }
-}
-
-
 
 #BASE tests
 
@@ -1409,6 +1447,12 @@ base <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.f
                                    httpAccept = "application/json")) #format the URL to be sent to the API
 theData <- httr::content(base, as = "text") #access denied
 rawToChar(base$content) #access denied
+
+
+
+#ggplot
+
+plotAllindices(CombineSp)
 
 ```
 

@@ -17,14 +17,15 @@ Imports:
     data.table,
     httr,
     XML,
-    jsonlite
+    jsonlite,
+    ggplot2,
+    ggpubr
 Suggests: 
     testthat,
     knitr,
     roxygen2,
     devtools,
     rmarkdown,
-    ggplot2,
     RefManageR
 License: MIT + file LICENSE
 URL: https://github.com/jessicatytam/specieshindex
