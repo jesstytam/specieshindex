@@ -1381,52 +1381,6 @@ Spi10(dummy1) #12
 
 
 ```{r, testing}
-sid <- auth(username = NULL, password = NULL)
-
-
-CountSpT_wos(genus = "Osphranter", species = "rufus") #3
-CountSpT_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus") #115
-CountSpT_wos(genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*") #0
-CountSpT_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*") #1
-
-CountSpTAK_wos(genus = "Osphranter", species = "rufus") #8
-CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus") #199
-CountSpTAK_wos(genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*") #1
-CountSpTAK_wos(genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*") #11
-
-test <- FetchSpT_wos(genus = "Bettongia", species = "penicillata")
-CountSpT_wos(genus = "Bettongia", species = "penicillata")
-woylie_wos <- FetchSpTAK_wos(genus = "Bettongia", species = "penicillata")
-Allindices(test, genus = "Bettongia", species = "penicillata")
-FetchSpT_wos(genus = "Osphranter", species = "rufus")
-
-
-
-query <- wosr::pull_wos(query = create_query_string_T_wos(genus = "Osphranter", species = "rufus"),
-                        sid = sid) 
-results <- data.table::rbindlist(query, fill = TRUE) 
-results <- setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
-
-genus <- "Osphranter"
-species <- "rufus"
-query <- wosr::pull_wos(query = create_query_string_TAK_wos(genus, species),
-                        sid = sid) 
-results <- data.table::rbindlist(query, fill = TRUE)
-results <- data.table::setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
-  
-
-
-
-results <- map_dfr(query, as.list)
-
-
-apply(results$author_no, 1, paste, collapse = " ")
-
-results <- data.table::setDT(results)[, lapply(.SD, function(x) x[!is.na(x)][1L]), by = ut] #this is not working
-results <- setDT(results)[, lapply(.SD, na.omit), by = ut]
-results <- setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
-results <- setDT(results)[, list(names(results)[-c(1)] = paste(names(results)[-c(1)], collapse = ",")), ut]
-
 
 #BASE tests
 
@@ -1443,10 +1397,9 @@ CountSpT_base(genus = "Osphranter", species = "rufus", synonyms = '"Macropus ruf
 
 
 base <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
-                      query = list(query = 'dctitle:("Osphranter rufus" OR "Macropus rufus")',
-                                   httpAccept = "application/json")) #format the URL to be sent to the API
-theData <- httr::content(base, as = "text") #access denied
-rawToChar(base$content) #access denied
+                      query = list(query = create_query_string_T_base(genus = "Osphranter", species = "rufus"))) #format the URL to be sent to the API
+theData <- httr::content(base, as = "text", encoding = "UTF-8")
+newData <- XML::xmlParse(base)
 
 
 
