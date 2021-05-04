@@ -1204,9 +1204,9 @@ plotAllindices <- function(data) {
   #h-index
   h_plot <- ggplot2::ggplot(data = data,
                             ggplot2::aes(x = genus_species,
-                                y = h,
-                                colour = genus_species)) +
-    ggplot2::geom_point() +
+                                         y = h,
+                                         colour = genus_species)) +
+    ggplot2::geom_point(size = 2) +
     ggplot2::labs(title = "h-index",
                   colour = "Species") +
     spindex_plots_theme()
@@ -1215,7 +1215,7 @@ plotAllindices <- function(data) {
                             ggplot2::aes(x = genus_species,
                                          y = m,
                                          colour = genus_species)) +
-    ggplot2::geom_point() +
+    ggplot2::geom_point(size = 2) +
     ggplot2::labs(title = "m-index",
                   colour = "Species") +
     spindex_plots_theme()
@@ -1224,7 +1224,7 @@ plotAllindices <- function(data) {
                               ggplot2::aes(x = genus_species,
                                            y = i10,
                                            colour = genus_species)) +
-    ggplot2::geom_point() +
+    ggplot2::geom_point(size = 2) +
     ggplot2::labs(title = "i10 index",
                   colour = "Species") +
     spindex_plots_theme()
@@ -1233,7 +1233,7 @@ plotAllindices <- function(data) {
                              ggplot2::aes(x = genus_species,
                                           y = h5,
                                           colour = genus_species)) +
-    ggplot2::geom_point() +
+    ggplot2::geom_point(size = 2) +
     ggplot2::labs(title = "h5 index",
                   colour = "Species") +
     spindex_plots_theme()

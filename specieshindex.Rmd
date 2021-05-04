@@ -1204,7 +1204,7 @@ plotAllindices <- function(data) {
                             ggplot2::aes(x = genus_species,
                                          y = h,
                                          colour = genus_species)) +
-  ggplot2::geom_point() +
+  ggplot2::geom_point(size = 2) +
   ggplot2::labs(title = "h-index",
                 colour = "Species") +
     spindex_plots_theme()
@@ -1213,7 +1213,7 @@ plotAllindices <- function(data) {
                             ggplot2::aes(x = genus_species,
                                          y = m,
                                          colour = genus_species)) +
-    ggplot2::geom_point() +
+    ggplot2::geom_point(size = 2) +
     ggplot2::labs(title = "m-index",
                   colour = "Species") +
     spindex_plots_theme()
@@ -1222,7 +1222,7 @@ plotAllindices <- function(data) {
                               ggplot2::aes(x = genus_species,
                                            y = i10,
                                            colour = genus_species)) +
-    ggplot2::geom_point() +
+    ggplot2::geom_point(size = 2) +
     ggplot2::labs(title = "i10 index",
                   colour = "Species") +
     spindex_plots_theme()
@@ -1231,7 +1231,7 @@ plotAllindices <- function(data) {
                              ggplot2::aes(x = genus_species,
                                           y = h5,
                                           colour = genus_species)) +
-    ggplot2::geom_point() +
+    ggplot2::geom_point(size = 2) +
     ggplot2::labs(title = "h5 index",
                   colour = "Species") +
     spindex_plots_theme()
@@ -1384,7 +1384,7 @@ Spi10(dummy1) #12
 
 #BASE tests
 
-base_test <- bs_search(query = "dctitle:Bettongia penicillata", hits = 125) #108
+base_test <- bs_search(query = "dctitle:Macropus rufus", hits = 125) #108
 base_test <- bs_search(query = 'dctitle:"Bettongia penicillata"', hits = 125) #99
 
 kangaroo1_base <- FetchSpTAK_base(genus = "Osphranter", species = "rufus") #9
@@ -1396,9 +1396,10 @@ CountSpT_base(genus = "Osphranter", species = "rufus", synonyms = '"Macropus ruf
 
 
 
-base <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
-                      query = list(query = create_query_string_T_base(genus = "Osphranter", species = "rufus"))) #format the URL to be sent to the API
-theData <- httr::content(base, as = "text", encoding = "UTF-8")
+base <- httr::POST(url = "https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
+                      body = "dctitle:Macropus rufus") #format the URL to be sent to the API
+http_status(base)
+theData <- httr::content(base, as = "text", encoding = "application/xml")
 newData <- XML::xmlParse(base)
 
 
