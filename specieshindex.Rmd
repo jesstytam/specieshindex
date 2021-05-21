@@ -863,7 +863,7 @@ CountSpT_base <- function(genus, species, synonyms, additionalkeywords) {
   findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
   if (findname$user_supplied_name[1] %in% findname$matched_name) {
     print("Species found on the Encyclopedia of Life.")
-  } else {print("Species missing from the Encyclopedia of Life.")}
+  } else {stop("Species missing from the Encyclopedia of Life.")}
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
                         query = list(func = "PerformSearch",
                                      query = create_query_string_T_base(genus, species, synonyms, additionalkeywords)))
@@ -904,18 +904,18 @@ FetchSpT_base <- function(genus, species, synonyms, additionalkeywords) {
   step_size <- 125
   looprepeat <- ceiling(count/step_size)-1
   for (i in 0:looprepeat) { #number of loops to be determined by the count of the documents
-    print(paste("loop", i))
+    print(paste("loop", i+1))
     query <- rbace::bs_search(query = create_query_string_T_base(genus, species, synonyms, additionalkeywords),
                               hits = step_size,
                               offset = step_size*i) 
-    query <- data.table::rbindlist(query, fill = TRUE)
+    query <- data.table::rbindlist(query)
     results <- dplyr::bind_rows(results, query)
     start_record <- as.numeric(summary(query)[1,1])
   }
   #renaming columns
   #names(results)[names(results) == "tot_cites"] <- "citations"
-  #names(results)[names(results) == "doc_type"] <- "description"
-  #names(results)[names(results) == "date"] <- "cover_date"
+  #names(results)[names(results) == "dctype"] <- "description"
+  #names(results)[names(results) == "dcdate"] <- "cover_date"
   #showing final list of records
   returned <- nrow(results)
   print(paste(returned, "records retrived in total."))
@@ -1400,7 +1400,7 @@ Spi10(dummy1) #12
 
 #BASE tests
 
-base_test <- bs_search(query = "dctitle:Macropus rufus", hits = 125) #108
+base_test <- bs_search(query = "dctitle:Phascolarctos cinereus", hits = 125) 
 base_test <- bs_search(query = 'dctitle:"Bettongia penicillata"', hits = 125) #99
 
 kangaroo1_base <- FetchSpTAK_base(genus = "Osphranter", species = "rufus") #9
@@ -1414,10 +1414,12 @@ CountSpT_base(genus = "Osphranter", species = "rufus", synonyms = '"Macropus ruf
 
 test <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
                    query = list(func = "PerformSearch",
-                                query = "dctitle:Macropus rufus"))
+                                query = create_query_string_T_base(genus = "Phascolarctos", species = "cinereus")))
 test_data <- XML::xmlParse(test)
 resultCount <- as.numeric(XML::xpathSApply(test_data, "//response/result/@numFound"))
 
+httr::content(test_data, as = "text")
+xpathSApply(test_data, "//response/result/@doc")
 
 CountSpT_base(genus = "Phascolarctos", species = "cinerius")
 CountSpT_base(genus = "Phascolarctos", species = "cinereus")
@@ -1440,7 +1442,7 @@ ifelse(findname$user_supplied_name[1] %in% findname$matched_name,
 
 koala_test <- FetchSpT_base(genus = "Phascolarctos", species = "cinereus")
 
-unique(koala_test$dctitle))
+unique(koala_test$dctitle)
 
 
 #ggplot
