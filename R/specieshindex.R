@@ -40,14 +40,13 @@ CountSpT <- function(genus, species, synonyms, additionalkeywords, APIkey, datat
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
-  theURL <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                      query = list(apiKey = paste0(APIkey),
-                                   query = create_query_string_T(genus, species, synonyms, additionalkeywords),
-                                   httpAccept = "application/xml")) #format the URL to be sent to the API
-  httr::stop_for_status(theURL) #pass any HTTP errors to the R console
-  theData <- httr::content(theURL, as = "text") #extract the content of the response
-  newData <- XML::xmlParse(theURL) #parse the data to extract values
-  resultCount <- as.numeric(XML::xpathSApply(newData,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
+  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                        query = list(apiKey = paste0(APIkey),
+                                     query = create_query_string_T(genus, species, synonyms, additionalkeywords),
+                                     httpAccept = "application/xml")) #format the URL to be sent to the API
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response) #parse the data to extract values
+  resultCount <- as.numeric(XML::xpathSApply(response_data, "//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
   return(resultCount)
 }
 
@@ -95,14 +94,13 @@ CountSpTAK <- function(genus, species, synonyms, additionalkeywords, APIkey, dat
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
-  theURL <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                      query = list(apiKey = paste0(APIkey),
-                                   query = create_query_string_TAK(genus, species, synonyms, additionalkeywords),
-                                   httpAccept = "application/xml")) #format the URL to be sent to the API
-  httr::stop_for_status(theURL) #pass any HTTP errors to the R console
-  theData <- httr::content(theURL, as = "text") #extract the content of the response
-  newData <- XML::xmlParse(theURL) #parse the data to extract values
-  resultCount <- as.numeric(XML::xpathSApply(newData,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
+  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                        query = list(apiKey = paste0(APIkey),
+                                     query = create_query_string_TAK(genus, species, synonyms, additionalkeywords),
+                                     httpAccept = "application/xml")) #format the URL to be sent to the API
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response) #parse the data to extract values
+  resultCount <- as.numeric(XML::xpathSApply(response_data, "//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
   return(resultCount)
 }
 
@@ -640,6 +638,10 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 
 
 
+
+
+
+
 #' This function counts the total number of search results.
 #' It counts the publications with the binomial name in the title only.
 #' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
@@ -682,11 +684,11 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, s
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
-  theURL <- httr::POST(url = "https://api.lens.org/scholarly/search",
-                       add_headers(.headers = c("Authorization" = token,
-                                                "Content-Type" = "application/json")),
-                       body = create_query_string_T_lens(genus, species, synonyms, additionalkeywords, size))
-  lens_content <- jsonlite::fromJSON(rawToChar(theURL$content))
+  response <- httr::POST(url = "https://api.lens.org/scholarly/search",
+                         add_headers(.headers = c("Authorization" = token,
+                                                  "Content-Type" = "application/json")),
+                         body = create_query_string_T_lens(genus, species, synonyms, additionalkeywords, size))
+  lens_content <- jsonlite::fromJSON(rawToChar(response$content))
   if (!is.null(lens_content$total)) {
     resultCount <- as.numeric(lens_content$total)
   } else {
@@ -739,11 +741,11 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token,
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
-  theURL <- httr::POST(url = "https://api.lens.org/scholarly/search",
-                       add_headers(.headers = c("Authorization" = token,
-                                                "Content-Type" = "application/json")),
-                       body = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords, size))
-  lens_content <- jsonlite::fromJSON(rawToChar(theURL$content))
+  response <- httr::POST(url = "https://api.lens.org/scholarly/search",
+                         add_headers(.headers = c("Authorization" = token,
+                                                  "Content-Type" = "application/json")),
+                         body = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords, size))
+  lens_content <- jsonlite::fromJSON(rawToChar(response$content))
   if (!is.null(lens_content$total)) {
     resultCount <- as.numeric(lens_content$total)
   } else {
