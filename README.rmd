@@ -102,8 +102,8 @@ FetchSpT_wos(genus = "Bettongia", species = "penicillata")
 
 #Lens requests
 token <- "your_lens_token"
-CountSpT_lens(genus = "Bettongia", species = "penicillata", token = token, size = 50000)
-FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = token, size = 50000)
+CountSpT_lens(genus = "Bettongia", species = "penicillata", size = 50000, token = token)
+FetchSpT_lens(genus = "Bettongia", species = "penicillata", size = 50000, token = token)
 ```
 
 Set `size = 1000` if you are using a 14-day token. The default is set to `size = 50000`.

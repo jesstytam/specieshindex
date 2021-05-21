@@ -638,7 +638,57 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 
 
 
+#' Title
+#'
+#' @param genus 
+#' @param species 
+#' @param synonyms 
+#' @param additionalkeywords 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+CountSpT_base <- function(genus, species, synonyms, additionalkeywords) {
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
+  if (findname$user_supplied_name[1] %in% findname$matched_name) {
+    print("Species found on the Encyclopedia of Life.")
+  } else {print("Species missing from the Encyclopedia of Life.")}
+  response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
+                        query = list(func = "PerformSearch",
+                                     query = create_query_string_T_base(genus, species, synonyms, additionalkeywords)))
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response)
+  resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
+  return(resultCount)
+}
 
+
+
+#' Title
+#'
+#' @param genus 
+#' @param species 
+#' @param synonyms 
+#' @param additionalkeywords 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
+  if (findname$user_supplied_name[1] %in% findname$matched_name) {
+    print("Species found on the Encyclopedia of Life.")
+  } else {print("Species missing from the Encyclopedia of Life.")}
+  response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
+                        query = list(func = "PerformSearch",
+                                     query = create_query_string_TAK_base(genus, species, synonyms, additionalkeywords)))
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response)
+  resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
+  return(resultCount)
+}
 
 
 
@@ -652,9 +702,9 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
-#' @param token Lens token needed to access and download data from their database.
 #' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#'
+#' @param token Lens token needed to access and download data from their database.
+#' 
 #' @return Search count of the species with the given \code{genus} and \code{species}.
 #' @export
 #' 
@@ -676,7 +726,7 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' CountSpT_lens("bettongia", "penicillata", "conserv*")
 #' }
-CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
+CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000, token) {
   if (missing(token)) {
     stop("You need to register for a token on Lens.") #stop running if token missing
   }
@@ -709,9 +759,9 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, s
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
-#' @param token Lens token needed to access and download data from their database.
 #' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#'
+#' @param token Lens token needed to access and download data from their database.
+#' 
 #' @return Search count of the species with the given \code{genus} and \code{species}.
 #' @export
 #' 
@@ -733,7 +783,7 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, s
 #' 
 #' CountSpTAK_lens("bettongia", "penicillata", "conserv*")
 #' }
-CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
+CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000, token) {
   if (missing(token)) {
     stop("You need to register for a token on Lens.") #stop running if token missing
   }
@@ -1405,6 +1455,92 @@ create_query_string_TAK_wos <- function(genus, species, synonyms, additionalkeyw
     return(paste0('TI = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')',
                   ' OR AB = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')',
                   ' OR AK = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
+  } 
+}
+
+
+
+#' Creates a query string for BACE to make functions with a query cleaner.
+#' Title, abstract, and keywords.
+#'
+#' @title Query string for BACE
+#'
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param synonyms Alternate species names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @noRd
+#' 
+create_query_string_T_base <- function(genus, species, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:"', genus, ' ', species, '"'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[1])
+    if (length(synonyms)==1) {
+      return(paste0(temp_string, ')'))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0(temp_string, ' OR ', synonyms[i])
+      }
+      return(paste0(temp_string, ')'))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('dctitle:(("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
+  } 
+}
+
+
+
+#' Creates a query string for BACE to make functions with a query cleaner.
+#' Title, abstract, and keywords.
+#'
+#' @title Query string for BACE
+#'
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#' @param synonyms Alternate species names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @noRd
+#' 
+create_query_string_TAK_base <- function(genus, species, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:"', genus, ' ', species, '"',
+                  ' OR dcdescription:"', genus, ' ', species, '"',
+                  ' OR dcsubject:"', genus, ' ', species, '"'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:("', genus, ' ', species, '" AND ', additionalkeywords, ')',
+                  ' OR dcdescription:("', genus, ' ', species, '" AND ', additionalkeywords, ')',
+                  ' OR dcsubject:("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[1], ')',
+                          ' OR dcdescription:("', genus, ' ', species, '" OR ', synonyms[1], ')',
+                          ' OR dcsubject:("', genus, ' ', species, '" OR ', synonyms[1], ')')
+    if (length(synonyms)==1) {
+      return(paste0(temp_string))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[i], ')',
+                              ' OR dcdescription:("', genus, ' ', species, '" OR ', synonyms[i], ')',
+                              ' OR dcsubject:("', genus, ' ', species, '" OR ', synonyms[i], ')')
+      }
+      return(paste0(temp_string))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('dctitle:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
+                  ' OR dcdescription:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
+                  ' OR dcsubject:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
   } 
 }
 

@@ -11,6 +11,7 @@ LazyData: true
 Imports: 
     rscopus,
     wosr,
+    rbace,
     lens2r,
     taxize,
     dplyr,

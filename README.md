@@ -131,8 +131,8 @@ FetchSpT_wos(genus = "Bettongia", species = "penicillata")
 
 #Lens requests
 token <- "your_lens_token"
-CountSpT_lens(genus = "Bettongia", species = "penicillata", token = token, size = 50000)
-FetchSpT_lens(genus = "Bettongia", species = "penicillata", token = token, size = 50000)
+CountSpT_lens(genus = "Bettongia", species = "penicillata", size = 50000, token = token)
+FetchSpT_lens(genus = "Bettongia", species = "penicillata", size = 50000, token = token)
 ```
 
 Set `size = 1000` if you are using a 14-day token. The default is set to
@@ -195,15 +195,15 @@ CombineSp
 ```
 
     ##              genus_species     species           genus publications citations
-    ## 1    Bettongia_penicillata penicillata       Bettongia          113      1903
-    ## 2       Setonix_brachyurus  brachyurus         Setonix          242      3427
-    ## 3 Ornithorhynchus_anatinus    anatinus Ornithorhynchus          321      6365
-    ## 4   Phascolarctos_cinereus    cinereus   Phascolarctos          773     14291
+    ## 1    Bettongia penicillata penicillata       Bettongia          113      1903
+    ## 2       Setonix brachyurus  brachyurus         Setonix          242      3427
+    ## 3 Ornithorhynchus anatinus    anatinus Ornithorhynchus          321      6365
+    ## 4   Phascolarctos cinereus    cinereus   Phascolarctos          773     14291
     ##   journals years_publishing  h     m i10 h5
     ## 1       55               44 26 0.591  54  6
     ## 2      107               67 29 0.433 121  3
     ## 3      153               68 41 0.603 177  6
-    ## 4      227              140 53 0.379 427 12
+    ## 4      227              140 53 0.379 427 11
 
 Once you are happy with your dataset, you can make some nice plots.
 Using `ggplot2`, we can compare the *h*-index and the total citations.
