@@ -11,7 +11,6 @@ output:
 pacman::p_load(tidyverse,
                rscopus,
                wosr,
-               rbace,
                lens2r,
                data.table,
                httr,
@@ -1259,6 +1258,16 @@ plotAllindices <- function(data) {
 }
 ```
 
+```{r}
+plotPub <- function(data) {
+  data$year <- as.numeric(substr(data$cover_date, 1, 4))
+  pub <- ggplot2::ggplot(data = data,
+                  aes(x = year)) +
+    ggplot2::geom_freqpoly() 
+  return(pub)
+}
+```
+
 
 **Tests**
 
@@ -1447,6 +1456,11 @@ unique(koala_test$dctitle)
 
 #ggplot
 
-plotAllindices(CombineSp)
+test_bind <- list(Koala, Platypus, Quokka, Woylie)
+
+test_bind <- test_bind %>% lapply(test_bind, function(x) mutate(sp = as.character(substitute(x))))
+
+
+plotPub(Koala)
 
 ```
