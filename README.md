@@ -22,6 +22,7 @@ installed.
 #Installation from GitHub
 install.packages("rscopus")
 install.packages("wosr")
+install.packages("rbace")
 install.packages("lens2r")
 install.packages("taxize")
 install.packages("XML")
@@ -274,12 +275,10 @@ ggplot(CombineSp, aes(x = species,
 
   - Web of Science
       - [x] Count functions working
-      - [ ] Fetch functions working
+      - [x] Fetch functions working
       - [x] All indices working
   - BASE
-      - [ ] Count functions working
-      - [ ] Fetch functions working
-      - [ ] All indices working
+      - [x] Count functions working
   - Lens
       - [x] Count functions working
       - [x] Fetch functions working
@@ -287,7 +286,7 @@ ggplot(CombineSp, aes(x = species,
 
 ## :rocket: Acknowledgements
 
-`specieshindex` is enabled by Scopus, Web of Science, and [The
+`specieshindex` is enabled by Scopus, Web of Science, BASE, and [The
 Lens](https://www.lens.org/).
 
 <iframe src="https://lens.org/lens/embed/attribution" scrolling="no" height="30px" width="100%">

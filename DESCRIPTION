@@ -1,7 +1,7 @@
 Package: specieshindex
 Type: Package
 Title: How (scientifically) popular is a given species?
-Version: 0.2.0
+Version: 0.2.1
 Date: 2021-01-19
 Author: Jessica Tam
 Maintainer: Jessica Tam <tamtinying@gmail.com>
@@ -11,6 +11,7 @@ LazyData: true
 Imports: 
     rscopus,
     wosr,
+    rbace,
     lens2r,
     taxize,
     dplyr,

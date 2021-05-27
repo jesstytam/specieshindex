@@ -21,6 +21,7 @@ To get this package to work, make sure you have the following packages installed
 #Installation from GitHub
 install.packages("rscopus")
 install.packages("wosr")
+install.packages("rbace")
 install.packages("lens2r")
 install.packages("taxize")
 install.packages("XML")
@@ -219,18 +220,16 @@ ggplot(CombineSp, aes(x = species,
 ## :paw_prints: Roadmap
 - Web of Science
   - [x] Count functions working
-  - [ ] Fetch functions working
+  - [x] Fetch functions working
   - [x] All indices working
 - BASE
-  - [ ] Count functions working
-  - [ ] Fetch functions working
-  - [ ] All indices working
+  - [x] Count functions working
 - Lens
   - [x] Count functions working
   - [x] Fetch functions working
   - [x] All indices working
   
 ## :rocket: Acknowledgements
-`specieshindex` is enabled by Scopus, Web of Science, and [The Lens](https://www.lens.org/).
+`specieshindex` is enabled by Scopus, Web of Science, BASE, and [The Lens](https://www.lens.org/).
 
 <iframe src="https://lens.org/lens/embed/attribution" scrolling="no" height="30px" width="100%"></iframe>

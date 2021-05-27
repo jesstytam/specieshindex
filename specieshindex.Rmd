@@ -889,60 +889,6 @@ CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
 }
 ```
 
-```{r, fetch from base using title, message=FALSE}
-#this function downloads citation data from base
-FetchSpT_base <- function(genus, species, synonyms, additionalkeywords) {
-  count <- CountSpT_base(genus, species, synonyms, additionalkeywords) #check the number of records
-  print(paste(count, "records found."))
-  if (count < 1) {
-    noCitations <- data.frame(citations = 0)
-    return(noCitations)
-  }
-  #loop
-  results <- data.frame()
-  step_size <- 125
-  looprepeat <- ceiling(count/step_size)-1
-  for (i in 0:looprepeat) { #number of loops to be determined by the count of the documents
-    print(paste("loop", i+1))
-    query <- rbace::bs_search(query = create_query_string_T_base(genus, species, synonyms, additionalkeywords),
-                              hits = step_size,
-                              offset = step_size*i) 
-    query <- data.table::rbindlist(query)
-    results <- dplyr::bind_rows(results, query)
-    start_record <- as.numeric(summary(query)[1,1])
-  }
-  #renaming columns
-  #names(results)[names(results) == "tot_cites"] <- "citations"
-  #names(results)[names(results) == "dctype"] <- "description"
-  #names(results)[names(results) == "dcdate"] <- "cover_date"
-  #showing final list of records
-  returned <- nrow(results)
-  print(paste(returned, "records retrived in total."))
-  return(results)
-}
-```
-
-```{r, fetch from base using title only, message=FALSE}
-#this function downloads citation data from base
-FetchSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
-  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
-  )
-  query <- rbace::bs_search(query = create_query_string_TAK_base(genus, species, synonyms, additionalkeywords),
-                            hits = 125) 
-  results <- data.table::rbindlist(query, fill = TRUE)
-  #renaming columns
-  #names(results)[names(results) == "tot_cites"] <- "citations"
-  #names(results)[names(results) == "doc_type"] <- "description"
-  #names(results)[names(results) == "date"] <- "cover_date"
-  #showing final list of records
-  returned <- nrow(results)
-  print(paste(returned, "records retrived in total."))
-  return(results)
-}
-```
-
 ```{r, function to get result count from lens title only}
 CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
   if (missing(token)) {
