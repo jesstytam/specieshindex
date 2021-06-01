@@ -10,6 +10,8 @@ status](https://www.r-pkg.org/badges/version/specieshindex)](https://CRAN.R-proj
 [![Github All
 Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg)]()
 
+*UNDER CONSTRUCTION, DOCUMENTATION NOT UP TO DATE*
+
 `specieshindex` is a package that aims to gauge scientific influence of
 different species mainly using the *h*-index.
 
