@@ -464,16 +464,13 @@ spindex_plots_theme <- function() {
 
 ```{r, function to get result count from scopus title only}
 #code from Fonti (modified)
-CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, APIkey, datatype = "application/xml") {
-  if (missing(APIkey)) {
-    stop("You need to register for an API key on Scopus.") #stop running if API key missing
-  }
+CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
   findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
   ) 
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                      query = list(apiKey = paste0(APIkey),
+                      query = list(apiKey = APIkey,
                                    query = create_query_string_T(genus, species, synonyms, additionalkeywords),
                                    httpAccept = "application/xml")) #format the URL to be sent to the API
   httr::stop_for_status(response) #pass any HTTP errors to the R console
@@ -485,7 +482,7 @@ CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, APIkey
 
 ```{r, function to get result count from scopus title+abs+key}
 #code from Fonti (modified)
-CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, APIkey, datatype = "application/xml") {
+CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, APIkey = APIkey, datatype = "application/xml") {
   if (missing(APIkey)) {
     stop("You need to register for an API key on Scopus.") #stop running if API key missing
   }
@@ -506,7 +503,7 @@ CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, APIk
 
 ```{r, fetch from scopus using title only, message=FALSE}
 #this function downloads citation data from scopus
-FetchSpT_scopus <- function(genus, species, synonyms, additionalkeywords, language = 0, APIkey) {
+FetchSpT_scopus <- function(genus, species, synonyms, additionalkeywords, language = 0, APIkey = APIkey) {
   count <- CountSpT(genus, species, synonyms, additionalkeywords, APIkey) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
@@ -649,7 +646,7 @@ FetchSpT_scopus <- function(genus, species, synonyms, additionalkeywords, langua
 
 ```{r, fetch from scopus using title+abs+key, message=FALSE}
 #this function downloads citation data from scopus
-FetchSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, language = 0, APIkey) {
+FetchSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, language = 0, APIkey = APIkey) {
   count <- CountSpTAK(genus, species, synonyms, additionalkeywords, APIkey) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
@@ -891,10 +888,7 @@ CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
 ```
 
 ```{r, function to get result count from lens title only}
-CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
-  if (missing(token)) {
-    stop("You need to register for a token on Lens.") #stop running if token missing
-  }
+CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000) {
   findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
@@ -914,10 +908,7 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, s
 ```
 
 ```{r, function to get result count from lens title, abstract, and keywords only}
-CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
-  if (missing(token)) {
-    stop("You need to register for a token on Lens.") #stop running if token missing
-  }
+CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000) {
   findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
@@ -938,10 +929,7 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token,
 
 ```{r, fetch from lens using title, message=FALSE}
 #this function downloads citation data from lens
-FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
-  if (missing(token)) {
-    stop("You need to register for a token on Lens.") #stop running if API key missing
-  }
+FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000) {
   findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
@@ -970,10 +958,7 @@ FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, token, s
 
 ```{r, fetch from lens using title+abs+key, message=FALSE}
 #this function downloads citation data from lens
-FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, token, size = 50000) {
-  if (missing(token)) {
-    stop("You need to register for a token on Lens.") #stop running if API key missing
-  }
+FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000) {
   findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
   dplyr::case_when(
     findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
@@ -1354,19 +1339,24 @@ Spi10(dummy1) #12
 
 ```{r, testing}
 
+APIkey <- "442b9048417ef20cf680a0ae26ee4d86"
+sid <- auth(username = NULL, password = NULL)
+token <- "your_lens_token"
+
 CountSpT <- function(db, genus, species, synonyms, additinoalkeywords, language, size) {
   if (db == "scopus") {
-    CountSpT_scopus(genus, species, synonyms, additionalkeywords, language)
+    countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords, language)
   } else if (db == "wos") {
-    CountSpT_wos(genus, species, synonyms, additionalkeywords)
+    countsp <- CountSpT_wos(genus, species, synonyms, additionalkeywords)
   } else if (db == "base") {
-    CountSpT_base(genus, species, synonyms, additionalkeywords)
+    countsp <- CountSpT_base(genus, species, synonyms, additionalkeywords)
   } else if (db == "lens") {
-    CountSpT_lens(genus, species, synonyms, additionalkeywords, size)
+    countsp <- CountSpT_lens(genus, species, synonyms, additionalkeywords, size)
   }
+  return(countsp)
 }
 
-
+CountSpT("wos", "Bettongia", "penicillata")
 
 
 
