@@ -1343,7 +1343,7 @@ APIkey <- "442b9048417ef20cf680a0ae26ee4d86"
 sid <- auth(username = NULL, password = NULL)
 token <- "your_lens_token"
 
-CountSpT <- function(db, genus, species, synonyms, additinoalkeywords, language, size) {
+CountSpT_wrap <- function(db, genus, species, synonyms, additinoalkeywords, language, size) {
   if (db == "scopus") {
     countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords, language)
   } else if (db == "wos") {
@@ -1356,7 +1356,7 @@ CountSpT <- function(db, genus, species, synonyms, additinoalkeywords, language,
   return(countsp)
 }
 
-CountSpT("wos", "Bettongia", "penicillata")
+CountSpT_wrap("scopus", "Bettongia", "penicillata")
 
 
 
