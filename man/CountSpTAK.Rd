@@ -2,18 +2,13 @@
 % Please edit documentation in R/specieshindex.R
 \name{CountSpTAK}
 \alias{CountSpTAK}
-\title{Search count from Scopus - title, abstract, and keywords}
+\title{CountSpTAK wrapper}
 \usage{
-CountSpTAK(
-  genus,
-  species,
-  synonyms,
-  additionalkeywords,
-  APIkey,
-  datatype = "application/xml"
-)
+CountSpTAK(db, genus, species, synonyms, additionalkeywords, size = 50000)
 }
 \arguments{
+\item{db}{Literature database. Scopus ("scopus") or Web of Science ("wos") or Base ("base") or Lens ("lens").}
+
 \item{genus}{Genus classification from the binomial name.}
 
 \item{species}{Species classification from the binomial name.}
@@ -22,34 +17,19 @@ CountSpTAK(
 
 \item{additionalkeywords}{Optional search terms.}
 
-\item{APIkey}{Scopus API key needed to access and download data from their database.}
-
-\item{datatype}{Formats the URL to be sent to the API. The default is "application/xml".}
+\item{size}{Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers. Lens only.}
 }
 \value{
 Search count of the species with the given \code{genus} and \code{species}.
 }
 \description{
-This function counts the total number of search results.
-It counts the publications with the binomial name in the title, abstract, and keywords.
-A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
+This is a wrapper function for \code{\link{CountSpTAK_scopus}}, \code{\link{CountSpTAK_wos}}, \code{\link{CountSpTAK_base}}, and \code{\link{CountSpTAk_lens}}.
 }
 \examples{
 \dontrun{
-CountSpTAK("Bettongia", "penicillata", APIkey = "myAPI")
-
-#lower case letter in genus is also accepted and will return identical results
-
-CountSpTAK("bettongia", "penicillata", APIkey = "myAPI")
+CountSpTAK("scopus", genus = "Osphranter", species = "rufus")
 }
 \dontrun{
-CountSpTAK("Bettongia", "penicillata", "conserv*", "myAPI")
-
-#lower case letter in genus is also accepted and will return identical results
-
-CountSpTAK("bettongia", "penicillata", "conserv*", "myAPI")
+CountSpTAK("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*")
 }
-}
-\references{
-Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 }

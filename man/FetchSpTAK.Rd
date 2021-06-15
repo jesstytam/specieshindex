@@ -2,11 +2,21 @@
 % Please edit documentation in R/specieshindex.R
 \name{FetchSpTAK}
 \alias{FetchSpTAK}
-\title{Fetch data from Scopus - title, abstract and keywords}
+\title{FetchSpTAK wrapper}
 \usage{
-FetchSpTAK(genus, species, synonyms, additionalkeywords, language = 0, APIkey)
+FetchSpTAK(
+  db,
+  genus,
+  species,
+  synonyms,
+  additionalkeywords,
+  language = 0,
+  size = 50000
+)
 }
 \arguments{
+\item{db}{Literature database. Scopus ("scopus") or Web of Science ("wos") or Lens ("lens").}
+
 \item{genus}{Genus classification from the binomial name.}
 
 \item{species}{Species classification from the binomial name.}
@@ -15,30 +25,21 @@ FetchSpTAK(genus, species, synonyms, additionalkeywords, language = 0, APIkey)
 
 \item{additionalkeywords}{Optional search terms.}
 
-\item{language}{Language of the paper; default is 0, enter 1 to retrieve the variable.}
+\item{language}{Language of the paper; default is 0, enter 1 to retrieve the variable. Scopus only.}
 
-\item{APIkey}{Scopus API key needed to access and download data from their database.}
+\item{size}{Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers. Lens only.}
 }
 \value{
 A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 }
 \description{
-This function fetches citation information from Scopus using genus and species name found in the title, abstract and keywords of the publications.
-Duplicates are to be removed by the user after fetching the data.
+This is a wrapper function for \code{\link{FetchSpTAK_scopus}}, \code{\link{FetchSpTAK_wos}}, \code{\link{FetchSpTAK_base}}, and \code{\link{FetchSpTAK_lens}}.
 }
 \examples{
 \dontrun{
-FetchSpTAK("Bettongia", "penicillata", APIkey = "myAPI")
-
-#lower case letter in genus is also accepted and will return identical results
-
-FetchSpTAK("bettongia", "penicillata", APIkey = "myAPI")
+FetchSpTAK("scopus", genus = "Osphranter", species = "rufus")
 }
 \dontrun{
-FetchSpTAK("Bettongia", "penicillata", "conserv*", "myAPI")
-
-#lower case letter in genus is also accepted and will return identical results
-
-FetchSpTAK("bettongia", "penicillata", "conserv*", "myAPI")
+FetchSpTAK("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*")
 }
 }

@@ -2,11 +2,21 @@
 % Please edit documentation in R/specieshindex.R
 \name{FetchSpT}
 \alias{FetchSpT}
-\title{Fetch data from Scopus - title only}
+\title{FetchSpT wrapper}
 \usage{
-FetchSpT(genus, species, synonyms, additionalkeywords, language = 0, APIkey)
+FetchSpT(
+  db,
+  genus,
+  species,
+  synonyms,
+  additionalkeywords,
+  language = 0,
+  size = 50000
+)
 }
 \arguments{
+\item{db}{Literature database. Scopus ("scopus") or Web of Science ("wos") or or Lens ("lens").}
+
 \item{genus}{Genus classification from the binomial name.}
 
 \item{species}{Species classification from the binomial name.}
@@ -15,30 +25,21 @@ FetchSpT(genus, species, synonyms, additionalkeywords, language = 0, APIkey)
 
 \item{additionalkeywords}{Optional search terms.}
 
-\item{language}{Language of the paper; default is 0, enter 1 to retrieve the variable.}
+\item{language}{Language of the paper; default is 0, enter 1 to retrieve the variable. Scopus only.}
 
-\item{APIkey}{Scopus API key needed to access and download data from their database.}
+\item{size}{Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers. Lens only.}
 }
 \value{
 A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 }
 \description{
-This function fetches citation information from Scopus using genus and species name found in the title of the publications.
-Duplicates are to be removed by the user after fetching the data.
+This is a wrapper function for \code{\link{FetchSpT_scopus}}, \code{\link{FetchSpT_wos}}, \code{\link{FetchSpT_base}}, and \code{\link{FetchSpT_lens}}.
 }
 \examples{
 \dontrun{
-FetchSpT("Bettongia", "penicillata", APIkey = "myAPI")
-
-#lower case letter in genus is also accepted and will return identical results
-
-FetchSpT("bettongia", "penicillata", APIkey = "myAPI")
+FetchSpT("scopus", genus = "Osphranter", species = "rufus")
 }
 \dontrun{
-FetchSpT("Bettongia", "penicillata", "conserv*", "myAPI")
-
-#lower case letter in genus is also accepted and will return identical results
-
-FetchSpT("bettongia", "penicillata", "conserv*", "myAPI")
+FetchSpT("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*")
 }
 }
