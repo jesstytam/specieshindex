@@ -1437,4 +1437,51 @@ test_bind <- test_bind %>% lapply(test_bind, function(x) mutate(sp = as.characte
 
 plotPub(Koala)
 
+
+#genus
+
+create_query_string_T_scopus_genus <- function(genus, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TITLE("', genus, '")'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TITLE("', genus, '" AND ', additionalkeywords, ')'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('TITLE("', genus, '" OR "', synonyms[1], '"')
+    if (length(synonyms)==1) {
+      return(paste0(temp_string, ')'))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0(temp_string, ' OR "', synonyms[i], '"')
+      }
+      return(paste0(temp_string, ')'))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('TITLE(("', genus, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
+  } 
+}
+
+
+CountSpT_scopus_genus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
+  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
+  ) 
+  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                      query = list(apiKey = apikey,
+                                   query = create_query_string_T_scopus_genus(genus, synonyms, additionalkeywords),
+                                   httpAccept = "application/xml")) #format the URL to be sent to the API
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response) #parse the data to extract values
+  resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
+  return(resultCount)
+}
+
+CountSpT_scopus_genus("Macropus") #1101
+CountSpT_scopus_genus("drosophila") #65802
+
+
 ```
