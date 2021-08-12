@@ -1456,7 +1456,7 @@ plotAllindices <- function(data) {
 
 
 #' Creates a query string for Scopus to make functions with a query cleaner.
-#' Title only.
+#' Title only; genus species.
 #' 
 #' @title Query string for Scopus
 #'
@@ -1494,7 +1494,7 @@ create_query_string_T_scopus <- function(genus, species, synonyms, additionalkey
 
 
 #' Creates a query string for Scopus to make functions with a query cleaner.
-#' Title, abstract, and keywords.
+#' Title, abstract, and keywords; genus species.
 #' 
 #' @title Query string for Scopus
 #'
@@ -1531,8 +1531,82 @@ create_query_string_TAK_scopus <- function(genus, species, synonyms, additionalk
 
 
 
+#' Creates a query string for Scopus to make functions with a query cleaner.
+#' Title only; genus.
+#' 
+#' @title Query string for Scopus
+#'
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @noRd
+#' 
+create_query_string_T_scopus_genus <- function(genus, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TITLE("', genus, '")'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TITLE("', genus, '" AND ', additionalkeywords, ')'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('TITLE("', genus, '" OR "', synonyms[1], '"')
+    if (length(synonyms)==1) {
+      return(paste0(temp_string, ')'))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0(temp_string, ' OR "', synonyms[i], '"')
+      }
+      return(paste0(temp_string, ')'))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('TITLE(("', genus, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
+  } 
+}
+
+
+
+#' Creates a query string for Scopus to make functions with a query cleaner.
+#' Title, abstract, and keywords; genus.
+#'
+#' @title Query string for Scopus
+#'
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @noRd
+#' 
+create_query_string_TAK_scopus_genus <- function(genus, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TITLE-ABS-KEY("', genus, '")'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TITLE-ABS-KEY("', genus, '" AND ', additionalkeywords, ')'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('TITLE-ABS-KEY("', genus, '" OR "', synonyms[1], '"')
+    if (length(synonyms)==1) {
+      return(paste0(temp_string, ')'))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0(temp_string, ' OR "', synonyms[i], '"')
+      }
+      return(paste0(temp_string, ')'))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('TITLE-ABS-KEY(("', genus, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
+  } 
+}
+
+
+
 #' Creates a query string for Web of Science to make functions with a query cleaner.
-#' Title only.
+#' Title only; genus species.
 #'
 #' @title Query string for Web of Science
 #' 
@@ -1570,7 +1644,7 @@ create_query_string_T_wos <- function(genus, species, synonyms, additionalkeywor
 
 
 #' Creates a query string for Web of Science to make functions with a query cleaner.
-#' Title, abstract, and keywords.
+#' Title, abstract, and keywords; genus species.
 #'
 #' @title Query string for Web of Science
 #' 
@@ -1617,8 +1691,92 @@ create_query_string_TAK_wos <- function(genus, species, synonyms, additionalkeyw
 
 
 
+#' Creates a query string for Web of Science to make functions with a query cleaner.
+#' Title only; genus.
+#'
+#' @title Query string for Web of Science
+#' 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @noRd
+#' 
+create_query_string_T_wos_genus <- function(genus, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TI = "', genus, '"'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TI = ("', genus, '" AND ', additionalkeywords, ')'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('TI = ("', genus, '" OR "', synonyms[1], '")')
+    if (length(synonyms)==1) {
+      return(paste0(temp_string))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0('TI = ("', genus, '" OR "', synonyms[i], '")')
+      }
+      return(paste0(temp_string))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('TI = (("', genus, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
+  } 
+}
+
+
+
+#' Creates a query string for Web of Science to make functions with a query cleaner.
+#' Title, abstract, and keywords; genus.
+#'
+#' @title Query string for Web of Science
+#' 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate species genus names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @noRd
+#' 
+create_query_string_TAK_wos_genus <- function(genus, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TI = "', genus,
+                  '" OR AB = "', genus,
+                  '" OR AK = "', genus, '"'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('TI = ("', genus, '" AND ', additionalkeywords, ')',
+                  ' OR AB = ("', genus, '" AND ', additionalkeywords, ')',
+                  ' OR AK = ("', genus, '" AND ', additionalkeywords, ')'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('TI = ("', genus, '" OR "', synonyms[1], '")',
+                          ' OR AB = ("', genus, '" OR "', synonyms[1], '")',
+                          ' OR AK = ("', genus, '" OR "', synonyms[1], '")')
+    if (length(synonyms)==1) {
+      return(paste0(temp_string))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0('TI = ("', genus, '" OR "', synonyms[i], '")',
+                              ' OR AB = ("', genus, '" OR "', synonyms[i], '")',
+                              ' OR AK = ("', genus, '" OR "', synonyms[i], '")')
+      }
+      return(paste0(temp_string))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('TI = (("', genus, '" OR "', synonyms, '") AND ', additionalkeywords, ')',
+                  ' OR AB = (("', genus, '" OR "', synonyms, '") AND ', additionalkeywords, ')',
+                  ' OR AK = (("', genus, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
+  } 
+}
+
+
+
 #' Creates a query string for BASE to make functions with a query cleaner.
-#' Title only.
+#' Title only; genus species.
 #'
 #' @title Query string for BASE
 #' 
@@ -1656,7 +1814,7 @@ create_query_string_T_base <- function(genus, species, synonyms, additionalkeywo
 
 
 #' Creates a query string for BASE to make functions with a query cleaner.
-#' Title, abstract, and keywords.
+#' Title, abstract, and keywords; genus species.
 #'
 #' @title Query string for BASE
 #' 
@@ -1703,8 +1861,92 @@ create_query_string_TAK_base <- function(genus, species, synonyms, additionalkey
 
 
 
+#' Creates a query string for BASE to make functions with a query cleaner.
+#' Title only; genus.
+#'
+#' @title Query string for BASE
+#' 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @noRd
+#' 
+create_query_string_T_base_genus <- function(genus, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:"', genus, '"'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:("', genus, '" AND ', additionalkeywords, ')'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('dctitle:("', genus, '" OR ', synonyms[1])
+    if (length(synonyms)==1) {
+      return(paste0(temp_string, ')'))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0(temp_string, ' OR ', synonyms[i])
+      }
+      return(paste0(temp_string, ')'))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('dctitle:(("', genus, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
+  } 
+}
+
+
+
+#' Creates a query string for BASE to make functions with a query cleaner.
+#' Title, abstract, and keywords; genus.
+#'
+#' @title Query string for BASE
+#' 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#'
+#' @noRd
+#' 
+create_query_string_TAK_base_genus <- function(genus, synonyms, additionalkeywords){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:"', genus, '"',
+                  ' OR dcdescription:"', genus, '"',
+                  ' OR dcsubject:"', genus, '"'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('dctitle:("', genus, '" AND ', additionalkeywords, ')',
+                  ' OR dcdescription:("', genus, '" AND ', additionalkeywords, ')',
+                  ' OR dcsubject:("', genus, '" AND ', additionalkeywords, ')'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('dctitle:("', genus, '" OR ', synonyms[1], ')',
+                          ' OR dcdescription:("', genus, '" OR ', synonyms[1], ')',
+                          ' OR dcsubject:("', genus, '" OR ', synonyms[1], ')')
+    if (length(synonyms)==1) {
+      return(paste0(temp_string))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0('dctitle:("', genus, '" OR ', synonyms[i], ')',
+                              ' OR dcdescription:("', genus, '" OR ', synonyms[i], ')',
+                              ' OR dcsubject:("', genus, '" OR ', synonyms[i], ')')
+      }
+      return(paste0(temp_string))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('dctitle:(("', genus, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
+                  ' OR dcdescription:(("', genus, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
+                  ' OR dcsubject:(("', genus, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
+  } 
+}
+
+
+
 #' Creates a query string for Lens to make functions with a query cleaner.
-#' Title only.
+#' Title only; genus species.
 #'
 #' @title Query string for Lens
 #' 
@@ -1803,7 +2045,7 @@ create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywo
 
 
 #' Creates a query string for Lens to make functions with a query cleaner.
-#' Title, abstract, and keywords.
+#' Title, abstract, and keywords; genus species.
 #'
 #' @title Query string for Lens
 #' 
@@ -1893,6 +2135,207 @@ create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkey
 			  "must": [{
 				  "query_string": {
 					  "query": "(\\"', genus, ' ', species, '\\" OR \\"', synonyms, '\\") AND ', additionalkeywords, '",
+					  "fields": ["title", "abstract", "keyword"],
+					"default_operator": "or"
+				  }
+			  }]
+		  }
+	  },
+	  "size": ', size, '
+  }'))
+  } 
+}
+
+
+
+#' Creates a query string for Lens to make functions with a query cleaner.
+#' Title only; genus.
+#'
+#' @title Query string for Lens
+#' 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
+#'
+#' @noRd
+#' 
+create_query_string_T_lens_genus <- function(genus, synonyms, additionalkeywords, size = 50000){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "\\"', genus, '\\"",
+					  "fields": ["title"]
+				  }
+			  }]
+		  }
+	  },
+	  "size": ', size, '
+  }'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "\\"', genus, '\\" AND ', additionalkeywords, '",
+					  "fields": ["title"]
+				  }
+			  }]
+		  }
+	  },
+	  "size": ', size, '
+  }'))
+  }
+  if (missing(additionalkeywords)&!missing(synonyms)) {
+    temp_string <- paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "\\"', genus, '\\" OR \\"', synonyms[1], '\\"",
+					  "fields": ["title"]
+				  }
+			  }]
+		  }
+	  },
+	  "size": ', size, '
+  }')
+    if (length(synonyms)==1) {
+      return(paste0(temp_string))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "\\"', genus, '\\" OR \\"', synonyms[i], '\\"",
+					  "fields": ["title"]
+				  }
+			  }]
+		  }
+	  },
+	  "size": ', size, '
+  }')
+      }
+      return(paste0(temp_string))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "(\\"', genus, '\\" OR \\"', synonyms, '\\") AND ', additionalkeywords, '",
+					  "fields": ["title"]
+				  }
+			  }]
+		  }
+	  },
+	  "size": ', size, '
+  }'))
+  } 
+}
+
+
+
+#' Creates a query string for Lens to make functions with a query cleaner.
+#' Title, abstract, and keywords; genus.
+#'
+#' @title Query string for Lens
+#' 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
+#'
+#' @noRd
+#' 
+create_query_string_TAK_lens_genus <- function(genus, synonyms, additionalkeywords, size = 50000){
+  if (missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "\\"', genus, '\\"",
+					  "fields": ["title", "abstract", "keyword"],
+					  "default_operator": "or"
+				  }
+			  }]
+		  }
+	  },
+	  "size": ', size, '
+  }'))
+  } 
+  if (!missing(additionalkeywords) & missing(synonyms)) {
+    return(paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "\\"', genus, '\\" AND ', additionalkeywords, '",
+					  "fields": ["title", "abstract", "keyword"],
+					"default_operator": "or"
+				  }
+			  }]
+		  }
+	  },
+	  "size": ', size, '
+  }'))
+  }
+  if (missing(additionalkeywords) & !missing(synonyms)) {
+    temp_string <- paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "\\"', genus, '\\" OR \\"', synonyms[1], '\\"",
+					  "fields": ["title", "abstract", "keyword"],
+					"default_operator": "or"
+				  }
+			  }]
+		  }
+	  },
+	  "size": ', size, '
+  }')
+    if (length(synonyms)==1) {
+      return(paste0(temp_string))
+    }
+    else {
+      for (i in 2:length(synonyms)){
+        temp_string <- paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "\\"', genus, '\\" OR \\"', synonyms[i], '\\"",
+					  "fields": ["title", "abstract", "keyword"],
+					"default_operator": "or"
+				  }
+			  }]
+		  }
+	  },
+	  "size": ', size, '
+  }')
+      }
+      return(paste0(temp_string))
+    }
+  }
+  if (!missing(additionalkeywords) & !missing(synonyms)) {
+    return(paste0('{
+    "query": {
+		  "bool": {
+			  "must": [{
+				  "query_string": {
+					  "query": "(\\"', genus, '\\" OR \\"', synonyms, '\\") AND ', additionalkeywords, '",
 					  "fields": ["title", "abstract", "keyword"],
 					"default_operator": "or"
 				  }
