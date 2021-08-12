@@ -911,6 +911,42 @@ CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, data
 }
 ```
 
+```{r, function to get result count from scopus title only; genus}
+#code from Fonti (modified)
+CountGenusT_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
+  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
+  ) 
+  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                      query = list(apiKey = apikey,
+                                   query = create_query_string_T_scopus_genus(genus, synonyms, additionalkeywords),
+                                   httpAccept = "application/xml")) #format the URL to be sent to the API
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response) #parse the data to extract values
+  resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
+  return(resultCount)
+}
+```
+
+```{r, function to get result count from scopus title+abs+key; genus}
+#code from Fonti (modified)
+CountGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
+  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
+  ) 
+  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                      query = list(apiKey = apikey,
+                                   query = create_query_string_TAK_scopus_genus(genus, synonyms, additionalkeywords),
+                                   httpAccept = "application/xml")) #format the URL to be sent to the API
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response) #parse the data to extract values
+  resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
+  return(resultCount)
+}
+```
+
 ```{r, fetch from scopus using title only, message=FALSE}
 #this function downloads citation data from scopus
 FetchSpT_scopus <- function(genus, species, synonyms, additionalkeywords, language = 0) {
