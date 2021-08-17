@@ -240,17 +240,38 @@ CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, data
 
 
 
-#' Title
+#' This function counts the total number of search results.
+#' It counts the publications with the genus name in the title only.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
+#' 
+#' @title Search count from Scopus - title only
 #'
-#' @param genus 
-#' @param synonyms 
-#' @param additionalkeywords 
-#' @param datatype 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
 #'
-#' @return
+#' @return Search count of the genus with the given \code{genus}.
 #' @export
+#' 
+#' @references 
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 #'
 #' @examples
+#' \dontrun{
+#' CountGenusT_scopus("Bettongia")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusT_scopus("bettongia")
+#' }
+#' \dontrun{
+#' CountGenusT_scopus("Bettongia", "conserv*")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusT_scopus("bettongia", "conserv*")
+#' }
 CountGenusT_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
   findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
   dplyr::case_when(
@@ -268,17 +289,38 @@ CountGenusT_scopus <- function(genus, synonyms, additionalkeywords, datatype = "
 
 
 
-#' Title
+#' This function counts the total number of search results.
+#' It counts the publications with the genus name in the title, abstract, and keywords.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
+#' 
+#' @title Search count from Scopus - title, abstract, and keywords
 #'
-#' @param genus 
-#' @param synonyms 
-#' @param additionalkeywords 
-#' @param datatype 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
 #'
-#' @return
+#' @return Search count of the genus with the given \code{genus}.
 #' @export
+#' 
+#' @references 
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 #'
 #' @examples
+#' \dontrun{
+#' CountGenusTAK_scopus("Bettongia")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusTAK_scopus("bettongia")
+#' }
+#' \dontrun{
+#' CountGenusTAK_scopus("Bettongia")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusTAK_scopus("bettongia")
+#' }
 CountGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
   findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
   dplyr::case_when(
@@ -724,16 +766,37 @@ CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 
 
 
-#' Title
+#' This function counts the total number of search results.
+#' It counts the publications with the genus name in the title only.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
+#' 
+#' @title Search count from Web of Science - title only
 #'
-#' @param genus 
-#' @param synonyms 
-#' @param additionalkeywords 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
 #'
-#' @return
+#' @return Search count of the genus with the given \code{genus}.
 #' @export
+#' 
+#' @references 
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 #'
 #' @examples
+#' \dontrun{
+#' CountGenusT_wos("Bettongia")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusT_wos("bettongia")
+#' }
+#' \dontrun{
+#' CountGenusT_wos("Bettongia", "conserv*")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusT_wos("bettongia", "conserv*")
+#' }
 CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
   findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
   dplyr::case_when(
@@ -746,16 +809,37 @@ CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
 
 
 
-#' Title
+#' This function counts the total number of search results.
+#' It counts the publications with the genus name in the title, abstract and author keywords.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
+#' 
+#' @title Search count from Web of Science - title, abstract and author keywords
 #'
-#' @param genus 
-#' @param synonyms 
-#' @param additionalkeywords 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
 #'
-#' @return
+#' @return Search count of the genus with the given \code{genus}.
 #' @export
+#' 
+#' @references 
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 #'
 #' @examples
+#' \dontrun{
+#' CountGenusTAK_wos("Bettongia")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusTAK_wos("bettongia")
+#' }
+#' \dontrun{
+#' CountGenusTAK_wos("Bettongia", "conserv*")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusTAK_wos("bettongia", "conserv*")
+#' }
 CountGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
   findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
   dplyr::case_when(
@@ -887,18 +971,18 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #'
 #' @examples
 #' \dontrun{
-#' CountSpT_wos("Bettongia", "penicillata")
+#' CountSpT_base("Bettongia", "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' CountSpT_wos("bettongia", "penicillata")
+#' CountSpT_base("bettongia", "penicillata")
 #' }
 #' \dontrun{
-#' CountSpT_wos("Bettongia", "penicillata", "conserv*")
+#' CountSpT_base("Bettongia", "penicillata", "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' CountSpT_wos("bettongia", "penicillata", "conserv*")
+#' CountSpT_base("bettongia", "penicillata", "conserv*")
 #' }
 CountSpT_base <- function(genus, species, synonyms, additionalkeywords) {
   findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
@@ -964,16 +1048,37 @@ CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
 
 
 
-#' Title
+#' This function counts the total number of search results.
+#' It counts the publications with the genus name in the title only.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
+#' 
+#' @title Search count from BASE - title only
 #'
-#' @param genus 
-#' @param synonyms 
-#' @param additionalkeywords 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
 #'
-#' @return
+#' @return Search count of the genus with the given \code{genus}.
 #' @export
+#' 
+#' @references 
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 #'
 #' @examples
+#' \dontrun{
+#' CountGenusT_base("Bettongia")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusT_base("bettongia")
+#' }
+#' \dontrun{
+#' CountGenusT_base("Bettongia", "conserv*")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusT_base("bettongia", "conserv*")
+#' }
 CountGenusT_base <- function(genus, synonyms, additionalkeywords) {
   findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
   if (findname$user_supplied_name[1] %in% findname$matched_name) {
@@ -990,16 +1095,37 @@ CountGenusT_base <- function(genus, synonyms, additionalkeywords) {
 
 
 
-#' Title
+#' This function counts the total number of search results.
+#' It counts the publications with the genus name in the title, abstract and author keywords.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
+#' 
+#' @title Search count from BASE - title, abstract and author keywords
 #'
-#' @param genus 
-#' @param synonyms 
-#' @param additionalkeywords 
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
 #'
-#' @return
+#' @return Search count of the genus with the given \code{genus}.
 #' @export
+#' 
+#' @references 
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 #'
 #' @examples
+#' \dontrun{
+#' CountGenusTAK_base("Bettongia")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusTAK_base("bettongia")
+#' }
+#' \dontrun{
+#' CountGenusTAK_base("Bettongia", "conserv*")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusTAK_base("bettongia", "conserv*")
+#' }
 CountGenusTAK_base <- function(genus, synonyms, additionalkeywords) {
   findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
   if (findname$user_supplied_name[1] %in% findname$matched_name) {
@@ -1080,7 +1206,6 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, size = 5
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
 #' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#' @param token Lens token needed to access and download data from their database.
 #' 
 #' @return Search count of the species with the given \code{genus} and \code{species}.
 #' @export
@@ -1123,17 +1248,38 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, size =
 
 
 
-#' Title
+#' This function counts the total number of search results.
+#' It counts the publications with the genus name in the title only.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
+#' 
+#' @title Search count from Lens - title only
 #'
-#' @param genus 
-#' @param synonyms 
-#' @param additionalkeywords 
-#' @param size 
-#'
-#' @return
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
+#' 
+#' @return Search count of the genus with the given \code{genus}.
 #' @export
+#' 
+#' @references 
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 #'
 #' @examples
+#' \dontrun{
+#' CountGenusT_lens("Bettongia")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusT_lens("bettongia")
+#' }
+#' \dontrun{
+#' CountGenusT_lens("Bettongia", "conserv*")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusT_lens("bettongia", "conserv*")
+#' }
 CountGenusT_lens <- function(genus, synonyms, additionalkeywords, size = 50000) {
   findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
   dplyr::case_when(
@@ -1154,17 +1300,38 @@ CountGenusT_lens <- function(genus, synonyms, additionalkeywords, size = 50000) 
 
 
 
-#' Title
+#' This function counts the total number of search results.
+#' It counts the publications with the genus name in the title, abstract and author keywords.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
+#' 
+#' @title Search count from Lens - title, abstract and author keywords
 #'
-#' @param genus 
-#' @param synonyms 
-#' @param additionalkeywords 
-#' @param size 
-#'
-#' @return
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
+#' 
+#' @return Search count of the genus with the given \code{genus}.
 #' @export
+#' 
+#' @references 
+#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 #'
 #' @examples
+#' \dontrun{
+#' CountGenusTAK_lens("Bettongia")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusTAK_lens("bettongia")
+#' }
+#' \dontrun{
+#' CountGenusTAK_lens("Bettongia", "conserv*")
+#' 
+#' #lower case letter in genus is also accepted and will return identical results
+#' 
+#' CountGenusTAK_lens("bettongia", "conserv*")
+#' }
 CountGenusTAK_lens <- function(genus, synonyms, additionalkeywords, size = 50000) {
   findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
   dplyr::case_when(
