@@ -12,7 +12,6 @@ Imports:
     rscopus,
     wosr,
     rbace,
-    lens2r,
     taxize,
     dplyr,
     data.table,

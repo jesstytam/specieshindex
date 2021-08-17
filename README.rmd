@@ -24,7 +24,6 @@ To get this package to work, make sure you have the following packages installed
 install.packages("rscopus")
 install.packages("wosr")
 install.packages("rbace")
-install.packages("lens2r")
 install.packages("taxize")
 install.packages("XML")
 install.packages("jsonlite")
@@ -229,20 +228,8 @@ ggplot(CombineSp, aes(x = species,
 **Figure 2.** The *m*-index of the Woylie, Quokka, Platypus, and Koala.
 
 <br/>
-
-## :paw_prints: Roadmap
-- Web of Science
-  - [x] Count functions working
-  - [x] Fetch functions working
-  - [x] All indices working
-- BASE
-  - [x] Count functions working
-- Lens
-  - [x] Count functions working
-  - [x] Fetch functions working
-  - [x] All indices working
   
 ## :rocket: Acknowledgements
-`specieshindex` is enabled by Scopus, Web of Science, BASE, and [The Lens](https://www.lens.org/).
+`specieshindex` is enabled by Scopus, Web of Science, and BASE.
 
 <iframe src="https://lens.org/lens/embed/attribution" scrolling="no" height="30px" width="100%"></iframe>

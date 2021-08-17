@@ -58,7 +58,6 @@ To get this package to work, make sure you have the following packages installed
 # Installation from GitHub
 install.packages("rscopus")
 install.packages("wosr")
-install.packages("lens2r")
 install.packages("taxize")
 install.packages("XML")
 install.packages("jsonlite")

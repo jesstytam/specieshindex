@@ -1,14 +1,13 @@
-#' This is a wrapper function for \code{\link{CountSpT_scopus}}, \code{\link{CountSpT_wos}}, \code{\link{CountSpT_base}}, and \code{\link{CountSpT_lens}}.
+#' This is a wrapper function for \code{\link{CountSpT_scopus}}, \code{\link{CountSpT_wos}}, and \code{\link{CountSpT_base}}.
 #' 
 #' @title CountSpT wrapper
 #'
-#' @param db Literature database. Scopus ("scopus") or Web of Science ("wos") or Base ("base") or Lens ("lens").
+#' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers. Lens only.
-#'
+#' 
 #' @return Search count of the species with the given \code{genus} and \code{species}.
 #' @export
 #'
@@ -19,32 +18,29 @@
 #' \dontrun{
 #' CountSpT("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*")
 #' }
-CountSpT <- function(db, genus, species, synonyms, additionalkeywords, size = 50000) {
+CountSpT <- function(db, genus, species, synonyms, additionalkeywords) {
   if (db == "scopus") {
     countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords)
   } else if (db == "wos") {
     countsp <- CountSpT_wos(genus, species, synonyms, additionalkeywords)
   } else if (db == "base") {
     countsp <- CountSpT_base(genus, species, synonyms, additionalkeywords)
-  } else if (db == "lens") {
-    countsp <- CountSpT_lens(genus, species, synonyms, additionalkeywords, size)
-  }
+  } 
   return(countsp)
 }
 
 
 
-#' This is a wrapper function for \code{\link{CountSpTAK_scopus}}, \code{\link{CountSpTAK_wos}}, \code{\link{CountSpTAK_base}}, and \code{\link{CountSpTAk_lens}}.
+#' This is a wrapper function for \code{\link{CountSpTAK_scopus}}, \code{\link{CountSpTAK_wos}}, and \code{\link{CountSpTAK_base}}.
 #' 
 #' @title CountSpTAK wrapper
 #'
-#' @param db Literature database. Scopus ("scopus") or Web of Science ("wos") or Base ("base") or Lens ("lens").
+#' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers. Lens only.
-#'
+#' 
 #' @return Search count of the species with the given \code{genus} and \code{species}.
 #' @export
 #'
@@ -55,33 +51,94 @@ CountSpT <- function(db, genus, species, synonyms, additionalkeywords, size = 50
 #' \dontrun{
 #' CountSpTAK("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*")
 #' }
-CountSpTAK <- function(db, genus, species, synonyms, additionalkeywords, size = 50000) {
+CountSpTAK <- function(db, genus, species, synonyms, additionalkeywords) {
   if (db == "scopus") {
     countsp <- CountSpTAK_scopus(genus, species, synonyms, additionalkeywords)
   } else if (db == "wos") {
     countsp <- CountSpTAK_wos(genus, species, synonyms, additionalkeywords)
   } else if (db == "base") {
     countsp <- CountSpTAK_base(genus, species, synonyms, additionalkeywords)
-  } else if (db == "lens") {
-    countsp <- CountSpTAK_lens(genus, species, synonyms, additionalkeywords, size)
   }
   return(countsp)
 }
 
 
 
-#' This is a wrapper function for \code{\link{FetchSpT_scopus}}, \code{\link{FetchSpT_wos}}, \code{\link{FetchSpT_base}}, and \code{\link{FetchSpT_lens}}.
+#' This is a wrapper function for \code{\link{CountGenusT_scopus}}, \code{\link{CountGenusT_wos}}, and \code{\link{CountGenusT_base}}.
+#' 
+#' @title CountSpT wrapper
+#'
+#' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#' 
+#' @return Search count of the genus with the given \code{genus}.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' CountGenusT("scopus", genus = "Osphranter")
+#' }
+#' \dontrun{
+#' CountGenusT("scopus", genus = "Osphranter", synonyms = "Macropus", additionalkeywords = "conserv*")
+#' }
+CountGenusT <- function(db, genus, synonyms, additionalkeywords) {
+  if (db == "scopus") {
+    countgenus <- CountGenusT_scopus(genus, synonyms, additionalkeywords)
+  } else if (db == "wos") {
+    countgenus <- CountGenusT_wos(genus, synonyms, additionalkeywords)
+  } else if (db == "base") {
+    countgenus <- CountGenusT_base(genus, synonyms, additionalkeywords)
+  }
+  return(countgenus)
+}
+
+
+
+#' This is a wrapper function for \code{\link{CountGenusTAK_scopus}}, \code{\link{CountGenusTAK_wos}}, and \code{\link{CountGenusTAK_base}}.
+#' 
+#' @title CountSpTAK wrapper
+#'
+#' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
+#' @param genus Genus classification from the binomial name.
+#' @param synonyms Alternate genus names.
+#' @param additionalkeywords Optional search terms.
+#' 
+#' @return Search count of the genus with the given \code{genus}.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' CountGenusTAK("scopus", genus = "Osphranter")
+#' }
+#' \dontrun{
+#' CountGenusTAK("scopus", genus = "Osphranter", synonyms = "Macropus", additionalkeywords = "conserv*")
+#' }
+CountGenusTAK <- function(db, genus, synonyms, additionalkeywords) {
+  if (db == "scopus") {
+    countgenus <- CountGenusTAK_scopus(genus, synonyms, additionalkeywords)
+  } else if (db == "wos") {
+    countgenus <- CountGenusTAK_wos(genus, synonyms, additionalkeywords)
+  } else if (db == "base") {
+    countgenus <- CountGenusTAK_base(genus, synonyms, additionalkeywords)
+  } 
+  return(countgenus)
+}
+
+
+
+#' This is a wrapper function for \code{\link{FetchSpT_scopus}}, \code{\link{FetchSpT_wos}}, and \code{\link{FetchSpT_base}}.
 #' 
 #' @title FetchSpT wrapper
 #'
-#' @param db Literature database. Scopus ("scopus") or Web of Science ("wos") or or Lens ("lens").
+#' @param db Literature database. Scopus ("scopus") or Web of Science ("wos").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
 #' @param language Language of the paper; default is 0, enter 1 to retrieve the variable. Scopus only.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers. Lens only.
-#'
+#' 
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 #' @export
 #'
@@ -92,31 +149,28 @@ CountSpTAK <- function(db, genus, species, synonyms, additionalkeywords, size = 
 #' \dontrun{
 #' FetchSpT("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*")
 #' }
-FetchSpT <- function(db, genus, species, synonyms, additionalkeywords, language = 0, size = 50000) {
+FetchSpT <- function(db, genus, species, synonyms, additionalkeywords, language = 0) {
   if (db == "scopus") {
     fetchsp <- FetchSpT_scopus(genus, species, synonyms, additionalkeywords, language)
   } else if (db == "wos") {
     fetchsp <- FetchSpT_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "lens") {
-    fetchsp <- FetchSpT_lens(genus, species, synonyms, additionalkeywords, size)
   }
   return(fetchsp)
 }
 
 
 
-#' This is a wrapper function for \code{\link{FetchSpTAK_scopus}}, \code{\link{FetchSpTAK_wos}}, \code{\link{FetchSpTAK_base}}, and \code{\link{FetchSpTAK_lens}}.
+#' This is a wrapper function for \code{\link{FetchSpTAK_scopus}}, \code{\link{FetchSpTAK_wos}}, and \code{\link{FetchSpTAK_base}}.
 #' 
 #' @title FetchSpTAK wrapper
 #'
-#' @param db Literature database. Scopus ("scopus") or Web of Science ("wos") or Lens ("lens").
+#' @param db Literature database. Scopus ("scopus") or Web of Science ("wos").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
 #' @param language Language of the paper; default is 0, enter 1 to retrieve the variable. Scopus only.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers. Lens only.
-#'
+#' 
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 #' @export
 #'
@@ -127,13 +181,11 @@ FetchSpT <- function(db, genus, species, synonyms, additionalkeywords, language 
 #' \dontrun{
 #' FetchSpTAK("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*")
 #' }
-FetchSpTAK <- function(db, genus, species, synonyms, additionalkeywords, language = 0, size = 50000) {
+FetchSpTAK <- function(db, genus, species, synonyms, additionalkeywords, language = 0) {
   if (db == "scopus") {
     fetchsp <- FetchSpTAK_scopus(genus, species, synonyms, additionalkeywords, language)
   } else if (db == "wos") {
     fetchsp <- FetchSpTAK_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "lens") {
-    fetchsp <- FetchSpTAK_lens(genus, species, synonyms, additionalkeywords, size)
   }
   return(fetchsp)
 }
@@ -1142,330 +1194,6 @@ CountGenusTAK_base <- function(genus, synonyms, additionalkeywords) {
 
 
 
-#' This function counts the total number of search results.
-#' It counts the publications with the binomial name in the title only.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
-#' 
-#' @title Search count from Lens - title only
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#' 
-#' @return Search count of the species with the given \code{genus} and \code{species}.
-#' @export
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountSpT_lens("Bettongia", "penicillata")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountSpT_lens("bettongia", "penicillata")
-#' }
-#' \dontrun{
-#' CountSpT_lens("Bettongia", "penicillata", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountSpT_lens("bettongia", "penicillata", "conserv*")
-#' }
-CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000) {
-  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
-  ) 
-  response <- httr::POST(url = "https://api.lens.org/scholarly/search",
-                         add_headers(.headers = c("Authorization" = token,
-                                                  "Content-Type" = "application/json")),
-                         body = create_query_string_T_lens(genus, species, synonyms, additionalkeywords, size))
-  lens_content <- jsonlite::fromJSON(rawToChar(response$content))
-  if (!is.null(lens_content$total)) {
-    resultCount <- as.numeric(lens_content$total)
-  } else {
-    resultCount <- 0
-  }
-  return(resultCount)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the binomial name in the title, abstract and author keywords.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
-#' 
-#' @title Search count from Lens - title, abstract and author keywords
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#' 
-#' @return Search count of the species with the given \code{genus} and \code{species}.
-#' @export
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountSpTAK_lens("Bettongia", "penicillata")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountSpTAK_lens("bettongia", "penicillata")
-#' }
-#' \dontrun{
-#' CountSpTAK_lens("Bettongia", "penicillata", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountSpTAK_lens("bettongia", "penicillata", "conserv*")
-#' }
-CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000) {
-  findname <- taxize::gnr_resolve(sci = c(genus, species)) 
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
-  ) 
-  response <- httr::POST(url = "https://api.lens.org/scholarly/search",
-                         add_headers(.headers = c("Authorization" = token,
-                                                  "Content-Type" = "application/json")),
-                         body = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords, size))
-  lens_content <- jsonlite::fromJSON(rawToChar(response$content))
-  if (!is.null(lens_content$total)) {
-    resultCount <- as.numeric(lens_content$total)
-  } else {
-    resultCount <- 0
-  }
-  return(resultCount)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the genus name in the title only.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
-#' 
-#' @title Search count from Lens - title only
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#' 
-#' @return Search count of the genus with the given \code{genus}.
-#' @export
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountGenusT_lens("Bettongia")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusT_lens("bettongia")
-#' }
-#' \dontrun{
-#' CountGenusT_lens("Bettongia", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusT_lens("bettongia", "conserv*")
-#' }
-CountGenusT_lens <- function(genus, synonyms, additionalkeywords, size = 50000) {
-  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
-  ) 
-  response <- httr::POST(url = "https://api.lens.org/scholarly/search",
-                         add_headers(.headers = c("Authorization" = token,
-                                                  "Content-Type" = "application/json")),
-                         body = create_query_string_T_lens_genus(genus, synonyms, additionalkeywords, size))
-  lens_content <- jsonlite::fromJSON(rawToChar(response$content))
-  if (!is.null(lens_content$total)) {
-    resultCount <- as.numeric(lens_content$total)
-  } else {
-    resultCount <- 0
-  }
-  return(resultCount)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the genus name in the title, abstract and author keywords.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
-#' 
-#' @title Search count from Lens - title, abstract and author keywords
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#' 
-#' @return Search count of the genus with the given \code{genus}.
-#' @export
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountGenusTAK_lens("Bettongia")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusTAK_lens("bettongia")
-#' }
-#' \dontrun{
-#' CountGenusTAK_lens("Bettongia", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusTAK_lens("bettongia", "conserv*")
-#' }
-CountGenusTAK_lens <- function(genus, synonyms, additionalkeywords, size = 50000) {
-  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
-  ) 
-  response <- httr::POST(url = "https://api.lens.org/scholarly/search",
-                         add_headers(.headers = c("Authorization" = token,
-                                                  "Content-Type" = "application/json")),
-                         body = create_query_string_TAK_lens_genus(genus, synonyms, additionalkeywords, size))
-  lens_content <- jsonlite::fromJSON(rawToChar(response$content))
-  if (!is.null(lens_content$total)) {
-    resultCount <- as.numeric(lens_content$total)
-  } else {
-    resultCount <- 0
-  }
-  return(resultCount)
-}
-
-
-
-#' This function fetches citation information from Lens using genus and species name found in the title of the publications.
-#' Duplicates are to be removed by the user after fetching the data.
-#'
-#' @title Fetch data from Lens - title only
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#'
-#' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' FetchSpT_lens("Bettongia", "penicillata")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' FetchSpT_lens("bettongia", "penicillata")
-#' }
-#' \dontrun{
-#' FetchSpT_lens("Bettongia", "penicillata", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' FetchSpT_lens("bettongia", "penicillata", "conserv*")
-#' }
-FetchSpT_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000) {
-  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
-  )
-  results <- lens2r::get_scholarly_df(query = create_query_string_T_lens(genus, species, synonyms, additionalkeywords, size),
-                                      token = token)
-  #renaming columns
-  names(results)[names(results) == "scholarly_citations_count"] <- "citations"
-  names(results)[names(results) == "source.title"] <- "journal"
-  names(results)[names(results) == "publication_type"] <- "description"
-  names(results)[names(results) == "date_published"] <- "cover_date"
-  #replacing NA with 0
-  for (i in 1:nrow(results)) {
-    if (is.na(results$citations[i])) {
-      results$citations[i] <- 0
-    }
-  }
-  #clean cover_date
-  results$cover_date <- substr(results$cover_date, 1, 10)
-  #showing final list of records
-  returned <- nrow(results)
-  print(paste(returned, "records retrived in total."))
-  return(results)
-}
-
-
-
-#' This function fetches citation information from Lens using genus and species name found in the title, abstract, and keywords of the publications.
-#' Duplicates are to be removed by the user after fetching the data.
-#'
-#' @title Fetch data from Lens - title, abstract, and keywords.
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#'
-#' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' FetchSpTAK_lens("Bettongia", "penicillata")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' FetchSpTAK_lens("bettongia", "penicillata")
-#' }
-#' \dontrun{
-#' FetchSpTAK_lens("Bettongia", "penicillata", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' FetchSpTAK_lens("bettongia", "penicillata", "conserv*")
-#' }
-FetchSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000) {
-  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
-  ) 
-  results <- lens2r::get_scholarly_df(query = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords, size),
-                                      token = token)
-  #renaming columns
-  names(results)[names(results) == "scholarly_citations_count"] <- "citations"
-  names(results)[names(results) == "source.title"] <- "journal"
-  names(results)[names(results) == "publication_type"] <- "description"
-  names(results)[names(results) == "year_published"] <- "cover_date"
-  #replacing NA with 0
-  for (i in 1:nrow(results)) {
-    if (is.na(results$citations[i])) {
-      results$citations[i] <- 0
-    }
-  }
-  #clean cover_date
-  results$cover_date <- substr(results$cover_date, 1, 10)
-  #showing final list of records
-  returned <- nrow(results)
-  print(paste(returned, "records retrived in total."))
-  return(results)
-}
-
-
-
 #' This function calculates the total number of publications.
 #'
 #' @title Total publications
@@ -2321,410 +2049,6 @@ create_query_string_TAK_base_genus <- function(genus, synonyms, additionalkeywor
     return(paste0('dctitle:(("', genus, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
                   ' OR dcdescription:(("', genus, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
                   ' OR dcsubject:(("', genus, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
-  } 
-}
-
-
-
-#' Creates a query string for Lens to make functions with a query cleaner.
-#' Title only; genus species.
-#'
-#' @title Query string for Lens
-#' 
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#'
-#' @noRd
-#' 
-create_query_string_T_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000){
-  if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, ' ', species, '\\"",
-					  "fields": ["title"]
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
-  } 
-  if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, ' ', species, '\\" AND ', additionalkeywords, '",
-					  "fields": ["title"]
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
-  }
-  if (missing(additionalkeywords)&!missing(synonyms)) {
-    temp_string <- paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, ' ', species, '\\" OR \\"', synonyms[1], '\\"",
-					  "fields": ["title"]
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }')
-    if (length(synonyms)==1) {
-      return(paste0(temp_string))
-    }
-    else {
-      for (i in 2:length(synonyms)){
-        temp_string <- paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, ' ', species, '\\" OR \\"', synonyms[i], '\\"",
-					  "fields": ["title"]
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }')
-      }
-      return(paste0(temp_string))
-    }
-  }
-  if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "(\\"', genus, ' ', species, '\\" OR \\"', synonyms, '\\") AND ', additionalkeywords, '",
-					  "fields": ["title"]
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
-  } 
-}
-
-
-
-#' Creates a query string for Lens to make functions with a query cleaner.
-#' Title, abstract, and keywords; genus species.
-#'
-#' @title Query string for Lens
-#' 
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#'
-#' @noRd
-#' 
-create_query_string_TAK_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000){
-  if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, ' ', species, '\\"",
-					  "fields": ["title", "abstract", "keyword"],
-					  "default_operator": "or"
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
-  } 
-  if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, ' ', species, '\\" AND ', additionalkeywords, '",
-					  "fields": ["title", "abstract", "keyword"],
-					"default_operator": "or"
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
-  }
-  if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, ' ', species, '\\" OR \\"', synonyms[1], '\\"",
-					  "fields": ["title", "abstract", "keyword"],
-					"default_operator": "or"
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }')
-    if (length(synonyms)==1) {
-      return(paste0(temp_string))
-    }
-    else {
-      for (i in 2:length(synonyms)){
-        temp_string <- paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, ' ', species, '\\" OR \\"', synonyms[i], '\\"",
-					  "fields": ["title", "abstract", "keyword"],
-					"default_operator": "or"
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }')
-      }
-      return(paste0(temp_string))
-    }
-  }
-  if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "(\\"', genus, ' ', species, '\\" OR \\"', synonyms, '\\") AND ', additionalkeywords, '",
-					  "fields": ["title", "abstract", "keyword"],
-					"default_operator": "or"
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
-  } 
-}
-
-
-
-#' Creates a query string for Lens to make functions with a query cleaner.
-#' Title only; genus.
-#'
-#' @title Query string for Lens
-#' 
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#'
-#' @noRd
-#' 
-create_query_string_T_lens_genus <- function(genus, synonyms, additionalkeywords, size = 50000){
-  if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, '\\"",
-					  "fields": ["title"]
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
-  } 
-  if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, '\\" AND ', additionalkeywords, '",
-					  "fields": ["title"]
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
-  }
-  if (missing(additionalkeywords)&!missing(synonyms)) {
-    temp_string <- paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, '\\" OR \\"', synonyms[1], '\\"",
-					  "fields": ["title"]
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }')
-    if (length(synonyms)==1) {
-      return(paste0(temp_string))
-    }
-    else {
-      for (i in 2:length(synonyms)){
-        temp_string <- paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, '\\" OR \\"', synonyms[i], '\\"",
-					  "fields": ["title"]
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }')
-      }
-      return(paste0(temp_string))
-    }
-  }
-  if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "(\\"', genus, '\\" OR \\"', synonyms, '\\") AND ', additionalkeywords, '",
-					  "fields": ["title"]
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
-  } 
-}
-
-
-
-#' Creates a query string for Lens to make functions with a query cleaner.
-#' Title, abstract, and keywords; genus.
-#'
-#' @title Query string for Lens
-#' 
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#' @param size Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers.
-#'
-#' @noRd
-#' 
-create_query_string_TAK_lens_genus <- function(genus, synonyms, additionalkeywords, size = 50000){
-  if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, '\\"",
-					  "fields": ["title", "abstract", "keyword"],
-					  "default_operator": "or"
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
-  } 
-  if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, '\\" AND ', additionalkeywords, '",
-					  "fields": ["title", "abstract", "keyword"],
-					"default_operator": "or"
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
-  }
-  if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, '\\" OR \\"', synonyms[1], '\\"",
-					  "fields": ["title", "abstract", "keyword"],
-					"default_operator": "or"
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }')
-    if (length(synonyms)==1) {
-      return(paste0(temp_string))
-    }
-    else {
-      for (i in 2:length(synonyms)){
-        temp_string <- paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "\\"', genus, '\\" OR \\"', synonyms[i], '\\"",
-					  "fields": ["title", "abstract", "keyword"],
-					"default_operator": "or"
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }')
-      }
-      return(paste0(temp_string))
-    }
-  }
-  if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('{
-    "query": {
-		  "bool": {
-			  "must": [{
-				  "query_string": {
-					  "query": "(\\"', genus, '\\" OR \\"', synonyms, '\\") AND ', additionalkeywords, '",
-					  "fields": ["title", "abstract", "keyword"],
-					"default_operator": "or"
-				  }
-			  }]
-		  }
-	  },
-	  "size": ', size, '
-  }'))
   } 
 }
 

@@ -12,7 +12,6 @@ pacman::p_load(tidyverse,
                rscopus,
                wosr,
                rbace,
-               lens2r,
                data.table,
                httr,
                XML,
@@ -817,39 +816,63 @@ spindex_plots_theme <- function() {
 
 ```{r}
 #countspt() wrapper
-CountSpT <- function(db, genus, species, synonyms, additionalkeywords, size = 50000) {
+CountSpT <- function(db, genus, species, synonyms, additionalkeywords) {
   if (db == "scopus") {
     countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords)
   } else if (db == "wos") {
     countsp <- CountSpT_wos(genus, species, synonyms, additionalkeywords)
   } else if (db == "base") {
     countsp <- CountSpT_base(genus, species, synonyms, additionalkeywords)
-  } else if (db == "lens") {
-    countsp <- CountSpT_lens(genus, species, synonyms, additionalkeywords, size)
-  }
+  } 
   return(countsp)
 }
 ```
 
 ```{r}
 #countsptak() wrapper
-CountSpTAK <- function(db, genus, species, synonyms, additionalkeywords, size = 50000) {
+CountSpTAK <- function(db, genus, species, synonyms, additionalkeywords) {
   if (db == "scopus") {
     countsp <- CountSpTAK_scopus(genus, species, synonyms, additionalkeywords)
   } else if (db == "wos") {
     countsp <- CountSpTAK_wos(genus, species, synonyms, additionalkeywords)
   } else if (db == "base") {
     countsp <- CountSpTAK_base(genus, species, synonyms, additionalkeywords)
-  } else if (db == "lens") {
-    countsp <- CountSpTAK_lens(genus, species, synonyms, additionalkeywords, size)
-  }
+  } 
   return(countsp)
 }
 ```
 
 ```{r}
+#countgenust() wrapper
+CountGenusT <- function(db, genus, synonyms, additionalkeywords) {
+  if (db == "scopus") {
+    countgenus <- CountGenusT_scopus(genus, synonyms, additionalkeywords)
+  } else if (db == "wos") {
+    countgenus <- CountGenusT_wos(genus, synonyms, additionalkeywords)
+  } else if (db == "base") {
+    countgenus <- CountGenusT_base(genus, synonyms, additionalkeywords)
+  }
+  return(countgenus)
+}
+```
+
+```{r}
+#countgenustak() wrapper
+CountGenusTAK <- function(db, genus, synonyms, additionalkeywords) {
+  if (db == "scopus") {
+    countgenus <- CountGenusTAK_scopus(genus, synonyms, additionalkeywords)
+  } else if (db == "wos") {
+    countgenus <- CountGenusTAK_wos(genus, synonyms, additionalkeywords)
+  } else if (db == "base") {
+    countgenus <- CountGenusTAK_base(genus, synonyms, additionalkeywords)
+  } 
+  return(countgenus)
+}
+```
+
+```{r}
 #fetchspt() wrapper
-FetchSpT <- function(db, genus, species, synonyms, additionalkeywords, language = 0, size = 50000) {
+FetchSpT <- function(db, genus, species, synonyms, additionalkeywords, language = 0) {
   if (db == "scopus") {
     fetchsp <- FetchSpT_scopus(genus, species, synonyms, additionalkeywords, language)
   } else if (db == "wos") {
@@ -863,7 +886,7 @@ FetchSpT <- function(db, genus, species, synonyms, additionalkeywords, language 
 
 ```{r}
 #fetchsptak() wrapper
-FetchSpTAK <- function(db, genus, species, synonyms, additionalkeywords, language = 0, size = 50000) {
+FetchSpTAK <- function(db, genus, species, synonyms, additionalkeywords, language = 0) {
   if (db == "scopus") {
     fetchsp <- FetchSpTAK_scopus(genus, species, synonyms, additionalkeywords, language)
   } else if (db == "wos") {

@@ -25,7 +25,6 @@ installed.
 install.packages("rscopus")
 install.packages("wosr")
 install.packages("rbace")
-install.packages("lens2r")
 install.packages("taxize")
 install.packages("XML")
 install.packages("jsonlite")
@@ -71,8 +70,6 @@ or acquire a VPN from your institution if you are working from home.**
 Alternatively, if you are a subscriber of Scopus already, you can ignore
 this step.
 
-#### :key: Getting an API key
-
 To connect and download citation information from Scopus legally, you
 will **absolutely need** an API key. Here are the steps to obtain the
 key.
@@ -86,16 +83,13 @@ key.
 
 ### :mega: Connecting to Web of Science
 
-You will need to set up your session ID before gaining access to the Web
-of Science database. Run the following line of code to do so.
+You are required to be at your institution for this to work since the
+API is accessed via the IP address.
 
-``` r
-sid <- auth(username = NULL, password = NULL)
-```
+### :mega: Connecting to BASE
 
-You won’t have to set your ID again until your next session. You are
-required to be at your institution for this to work since the API is
-accessed via the IP address.
+It is recommended that you have your IP address whitelisted. You can do
+it [here](https://www.base-search.net/about/en/contact.php).
 
 ### :mega: Connecting to Lens
 
@@ -113,6 +107,24 @@ exceeds 1,000 records.
 ## Examples
 
 Here is a quick demonstration of how the package works.
+
+### Setting up keys
+
+You will need to set up your API key / session ID / token before gaining
+access to the databases. Run the following line of code to do so.
+
+``` r
+#Scopus
+apikey <- "your_scopus_api_key"
+#Web of Science
+sid <- auth(username = NULL, password = NULL)
+#Lens
+token <- "your_lens_token"
+```
+
+You won’t have to set this again until your next session. You are
+required to be at your institution for this to work since the API is
+accessed via the IP address.
 
 ### :pencil2: Count and Fetch Syntax
 
@@ -273,23 +285,9 @@ ggplot(CombineSp, aes(x = species,
 
 <br/>
 
-## :paw\_prints: Roadmap
-
-  - Web of Science
-      - [x] Count functions working
-      - [x] Fetch functions working
-      - [x] All indices working
-  - BASE
-      - [x] Count functions working
-  - Lens
-      - [x] Count functions working
-      - [x] Fetch functions working
-      - [x] All indices working
-
 ## :rocket: Acknowledgements
 
-`specieshindex` is enabled by Scopus, Web of Science, BASE, and [The
-Lens](https://www.lens.org/).
+`specieshindex` is enabled by Scopus, Web of Science, and BASE.
 
 <iframe src="https://lens.org/lens/embed/attribution" scrolling="no" height="30px" width="100%">
 
