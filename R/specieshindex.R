@@ -240,6 +240,62 @@ CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, data
 
 
 
+#' Title
+#'
+#' @param genus 
+#' @param synonyms 
+#' @param additionalkeywords 
+#' @param datatype 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+CountGenusT_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
+  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
+  ) 
+  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                        query = list(apiKey = apikey,
+                                     query = create_query_string_T_scopus_genus(genus, synonyms, additionalkeywords),
+                                     httpAccept = "application/xml")) #format the URL to be sent to the API
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response) #parse the data to extract values
+  resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
+  return(resultCount)
+}
+
+
+
+#' Title
+#'
+#' @param genus 
+#' @param synonyms 
+#' @param additionalkeywords 
+#' @param datatype 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+CountGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
+  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
+  ) 
+  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                        query = list(apiKey = apikey,
+                                     query = create_query_string_TAK_scopus_genus(genus, synonyms, additionalkeywords),
+                                     httpAccept = "application/xml")) #format the URL to be sent to the API
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response) #parse the data to extract values
+  resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
+  return(resultCount)
+}
+
+
+
 #' This function fetches citation information from Scopus using genus and species name found in the title of the publications.
 #' Duplicates are to be removed by the user after fetching the data.
 #'
@@ -668,6 +724,50 @@ CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 
 
 
+#' Title
+#'
+#' @param genus 
+#' @param synonyms 
+#' @param additionalkeywords 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
+  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
+  )
+  count <- wosr::query_wos(query = create_query_string_T_wos_genus(genus, synonyms, additionalkeywords),
+                           sid = sid) 
+  return(count)
+}
+
+
+
+#' Title
+#'
+#' @param genus 
+#' @param synonyms 
+#' @param additionalkeywords 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+CountGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
+  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
+  )
+  count <- wosr::query_wos(query = create_query_string_TAK_wos_genus(genus, synonyms, additionalkeywords),
+                           sid = sid) 
+  return(count)
+}
+
+
+
 #' This function fetches citation information from Web of Science using genus and species name found in the title of the publications.
 #' Duplicates are to be removed by the user after fetching the data.
 #'
@@ -864,6 +964,58 @@ CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
 
 
 
+#' Title
+#'
+#' @param genus 
+#' @param synonyms 
+#' @param additionalkeywords 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+CountGenusT_base <- function(genus, synonyms, additionalkeywords) {
+  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
+  if (findname$user_supplied_name[1] %in% findname$matched_name) {
+    print("Genus found on the Encyclopedia of Life.")
+  } else {stop("Genus missing from the Encyclopedia of Life.")}
+  response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
+                        query = list(func = "PerformSearch",
+                                     query = create_query_string_T_base_genus(genus, synonyms, additionalkeywords)))
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response)
+  resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
+  return(resultCount)
+}
+
+
+
+#' Title
+#'
+#' @param genus 
+#' @param synonyms 
+#' @param additionalkeywords 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+CountGenusTAK_base <- function(genus, synonyms, additionalkeywords) {
+  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
+  if (findname$user_supplied_name[1] %in% findname$matched_name) {
+    print("Genus found on the Encyclopedia of Life.")
+  } else {print("Genus missing from the Encyclopedia of Life.")}
+  response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
+                        query = list(func = "PerformSearch",
+                                     query = create_query_string_TAK_base_genus(genus, synonyms, additionalkeywords)))
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response)
+  resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
+  return(resultCount)
+}
+
+
+
 #' This function counts the total number of search results.
 #' It counts the publications with the binomial name in the title only.
 #' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
@@ -960,6 +1112,68 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, size =
                          add_headers(.headers = c("Authorization" = token,
                                                   "Content-Type" = "application/json")),
                          body = create_query_string_TAK_lens(genus, species, synonyms, additionalkeywords, size))
+  lens_content <- jsonlite::fromJSON(rawToChar(response$content))
+  if (!is.null(lens_content$total)) {
+    resultCount <- as.numeric(lens_content$total)
+  } else {
+    resultCount <- 0
+  }
+  return(resultCount)
+}
+
+
+
+#' Title
+#'
+#' @param genus 
+#' @param synonyms 
+#' @param additionalkeywords 
+#' @param size 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+CountGenusT_lens <- function(genus, synonyms, additionalkeywords, size = 50000) {
+  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
+  ) 
+  response <- httr::POST(url = "https://api.lens.org/scholarly/search",
+                         add_headers(.headers = c("Authorization" = token,
+                                                  "Content-Type" = "application/json")),
+                         body = create_query_string_T_lens_genus(genus, synonyms, additionalkeywords, size))
+  lens_content <- jsonlite::fromJSON(rawToChar(response$content))
+  if (!is.null(lens_content$total)) {
+    resultCount <- as.numeric(lens_content$total)
+  } else {
+    resultCount <- 0
+  }
+  return(resultCount)
+}
+
+
+
+#' Title
+#'
+#' @param genus 
+#' @param synonyms 
+#' @param additionalkeywords 
+#' @param size 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+CountGenusTAK_lens <- function(genus, synonyms, additionalkeywords, size = 50000) {
+  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
+  dplyr::case_when(
+    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
+  ) 
+  response <- httr::POST(url = "https://api.lens.org/scholarly/search",
+                         add_headers(.headers = c("Authorization" = token,
+                                                  "Content-Type" = "application/json")),
+                         body = create_query_string_TAK_lens_genus(genus, synonyms, additionalkeywords, size))
   lens_content <- jsonlite::fromJSON(rawToChar(response$content))
   if (!is.null(lens_content$total)) {
     resultCount <- as.numeric(lens_content$total)
