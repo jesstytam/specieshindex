@@ -4,10 +4,10 @@
 \alias{CountSpT}
 \title{CountSpT wrapper}
 \usage{
-CountSpT(db, genus, species, synonyms, additionalkeywords, size = 50000)
+CountSpT(db, genus, species, synonyms, additionalkeywords)
 }
 \arguments{
-\item{db}{Literature database. Scopus ("scopus") or Web of Science ("wos") or Base ("base") or Lens ("lens").}
+\item{db}{Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").}
 
 \item{genus}{Genus classification from the binomial name.}
 
@@ -16,14 +16,12 @@ CountSpT(db, genus, species, synonyms, additionalkeywords, size = 50000)
 \item{synonyms}{Alternate species names.}
 
 \item{additionalkeywords}{Optional search terms.}
-
-\item{size}{Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers. Lens only.}
 }
 \value{
 Search count of the species with the given \code{genus} and \code{species}.
 }
 \description{
-This is a wrapper function for \code{\link{CountSpT_scopus}}, \code{\link{CountSpT_wos}}, \code{\link{CountSpT_base}}, and \code{\link{CountSpT_lens}}.
+This is a wrapper function for \code{\link{CountSpT_scopus}}, \code{\link{CountSpT_wos}}, and \code{\link{CountSpT_base}}.
 }
 \examples{
 \dontrun{

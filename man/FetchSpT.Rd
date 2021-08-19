@@ -4,18 +4,10 @@
 \alias{FetchSpT}
 \title{FetchSpT wrapper}
 \usage{
-FetchSpT(
-  db,
-  genus,
-  species,
-  synonyms,
-  additionalkeywords,
-  language = 0,
-  size = 50000
-)
+FetchSpT(db, genus, species, synonyms, additionalkeywords, language = 0)
 }
 \arguments{
-\item{db}{Literature database. Scopus ("scopus") or Web of Science ("wos") or or Lens ("lens").}
+\item{db}{Literature database. Scopus ("scopus") or Web of Science ("wos").}
 
 \item{genus}{Genus classification from the binomial name.}
 
@@ -26,14 +18,12 @@ FetchSpT(
 \item{additionalkeywords}{Optional search terms.}
 
 \item{language}{Language of the paper; default is 0, enter 1 to retrieve the variable. Scopus only.}
-
-\item{size}{Maximum number of documents that can be downloaded depending on the users token. Default is set to 50,000 for subscribers, the alternative is 1,000 for non-subscribers. Lens only.}
 }
 \value{
 A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 }
 \description{
-This is a wrapper function for \code{\link{FetchSpT_scopus}}, \code{\link{FetchSpT_wos}}, \code{\link{FetchSpT_base}}, and \code{\link{FetchSpT_lens}}.
+This is a wrapper function for \code{\link{FetchSpT_scopus}}, \code{\link{FetchSpT_wos}}, and \code{\link{FetchSpT_base}}.
 }
 \examples{
 \dontrun{
