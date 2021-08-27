@@ -2252,7 +2252,6 @@ Spi10(dummy1) #12
 
 apikey <- "442b9048417ef20cf680a0ae26ee4d86"
 sid <- auth(username = NULL, password = NULL)
-token <- "your_lens_token"
 
 CountSpT <- function(db, genus, species, synonyms, additionalkeywords, size = 50000) {
   if (db == "scopus") {
@@ -2323,9 +2322,15 @@ create_query_string_T_scopus_genus <- function(genus, synonyms, additionalkeywor
 
 CountSpT_scopus_genus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
   findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
-  ) 
+  if (nrow(findname)==0 | isFALSE("Encyclopedia of Life" %in% findname$data_source_title)) {
+    stop(print(paste("Genus not found on the Encyclopedia of Life. Please check your spelling and try again.")))
+  }
+  findname_eol <- findname[findname$data_source_title == "Encyclopedia of Life",]
+  if (isTRUE(findname_eol$user_supplied_name == findname_eol$matched_name)) {
+    print(paste("Genus found on the Encyclopedia of Life."))
+  } else {
+    stop(print(paste("Genus not found on the Encyclopedia of Life. Please check your spelling and try again.")))
+  }
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                       query = list(apiKey = apikey,
                                    query = create_query_string_T_scopus_genus(genus, synonyms, additionalkeywords),
@@ -2342,7 +2347,32 @@ CountSpT_scopus_genus("drosophila") #65802
 
 #testing
 
-CountSpT("scopus", "macropus", "macropus")
+FetchSpT("scopus", "macropus", "rufus")
+
+
+
+
+CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
+  findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
+  if (nrow(findname)==0 | isFALSE("Encyclopedia of Life" %in% findname$data_source_title)) {
+    stop(print(paste("Species not found on the Encyclopedia of Life. Please check your spelling and try again.")))
+  }
+  findname_eol <- findname[findname$data_source_title == "Encyclopedia of Life",]
+  if (isTRUE(findname_eol$user_supplied_name == findname_eol$matched_name)) {
+    print(paste("Species found on the Encyclopedia of Life."))
+  } else {
+    stop(print(paste("Species not found on the Encyclopedia of Life. Please check your spelling and try again.")))
+  }
+  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                        query = list(apiKey = apikey,
+                                     query = create_query_string_T_scopus(genus, species, synonyms, additionalkeywords),
+                                     httpAccept = "application/xml")) #format the URL to be sent to the API
+  httr::stop_for_status(response) #pass any HTTP errors to the R console
+  response_data <- XML::xmlParse(response) #parse the data to extract values
+  resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
+  return(resultCount)
+}
+
 
 
 ```

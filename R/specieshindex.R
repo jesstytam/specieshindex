@@ -289,9 +289,12 @@ FetchGenusTAK <- function(db, genus, synonyms, additionalkeywords, language = 0)
 #' }
 CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
   findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
-  ) 
+  findname_eol <- findname[findname$data_source_title == "Encyclopedia of Life",]
+  if (isTRUE(findname_eol$user_supplied_name == findname_eol$matched_name)) {
+    print(paste("Species found on the Encyclopedia of Life."))
+  } else {
+    stop(print(paste("Species not found on the Encyclopedia of Life. Please check your spelling and try again.")))
+  }
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                         query = list(apiKey = apikey,
                                      query = create_query_string_T_scopus(genus, species, synonyms, additionalkeywords),
@@ -339,9 +342,12 @@ CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, dataty
 #' }
 CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
   findname <- taxize::gnr_resolve(sci = c(genus, species)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Species found on the Encyclopedia of Life."))
-  ) 
+  findname_eol <- findname[findname$data_source_title == "Encyclopedia of Life",]
+  if (isTRUE(findname_eol$user_supplied_name == findname_eol$matched_name)) {
+    print(paste("Species found on the Encyclopedia of Life."))
+  } else {
+    stop(print(paste("Species not found on the Encyclopedia of Life. Please check your spelling and try again.")))
+  }
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                         query = list(apiKey = apikey,
                                      query = create_query_string_TAK_scopus(genus, species, synonyms, additionalkeywords),
