@@ -2399,7 +2399,7 @@ names(output_by_year)[names(output_by_year)=="Var1"] <- "Year"
 library(ggplot2)
 
 ggplot(output_by_year, aes(x = Year,
-                        y = Freq)) +
+                           y = Freq)) +
   geom_area()
 
 
