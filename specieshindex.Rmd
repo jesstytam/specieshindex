@@ -2386,4 +2386,21 @@ if (test$score[1]>0.9) {
     print(paste("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again."))
   }
 
+
+
+test_woylie <- FetchSpT("scopus", "Bettongia", "penicillata")
+test_kangaroo <- FetchSpT("scopus", "Macropus", "rufus")
+
+test_woylie$year <- as.numeric(substr(test_woylie$cover_date, 1, 4))
+
+output_by_year <- data.frame(table(test_woylie$year))
+names(output_by_year)[names(output_by_year)=="Var1"] <- "Year"
+
+library(ggplot2)
+
+ggplot(output_by_year, aes(x = Year,
+                        y = Freq)) +
+  geom_area()
+
+
 ```

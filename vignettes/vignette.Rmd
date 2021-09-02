@@ -44,7 +44,7 @@ knitr::include_graphics("../vignettes/Banner.png")
 
 There are many ways to gauge research influence. We can simply sum up the number of publications or citations, which is a straight forward way without the need of any complicated mathematical formulas. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the *h*-index, *m*-index, i10 index, h5 index, etc.
 
-*H*-index [@Hirsch200516569] is one of the main methods to measure publication influence objectively. It is calculated using the formula *h* = total publications (n) that have at least been cited **n** times, after sorting the publications by their citation counts in a descending order. 
+*H*-index [@Hirsch200516569] is one of the main methods to measure publication influence objectively. It is calculated using the formula *h* = total publications (**n**) that have at least been cited **n** times, after sorting the publications by their citation counts in a descending order. 
 
 Currently, *h*-index is commonly used for assessing influence and academic productivity of authors, research institutions and journals [@Braun20058]. Recently, this index has been also applied to quantify the research effort and influence associated with different species of living organisms [@Fleming2016241].
 
@@ -85,11 +85,16 @@ Below, we outline how to perform these steps using our package.
 
 ## Connecting to Scopus
 
-**Make sure you are connected to the internet via institutional access or acquire a VPN from your institution if you are working from home.** Alternatively, the functions will also run if you are already a subscriber of Scopus.
+Make sure you are connected to the internet via institutional access or acquire a VPN from your institution if you are working from home. Alternatively, the functions will also run if you are already a subscriber of Scopus.
 
-Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise, the functions will not run (and is in fact illegal to download the data). You can register your key [here](https://dev.elsevier.com/). Run the following line of code to get started:
+Before initiating the retrieval of any data, make sure you have registered an API key from Scopus. Otherwise, the functions will not run (and is in fact illegal to download the data). You can register your key [here](https://dev.elsevier.com/) following these steps:
 
-For example, you can run:
+1. Go to https://dev.elsevier.com/ and click on the button `I want an API key`.
+2. Create an account and log in.
+3. Go to the `My API Key` tab on top of the page and click `Create API Key`.
+4. Read the legal documents and check the boxes.
+
+Run the following line of code to set your API key for the current session and get started:
 
 ```{r, eval=FALSE}
 #API key
@@ -114,7 +119,7 @@ It is recommended that you have your IP address whitelisted. You can do it [here
 
 ### Additional keywords
 
-There is an optional parameter `additionalkeywords` that can be included to make your search more precise. This is achieved by expanding your query string and restrict the search to records that include specified combination of the additional keywords. The additional keywords can be a single word, e.g. "conservation", but better yet, you can parse a string with Boolean operators, e.g. "conserv\* OR protect\* OR reintrod\* OR restor\*". The Boolean operator "AND" has already been implemented in the code to link the Latin name and the additional string. To learn more about search language, you can visit [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
+There is an optional parameter `additionalkeywords` that can be included to make your search more precise. This is achieved by expanding your query string and restrict the search to records that include specified combination of the additional keywords. The additional keywords can be a single word, e.g. "conservation", or you can parse a string with Boolean operators, e.g. "conserv\* OR protect\* OR reintrod\* OR restor\*". The Boolean operator "AND" has already been implemented in the code to link the Latin name and the additional string. To learn more about search language, you can visit [here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and [here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
 
 Here are some examples of searches including additional keywords:
 
@@ -154,11 +159,11 @@ CountSpTAK(db = "scopus",
            additionalkeywords = "NOT (phylog* OR taxonom*)")
 ```
 
-If no additional keywords are parsed, the extraction will include all publications related to the species. In this case, you MUST include `API key =` to specify your API key, otherwise your key will be read as an additional keyword and result in an error. 
+If no additional keywords are parsed, the extraction will include all publications related to the species.
 
 ### Synonyms
 
-Some species have had their classification changed in the past, resulting in multiple binomial names and synonyms. Synonyms can be added to the search strings to get the maximum hits. If you have more than 1 synonym, you can parse a list (the list should be named "synonyms") into the argument.
+Some species have had their classification changed in the past, resulting in multiple names and synonyms. Synonyms can be added to the search strings to get the maximum hits. If you have more than 1 synonym, you can parse a list (the list should be named "synonyms") into the argument.
 
 ```{r, eval=FALSE}
 CountSpT(db = "scopus",
@@ -168,13 +173,13 @@ CountSpT(db = "scopus",
 
 ### Count and Fetch Syntax
 
-The searches are performed using species Latin name. The relevant functions take two parts of a Latin binominal species name as their main parameters, e.g. "*Bettongia*", "*penicillata*”. Make sure you are using binomial names instead of common names as required by the code.
+The searches are performed using species Latin name. The relevant functions take either a Latin binominal species name as their main parameters, e.g. "*Bettongia*", "*penicillata*”, or their genus name, e.g. "*Bettongia*". Make sure you are using binomial names instead of common names as required by the code.
 
-We have implemented functions that check the available number of relevant records (Count) and functions that download these records (Fetch) for a given species. Count and Fetch functions have two versions, with suffixes T and TAK, respectively. In these functions, the suffix ‘T’ is for title and ‘TAK’ is for title, abstract, or keywords. These terms are used to indicate where in the records you want your search terms to be found in. While ‘T’ only finds the publications with the binomial species name in the title, ‘TAK’ will find records with the name in title, abstract or keywords. 
+We have implemented functions that check the available number of relevant records (Count) and functions that download these records (Fetch) for a given species. Count and Fetch functions have two versions, with suffixes T and TAK, respectively. In these functions, the suffix ‘T’ is for title and ‘TAK’ is for title, abstract, or keywords. These terms are used to indicate where in the records you want your search terms to be found in. While ‘T’ only finds the publications with the binomial species name in the title, ‘TAK’ will find records with the name in title, abstract or keywords. To find articles of species, one of the functions you can use is `CountSpT()`. To find articles of genera, one of the functions you can use is `CountGenusT()`.
 
 It is recommend that you run a quick search using functions `CountSpT()` or `CountSpTAK()` before actually fetching the records since this can be a tedious process. Both functions give a search count of the number of records found on the databases.
 
-`specieshindex` supports multiple databases, including Scopus, Web of Science, and Lens. To differentiate between them, the suffix of the Count and Fetch functions have been labeled with the database's name, with the exception of Scopus.
+`specieshindex` supports multiple databases, including Scopus, Web of Science, and BASE. To differentiate between them, you can change the `db` parameter. Here are all of the variations of Count and Fetch functions connecting to various databases:
 
 ```{r, eval=FALSE}
 #Scopus requests
@@ -208,7 +213,7 @@ CountGenusTAK(db = "base", genus = "Bettongia")
 
 ## Extracting citation records
 
-`CountSpTAK()` should yield more results since it also looked for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
+In the examples proceeding, I will be using species names instead of genus, and setting `db = "scopus"`. `CountSpTAK()` should yield more results since it also looks for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
 
 As you may expect, some species have been studied more than the others [@Simko2015; @Krause2017313], resulting in more publications. Therefore, if there are more than a few thousand citation records found, it will take a considerably longer time to download them all, unless you are using a computer with high processing power and fast internet connection.
 
@@ -266,7 +271,7 @@ In larger datasets, duplicates may appear, although usually in low numbers. It i
 
 ### Adding language as a variable (Scopus only)
 
-The default of the parameter `language` is set to 0. To retrieve the language for each document, set `language = 1`. This will create an extra variable called 'language' in the output. Since it adds language as an extra field to the Scopus query, it will take longer to download the records as opposed to the default. This will also create a few duplicated records. Again, it is up to the user to decide which documents to exclude afterwards.
+The default of the parameter `language` is set to 0. To retrieve the language for each document, set `language = 1`. This will create an extra variable called 'language' in the output. Since it adds language as an extra field to the Scopus query, it will take longer to download the records as opposed to the default setting. This will also create a few duplicated records. Again, it is up to the user to decide which documents to exclude afterwards.
 
 For example, if you want to retrieve documents with the language variable, you can run:
 
@@ -278,7 +283,7 @@ FetchSpT(db = "scopus", genus = "Ailuropoda", species = "melanoleuca", language 
 
 If the error `Bad Request (HTTP 400)` occurs in this step, try connecting to the internet via institutional access, instead of the one at home. This error might be caused by some authorisation issues.
 
-It is important to make sure you have spelt the genus and species name accurately when entering the function. If unsure, you can go to the [Global Names Resolver](https://resolver.globalnames.org/data_sources) for verification. This is where the above functions are linked to for checking via the package `taxize` [@Chamberlain2013]. If the desired species is not in the index, it is possible that it has just been discovered and not officially listed yet, or the name has been changed and is no longer in use. Whether or not old synonyms are accepted depends on if they still exist in the database.
+It is important to make sure you have spelt the species or genus name accurately when entering the function. If unsure, you can go to the [The Catalogue of Life](https://www.catalogueoflife.org/), [Integrated Taxonomic Information System](https://www.itis.gov/), [National Center for Biotechnology Information](https://www.ncbi.nlm.nih.gov/guide/taxonomy/), or [Encyclopedia of Life](https://eol.org/) for verification. These databases are where the above functions are linked to for checking via the package `taxize` [@Chamberlain2013]. If the desired species or genus is not in the index, it is possible that it has just been discovered and not officially listed yet, or the name has been changed and is no longer in use. Whether or not old synonyms are accepted depends on if they exist in the databases.
 
 ## Simple counts
 
@@ -326,9 +331,9 @@ YearsPublishing(Woylie)
 
 ## Statistical indices
 
-Statistical indices can provide deeper insights than the simple counts and ratios described above. They take a few parameters into consideration, such as time, total citations, total publications, and their distributions, to compute the index. Here we implemented the following statistical indices of research impact for species: *h*-index, h5 index, *m*-index, and the i10 index.
+Statistical indices can provide deeper insights than the simple counts and ratios described above. They take a few parameters into consideration, such as time, total citations, total publications, and their distributions, to compute the index. Here we implemented the following statistical indices of research impact for species: *h*-index, *h5* index, *m*-index, and the *i10* index.
 
-Use `SpHindex()` to compute the *h*-index [@Hirsch200516569] for a given set of records. It sorts the citation counts in descending order and then finds the largest number of publications (n) that have EACH been cited at least **n** times.
+Use `SpHindex()` to compute the *h*-index [@Hirsch200516569] for a given set of records. It sorts the citation counts in descending order and then finds the largest number of publications (**n**) that have EACH been cited at least **n** times.
 
 For example:
 
@@ -336,7 +341,7 @@ For example:
 SpHindex(Woylie)
 ```
 
-The h5 index computes the *h*-index for the past 5 years.
+The *h5* index computes the *h*-index for the past 5 years.
 
 For example:
 
@@ -360,7 +365,7 @@ For example:
 SpMindex(Woylie)
 ```
 
-The i10 index is another variant of the *h*-index, which only takes into account publications with at least 10 citations. The i10 index can be calculated using `Spi10()`, which simply counts the publications that has 10 or more citations.
+The *i10* index is another variant of the *h*-index, which only takes into account publications with at least 10 citations. The *i10* index can be calculated using `Spi10()`, which simply counts the publications that has 10 or more citations.
 
 For example:
 
@@ -375,7 +380,7 @@ Rather than calling each function to calculate the indices in turn, you can get 
 For example:
 
 ```{r, warning=FALSE}
-Allindices(Woylie, genus = "Bettongia", species = "penicillata")
+Allindices(data = Woylie, genus = "Bettongia", species = "penicillata")
 ```
 
 There is an additional argument `sourcetype` with the default set to `sourcetype = 0`. If set to `sourcetype = 1`, the output of `Allindices()` will include the output of `SourceType()`.
@@ -400,10 +405,10 @@ As shown here, there were 113 records (publications) for the woylie, 242 records
 Next, we calculate research productivity and influence indices using the `Allindices()` function:
 
 ```{r, warning=FALSE}
-W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
-Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
-P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
-K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
+W <- Allindices(data = Woylie, genus = "Bettongia", species = "penicillata")
+Q <- Allindices(data = Quokka, genus = "Setonix", species = "brachyurus")
+P <- Allindices(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
+K <- Allindices(data = Koala, genus = "Phascolarctos", species = "cinereus")
 ```
 
 If you want to compare and analyse them against each other, you can use the function `rbind()` to combine indices for all four species into a single dataframe:
@@ -413,34 +418,10 @@ CombineSp <- dplyr::bind_rows(W, Q, P, K) #combining the citation records
 CombineSp
 ```
 
-After preparing the data, we are ready to make some plots. For example, using the package `ggplot2`, we can plot the h-index and m-index. When comparing the indices, it is important to remember that their scales may differ drastically. Therefore, putting the variables in the same plot may generate plots that do not make a lot of sense.
-
-We first plot the h-index:
+After preparing the data, we are ready to make some plots. The in-built function `plotAllindices()` plots the *h*-index, *m*-index, *i10* index, and *h5* index in a grid. When comparing the indices, it is important to remember that their scales may differ drastically. Therefore, putting the variables in the same plot may generate plots that do not make a lot of sense. However, this is an efficient way of visualising your data with only 1 line of code.
 
 ```{r, fig.height=5, fig.width=6, fig.align='center'}
-# h-index
-library(ggplot2)
-ggplot(CombineSp, aes(x = species)) +
-  geom_point(aes(y = h,
-                 colour = "H-index"),
-             size = 2.5) +
-  labs(y = "h-index",
-       colour = "Index") +
-  scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) +
-  scale_colour_manual(values = c("H-index" = "#3498DB")) +
-  theme(axis.title = element_text(size = 12,
-                                  colour = "black"),
-        axis.title.x = element_blank(),
-        axis.text = element_text(size = 10,
-                                 colour = "black"),
-        axis.line.x = element_line(colour = "grey50"),
-        plot.background = element_rect(fill = "white"),
-        panel.background = element_rect(fill = "white"),
-        panel.grid.major.y = element_line(colour = "grey80",
-                                          linetype = "longdash"),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.position = "none")
+plotAllindices(CombineSp)
 ```
 
 \
@@ -536,13 +517,13 @@ In order to understand what yields a high *m*-index score, we should recall that
 
 Currently, the input option for search requests is limited to species Latin names. Although common names are synonymous with the binomial names, they are comparatively much less explicit. There could be multiple species using the same common name, which will require extra steps to specify which is the particular species that is being studied. Moreover, there are other fields of research that use species' common names in the titles of their work without meaning the actual species, e.g. as a product/project name. 
 
-Another limitation is that only species-level searches using binomial names are enabled at the moment. This is because of homonymous [@10.3897/zookeys.550.9546] genus names between some plant and animal taxa. For example, the genus *Prunella* represents both a taxon of herbaceous plants and passerines. Additional parameters will have to be added to identify the exact taxon in question.
+Although genus-level searches are enabled, users should be cautious of duplicated genus names across different clades. This is because of homonymous [@10.3897/zookeys.550.9546] genus names between some plant and animal taxa. For example, the genus *Prunella* represents both a taxon of herbaceous plants and passerines. Additional parameters will have to be added to identify the exact taxon in question in the future.
 
-Finally, access to databases depends on location and whether or not your institution is a subscriber of said database. Scopus requests must be sent via a subscriber's internet provider. This include universities and individuals who have paid for annual Scopus subscription. This is easily addressed by connecting to your institution's network. Hence, it might not work at all if you are working from home. The error `Bad Request (HTTP 400)` will be returned in this case. Web of Science requests must be sent from the IP address of your institution, else the user is required to register for an account. Lens Fetch requests can only be made by users who's institution is a subscriber.
+Finally, access to databases depends on location and whether or not your institution is a subscriber of said database. Scopus requests must be sent via a subscriber's internet provider. This include universities and individuals who have paid for annual Scopus subscription. This is easily addressed by connecting to your institution's network. Hence, it might not work at all if you are working from home. The error `Bad Request (HTTP 400)` will be returned in this case. Web of Science requests must be sent from the IP address of your institution, else the user is required to register for an account. BASE requests can only be made via a location where the IP address has been white-listed.
 
 # Implications and future uses
 
-Although the development of this package is still in its infancy, it is nonetheless a valuable tool for reserchers looking to examine research biases between species. Some functions that could be added in the future include search requests for higher classification levels, e.g. genus, class, etc., and to include other emerging indices that are being used to calculate research influence. The results of the species h-index will show us the research interest each taxon receives. More investigations will then follow to explore the reasons why and how the knowledge gap affected species conservation and the depth of understanding we have for them.
+Although the development of this package is still in its infancy, it is nonetheless a valuable tool for researchers looking to examine research biases between species. Some functions that could be added in the future include search requests for higher classification levels, e.g. genus, class, etc., and to include other emerging indices that are being used to calculate research influence. The results of the species h-index will show us the research interest each taxon receives. More investigations will then follow to explore the reasons why and how the knowledge gap affected species conservation and the depth of understanding we have for them.
 
 # Acknowledgements
 

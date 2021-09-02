@@ -67,14 +67,6 @@ You are required to be at your institution for this to work since the API is acc
 
 It is recommended that you have your IP address whitelisted. You can do it [here](https://www.base-search.net/about/en/contact.php).
 
-### :mega: Connecting to Lens
-
-An individual token is required to extract data from Lens. If your institution is not a subscriber of Lens, you will only be able to register for a 14-day token, which can be renewed. In addition, you might not be able to use the Fetch functions if the search results exceeds 1,000 records. 
-
-1. Create an account with Lens.
-2. Go to https://www.lens.org/lens/user/subscriptions#scholar and select your desired Scholarly API.
-3. Request access.
-
 ## Examples
 
 Here is a quick demonstration of how the package works.
@@ -83,17 +75,15 @@ Here is a quick demonstration of how the package works.
 devtools::load_all(".")
 ```
 
-### Setting up keys
+### :jogsaw: Setting up keys
 
-You will need to set up your API key / session ID / token before gaining access to the databases. Run the following line of code to do so.
+You will need to set up your API key / session ID before gaining access to the databases. Run the following lines of code to do so.
 
 ```{r, eval=FALSE}
 #Scopus
 apikey <- "your_scopus_api_key"
 #Web of Science
 sid <- auth(username = NULL, password = NULL)
-#Lens
-token <- "your_lens_token"
 ```
 
 You won't have to set this again until your next session. You are required to be at your institution for this to work since the API is accessed via the IP address.
@@ -104,41 +94,42 @@ Multiple databases have been incorporated into `specieshindex`, including Scopus
 
 ```{r, eval=FALSE}
 #Scopus requests
-API <- "your_api_key_from_scopus"
-CountSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
-FetchSpT(genus = "Bettongia", species = "penicillata", APIkey = API)
+CountSpT(db = "scopus", genus = "Bettongia", species = "penicillata")
+FetchSpT(db = "scopus", genus = "Bettongia", species = "penicillata")
+CountGenusT(db = "scopus", genus = "Bettongia")
+FetchGenusT(db = "scopus", genus = "Bettongia")
 
 #Web of science requests
 #No tokens or api keys needed if session ID has been set as shown previously
-CountSpT_wos(genus = "Bettongia", species = "penicillata")
-FetchSpT_wos(genus = "Bettongia", species = "penicillata")
+CountSpT(db = "wos", genus = "Bettongia", species = "penicillata")
+FetchSpT(db = "wos", genus = "Bettongia", species = "penicillata")
+CountGenusT(db = "wos", genus = "Bettongia")
+FetchGenusT(db = "wos", genus = "Bettongia")
 
-#Lens requests
-token <- "your_lens_token"
-CountSpT_lens(genus = "Bettongia", species = "penicillata", size = 50000, token = token)
-FetchSpT_lens(genus = "Bettongia", species = "penicillata", size = 50000, token = token)
+#BASE requests
+CountSpT(db = "base", genus = "Bettongia", species = "penicillata")
+FetchSpT(db = "base", genus = "Bettongia", species = "penicillata")
+CountGenusT(db = "base", genus = "Bettongia")
+FetchGenusT(db = "base", genus = "Bettongia")
 ```
-
-Set `size = 1000` if you are using a 14-day token. The default is set to `size = 50000`.
 
 ### :abacus: Counting citation records
 
 If you are only interested in knowing how many publications there are on Scopus, you can run the Count functions. Use `CountSpT()` for title only or `CountSpTAK()` for title+abstract+keywords.
 
 ```{r, eval=FALSE}
-#API key
-API <- "your_api_key_from_scopus"
-
 #Count citation data
-CountSpT("Bettongia", "penicillata", APIkey = API)
-CountSpTAK("Bettongia", "penicillata", APIkey = API)
+CountSpT("scopus", "Bettongia", "penicillata")
+CountSpTAK("scopus", "Bettongia", "penicillata")
 
 #Example including additional keywords
-CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", APIkey = API)
+CountSpTAK("scopus", "Phascolarctos", "cinereus",
+           additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)")
 #search string: TITLE-ABS-KEY("Phascolarctos cinereus" AND (consrv* OR protect* OR reintrod* OR restor*))
 
 #Example including synonyms
-CountSpT("Osphranter", "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*", APIkey = API)
+CountSpT("scopus", "Osphranter", "rufus",
+         synonyms = "Macropus rufus", additionalkeywords = "conserv*")
 #search string: TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*)
 ```
 
@@ -148,10 +139,10 @@ In order to calculate the indices, you will need to download the citation record
 
 ```{r, eval=FALSE}
 #Extract citation data
-Woylie <- FetchSpTAK("Bettongia", "penicillata", APIkey = API)
-Quokka <- FetchSpTAK("Setonix", "brachyurus", APIkey = API)
-Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", APIkey = API)
-Koala <- FetchSpTAK("Phascolarctos", "cinereus", APIkey = API)
+Woylie <- FetchSpTAK("scopus", "Bettongia", "penicillata")
+Quokka <- FetchSpTAK("scopus", "Setonix", "brachyurus")
+Platypus <- FetchSpTAK("scopus", "Ornithorhynchus", "anatinus")
+Koala <- FetchSpTAK("scopus", "Phascolarctos", "cinereus")
 ```
 
 ### :bar_chart: Index calculation and plotting
@@ -169,67 +160,16 @@ CombineSp <- dplyr::bind_rows(W, Q, P, K) #combining the citation records
 CombineSp
 ```
 
-Once you are happy with your dataset, you can make some nice plots. Using `ggplot2`, we can compare the *h*-index and the total citations.
+Once you are happy with your dataset, you can make some nice plots. Using `plotAllindices()`, we can compare the indices against each other.
 
 ```{r, fig.align='center'}
-#h-index
-library(ggplot2)
-ggplot(CombineSp, aes(x = species,
-                      y = h)) +
-  geom_point(size = 4,
-             colour = "#6fc6f8") +
-  labs(y = "h-index") +
-  scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) +
-  ylim(25, 55) +
-  theme(axis.title = element_text(size = 12,
-                                  colour = "white"),
-        axis.title.x = element_blank(),
-        axis.text = element_text(size = 10,
-                                 colour = "white"),
-        axis.line.x = element_line(colour = "grey80"),
-        plot.background = element_rect(fill = "black"),
-        panel.background = element_rect(fill = "black"),
-        panel.grid.major.y = element_line(colour = "grey50"),
-        panel.grid.minor.y = element_line(colour = "grey50",
-                                          linetype = "longdash"),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        legend.position = "none")
+plotAllindices(CombineSp)
 ```
 
-**Figure 1.** The *h*-index of the Woylie, Quokka, Platypus, and Koala.
+**Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of the Woylie, Quokka, Platypus, and Koala.
 
 <br/>
 
-```{r, fig.align='center'}
-#Total citations
-ggplot(CombineSp, aes(x = species,
-                      y = m)) +
-  geom_point(size = 4,
-             colour = "#f976bb") +
-  labs(y = "m-index") +
-  scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) + 
-  theme(axis.title = element_text(size = 12,
-                                  colour = "white"),
-        axis.title.x = element_blank(),
-        axis.text = element_text(size = 10,
-                                 colour = "white"),
-        axis.line.x = element_line(colour = "grey80"),
-        plot.background = element_rect(fill = "black"),
-        panel.background = element_rect(fill = "black"),
-        panel.grid.major.y = element_line(colour = "grey50"),
-        panel.grid.minor.y = element_line(colour = "grey50",
-                                          linetype = "longdash"),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        legend.position = "none")
-```
-
-**Figure 2.** The *m*-index of the Woylie, Quokka, Platypus, and Koala.
-
-<br/>
   
 ## :rocket: Acknowledgements
 `specieshindex` is enabled by Scopus, Web of Science, and BASE.
-
-<iframe src="https://lens.org/lens/embed/attribution" scrolling="no" height="30px" width="100%"></iframe>
