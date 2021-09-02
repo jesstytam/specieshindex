@@ -95,7 +95,7 @@ it [here](https://www.base-search.net/about/en/contact.php).
 
 Here is a quick demonstration of how the package works.
 
-### :jogsaw: Setting up keys
+### :jigsaw: Setting up keys
 
 You will need to set up your API key / session ID before gaining access
 to the databases. Run the following lines of code to do so.
@@ -133,10 +133,9 @@ CountGenusT(db = "wos", genus = "Bettongia")
 FetchGenusT(db = "wos", genus = "Bettongia")
 
 #BASE requests
+#Fetch functions are not available for BASE
 CountSpT(db = "base", genus = "Bettongia", species = "penicillata")
-FetchSpT(db = "base", genus = "Bettongia", species = "penicillata")
 CountGenusT(db = "base", genus = "Bettongia")
-FetchGenusT(db = "base", genus = "Bettongia")
 ```
 
 ### :abacus: Counting citation records
@@ -215,7 +214,7 @@ plotAllindices(CombineSp)
 <img src="README_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
 **Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of
-the Woylie, Quokka, Platypus, and Koala.
+the Woylie, Platypus, Koala, and Quokka.
 
 <br/>
 
