@@ -2105,8 +2105,9 @@ plotAllindices <- function(data) {
 plotPub <- function(data) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
   pub <- ggplot2::ggplot(data = data,
-                  aes(x = year)) +
-    ggplot2::geom_freqpoly() 
+                         aes(x = year)) +
+    ggplot2::geom_freqpoly() +
+    spindex_plots_theme()
   return(pub)
 }
 ```
@@ -2388,6 +2389,8 @@ if (test$score[1]>0.9) {
 
 
 
+#new plot
+
 test_woylie <- FetchSpT("scopus", "Bettongia", "penicillata")
 test_kangaroo <- FetchSpT("scopus", "Macropus", "rufus")
 
@@ -2395,12 +2398,28 @@ test_woylie$year <- as.numeric(substr(test_woylie$cover_date, 1, 4))
 
 output_by_year <- data.frame(table(test_woylie$year))
 names(output_by_year)[names(output_by_year)=="Var1"] <- "Year"
+output_by_year$Year <- as.Date(strptime(output_by_year$Year, "%Y"))
 
 library(ggplot2)
 
 ggplot(output_by_year, aes(x = Year,
                            y = Freq)) +
-  geom_area()
+  geom_line() +
+  geom_point()
 
 
+plotPub(test_woylie)
+
+ggplot(output_by_year, aes(x = Year,
+                           y = Freq)) +
+  geom_line() +
+  geom_point()
+
+combine_test <- list(test_woylie, test_kangaroo)
+
+class(combine_test[[1]]$cover_date)
+
+lapply(combine_test$cover_date, FUN = function(x) as.numeric(substr(x, 1, 4)))
+
+plotPub(combine_test)
 ```
