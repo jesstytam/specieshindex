@@ -2079,6 +2079,8 @@ getYear <- function(data, genus, species) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
   output_by_year <- data.frame(table(data$year))
   names(output_by_year)[names(output_by_year)=="Var1"] <- "Year"
+  output_by_year$Year <- as.numeric(as.character(output_by_year$Year))
+  output_by_year <- tidyr::complete(output_by_year, Year = min(Year):max(Year), fill = list(Freq = 0))
   output_by_year$spp <- paste(genus, species)
   return(output_by_year)
 }
@@ -2114,7 +2116,6 @@ plotPub <- function(data) {
     ggplot2::labs(x = "Year",
                   y = "Number of articles",
                   colour = "Species") +
-    ggplot2::ylim(c(0, NA)) +
     sppub_plot_theme()
 }
 

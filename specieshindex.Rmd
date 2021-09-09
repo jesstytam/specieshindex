@@ -2129,6 +2129,8 @@ getYear <- function(data, genus, species) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
   output_by_year <- data.frame(table(data$year))
   names(output_by_year)[names(output_by_year)=="Var1"] <- "Year"
+  output_by_year$Year <- as.numeric(as.character(output_by_year$Year))
+  output_by_year <- tidyr::complete(output_by_year, Year = min(Year):max(Year), fill = list(Freq = 0))
   output_by_year$spp <- paste(genus, species)
   return(output_by_year)
 }
@@ -2147,7 +2149,6 @@ plotPub <- function(data) {
     ggplot2::labs(x = "Year",
                   y = "Number of articles",
                   colour = "Species") +
-    ggplot2::ylim(c(0, NA)) +
     ggplot2::scale_y_discrete() +
     sppub_plot_theme()
 }
@@ -2443,7 +2444,15 @@ plotPub(wos_year)
 test_woylie$year <- as.numeric(substr(test_woylie$cover_date, 1, 4))
 output_by_year <- data.frame(table(test_woylie$year))
 names(output_by_year)[names(output_by_year)=="Var1"] <- "Year"
+output_by_year$Year <- as.numeric(as.character(output_by_year$Year))
+output_by_year <- complete(output_by_year, Year = min(Year):max(Year), fill = list(Freq = 0))
 output_by_year$spp <- "Bettongia penicillata"
+
+output_by_year$Year <- as.numeric(output_by_year$Year)
+output_by_year <- output_by_year %>% 
+  complete(Year = min(Year):max(Year), fill = list(value1 = 0))
+
+
 
 test_kangaroo$year <- as.numeric(substr(test_kangaroo$cover_date, 1, 4))
 output_by_year_2 <- data.frame(table(test_kangaroo$year))
@@ -2467,6 +2476,8 @@ ggplot(combine_output, aes(x = as.numeric(as.character(Year)),
        colour = "Species") +
   ylim(c(0, NA)) +
   sppub_plot_theme()
+
+plotPub(output_by_year)
 
 
 getYear(test_woylie, "Bettongia", "penicillata")
