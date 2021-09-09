@@ -2148,6 +2148,7 @@ plotPub <- function(data) {
                   y = "Number of articles",
                   colour = "Species") +
     ggplot2::ylim(c(0, NA)) +
+    ggplot2::scale_y_discrete() +
     sppub_plot_theme()
 }
 ```
@@ -2434,6 +2435,11 @@ if (test$score[1]>0.9) {
 test_woylie <- FetchSpT("scopus", "Bettongia", "penicillata")
 test_kangaroo <- FetchSpT("scopus", "Macropus", "rufus")
 
+wos_test <- FetchSpT("wos", "Sarcophilus", "harrisii")
+
+wos_year <- getYear(wos_test, "Sarcophilus", "harrisii")
+plotPub(wos_year)
+
 test_woylie$year <- as.numeric(substr(test_woylie$cover_date, 1, 4))
 output_by_year <- data.frame(table(test_woylie$year))
 names(output_by_year)[names(output_by_year)=="Var1"] <- "Year"
@@ -2452,9 +2458,9 @@ ggplot(combine_output, aes(x = as.numeric(as.character(Year)),
                            y = Freq,
                            group = spp,
                            colour = spp)) +
-  geom_line(size = 0.6,
+  geom_line(size = 0.5,
             alpha = 0.8) +
-  geom_point(size = 1.5,
+  geom_point(size = 1,
             alpha = 0.8) +
   labs(x = "Year",
        y = "Number of articles",

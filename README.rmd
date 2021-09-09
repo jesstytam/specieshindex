@@ -11,8 +11,6 @@ output: github_document
 `r badger::badge_codecov("jessicatytam/specieshindex")`
 [![Github All Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg)]()
 
-*UNDER CONSTRUCTION, DOCUMENTATION NOT UP TO DATE*
-
 `specieshindex` is a package that aims to gauge scientific influence of different species mainly using the *h*-index.
 
 ## Installation
@@ -169,6 +167,20 @@ plotAllindices(CombineSp)
 
 <br/>
 
+You can also visualise the total publication per year with `getYear()` and `plotPub()`.
+
+```{r, fig.align='center'}
+extract_year_W <- getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
+extract_year_Q <- getYear(data = Quokka, genus = "Setonix", species = "brachyurus")
+extract_year_P <- getYear(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
+extract_year_K <- getYear(data = Koala, genus = "Phascolarctos", species = "cinereus")
+Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
+plotPub(Combine_pub)
+```
+
+**Figure 2.** The total number of publications per year of the Woylie, Platypus, Koala, and Quokka.
+
+<br/>
   
 ## :rocket: Acknowledgements
 `specieshindex` is enabled by Scopus, Web of Science, and BASE.

@@ -10,8 +10,6 @@ status](https://www.r-pkg.org/badges/version/specieshindex)](https://CRAN.R-proj
 [![Github All
 Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg)]()
 
-*UNDER CONSTRUCTION, DOCUMENTATION NOT UP TO DATE*
-
 `specieshindex` is a package that aims to gauge scientific influence of
 different species mainly using the *h*-index.
 
@@ -74,11 +72,11 @@ To connect and download citation information from Scopus legally, you
 will **absolutely need** an API key. Here are the steps to obtain the
 key.
 
-1.  Go to <https://dev.elsevier.com/> and click on the button `I want an
-    API key`.
+1.  Go to <https://dev.elsevier.com/> and click on the button
+    `I want an API key`.
 2.  Create an account and log in.
-3.  Go to the `My API Key` tab on top of the page and click `Create API
-    Key`.
+3.  Go to the `My API Key` tab on top of the page and click
+    `Create API Key`.
 4.  Read the legal documents and check the boxes.
 
 ### :mega: Connecting to Web of Science
@@ -215,6 +213,25 @@ plotAllindices(CombineSp)
 
 **Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of
 the Woylie, Platypus, Koala, and Quokka.
+
+<br/>
+
+You can also visualise the total publication per year with `getYear()`
+and `plotPub()`.
+
+``` r
+extract_year_W <- getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
+extract_year_Q <- getYear(data = Quokka, genus = "Setonix", species = "brachyurus")
+extract_year_P <- getYear(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
+extract_year_K <- getYear(data = Koala, genus = "Phascolarctos", species = "cinereus")
+Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
+plotPub(Combine_pub)
+```
+
+<img src="README_files/figure-gfm/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
+
+**Figure 2.** The total number of publications per year of the Woylie,
+Platypus, Koala, and Quokka.
 
 <br/>
 

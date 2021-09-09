@@ -2,7 +2,7 @@
 % Please edit documentation in R/specieshindex.R
 \name{plotAllindices}
 \alias{plotAllindices}
-\title{Plot}
+\title{Index plot}
 \usage{
 plotAllindices(data)
 }
@@ -13,7 +13,7 @@ plotAllindices(data)
 ggplot
 }
 \description{
-Plots the data of a single species or combined.
+Plots the indices of a single species or combined.
 }
 \examples{
 W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")

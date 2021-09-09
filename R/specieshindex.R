@@ -1999,9 +1999,9 @@ Allindices <- function(data, genus, species, sourcetype = 0) {
 
 
 
-#' Plots the data of a single species or combined.
+#' Plots the indices of a single species or combined.
 #' 
-#' @title Plot
+#' @title Index plot
 #'
 #' @param data The dataframe generated from \code{\link{Allindices}}.
 #'
@@ -2062,16 +2062,19 @@ plotAllindices <- function(data) {
 
 
 
-#' Title
+#' Extracts the year of each publication of the output from any of the Fetch functions and counts the number of publications each year.
 #'
-#' @param data 
-#' @param genus 
-#' @param species 
+#' @title Extract year
+#' @param data Output from any of the fetch function.
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
 #'
-#' @return
+#' @return A dataframe with the year and frequency of the publications
 #' @export
 #'
 #' @examples
+#' getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
+#' 
 getYear <- function(data, genus, species) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
   output_by_year <- data.frame(table(data$year))
@@ -2082,14 +2085,23 @@ getYear <- function(data, genus, species) {
 
 
 
-#' Title
+#' Plots the publication by year of a single species or combined.
+#' 
+#' @title Publication plot
 #'
-#' @param data 
+#' @param data The dataframe generated from \code{\link{getYear}}.
 #'
-#' @return
+#' @return ggplot
 #' @export
 #'
 #' @examples
+#' extract_year_W <- getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
+#' extract_year_Q <- getYear(data = Quokka, genus = "Setonix", species = "brachyurus")
+#' extract_year_P <- getYear(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
+#' extract_year_K <- getYear(data = Koala, genus = "Phascolarctos", species = "cinereus")
+#' Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
+#' plotPub(Combine_pub)
+#' 
 plotPub <- function(data) {
   ggplot2::ggplot(data, ggplot2::aes(x = as.numeric(as.character(Year)),
                                      y = Freq,
