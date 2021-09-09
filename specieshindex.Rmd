@@ -794,7 +794,7 @@ create_query_string_TAK_lens_genus <- function(genus, synonyms, additionalkeywor
 
 ```{r}
 #theme for ggplot
-spindex_plots_theme <- function() {
+spindex_plot_theme <- function() {
   ggplot2::theme(title = element_text(size = 12,
                                                face = "bold"),
                  axis.title.x = element_blank(),
@@ -802,6 +802,29 @@ spindex_plots_theme <- function() {
                  axis.ticks.x = element_blank(),
                  axis.line.x = element_line(colour = "grey20"),
                  axis.title.y = element_blank(),
+                 axis.text.y = element_text(size = 10),
+                 legend.key = element_rect(fill = "white"),
+                 plot.background = element_rect(fill = "white"),
+                 panel.background = element_rect(fill = "white"),
+                 panel.grid.major.y = element_line(colour = "grey90"),
+                 panel.grid.minor.y = element_line(colour = "grey90",
+                                                            linetype = "longdash"),
+                 panel.grid.major.x = ggplot2::element_blank(),
+                 panel.grid.minor.x = ggplot2::element_blank())
+}
+```
+
+```{r}
+#theme for ggplot
+sppub_plot_theme <- function() {
+  ggplot2::theme(title = element_blank(),
+                 axis.title.x = element_text(size = 12,
+                                               face = "bold"),
+                 axis.text.x = element_text(size = 10),
+                 axis.ticks.x = element_blank(),
+                 axis.line.x = element_line(colour = "grey20"),
+                 axis.title.y = element_text(size = 12,
+                                               face = "bold"),
                  axis.text.y = element_text(size = 10),
                  legend.key = element_rect(fill = "white"),
                  plot.background = element_rect(fill = "white"),
@@ -2102,12 +2125,30 @@ plotAllindices <- function(data) {
 ```
 
 ```{r}
-plotPub <- function(data) {
+getYear <- function(data, genus, species) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
-  pub <- ggplot2::ggplot(data = data,
-                         aes(x = year)) +
-    ggplot2::geom_freqpoly()
-  return(pub)
+  output_by_year <- data.frame(table(data$year))
+  names(output_by_year)[names(output_by_year)=="Var1"] <- "Year"
+  output_by_year$spp <- paste(genus, species)
+  return(output_by_year)
+}
+```
+
+```{r}
+plotPub <- function(data) {
+  ggplot2::ggplot(data, ggplot2::aes(x = as.numeric(as.character(Year)),
+                                     y = Freq,
+                                     group = spp,
+                                     colour = spp)) +
+    ggplot2::geom_line(size = 0.5,
+                       alpha = 0.8) +
+    ggplot2::geom_point(size = 1,
+                        alpha = 0.8) +
+    ggplot2::labs(x = "Year",
+                  y = "Number of articles",
+                  colour = "Species") +
+    ggplot2::ylim(c(0, NA)) +
+    sppub_plot_theme()
 }
 ```
 
@@ -2394,25 +2435,37 @@ test_woylie <- FetchSpT("scopus", "Bettongia", "penicillata")
 test_kangaroo <- FetchSpT("scopus", "Macropus", "rufus")
 
 test_woylie$year <- as.numeric(substr(test_woylie$cover_date, 1, 4))
-
 output_by_year <- data.frame(table(test_woylie$year))
 names(output_by_year)[names(output_by_year)=="Var1"] <- "Year"
-output_by_year$Year <- as.character(output_by_year$Year, format = "%Y")
+output_by_year$spp <- "Bettongia penicillata"
+
+test_kangaroo$year <- as.numeric(substr(test_kangaroo$cover_date, 1, 4))
+output_by_year_2 <- data.frame(table(test_kangaroo$year))
+names(output_by_year_2)[names(output_by_year_2)=="Var1"] <- "Year"
+output_by_year_2$spp <- "Macropus rufus"
+
+combine_output <- rbind(output_by_year, output_by_year_2)
 
 library(ggplot2)
 
-ggplot(output_by_year, aes(x = Year,
-                           y = Freq)) +
-  geom_line()
+ggplot(combine_output, aes(x = as.numeric(as.character(Year)),
+                           y = Freq,
+                           group = spp,
+                           colour = spp)) +
+  geom_line(size = 0.6,
+            alpha = 0.8) +
+  geom_point(size = 1.5,
+            alpha = 0.8) +
+  labs(x = "Year",
+       y = "Number of articles",
+       colour = "Species") +
+  ylim(c(0, NA)) +
+  sppub_plot_theme()
 
 
-plotPub(test_woylie)
+getYear(test_woylie, "Bettongia", "penicillata")
+plotPub(getYear(test_woylie, "Bettongia", "penicillata"))
 
-combine_test <- list(test_woylie, test_kangaroo)
 
-class(combine_test[[1]]$cover_date)
 
-lapply(combine_test$cover_date, FUN = function(x) as.numeric(substr(x, 1, 4)))
-
-plotPub(combine_test)
 ```

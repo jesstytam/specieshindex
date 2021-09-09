@@ -400,7 +400,7 @@ dim(Koala)
 
 As shown here, there were 113 records (publications) for the woylie, 242 records for the quokka, 321 records for the platypus, and 773 records for the koala. They all have a total of 20 variables, e.g. citations, journals, DOI, etc., representing bibliometric information downloaded from Scopus for each publication. I have skipped the steps of fetching the data from Scopus since it had already been demonstrated above.
 
-## Comparing indices
+## Visualising the data
 
 Next, we calculate research productivity and influence indices using the `Allindices()` function:
 
@@ -425,93 +425,30 @@ plotAllindices(CombineSp)
 ```
 
 \
-We can also plot the total citations counts for comparison, since citations is an important factor in contributing to h-index.
+To see the total output by year, you can use the functions `getYear()` and `plotPub()`. Below is an example using the same datasets as above. First, we need to extract the year from the output of `FetchSpT()` (or any other Fetch functions) with `getYear()`. Remember to supply the binomial name of the species.
 
-```{r, fig.height=5, fig.width=6, fig.align='center'}
-# Total citations
-ggplot(CombineSp, aes(x = species)) +
-  geom_point(aes(y = citations,
-                 colour = "Citations"),
-             size = 2.5) +
-  labs(y = "Total citations",
-       colour = "Index") +
-  scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) +
-  scale_colour_manual(values = c("Citations"  = "#2874A6")) +
-  theme(axis.title = element_text(size = 12,
-                                  colour = "black"),
-        axis.title.x = element_blank(),
-        axis.text = element_text(size = 10,
-                                 colour = "black"),
-        axis.line.x = element_line(colour = "grey50"),
-        plot.background = element_rect(fill = "white"),
-        panel.background = element_rect(fill = "white"),
-        panel.grid.major.y = element_line(colour = "grey80",
-                                          linetype = "longdash"),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.position = "none")
+```{r}
+extract_year_W <- getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
+extract_year_W
+```
+
+If you have multiple species to visualise, you can combine them with using `rbind()`.
+
+```{r}
+extract_year_Q <- getYear(data = Quokka, genus = "Setonix", species = "brachyurus")
+extract_year_P <- getYear(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
+extract_year_K <- getYear(data = Koala, genus = "Phascolarctos", species = "cinereus")
+Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
+```
+
+To plot the output, simply use the `plotPub()` function.
+
+```{r}
+plotPub(Combine_pub)
 ```
 
 \
-It seems like the h-index values are quite consistent with the total numbers of citations, i.e. the more the citations in total, the higher the h-index score. Therefore, the woylie, with the lowest number of citations has the lowest *h*-index. On the other hand, the koala, with the highest number of citations has the highest h-index.
-
-We next plot the m-index to see how it differs from the h-index. Recalling that m-index is calculated by dividing the h-index by the number of years of publication activity ($m=h/years~publishing$), let us have a closer inspection at both the m-index:
-
-```{r, fig.height=5, fig.width=6, fig.align='center'}
-# m-index
-ggplot(CombineSp, aes(x = species)) +
-  geom_point(aes(y = m,
-                 colour = "M-index"),
-             size = 2.5) +
-  labs(y = "m-index",
-       colour = "Index") +
-  scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) + 
-  scale_colour_manual(values = c("M-index"  = "#E74C3C")) +
-  theme(axis.title = element_text(size = 12,
-                                  colour = "black"),
-        axis.title.x = element_blank(),
-        axis.text = element_text(size = 10,
-                                 colour = "black"),
-        axis.line.x = element_line(colour = "grey50"),
-        plot.background = element_rect(fill = "white"),
-        panel.background = element_rect(fill = "white"),
-        panel.grid.major.y = element_line(colour = "grey80",
-                                          linetype = "longdash"),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.position = "none")
-```
-
-\
-We should also have a look at the related variable years_publishing (number of years since first publication for a given species).
-
-```{r, fig.height=5, fig.width=6, fig.align='center'}
-# Years publishing
-ggplot(CombineSp, aes(x = species)) +
-  geom_point(aes(y = years_publishing,
-                 colour = "Years publishing"),
-             size = 2.5) +
-  labs(y = "Total years",
-       colour = "Index") +
-  scale_x_discrete(labels = c("Platypus", "Quokka", "Koala", "Woylie")) + 
-  scale_colour_manual(values = c("Years publishing" = "#950505")) +
-  theme(axis.title = element_text(size = 12,
-                                  colour = "black"),
-        axis.title.x = element_blank(),
-        axis.text = element_text(size = 10,
-                                 colour = "black"),
-        axis.line.x = element_line(colour = "grey50"),
-        plot.background = element_rect(fill = "white"),
-        panel.background = element_rect(fill = "white"),
-        panel.grid.major.y = element_line(colour = "grey80",
-                                          linetype = "longdash"),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.position = "none") 
-```
-
-\
-In order to understand what yields a high *m*-index score, we should recall that the *m*-index is a ratio. A high *m*-index can be achieved by combination of a higher *h*-index and a lower `years_publishing` value. This explains why koala publications have a relatively low *m*-index, albeit highest *h*-index. Research on koalas has been produced for over 3 times longer than that on the woylie. Although the *h*-index of woylie publications was half of that of the koala, it had only been in the scientific scene for a few decades. Comparing the quokka to the platypus, we can see that their publications have both been around for a similar duration of time. 66 years for the quokka and 67 years for the platypus respectively. Since the platypus has a higher h-index than the quokka, this is thus consistent with the higher *m*-index score here.
+You can add a custom colour palette of choice for further customisation.
 
 # Limitations
 
@@ -523,7 +460,7 @@ Finally, access to databases depends on location and whether or not your institu
 
 # Implications and future uses
 
-Although the development of this package is still in its infancy, it is nonetheless a valuable tool for researchers looking to examine research biases between species. Some functions that could be added in the future include search requests for higher classification levels, e.g. genus, class, etc., and to include other emerging indices that are being used to calculate research influence. The results of the species h-index will show us the research interest each taxon receives. More investigations will then follow to explore the reasons why and how the knowledge gap affected species conservation and the depth of understanding we have for them.
+Although the development of this package is still in its infancy, it is nonetheless a valuable tool for researchers looking to examine research biases between species. Some functions that could be added in the future include search requests for higher classification levels, e.g. class, order, etc., and to include other emerging indices that are being used to calculate research influence. The results of the species h-index will show us the research interest each taxon receives. More investigations will then follow to explore the reasons why and how the knowledge gap affected species conservation and the depth of understanding we have for them.
 
 # Acknowledgements
 

@@ -2025,7 +2025,7 @@ plotAllindices <- function(data) {
     ggplot2::geom_point(size = 2) +
     ggplot2::labs(title = "h-index",
                   colour = "Species") +
-    spindex_plots_theme()
+    spindex_plot_theme()
   #m-index
   m_plot <- ggplot2::ggplot(data = data,
                             ggplot2::aes(x = genus_species,
@@ -2034,7 +2034,7 @@ plotAllindices <- function(data) {
     ggplot2::geom_point(size = 2) +
     ggplot2::labs(title = "m-index",
                   colour = "Species") +
-    spindex_plots_theme()
+    spindex_plot_theme()
   #i10
   i10_plot <- ggplot2::ggplot(data = data,
                               ggplot2::aes(x = genus_species,
@@ -2043,7 +2043,7 @@ plotAllindices <- function(data) {
     ggplot2::geom_point(size = 2) +
     ggplot2::labs(title = "i10 index",
                   colour = "Species") +
-    spindex_plots_theme()
+    spindex_plot_theme()
   #h5
   h5_plot <- ggplot2::ggplot(data = data,
                              ggplot2::aes(x = genus_species,
@@ -2052,12 +2052,58 @@ plotAllindices <- function(data) {
     ggplot2::geom_point(size = 2) +
     ggplot2::labs(title = "h5 index",
                   colour = "Species") +
-    spindex_plots_theme()
+    spindex_plot_theme()
   #combining the plots
   combine_plot <- ggpubr::ggarrange(h_plot, m_plot, i10_plot, h5_plot,
                                     common.legend = TRUE,
                                     legend = "right")
   return(combine_plot)
+}
+
+
+
+#' Title
+#'
+#' @param data 
+#' @param genus 
+#' @param species 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+getYear <- function(data, genus, species) {
+  data$year <- as.numeric(substr(data$cover_date, 1, 4))
+  output_by_year <- data.frame(table(data$year))
+  names(output_by_year)[names(output_by_year)=="Var1"] <- "Year"
+  output_by_year$spp <- paste(genus, species)
+  return(output_by_year)
+}
+
+
+
+#' Title
+#'
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plotPub <- function(data) {
+  ggplot2::ggplot(data, ggplot2::aes(x = as.numeric(as.character(Year)),
+                                     y = Freq,
+                                     group = spp,
+                                     colour = spp)) +
+    ggplot2::geom_line(size = 0.5,
+                       alpha = 0.8) +
+    ggplot2::geom_point(size = 1,
+                        alpha = 0.8) +
+    ggplot2::labs(x = "Year",
+                  y = "Number of articles",
+                  colour = "Species") +
+    ggplot2::ylim(c(0, NA)) +
+    sppub_plot_theme()
 }
 
 
@@ -2554,13 +2600,13 @@ create_query_string_TAK_base_genus <- function(genus, synonyms, additionalkeywor
 
 #' Theme for \code{\link{plotAllindices}}
 #'
-#' @title Theme for plot
+#' @title Theme for indices plot
 #' 
 #' @importFrom ggplot2 element_blank element_grob element_line element_rect element_render element_text
 #'
 #' @noRd
 #' 
-spindex_plots_theme <- function() {
+spindex_plot_theme <- function() {
   ggplot2::theme(title = element_text(size = 12,
                                       face = "bold"),
                  axis.title.x = element_blank(),
@@ -2577,4 +2623,34 @@ spindex_plots_theme <- function() {
                                                    linetype = "longdash"),
                  panel.grid.major.x = element_blank(),
                  panel.grid.minor.x = element_blank())
+}
+
+
+
+#' Theme for \code{\link{plotPub}}
+#'
+#' @title Theme for publications plot
+#' 
+#' @importFrom ggplot2 element_blank element_grob element_line element_rect element_render element_text
+#'
+#' @noRd
+#' 
+sppub_plot_theme <- function() {
+  ggplot2::theme(title = element_blank(),
+                 axis.title.x = element_text(size = 12,
+                                             face = "bold"),
+                 axis.text.x = element_text(size = 10),
+                 axis.ticks.x = element_blank(),
+                 axis.line.x = element_line(colour = "grey20"),
+                 axis.title.y = element_text(size = 12,
+                                             face = "bold"),
+                 axis.text.y = element_text(size = 10),
+                 legend.key = element_rect(fill = "white"),
+                 plot.background = element_rect(fill = "white"),
+                 panel.background = element_rect(fill = "white"),
+                 panel.grid.major.y = element_line(colour = "grey90"),
+                 panel.grid.minor.y = element_line(colour = "grey90",
+                                                   linetype = "longdash"),
+                 panel.grid.major.x = ggplot2::element_blank(),
+                 panel.grid.minor.x = ggplot2::element_blank())
 }
