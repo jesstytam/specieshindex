@@ -2138,7 +2138,7 @@ getYear <- function(data, genus, species) {
 
 ```{r}
 plotPub <- function(data) {
-  ggplot2::ggplot(data, ggplot2::aes(x = as.numeric(as.character(Year)),
+  ggplot2::ggplot(data, ggplot2::aes(x = Year,
                                      y = Freq,
                                      group = spp,
                                      colour = spp)) +

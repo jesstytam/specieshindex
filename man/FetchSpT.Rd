@@ -23,7 +23,7 @@ FetchSpT(db, genus, species, synonyms, additionalkeywords, language = 0)
 A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 }
 \description{
-This is a wrapper function for \code{\link{FetchSpT_scopus}}, \code{\link{FetchSpT_wos}}, and \code{\link{FetchSpT_base}}.
+This is a wrapper function for \code{\link{FetchSpT_scopus}}, and \code{\link{FetchSpT_wos}}.
 }
 \examples{
 \dontrun{

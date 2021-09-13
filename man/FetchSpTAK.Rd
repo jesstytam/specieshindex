@@ -23,7 +23,7 @@ FetchSpTAK(db, genus, species, synonyms, additionalkeywords, language = 0)
 A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 }
 \description{
-This is a wrapper function for \code{\link{FetchSpTAK_scopus}}, \code{\link{FetchSpTAK_wos}}, and \code{\link{FetchSpTAK_base}}.
+This is a wrapper function for \code{\link{FetchSpTAK_scopus}}, and \code{\link{FetchSpTAK_wos}}.
 }
 \examples{
 \dontrun{

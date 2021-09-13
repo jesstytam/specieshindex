@@ -128,7 +128,7 @@ CountGenusTAK <- function(db, genus, synonyms, additionalkeywords) {
 
 
 
-#' This is a wrapper function for \code{\link{FetchSpT_scopus}}, \code{\link{FetchSpT_wos}}, and \code{\link{FetchSpT_base}}.
+#' This is a wrapper function for \code{\link{FetchSpT_scopus}}, and \code{\link{FetchSpT_wos}}.
 #' 
 #' @title FetchSpT wrapper
 #'
@@ -160,7 +160,7 @@ FetchSpT <- function(db, genus, species, synonyms, additionalkeywords, language 
 
 
 
-#' This is a wrapper function for \code{\link{FetchSpTAK_scopus}}, \code{\link{FetchSpTAK_wos}}, and \code{\link{FetchSpTAK_base}}.
+#' This is a wrapper function for \code{\link{FetchSpTAK_scopus}}, and \code{\link{FetchSpTAK_wos}}.
 #' 
 #' @title FetchSpTAK wrapper
 #'
