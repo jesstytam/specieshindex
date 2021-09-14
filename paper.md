@@ -91,7 +91,7 @@ sid <- auth(username = NULL, password = NULL)
 
 ## Connecting to BASE
 
-Having a whitelisted IP address is essential when gaining access to the BASE database, which users can accomplish at https://www.base-search.net/about/en/contact.php. A token or API key, however, is not required.
+Having a whitelisted IP address is essential when gaining access to the BASE database, which users can accomplish at https://www.base-search.net/about/en/contact.php. A token or API key, however, is not required. Only count functions, e.g. `CountSpT()` and `CountSpTAK()`, are available as BASE does not return citation counts. Hence, index calculations will also be unavailable using this database. 
 
 ## Example
 
