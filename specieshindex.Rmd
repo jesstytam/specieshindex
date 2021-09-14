@@ -2394,6 +2394,18 @@ FetchSpT("scopus", "macropus", "rufus")
 
 
 
+genus <- "Bettongia"
+species <- "penicillata"
+
+findname <- taxize::gnr_resolve(sci = c(genus, species),
+                                data_source_ids = list("1", "3", "4", "12")) #check if the species exist
+findname <- findname[order(-findname$score),]
+if (findname$score[1]>0.9) {
+    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
+  } else {
+    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
+  }
+
 
 CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
   findname <- taxize::gnr_resolve(sci = c(genus, species),
@@ -2419,10 +2431,20 @@ CountSpT_scopus("Macropus", "rufus")
 CountSpT_scopus("Bettongia", "penicillata")
 
 test <- gnr_resolve(sci = "Macropus rufus", data_source_ids = list("1", "3", "4", "12"))
-test <- gnr_resolve(sci = "Bettongia penicillata", data_source_ids = list("1", "3", "4", "12"))
+test <- taxize::gnr_resolve(sci = "Bettongia penicillata", data_source_ids = list("1", "3", "4", "12"))
 test <- test[order(-test$score),]
-test$score[1]>0.9
+if (test$score[1]>0.9) {
+    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
+  } else {
+    print(paste("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again."))
+  }
 
+genus <- "Bettongia"
+species <- "penicillata"
+
+test <- taxize::gnr_resolve(sci = c(genus, species),
+                            data_source_ids = list("1", "3", "4", "12"))
+test <- test[order(-test$score),]
 if (test$score[1]>0.9) {
     print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
   } else {
