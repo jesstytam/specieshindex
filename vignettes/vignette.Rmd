@@ -104,7 +104,7 @@ apikey <- "your_api_key_from_scopus"
 
 ## Connecting to Web of Science
 
-No key is need to extract data from Web of Science if you are using this package from your institution's location. You will need to set up your session ID before gaining access to the Web of Science database. Run the following line of code to do so: 
+No key is needed to extract data from Web of Science if you are using this package from your institution's location. You will need to set up your session ID before gaining access to the Web of Science database. Run the following line of code to do so: 
 
 ```{r, eval=FALSE}
 sid <- auth(username = NULL, password = NULL)
