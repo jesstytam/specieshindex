@@ -793,10 +793,46 @@ create_query_string_TAK_lens_genus <- function(genus, synonyms, additionalkeywor
 ```
 
 ```{r}
+#species check
+sp_check <- function(genus, species) {
+  findname <- taxize::gnr_resolve(sci = paste(genus, species),
+                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
+  if (length(findname>0)) {
+    findname <- findname[order(-findname$score),]
+  } else {
+    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
+  }
+  if (findname$score[1]>=0.9) {
+    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
+  } else {
+    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
+  }
+}
+```
+
+```{r}
+#genus check
+genus_check <- function(genus) {
+  findname <- taxize::gnr_resolve(sci = genus,
+                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
+  if (length(findname>0)) {
+    findname <- findname[order(-findname$score),]
+  } else {
+    stop("Genus not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
+  }
+  if (findname$score[1]>=0.75) {
+    print(paste("Genus found on CoL, ITIS, NCBI, or EoL."))
+  } else {
+    stop("Genus not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
+  }
+}
+```
+
+```{r}
 #theme for ggplot
 spindex_plot_theme <- function() {
   ggplot2::theme(title = element_text(size = 12,
-                                               face = "bold"),
+                                      face = "bold"),
                  axis.title.x = element_blank(),
                  axis.text.x = element_blank(),
                  axis.ticks.x = element_blank(),
@@ -819,19 +855,19 @@ spindex_plot_theme <- function() {
 sppub_plot_theme <- function() {
   ggplot2::theme(title = element_blank(),
                  axis.title.x = element_text(size = 12,
-                                               face = "bold"),
+                                             face = "bold"),
                  axis.text.x = element_text(size = 10),
                  axis.ticks.x = element_blank(),
                  axis.line.x = element_line(colour = "grey20"),
                  axis.title.y = element_text(size = 12,
-                                               face = "bold"),
+                                             face = "bold"),
                  axis.text.y = element_text(size = 10),
                  legend.key = element_rect(fill = "white"),
                  plot.background = element_rect(fill = "white"),
                  panel.background = element_rect(fill = "white"),
                  panel.grid.major.y = element_line(colour = "grey90"),
                  panel.grid.minor.y = element_line(colour = "grey90",
-                                                            linetype = "longdash"),
+                                                   linetype = "longdash"),
                  panel.grid.major.x = ggplot2::element_blank(),
                  panel.grid.minor.x = ggplot2::element_blank())
 }
@@ -944,18 +980,7 @@ FetchGenusTAK <- function(db, genus, synonyms, additionalkeywords, language = 0)
 ```{r, function to get result count from scopus title only}
 #code from Fonti (modified)
 CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
-  findname <- taxize::gnr_resolve(sci = paste(genus, species),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  sp_check(genus, species)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                       query = list(apiKey = apikey,
                                    query = create_query_string_T_scopus(genus, species, synonyms, additionalkeywords),
@@ -970,18 +995,7 @@ CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, dataty
 ```{r, function to get result count from scopus title+abs+key}
 #code from Fonti (modified)
 CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
-  findname <- taxize::gnr_resolve(sci = paste(genus, species),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  sp_check(genus, species)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                       query = list(apiKey = apikey,
                                    query = create_query_string_TAK_scopus(genus, species, synonyms, additionalkeywords),
@@ -996,10 +1010,7 @@ CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, data
 ```{r, function to get result count from scopus title only; genus}
 #code from Fonti (modified)
 CountGenusT_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
-  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
-  ) 
+  genus_check(genus)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                       query = list(apiKey = apikey,
                                    query = create_query_string_T_scopus_genus(genus, synonyms, additionalkeywords),
@@ -1014,10 +1025,7 @@ CountGenusT_scopus <- function(genus, synonyms, additionalkeywords, datatype = "
 ```{r, function to get result count from scopus title+abs+key; genus}
 #code from Fonti (modified)
 CountGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
-  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
-  ) 
+  genus_check(genus)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                       query = list(apiKey = apikey,
                                    query = create_query_string_TAK_scopus_genus(genus, synonyms, additionalkeywords),
@@ -1599,18 +1607,7 @@ FetchGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, language =
 
 ```{r, function to get result count from scopus title only}
 CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
-  findname <- taxize::gnr_resolve(sci = paste(genus, species),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  sp_check(genus, species)
   count <- wosr::query_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
                            sid = sid) 
   return(count)
@@ -1619,18 +1616,7 @@ CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 
 ```{r, function to get result count from scopus title+abs+key}
 CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
-  findname <- taxize::gnr_resolve(sci = paste(genus, species),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  sp_check(genus, species)
   count <- wosr::query_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
                            sid = sid) 
   return(count)
@@ -1639,10 +1625,7 @@ CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 
 ```{r, function to get result count from scopus title only; genus}
 CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
-  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
-  )
+  genus_check(genus)
   count <- wosr::query_wos(query = create_query_string_T_wos_genus(genus, synonyms, additionalkeywords),
                            sid = sid) 
   return(count)
@@ -1651,10 +1634,7 @@ CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
 
 ```{r, function to get result count from scopus title+abs+key; genus}
 CountGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
-  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
-  dplyr::case_when(
-    findname$submitted_name %in% findname$matched_name ~ print(paste("Genus found on the Encyclopedia of Life."))
-  )
+  genus_check(genus)
   count <- wosr::query_wos(query = create_query_string_TAK_wos_genus(genus, synonyms, additionalkeywords),
                            sid = sid) 
   return(count)
@@ -1759,18 +1739,7 @@ FetchGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
 
 ```{r}
 CountSpT_base <- function(genus, species, synonyms, additionalkeywords) {
-  findname <- taxize::gnr_resolve(sci = paste(genus, species),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  sp_check(genus, species)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
                         query = list(func = "PerformSearch",
                                      query = create_query_string_T_base(genus, species, synonyms, additionalkeywords)))
@@ -1783,18 +1752,7 @@ CountSpT_base <- function(genus, species, synonyms, additionalkeywords) {
 
 ```{r}
 CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
-  findname <- taxize::gnr_resolve(sci = paste(genus, species),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  sp_check(genus, species)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
                         query = list(func = "PerformSearch",
                                      query = create_query_string_TAK_base(genus, species, synonyms, additionalkeywords)))
@@ -1807,10 +1765,7 @@ CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
 
 ```{r}
 CountGenusT_base <- function(genus, synonyms, additionalkeywords) {
-  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
-  if (findname$user_supplied_name[1] %in% findname$matched_name) {
-    print("Genus found on the Encyclopedia of Life.")
-  } else {stop("Genus missing from the Encyclopedia of Life.")}
+  genus_check(genus)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
                         query = list(func = "PerformSearch",
                                      query = create_query_string_T_base_genus(genus, synonyms, additionalkeywords)))
@@ -1823,10 +1778,7 @@ CountGenusT_base <- function(genus, synonyms, additionalkeywords) {
 
 ```{r}
 CountGenusTAK_base <- function(genus, synonyms, additionalkeywords) {
-  findname <- taxize::gnr_resolve(sci = c(genus)) #check if the species exist
-  if (findname$user_supplied_name[1] %in% findname$matched_name) {
-    print("Genus found on the Encyclopedia of Life.")
-  } else {print("Genus missing from the Encyclopedia of Life.")}
+  genus_check(genus)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
                         query = list(func = "PerformSearch",
                                      query = create_query_string_TAK_base_genus(genus, synonyms, additionalkeywords)))
@@ -1839,18 +1791,7 @@ CountGenusTAK_base <- function(genus, synonyms, additionalkeywords) {
 
 ```{r, function to get result count from lens title only}
 CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000) {
-  findname <- taxize::gnr_resolve(sci = paste(genus, species),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  sp_check(genus, species)
   response <- httr::POST(url = "https://api.lens.org/scholarly/search",
                          add_headers(.headers = c("Authorization" = token,
                                                   "Content-Type" = "application/json")),
@@ -1867,18 +1808,7 @@ CountSpT_lens <- function(genus, species, synonyms, additionalkeywords, size = 5
 
 ```{r, function to get result count from lens title, abstract, and keywords only}
 CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, size = 50000) {
-  findname <- taxize::gnr_resolve(sci = paste(genus, species),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  sp_check(genus, species)
   response <- httr::POST(url = "https://api.lens.org/scholarly/search",
                          add_headers(.headers = c("Authorization" = token,
                                                   "Content-Type" = "application/json")),
@@ -1895,18 +1825,7 @@ CountSpTAK_lens <- function(genus, species, synonyms, additionalkeywords, size =
 
 ```{r, function to get result count from lens title only; genus}
 CountGenusT_lens <- function(genus, synonyms, additionalkeywords, size = 50000) {
-  findname <- taxize::gnr_resolve(sci = paste(genus, species),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  genus_check(genus)
   response <- httr::POST(url = "https://api.lens.org/scholarly/search",
                          add_headers(.headers = c("Authorization" = token,
                                                   "Content-Type" = "application/json")),
@@ -1923,18 +1842,7 @@ CountGenusT_lens <- function(genus, synonyms, additionalkeywords, size = 50000) 
 
 ```{r, function to get result count from lens title, abstract, and keywords only; genus}
 CountGenusTAK_lens <- function(genus, synonyms, additionalkeywords, size = 50000) {
-  findname <- taxize::gnr_resolve(sci = paste(genus, species),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  genus_check(genus)
   response <- httr::POST(url = "https://api.lens.org/scholarly/search",
                          add_headers(.headers = c("Authorization" = token,
                                                   "Content-Type" = "application/json")),
@@ -2452,18 +2360,7 @@ create_query_string_T_scopus_genus <- function(genus, synonyms, additionalkeywor
 
 
 CountSpT_scopus_genus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
-  findname <- taxize::gnr_resolve(sci = genus,
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Genus not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.75) {
-    print(paste("Genus found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Genus not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  genus_check(genus)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                       query = list(apiKey = apikey,
                                    query = create_query_string_T_scopus_genus(genus, synonyms, additionalkeywords),
@@ -2474,8 +2371,8 @@ CountSpT_scopus_genus <- function(genus, synonyms, additionalkeywords, datatype 
   return(resultCount)
 }
 
-CountSpT_scopus_genus("Macopus") #1101
-CountSpT_scopus_genus("drosophila") #65802
+CountSpT_scopus_genus("Macropus") #1101
+CountSpT_scopus_genus("drosophilla") #65802
 
 genus <- "Macopus"
 findname <- taxize::gnr_resolve(sci = paste(genus),
@@ -2516,18 +2413,7 @@ if (findname$score[1]>=0.9) {
 
 
 CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
-  findname <- taxize::gnr_resolve(sci = paste(genus, species),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-  if (length(findname>0)) {
-    findname <- findname[order(-findname$score),]
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-  if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
+  sp_check(genus, species)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                         query = list(apiKey = apikey,
                                      query = create_query_string_T_scopus(genus, species, synonyms, additionalkeywords),
@@ -2544,6 +2430,7 @@ CountSpT_scopus("Macopus", "rufus")
 CountSpT_scopus("Bettongia", "penicillata")
 CountSpT_scopus("Betongia", "penicillata")
 CountSpT_scopus("Bos", "taurus")
+CountSpT_scopus("Bos", "tarus")
 
 
 test <- gnr_resolve(sci = "Macropus rufus", data_source_ids = list("1", "3", "4", "12"))
