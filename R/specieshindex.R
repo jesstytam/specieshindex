@@ -2642,6 +2642,15 @@ sppub_plot_theme <- function() {
 
 
 
+#' Matches and checks species names on Catalogue of Life (Col), Integrated Taxonomic Information System (ITIS), National Center for Biotechnology Information (NCBI), and Encyclopedia of Life (EoL).
+#'
+#' @title Species check
+#' 
+#' @param genus Genus classification from the binomial name.
+#' @param species Species classification from the binomial name.
+#'
+#' @noRd
+#' 
 sp_check <- function(genus, species) {
   findname <- taxize::gnr_resolve(sci = paste(genus, species),
                                   data_source_ids = list("1", "3", "4", "12")) #check if the species exist
@@ -2659,6 +2668,14 @@ sp_check <- function(genus, species) {
 
 
 
+#' Matches and checks genus names on Catalogue of Life (Col), Integrated Taxonomic Information System (ITIS), National Center for Biotechnology Information (NCBI), and Encyclopedia of Life (EoL).
+#'
+#' @title Species check
+#' 
+#' @param genus Genus classification from the binomial name.
+#'
+#' @noRd
+#' 
 genus_check <- function(genus) {
   findname <- taxize::gnr_resolve(sci = genus,
                                   data_source_ids = list("1", "3", "4", "12")) #check if the species exist
