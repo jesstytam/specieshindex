@@ -31,21 +31,21 @@ affiliations:
 
 # Summary
 
-Conservation efforts rely heavily on existing research. Species reintroduction projects, pest eradication, breeding programs and habitat restoration, all require sound scientific knowledge for their implementations. Unfortunately, there is serious taxonomic bias [@bonnet_taxonomic_2002] in ecological, evolutionary and conservation research, such that certain species receive more research interest than the others [@donaldson_taxonomic_2017; @dos2020drivers; @seddon_taxonomic_2005; @titley_scientific_2017; @troudet_taxonomic_2017]. Over time, taxonomic bias in research has widened the knowledge gaps between species and increased the patchiness of our knowledge. The scientific community now need to be able to quantify knowledge gaps to identify and address such gaps, and to direct research efforts where they are most needed for conservation.  
+Conservation efforts rely heavily on existing research. Species reintroduction projects, pest eradication, breeding programs and habitat restoration, all require sound scientific knowledge for their implementations. Unfortunately, there is serious taxonomic bias [@bonnet_taxonomic_2002] in ecological, evolutionary and conservation research, such that certain species receive more research interest than the others [@donaldson_taxonomic_2017; @dos2020drivers; @seddon_taxonomic_2005; @titley_scientific_2017; @troudet_taxonomic_2017]. Over time, taxonomic bias in research has widened the knowledge gaps between species and increased the patchiness of our knowledge. Quantifying taxonomic bias will allow the scientific community to address such gaps, by directing scientific efforts towards where they are most needed for conservation.  
 
-Many studies have previously quantified taxonomic bias among species of plants and animals [@adamo2021; @donaldson_taxonomic_2017; @dos2020drivers; @ducatez2019; @fleming_good_2016; @mckenzie_which_2015; @robertson_scientific_2015; @schiesari2007; @tensen2018; @trimble_aarde2010]. Most of these studies evaluated small groups of species, no more than a few hundred. Additionally, the majority of the studies used publication or citation counts to identify the bias. However, publication count can only capture the total research productivity. While citation count can capture research interest, it can be easily inflated by highly cited papers [@hirsch_index_2005], without equally considering each publication. Here, we propose the use of Hirsch's *h*-index [@hirsch_index_2005] as a better alternative in quantifying research interest of species.
+Over the last decade, the quantification of research biases have gained popularity, as shown by the growing number of studies on taxonomic bias among species of plants and animals [@adamo2021; @donaldson_taxonomic_2017; @dos2020drivers; @ducatez2019; @fleming_good_2016; @mckenzie_which_2015; @robertson_scientific_2015; @schiesari2007; @tensen2018; @trimble_aarde2010]. Most of these studies evaluated small groups of species, no more than a few hundred. Additionally, the majority of the studies used publication or citation counts to identify the bias. However, publication count can only capture the total research productivity. While citation count can capture research interest, it can be easily inflated by highly cited papers [@hirsch_index_2005], without equally considering each publication. Here, we propose and implement the use of Hirsch's *h*-index [@hirsch_index_2005] as a better alternative in quantifying research interest of species.
 
 # Statement of need
 
-`specieshindex` aims to make simpler the calculation of *h*-index in the context of measuring popularity of species in the scientific literature. The *h*-index was introduced by Hirsch [@hirsch_index_2005] to compare the influence of academics with a single number [@hirsch2014meaning]. It is calculated with the formula *h* = total publications (*n*) that have at least been cited *n* times, after ranking the publications in a descending order by their number of citations. The *h*-index is now also being used to measure the research interest and influence of the publications of different academic disciplines [@banks_extension_2006; @harzing_google_2016], journals [@braun_hirsch-type_2006], countries [@csajbok_hirsch-index_2007], species of animals [@fleming_good_2016; @mckenzie_which_2015; @robertson_scientific_2015], plants [@adamo2021], and pathogens [@cox_comparison_2016]. `specieshindex` calculates the *h*-index of different species and genera with their bibliometric information.
+`specieshindex` aims to make streamline the calculation of *h*-index in the context of measuring popularity of species in the scientific literature. The *h*-index was introduced by Hirsch [@hirsch_index_2005] to compare the influence of academics with a single number [@hirsch2014meaning]. The *h*-index is calculated as the total number of publications (*n*) that have at least been cited *n* times, after ranking the publications in a descending order by their number of citations. The *h*-index is now also being used to measure the research interest and influence of the publications of different academic disciplines [@banks_extension_2006; @harzing_google_2016], journals [@braun_hirsch-type_2006], countries [@csajbok_hirsch-index_2007], species of animals [@fleming_good_2016; @mckenzie_which_2015; @robertson_scientific_2015], plants [@adamo2021], and pathogens [@cox_comparison_2016]. `specieshindex` calculates the *h*-index of different species and genera.
 
-The package `specieshindex` connects to the Scopus, Web of Science, and Bielefeld Academic Search Engine (BASE) databases (interdisciplinary broad-range database of academic literature) and extracts citation records of relevant publications, as identified via a search query. It returns blibliometric information including the publication title, number of citations, publication type, etc. The binomial or genus names of the species should be used in the search query, instead of their common names, since the latter are less specific and can refer to larger groups of species. Examples of such include 'wombat', and 'echidna'. 
+The package `specieshindex` connects to the Scopus, and Web of Science databases (interdisciplinary broad-range database of academic literature) and extracts citation records of relevant publications, as identified via a search query. It returns blibliometric information including the publication title, number of citations, publication type, etc. The binomial or genus names of the species should be used in the search query, instead of their common names, since the latter are less specific and may refer to more than 1, and even unrelated species. An example of such is 'pig', which can refer to the domestic pig (*Sus scrofa* - an ungulate), or the guinea pig (*Cavia porcellus* - a rodent). Although this package also connects to Bielefeld Academic Search Engine (BASE), article extraction is not available, hence *h*-index calculation is unavailable with BASE.
 
-There are two types of functions that connect to the literature databases. The count functions, e.g. `CountSpT()` and `CountSpTAK()`, return the total publication count without extracting any citation records. Whereas the fetch functions, e.g. `FetchSpT()` and `FetchSpTAK()`, extract citation records for index calculations. These functions are distinguished by their suffixes "T" and "TAK". "T" function only finds publications with the species' name in the publication title, whereas "TAK" functions query the title, abstract and keywords. Apart from the *h*-index, `specieshindex` can also compute other established influence indices, including the *h5* index, the *m*-index, and the *i10* index. 
+There are two types of functions that connect to the literature databases. The count functions, e.g. `CountSpT()` and `CountSpTAK()` for species, and `CountGenusT()` and `CountGenusTAK()` for genus, return the total publication count without extracting any citation records. Whereas the fetch functions, e.g. `FetchSpT()` and `FetchSpTAK()` for species, and `FetchSpT()` and `FetchSpTAK()` for genus, extract citation records for index calculations. These functions are further distinguished by their suffixes "T" and "TAK". "T" functions only find publications with the species' name in the publication title, whereas "TAK" functions query articles' title, abstract and keywords. Apart from the *h*-index, `specieshindex` can also compute other established influence indices, including the *h5* index, the *m*-index, and the *i10* index. The *h5* index is the *h*-index of articles published in the most recent 5 years [@crotty2017other]. The *m*-index is the *h*-index divided by the number of years since the first publication [@hirsch_index_2005]. The *i10* index is the total number of articles with 10 or more citations; it is currently used by Google Scholar [@noruzi2016impact]. 
 
 # Implementation
 
-The following packages are required for specieshindex to work.
+The following packages are required for `specieshindex` to work.
 ```{r}
 # Installation from GitHub
 install.packages("rscopus")
@@ -82,7 +82,7 @@ apikey <- "your_api_key_from_scopus"
 
 ## Connecting to Web of Science
 
-Users do not need a key to extract data from Web of Science if you are using this package from your institution's location. To gain access to the Web of Science database, run the following line of code: 
+You do not need a key to extract data from Web of Science if you are using this package from your institution's location. To gain access to the Web of Science database, run the following line of code: 
 
 ```{r}
 # Setup session ID
@@ -91,11 +91,11 @@ sid <- auth(username = NULL, password = NULL)
 
 ## Connecting to BASE
 
-Having a whitelisted IP address is essential when gaining access to the BASE database, which users can accomplish at https://www.base-search.net/about/en/contact.php. A token or API key, however, is not required. Only count functions, e.g. `CountSpT()` and `CountSpTAK()`, are available as BASE does not return citation counts. Hence, index calculations will also be unavailable using this database. 
+Having a whitelisted IP address is essential when gaining access to the BASE database, which you can get on https://www.base-search.net/about/en/contact.php. A token or API key, however, is not required. Only count functions, e.g. `CountSpT()` and `CountSpTAK()`, are available as BASE does not return citation counts. Hence, index calculations will also be unavailable using this database. 
 
 ## Example
 
-The following example will demonstrate the calculation of various indices with citation records from Scopus. The species' binomial name (i.e. Latin name) or genus name (using functions such as `FetchGenusT()`) is required for the extraction:
+The following example will demonstrate the calculation of various indices with citation records from Scopus. The species' binomial name (e.g. *Sarcophilus harrisii*) or genus name (e.g. *Sarcophilus*) is required for the extraction:
 
 ```{r}
 # Extract citation data
@@ -141,9 +141,9 @@ plotAllindices(CombineSp)
 
 ![](README_files/figure-gfm/unnamed-chunk-8-1.png) 
 
-**Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of the Woylie, Platypus, Koala, and Quokka.
+**Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of the Woylie (*Bettongia penicillata*), Platypus (*Ornithorhynchus anatinus*), Koala (*Phascolarctos cinereus*), and Quokka (*Setonix brachyurus*).
 
-`plotPub()` plots the total publications per year of species, after extracting the year and frequency of publication with the `getYear()` function.
+`plotPub()` plots the total publications per year for species, after extracting data on years and number of publications per year with the `getYear()` function.
 
 ```{r}
 # Extract year and frequency
@@ -161,7 +161,7 @@ plotPub(Combine_pub)
 
 ![](README_files/figure-gfm/unnamed-chunk-9-1.png) 
 
-**Figure 2.** The total number of publications per year of the Woylie, Platypus, Koala, and Quokka.
+**Figure 2.** The total number of publications per year of the Woylie (*Bettongia penicillata*), Platypus (*Ornithorhynchus anatinus*), Koala (*Phascolarctos cinereus*), and Quokka (*Setonix brachyurus*).
 
 # Acknowledgements
 
