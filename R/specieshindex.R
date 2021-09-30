@@ -2659,7 +2659,7 @@ sp_check <- function(genus, species) {
   } else {
     stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
   }
-  if (findname$score[1]>=0.9) {
+  if (findname$score[1]>=0.75) {
     print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
   } else {
     stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
