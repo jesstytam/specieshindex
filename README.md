@@ -159,7 +159,7 @@ CountSpT("scopus", "Osphranter", "rufus",
 #search string: TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*)
 ```
 
-### :fishing\_pole\_and\_fish: Extracting citaiton records
+### :fishing\_pole\_and\_fish: Extracting citation records
 
 In order to calculate the indices, you will need to download the
 citation records. The parameters of the Count and Fetch functions are
