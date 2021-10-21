@@ -214,9 +214,9 @@ FetchSpTAK <- function(db, genus, species, synonyms, additionalkeywords, languag
 #' }
 FetchGenusT <- function(db, genus, synonyms, additionalkeywords, language = 0) {
   if (db == "scopus") {
-    fetchsp <- FetchGenusT_scopus(genus, synonyms, additionalkeywords, language)
+    fetchgenus <- FetchGenusT_scopus(genus, synonyms, additionalkeywords, language)
   } else if (db == "wos") {
-    fetchsp <- FetchGenusT_wos(genus, synonyms, additionalkeywords)
+    fetchgenus <- FetchGenusT_wos(genus, synonyms, additionalkeywords)
   }
   return(fetchgenus)
 }
@@ -245,9 +245,9 @@ FetchGenusT <- function(db, genus, synonyms, additionalkeywords, language = 0) {
 #' }
 FetchGenusTAK <- function(db, genus, synonyms, additionalkeywords, language = 0) {
   if (db == "scopus") {
-    fetchsp <- FetchGenusTAK_scopus(genus, synonyms, additionalkeywords, language)
+    fetchgenus <- FetchGenusTAK_scopus(genus, synonyms, additionalkeywords, language)
   } else if (db == "wos") {
-    fetchsp <- FetchGenusTAK_wos(genus, synonyms, additionalkeywords)
+    fetchgenus <- FetchGenusTAK_wos(genus, synonyms, additionalkeywords)
   }
   return(fetchgenus)
 }
