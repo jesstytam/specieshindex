@@ -159,7 +159,7 @@ CountSpT("scopus", "Osphranter", "rufus",
 #search string: TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*)
 ```
 
-### :fishing\_pole\_and\_fish: Extracting citation records
+### :fishing\_pole\_and\_fish: Extracting citaiton records
 
 In order to calculate the indices, you will need to download the
 citation records. The parameters of the Count and Fetch functions are
@@ -239,3 +239,8 @@ Platypus, Koala, and Quokka.
 ## :rocket: Acknowledgements
 
 `specieshindex` is enabled by Scopus, Web of Science, and BASE.
+
+## :gem: Contributing to `specieshindex`
+
+To propose any bug fixes or new features, please refer to our [community
+guidelines](https://github.com/jessicatytam/specieshindex/blob/52a1d30c86dc425de2b3966cfa6d802260b7229a/.github/CONTRIBUTING.md).

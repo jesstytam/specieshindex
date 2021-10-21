@@ -185,3 +185,6 @@ plotPub(Combine_pub)
   
 ## :rocket: Acknowledgements
 `specieshindex` is enabled by Scopus, Web of Science, and BASE.
+
+## :gem: Contributing to `specieshindex`
+To propose any bug fixes or new features, please refer to our [community guidelines](https://github.com/jessicatytam/specieshindex/blob/52a1d30c86dc425de2b3966cfa6d802260b7229a/.github/CONTRIBUTING.md).
