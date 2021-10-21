@@ -2392,8 +2392,10 @@ if (findname$score[1]>=0.75) {
 
 #testing
 
-FetchSpT("scopus", "macropus", "rufus")
-
+CountSpT("scopus", "macropus", "rufus") #114
+CountSpT("wos", "macropus", "rufus") #113
+CountSpT("base", "macropus", "rufus") #152
+CountSpT(db = "base", genus = "Bettongia", species = "penicillata")
 
 
 genus <- "Bettongia"
