@@ -2305,16 +2305,16 @@ FetchGenusT(db = "scopus", genus = "Bettongia")
 genus <- "Bettongia"
 species <- "penicillata"
 
-
-
 response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
                         query = list(func = "PerformSearch",
                                      query = specieshindex:::create_query_string_T_base(genus, species)))
 httr::stop_for_status(response) #pass any HTTP errors to the R console
-response_data <- XML::xmlParse(response)
+response_data <- XML::xmlParse(response) #working only on my linus pc ugh
 resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
 
-content_test <- jsonlite::fromJSON(rawToChar(response$content))
-contest_test <- content(response, as = text, encoding = "UTF-8")
+content_test <- jsonlite::fromJSON(rawToChar(response$content)) #content is xml so this isn't suppose to work i guess idk
+content_test <- content(response, as = "text", encoding = "UTF-8") #YES
+
+fromJSON(content_test, flatten = TRUE) #nope
 
 ```
