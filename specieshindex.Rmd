@@ -2292,103 +2292,6 @@ Spi10(dummy1) #12
 apikey <- "442b9048417ef20cf680a0ae26ee4d86"
 sid <- auth(username = NULL, password = NULL)
 
-CountSpT <- function(db, genus, species, synonyms, additionalkeywords, size = 50000) {
-  if (db == "scopus") {
-    countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos") {
-    countsp <- CountSpT_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "base") {
-    countsp <- CountSpT_base(genus, species, synonyms, additionalkeywords)
-  } else if (db == "lens") {
-    countsp <- CountSpT_lens(genus, species, synonyms, additionalkeywords, size)
-  }
-  return(countsp)
-}
-
-CountSpT_wrap("scopus", genus = "Osphranter", species = "rufus") #4
-CountSpT_wrap("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus") #118
-CountSpT_wrap("scopus", genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*") #0
-CountSpT_wrap("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*") #1
-
-CountSpT_wrap("wos", genus = "Osphranter", species = "rufus") #3
-CountSpT_wrap("wos", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus") #116
-CountSpT_wrap("wos", genus = "Osphranter", species = "rufus", additionalkeywords = "conserv*") #0
-CountSpT_wrap("wos", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*") #1
-
-test <- FetchSpT("scopus", genus = "Osphranter", species = "rufus", language = 1)
-
-
-
-load("data/languages.rda")
-write.csv(languages, "data/languages.csv")
-
-#ggplot
-
-test_bind <- list(Koala, Platypus, Quokka, Woylie)
-
-test_bind <- test_bind %>% lapply(test_bind, function(x) mutate(sp = as.character(substitute(x))))
-
-
-plotPub(Koala)
- 
-
-#genus
-
-create_query_string_T_scopus_genus <- function(genus, synonyms, additionalkeywords){
-  if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TITLE("', genus, '")'))
-  } 
-  if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TITLE("', genus, '" AND ', additionalkeywords, ')'))
-  }
-  if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TITLE("', genus, '" OR "', synonyms[1], '"')
-    if (length(synonyms)==1) {
-      return(paste0(temp_string, ')'))
-    }
-    else {
-      for (i in 2:length(synonyms)){
-        temp_string <- paste0(temp_string, ' OR "', synonyms[i], '"')
-      }
-      return(paste0(temp_string, ')'))
-    }
-  }
-  if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TITLE(("', genus, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
-  } 
-}
-
-
-CountSpT_scopus_genus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
-  genus_check(genus)
-  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                      query = list(apiKey = apikey,
-                                   query = create_query_string_T_scopus_genus(genus, synonyms, additionalkeywords),
-                                   httpAccept = "application/xml")) #format the URL to be sent to the API
-  httr::stop_for_status(response) #pass any HTTP errors to the R console
-  response_data <- XML::xmlParse(response) #parse the data to extract values
-  resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
-  return(resultCount)
-}
-
-CountSpT_scopus_genus("Macropus") #1101
-CountSpT_scopus_genus("drosophilla") #65802
-
-genus <- "Macopus"
-findname <- taxize::gnr_resolve(sci = paste(genus),
-                                  data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-if (nrow(findname>0)) {
-  findname <- findname[order(-findname$score),]
-} else {
-    stop("Genus not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-if (findname$score[1]>=0.75) {
-    print(paste("Genus found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Genus not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-
-
 
 #testing
 
@@ -2402,62 +2305,16 @@ FetchGenusT(db = "scopus", genus = "Bettongia")
 genus <- "Bettongia"
 species <- "penicillata"
 
-findname <- taxize::gnr_resolve(sci = c(genus, species),
-                                data_source_ids = list("1", "3", "4", "12")) #check if the species exist
-if (nrow(findname<1)) {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
-findname <- findname[order(-findname$score),]
-if (findname$score[1]>=0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  }
 
 
-CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
-  sp_check(genus, species)
-  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                        query = list(apiKey = apikey,
-                                     query = create_query_string_T_scopus(genus, species, synonyms, additionalkeywords),
-                                     httpAccept = "application/xml")) #format the URL to be sent to the API
-  httr::stop_for_status(response) #pass any HTTP errors to the R console
-  response_data <- XML::xmlParse(response) #parse the data to extract values
-  resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
-  return(resultCount)
-}
+response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
+                        query = list(func = "PerformSearch",
+                                     query = specieshindex:::create_query_string_T_base(genus, species)))
+httr::stop_for_status(response) #pass any HTTP errors to the R console
+response_data <- XML::xmlParse(response)
+resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
 
-
-CountSpT_scopus("Macropus", "rufus")
-CountSpT_scopus("Macopus", "rufus")
-CountSpT_scopus("Bettongia", "penicillata")
-CountSpT_scopus("Betongia", "penicillata")
-CountSpT_scopus("Bos", "taurus")
-CountSpT_scopus("Bos", "tarus")
-
-
-test <- gnr_resolve(sci = "Macropus rufus", data_source_ids = list("1", "3", "4", "12"))
-test <- taxize::gnr_resolve(sci = "Bettongia penicillata", data_source_ids = list("1", "3", "4", "12"))
-test <- test[order(-test$score),]
-if (test$score[1]>0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    print(paste("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again."))
-  }
-
-genus <- "Bettongia"
-species <- "penicillata"
-
-test <- taxize::gnr_resolve(sci = c(genus, species),
-                            data_source_ids = list("1", "3", "4", "12"))
-test <- test[order(-test$score),]
-if (test$score[1]>0.9) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
-  } else {
-    print(paste("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again."))
-  }
-
-
-
+content_test <- jsonlite::fromJSON(rawToChar(response$content))
+contest_test <- content(response, as = text, encoding = "UTF-8")
 
 ```
