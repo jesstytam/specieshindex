@@ -2298,8 +2298,8 @@ sid <- auth(username = NULL, password = NULL)
 CountSpT("scopus", "macropus", "rufus") #114
 CountSpT("wos", "macropus", "rufus") #113
 CountSpT("base", "macropus", "rufus") #152
-CountSpT(db = "base", genus = "Bettongia", species = "penicillata")
-FetchGenusT(db = "scopus", genus = "Bettongia")
+CountSpT(db = "base", genus = "Bettongia", species = "penicillata") #99
+FetchGenusT(db = "scopus", genus = "Bettongia") #this works
 
 
 genus <- "Bettongia"
