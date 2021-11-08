@@ -22,7 +22,7 @@ Imports:
     ggplot2,
     ggpubr
 Suggests: 
-    testthat,
+    testthat (>= 3.0.0),
     knitr,
     roxygen2,
     devtools,
@@ -33,3 +33,4 @@ URL: https://github.com/jessicatytam/specieshindex
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Encoding: UTF-8
+Config/testthat/edition: 3
