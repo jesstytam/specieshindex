@@ -43,13 +43,6 @@ jobs:
       
       - uses: actions/checkout@master
       
-      - uses: codecov/codecov-action@v2
-        with:
-          files: ./coverage1.xml,./coverage2.xml # optional
-          flags: unittests # optional
-          name: codecov-umbrella # optional
-          verbose: true # optional (default = false)
-
       - name: Query dependencies
         run: |
           install.packages('remotes')
@@ -92,4 +85,24 @@ jobs:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
           
-          
+      - name: test-coverage
+         jobs:
+           test-coverage:
+             runs-on: ubuntu-latest
+               env:
+                 GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+               steps:
+                   - uses: actions/checkout@v2
+
+                   - uses: r-lib/actions/setup-r@v1
+                     with:
+                        use-public-rspm: true
+
+                  - uses: r-lib/actions/setup-r-dependencies@v1
+                    with:
+                        extra-packages: covr
+
+                  - name: Test coverage
+                      run: covr::codecov()
+                      shell: Rscript {0}  
