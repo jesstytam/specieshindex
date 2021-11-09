@@ -85,24 +85,22 @@ jobs:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
           
-      - name: test-coverage
-         jobs:
-           test-coverage:
-             runs-on: ubuntu-latest
-               env:
-                 GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+  test-coverage:
+       runs-on: ubuntu-latest
+       env:
+         GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
-               steps:
-                   - uses: actions/checkout@v2
+       steps:
+         - uses: actions/checkout@v2
 
-                   - uses: r-lib/actions/setup-r@v1
-                     with:
-                        use-public-rspm: true
+         - uses: r-lib/actions/setup-r@v1
+           with:
+              use-public-rspm: true
 
-                  - uses: r-lib/actions/setup-r-dependencies@v1
-                    with:
-                        extra-packages: covr
+         - uses: r-lib/actions/setup-r-dependencies@v1
+           with:
+              extra-packages: covr
 
-                  - name: Test coverage
-                      run: covr::codecov()
-                      shell: Rscript {0}  
+         - name: Test coverage
+           run: covr::codecov()
+           shell: Rscript {0}  
