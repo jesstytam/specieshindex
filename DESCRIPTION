@@ -22,12 +22,13 @@ Imports:
     ggplot2,
     ggpubr
 Suggests: 
-    testthat (>= 3.0.0),
-    knitr,
-    roxygen2,
     devtools,
+    httptest,
+    knitr,
+    RefManageR,
     rmarkdown,
-    RefManageR
+    roxygen2,
+    testthat (>= 3.0.0)
 License: MIT + file LICENSE
 URL: https://github.com/jessicatytam/specieshindex
 RoxygenNote: 7.1.2
