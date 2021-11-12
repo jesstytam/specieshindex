@@ -1,5 +1,5 @@
 ---
-title: "Honours methods"
+title: "specieshindex"
 author: "Jess"
 date: "2/21/2020"
 output:
@@ -20,7 +20,7 @@ pacman::p_load(tidyverse,
                gtools,
                ggpubr)
 
-devtools::install_github("jessicatytam/specieshindex", force = TRUE)
+devtools::install_github("jessicatytam/specieshindex")
 library(specieshindex)
 ```
 
