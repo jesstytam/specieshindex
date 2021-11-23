@@ -67,7 +67,7 @@ library(specieshindex)
 
 ## Connecting to Scopus
 
-An API key from Scopus is required to extract citation records from their database legally. Here are the steps to obtain the key.
+An API key from Scopus is required to extract citation records from their database legally. However, note that the API would only works if your institution or organisation has a subscription with Elsevier. Otherwise, functionality is limited to basic searches. Here are the steps to obtain the key.
 
 1.  Go to <https://dev.elsevier.com/> and click on the button `I want an API key`.
 2.  Create an account and log in.
