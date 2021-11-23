@@ -59,7 +59,7 @@ install.packages("httr")
 install.packages("dplyr")
 install.packages("data.table")
 install.packages("tidyr")
-devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = TRUE)
+devtools::install_github("jessicatytam/specieshindex")
 
 # Load the library
 library(specieshindex)
