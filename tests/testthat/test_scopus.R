@@ -1,20 +1,33 @@
-tak_request <- lapply(readline("tests/testthat/api.elsevier.com/content/search/scopus-97ddc6.json"), fromJSON)
-
+#TITLE ONLY
 with_mock_api({
-  test_that("scopus_requests_happen", {
-    expect_s3_class(tak_request,
+  test_that("t_scopus_requests_happen", {
+    expect_s3_class(t_scopus,
                     "response")
+    expect_true(class(t_scopus$status_code)=="integer")
   })
 })
 
+test_that("CountSpT_scopus_works", {
+  response_data <- XML::xmlParse(t_scopus) #parse the data to extract values
+  resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue))
+  expect_equal(CountSpT("scopus", "Bettongia", "penicillata"), resultCount)
+})
 
-#try this
-#save(a,file="tests/testthat/api.elsevier.com/content/search/scopus-8efb8b.json")
-#dir.create("api.elsevier.com/content/search",recursive = TRUE)
-#a <- httr::GET("http://api.elsevier.com/content/search/scopus",
-# query = list(apiKey = "442b9048417ef20cf680a0ae26ee4d86",
-#              query = 'TITLE-ABS-KEY("Bettongia penincillata")',
-#              httpAccept = "application/xml"))
 
-#write a new request and see what new hash is given, use that as the file path
-#use real api key to get request, use a fake one to call it again ("test)
+
+
+
+#TITLE + ABSTRACT +KEYWORDS
+with_mock_api({
+  test_that("tak_scopus_requests_happen", {
+    expect_s3_class(tak_scopus,
+                    "response")
+    expect_true(class(tak_scopus$status_code)=="integer")
+  })
+})
+
+test_that("CountSpT_scopus_works", {
+  response_data <- XML::xmlParse(tak_scopus) #parse the data to extract values
+  resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue))
+  expect_equal(CountSpTAK("scopus", "Bettongia", "penicillata"), resultCount)
+})
