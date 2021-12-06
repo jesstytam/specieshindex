@@ -69,11 +69,10 @@ vignette("specieshindex")
 
 ## Connecting to Scopus
 
-<<<<<<< HEAD
 Scopus is one of the most extensive inter-disciplinary literature database that includes peer-reviewed journal articles, books, conference proceedings, and more. Functions that extract data will only run if you or your institution are a paid subscriber. An API key from Scopus is required to extract citation records from their database legally. Here are the steps to obtain the key.
-=======
+
 An API key from Scopus is required to extract citation records from their database legally. However, note that the API would only works if your institution or organisation has a subscription with Elsevier. Otherwise, functionality is limited to basic searches. Here are the steps to obtain the key.
->>>>>>> b75e11560a04f3376c8904d37399064ceafef35a
+
 
 1.  Go to <https://dev.elsevier.com/> and click on the button `I want an API key`.
 2.  Create an account and log in.
