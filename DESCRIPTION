@@ -18,7 +18,6 @@ Imports:
     data.table,
     httr,
     XML,
-    jsonlite,
     ggplot2,
     ggpubr
 Suggests: 

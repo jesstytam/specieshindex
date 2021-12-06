@@ -20,7 +20,7 @@ pacman::p_load(tidyverse,
                gtools,
                ggpubr)
 
-devtools::install_github("jessicatytam/specieshindex")
+remotes::install_github("jessicatytam/specieshindex", build_vignettes = TRUE, dependencies = TRUE)
 library(specieshindex)
 ```
 

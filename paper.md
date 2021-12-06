@@ -54,20 +54,26 @@ install.packages("wosr")
 install.packages("rbace")
 install.packages("taxize")
 install.packages("XML")
-install.packages("jsonlite")
 install.packages("httr")
 install.packages("dplyr")
 install.packages("data.table")
 install.packages("tidyr")
-devtools::install_github("jessicatytam/specieshindex", force = TRUE, build_vignettes = TRUE)
+remotes::install_github("jessicatytam/specieshindex", build_vignettes = TRUE, dependencies = TRUE)
 
 # Load the library
 library(specieshindex)
+
+# See the vignette
+vignette("specieshindex")
 ```
 
 ## Connecting to Scopus
 
-An API key from Scopus is required to extract citation records from their database legally. Here are the steps to obtain the key.
+<<<<<<< HEAD
+Scopus is one of the most extensive inter-disciplinary literature database that includes peer-reviewed journal articles, books, conference proceedings, and more. Functions that extract data will only run if you or your institution are a paid subscriber. An API key from Scopus is required to extract citation records from their database legally. Here are the steps to obtain the key.
+=======
+An API key from Scopus is required to extract citation records from their database legally. However, note that the API would only works if your institution or organisation has a subscription with Elsevier. Otherwise, functionality is limited to basic searches. Here are the steps to obtain the key.
+>>>>>>> b75e11560a04f3376c8904d37399064ceafef35a
 
 1.  Go to <https://dev.elsevier.com/> and click on the button `I want an API key`.
 2.  Create an account and log in.
@@ -83,7 +89,7 @@ apikey <- "your_api_key_from_scopus"
 
 ## Connecting to Web of Science
 
-You do not need a key to extract data from Web of Science if you are using this package from your institution's location. To gain access to the Web of Science database, run the following line of code:
+An alternative to Scopus for literature search is Web of Science. No key is needed to extract data from Web of Science if you are using this package from your institution's location. You do not need a key to extract data from Web of Science if you are using this package from your institution's location. To gain access to the Web of Science database, run the following line of code:
 
 ```{r}
 # Setup session ID
@@ -92,7 +98,7 @@ sid <- auth(username = NULL, password = NULL)
 
 ## Connecting to BASE
 
-Having a whitelisted IP address is essential when gaining access to the BASE database, which you can get on <https://www.base-search.net/about/en/contact.php>. A token or API key, however, is not required. Only count functions, e.g. `CountSpT()` and `CountSpTAK()`, are available as BASE does not return citation counts. Hence, index calculations will also be unavailable using this database.
+Bielefeld Academic Search Engine (BASE) is a literature database that contains both scholarly and grey literature. Since it does not provide citation information, data extraction is not available. Having a whitelisted IP address is essential when gaining access to the BASE database, which you can get on <https://www.base-search.net/about/en/contact.php>. A token or API key, however, is not required. Only count functions, e.g. `CountSpT()` and `CountSpTAK()`, are available as BASE does not return citation counts. Hence, index calculations will also be unavailable using this database.
 
 ## Example
 
@@ -164,8 +170,16 @@ plotPub(Combine_pub)
 
 **Figure 2.** The total number of publications per year of the Woylie (*Bettongia penicillata*), Platypus (*Ornithorhynchus anatinus*), Koala (*Phascolarctos cinereus*), and Quokka (*Setonix brachyurus*).
 
+## Concrete example
+
+To see a concrete example, @tam_lagisz_cornwell_nakagawa_2021 has applied this package to study taxonomic bias among mammals by quantifying the scientific interest of 7,521 species of mammals.
+
+![](README_files/figure-gfm/h100_text_2.png)
+
+**Figure 3.** Species *h*-index of mammals with a species *h*-index of *h* = 100 and larger (adapted from @tam_lagisz_cornwell_nakagawa_2021).
+
 # Acknowledgements
 
-I acknowledge the contributions of the authors of the dependence packages: `rscopus`, `wosr`, `rbace`, `taxize`, `XML`, `jsonlite`, `httr`, `dplyr`, `data.table`, `tidyr`. `specieshindex` is enabled by Scopus, Web of Science, and BASE [@pieper_summann2006].
+I acknowledge the contributions of the authors of the dependence packages: `rscopus`, `wosr`, `rbace`, `taxize`, `XML`, `httr`, `dplyr`, `data.table`, `tidyr`. `specieshindex` is enabled by Scopus, Web of Science, and BASE [@pieper_summann2006].
 
 # References

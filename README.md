@@ -25,21 +25,21 @@ install.packages("wosr")
 install.packages("rbace")
 install.packages("taxize")
 install.packages("XML")
-install.packages("jsonlite")
 install.packages("httr")
 install.packages("dplyr")
 install.packages("data.table")
 install.packages("tidyr")
-devtools::install_github("jessicatytam/specieshindex")
+remotes::install_github("jessicatytam/specieshindex", build_vignettes = TRUE, dependencies = TRUE)
 
 #Load the library
 library(specieshindex)
+
+#See the vignette
+vignette("specieshindex")
 ```
 
 You can find the vignette
-[here](https://github.com/jessicatytam/specieshindex/blob/master/vignettes/vignette.pdf)
-for more detailed instructions and the full list of functions
-[here](https://github.com/jessicatytam/specieshindex/blob/master/specieshindex_0.1.1.pdf).
+[here](https://github.com/jessicatytam/specieshindex/blob/master/vignettes/vignette.pdf).
 
 ## Before you start
 
@@ -64,10 +64,11 @@ the argument.
 
 ### :mega: Connecting to Scopus
 
-**Make sure you are connected to the internet via institutional access
-or acquire a VPN from your institution if you are working from home.**
-Alternatively, if you are a subscriber of Scopus already, you can ignore
-this step.
+**Functions that extract data will only run if you or your institution
+are a paid subscriber.** Make sure you are connected to the internet via
+institutional access or acquire a VPN from your institution if you are
+working from home. Alternatively, if you are a subscriber of Scopus
+already, you can ignore this step.
 
 To connect and download citation information from Scopus legally, you
 will **absolutely need** an API key. Here are the steps to obtain the
@@ -87,8 +88,8 @@ API is accessed via the IP address.
 
 ### :mega: Connecting to BASE
 
-It is recommended that you have your IP address whitelisted. You can do
-it [here](https://www.base-search.net/about/en/contact.php).
+You must have your IP address whitelisted. You can do it
+[here](https://www.base-search.net/about/en/contact.php).
 
 ## Examples
 
@@ -235,6 +236,13 @@ plotPub(Combine_pub)
 Platypus, Koala, and Quokka.
 
 <br/>
+
+## Concrete example
+
+To see a concrete example, [Tam et
+al. (2021)](https://ecoevorxiv.org/gd7cv/) has applied this package to
+study taxonomic bias among mammals by quantifying the scientific
+interest of 7,521 species of mammals.
 
 ## :rocket: Acknowledgements
 
