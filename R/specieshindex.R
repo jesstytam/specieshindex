@@ -287,6 +287,9 @@ FetchGenusTAK <- function(db, genus, synonyms, additionalkeywords, language = 0)
 #' 
 #' CountSpT_scopus("bettongia", "penicillata", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
   sp_check(genus, species)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
@@ -334,6 +337,9 @@ CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, dataty
 #' 
 #' CountSpTAK_scopus("bettongia", "penicillata")
 #' }
+#' 
+#' @noRd
+#' 
 CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
   sp_check(genus, species)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
@@ -380,6 +386,9 @@ CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, data
 #' 
 #' CountGenusT_scopus("bettongia", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 CountGenusT_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
   genus_check(genus)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
@@ -426,6 +435,9 @@ CountGenusT_scopus <- function(genus, synonyms, additionalkeywords, datatype = "
 #' 
 #' CountGenusTAK_scopus("bettongia")
 #' }
+#' 
+#' @noRd
+#' 
 CountGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
   genus_check(genus)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
@@ -469,6 +481,9 @@ CountGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, datatype =
 #' 
 #' FetchSpT_scopus("bettongia", "penicillata", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 FetchSpT_scopus <- function(genus, species, synonyms, additionalkeywords, language = 0) {
   count <- CountSpT_scopus(genus, species, synonyms, additionalkeywords) #check the number of records
   print(paste(count, "records found."))
@@ -639,6 +654,9 @@ FetchSpT_scopus <- function(genus, species, synonyms, additionalkeywords, langua
 #' 
 #' FetchSpTAK_scopus("bettongia", "penicillata", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 FetchSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, language = 0) {
   count <- CountSpTAK_scopus(genus, species, synonyms, additionalkeywords) #check the number of records
   print(paste(count, "records found."))
@@ -808,6 +826,9 @@ FetchSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, lang
 #' 
 #' FetchGenusT_scopus("bettongia", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 FetchGenusT_scopus <- function(genus, synonyms, additionalkeywords, language = 0) {
   count <- CountGenusT_scopus(genus, synonyms, additionalkeywords) #check the number of records
   print(paste(count, "records found."))
@@ -977,6 +998,9 @@ FetchGenusT_scopus <- function(genus, synonyms, additionalkeywords, language = 0
 #' 
 #' FetchGenusTAK_scopus("bettongia", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 FetchGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, language = 0) {
   count <- CountGenusTAK_scopus(genus, synonyms, additionalkeywords) #check the number of records
   print(paste(count, "records found."))
@@ -1150,6 +1174,9 @@ FetchGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, language =
 #' 
 #' CountSpT_wos("bettongia", "penicillata", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
   sp_check(genus, species)
   count <- wosr::query_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
@@ -1191,6 +1218,9 @@ CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' CountSpTAK_wos("bettongia", "penicillata", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
   sp_check(genus, species)
   count <- wosr::query_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
@@ -1231,6 +1261,9 @@ CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' CountGenusT_wos("bettongia", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
   genus_check(genus)
   count <- wosr::query_wos(query = create_query_string_T_wos_genus(genus, synonyms, additionalkeywords),
@@ -1271,6 +1304,9 @@ CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
 #' 
 #' CountGenusTAK_wos("bettongia", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 CountGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
   genus_check(genus)
   count <- wosr::query_wos(query = create_query_string_TAK_wos_genus(genus, synonyms, additionalkeywords),
@@ -1309,6 +1345,9 @@ CountGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
 #' 
 #' FetchSpT_wos("bettongia", "penicillata", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
   count <- CountSpT_wos(genus, species, synonyms, additionalkeywords) #check the number of records
   print(paste(count, "records found."))
@@ -1361,6 +1400,9 @@ FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' FetchSpTAK_wos("bettongia", "penicillata", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
   count <- CountSpTAK_wos(genus, species, synonyms, additionalkeywords) #check the number of records
   print(paste(count, "records found."))
@@ -1412,6 +1454,9 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' FetchGenusT_wos("bettongia", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 FetchGenusT_wos <- function(genus, synonyms, additionalkeywords) {
   count <- CountGenusT_wos(genus, synonyms, additionalkeywords) #check the number of records
   print(paste(count, "records found."))
@@ -1463,6 +1508,9 @@ FetchGenusT_wos <- function(genus, synonyms, additionalkeywords) {
 #' 
 #' FetchGenusTAK_wos("bettongia", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 FetchGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
   count <- CountGenusTAK_wos(genus, synonyms, additionalkeywords) #check the number of records
   print(paste(count, "records found."))
@@ -1518,6 +1566,9 @@ FetchGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
 #' 
 #' CountSpT_base("bettongia", "penicillata", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 CountSpT_base <- function(genus, species, synonyms, additionalkeywords) {
   sp_check(genus, species)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
@@ -1563,6 +1614,9 @@ CountSpT_base <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' CountSpTAK_base("bettongia", "penicillata", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
   sp_check(genus, species)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
@@ -1607,6 +1661,9 @@ CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' CountGenusT_base("bettongia", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 CountGenusT_base <- function(genus, synonyms, additionalkeywords) {
   genus_check(genus)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
@@ -1651,6 +1708,9 @@ CountGenusT_base <- function(genus, synonyms, additionalkeywords) {
 #' 
 #' CountGenusTAK_base("bettongia", "conserv*")
 #' }
+#' 
+#' @noRd
+#' 
 CountGenusTAK_base <- function(genus, synonyms, additionalkeywords) {
   genus_check(genus)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",

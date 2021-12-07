@@ -5,3 +5,5 @@
 .DS_Store
 inst/doc
 check
+/doc/
+/Meta/

@@ -874,6 +874,38 @@ sppub_plot_theme <- function() {
 ```
 
 ```{r}
+#count() wrapper
+Count <- function(db, search, level, genus, species, synonyms, additionalkeywords) {
+  if (db == "scopus" && search == "t" && level == "species") {
+    countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" && search == "t" && level == "species") {
+    countsp <- CountSpT_wos(genus, species, synonyms, additionalkeywords)
+  } else if (db == "base" && search == "t" && level == "species") {
+    countsp <- CountSpT_base(genus, species, synonyms, additionalkeywords)
+  } else if (db == "scopus" && search == "tak" && level == "species") {
+    countsp <- CountSpTAK_scopus(genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" && search == "tak" && level == "species") {
+    countsp <- CountSpTAK_wos(genus, species, synonyms, additionalkeywords)
+  } else if (db == "base" && search == "tak" && level == "species") {
+    countsp <- CountSpTAK_base(genus, species, synonyms, additionalkeywords)
+  } else if (db == "scopus" && search == "t" && level == "genus") {
+    countsp <- CountGenusT_scopus(genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" && search == "t" && level == "genus") {
+    countsp <- CountGenusT_wos(genus, species, synonyms, additionalkeywords)
+  } else if (db == "base" && search == "t" && level == "genus") {
+    countsp <- CountGenusT_base(genus, species, synonyms, additionalkeywords)
+  } else if (db == "scopus" && search == "tak" && level == "genus") {
+    countsp <- CountGenusTAK_scopus(genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" && search == "tak" && level == "genus") {
+    countsp <- CountGenusTAK_wos(genus, species, synonyms, additionalkeywords)
+  } else if (db == "base" && search == "tak" && level == "genus") {
+    countsp <- CountGenusTAK_base(genus, species, synonyms, additionalkeywords)
+  } 
+  return(countsp)
+}
+```
+
+```{r}
 #countspt() wrapper
 CountSpT <- function(db, genus, species, synonyms, additionalkeywords) {
   if (db == "scopus") {
@@ -926,6 +958,32 @@ CountGenusTAK <- function(db, genus, synonyms, additionalkeywords) {
     countgenus <- CountGenusTAK_base(genus, synonyms, additionalkeywords)
   } 
   return(countgenus)
+}
+```
+
+```{r}
+#fetch() wrapper
+Fetch <- function(db, search, level, genus, species, synonyms, additionalkeywords) {
+  if (db == "scopus" && search == "t" && level == "species") {
+    fetchsp <- FetchSpT_scopus(genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" && search == "t" && level == "species") {
+    fetchsp <- FetchSpT_wos(genus, species, synonyms, additionalkeywords)
+  } else if (db == "scopus" && search == "tak" && level == "species") {
+    fetchsp <- FetchSpTAK_scopus(genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" && search == "tak" && level == "species") {
+    fetchsp <- FetchSpTAK_wos(genus, species, synonyms, additionalkeywords)
+  } else if (db == "scopus" && search == "t" && level == "genus") {
+    fetchsp <- FetchGenusT_scopus(genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" && search == "t" && level == "genus") {
+    fetchsp <- FetchGenusT_wos(genus, species, synonyms, additionalkeywords)
+  } else if (db == "scopus" && search == "tak" && level == "genus") {
+    fetchsp <- FetchGenusTAK_scopus(genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" && search == "tak" && level == "genus") {
+    fetchsp <- FetchGenusTAK_wos(genus, species, synonyms, additionalkeywords)
+  } else if (db == "base") {
+    stop("Data extraction is not available for BASE")
+  } 
+  return(fetchsp)
 }
 ```
 

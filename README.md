@@ -38,9 +38,6 @@ library(specieshindex)
 vignette("specieshindex")
 ```
 
-You can find the vignette
-[here](https://github.com/jessicatytam/specieshindex/blob/master/vignettes/vignette.pdf).
-
 ## Before you start
 
 ### :dart: Additional keywords
