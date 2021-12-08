@@ -7,7 +7,7 @@
 SpMindex(data)
 }
 \arguments{
-\item{data}{The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.}
+\item{data}{The dataframe generated from \code{\link{Fetch}}.}
 }
 \value{
 M-index.

@@ -115,46 +115,30 @@ You won't have to set your ID again until your next session. You are required to
 
 Bielefeld Academic Search Engine (BASE) is a literature database that contains both scholarly and grey literature. Since it does not provide citation information, data extraction is not available. Before connecting to BASE, make sure you have your IP address whitelisted. You can do it [here](https://www.base-search.net/about/en/contact.php). A token or API key, however, is not required.
 
-## Other arguments and syntax
+## Making requests
 
-### Count and Fetch Syntax
+### Count requests
 
 The searches are performed using species Latin name. The relevant functions take either a Latin binominal species name as their main parameters, e.g. "*Bettongia*", "*penicillata*”, or their genus name, e.g. "*Bettongia*". Make sure you are using binomial names instead of common names as required by the code.
 
-We have implemented functions that check the available number of relevant records (Count) and functions that download these records (Fetch) for a given species. Count and Fetch functions have two versions, with suffixes T and TAK, respectively. In these functions, the suffix ‘T’ is for title and ‘TAK’ is for title, abstract, or keywords. These terms are used to indicate where in the records you want your search terms to be found in. While ‘T’ only finds the publications with the binomial species name in the title, ‘TAK’ will find records with the name in title, abstract or keywords. To find articles of species, one of the functions you can use is `CountSpT()`. To find articles of genera, one of the functions you can use is `CountGenusT()`.
+We have implemented functions that check the available number of relevant records (`Count()`) and functions that download these records (`Fetch()`) for a given species. `specieshindex` supports multiple databases, including Scopus, Web of Science, and BASE. To differentiate between them, you can change the `db` parameter. You can set `search = "t"` for searches in the title only and `search = "tak"` for searches in the title, abstract, or keywords. To find articles of species, set `level = "species`. To find articles of genera, set `level = "genus`.
 
-It is recommend that you run a quick search using functions `CountSpT()` or `CountSpTAK()` before actually fetching the records since this can be a tedious process. Both functions give a search count of the number of records found on the databases.
+We recommend that you run a quick search using the `Count()` function before running `Fetch()` to extract any data since this can be a tedious process for searches with many results. Both functions give a search count of the number of records found on the databases.
 
-`specieshindex` supports multiple databases, including Scopus, Web of Science, and BASE. To differentiate between them, you can change the `db` parameter. Here are all of the variations of Count and Fetch functions connecting to various databases:
+Here are some variations of `Count()` connecting to Scopus:
 
 ```{r, eval=FALSE}
-#Scopus requests
-#remember to set your API key
-CountSpT(db = "scopus", genus = "Bettongia", species = "penicillata")
-CountSpTAK(db = "scopus", genus = "Bettongia", species = "penicillata")
-FetchSpT(db = "scopus", genus = "Bettongia", species = "penicillata")
-FetchSpTAK(db = "scopus", genus = "Bettongia", species = "penicillata")
-CountGenusT(db = "scopus", genus = "Bettongia")
-CountGenusTAK(db = "scopus", genus = "Bettongia")
-FetchGenusT(db = "scopus", genus = "Bettongia")
-FetchGenusTAK(db = "scopus", genus = "Bettongia")
+# Title only; species level
+Count(db = "scopus",
+      search = "t",
+      level = "species",
+      genus = "Bettongia", species = "penicillata")
 
-#Web of Science requests
-#no tokens or api keys needed if session ID has been set as shown previously
-CountSpT(db = "wos", genus = "Bettongia", species = "penicillata")
-CountSpTAK(db = "wos", genus = "Bettongia", species = "penicillata")
-FetchSpT(db = "wos", genus = "Bettongia", species = "penicillata")
-FetchSpTAK(db = "wos", genus = "Bettongia", species = "penicillata")
-CountGenusT(db = "wos", genus = "Bettongia")
-CountGenusTAK(db = "wos", genus = "Bettongia")
-FetchGenusT(db = "wos", genus = "Bettongia")
-FetchGenusTAK(db = "wos", genus = "Bettongia")
-
-#BASE requests
-CountSpT(db = "base", genus = "Bettongia", species = "penicillata")
-CountSpTAK(db = "base", genus = "Bettongia", species = "penicillata")
-CountGenusT(db = "base", genus = "Bettongia")
-CountGenusTAK(db = "base", genus = "Bettongia")
+#Title, abstract, and keywords; genus level
+Count(db = "scopus",
+      search = "tak",
+      level = "genus",
+      genus = "Bettongia")
 ```
 
 ### Additional keywords
@@ -164,39 +148,33 @@ There is an optional parameter `additionalkeywords` that can be included to make
 Here are some examples of searches including additional keywords:
 
 ```{r, eval=FALSE}
-# Title only
-CountSpT(db = "scopus",
-         genus = "Bettongia", species = "penicillata",
-         additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)")
-CountSpT(db = "scopus",
-         genus = "Bettongia", species = "penicillata",
-         additionalkeywords = "(popul* W/5 ecolog*)")
-CountSpT(db = "scopus",
-         genus = "Bettongia", species = "penicillata",
-         additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)")
-CountSpT(db = "scopus",
-         genus = "Bettongia", species = "penicillata",
-         additionalkeywords = "(popul* AND NOT popular)")
-CountSpT(db = "scopus",
-         genus = "Bettongia", species = "penicillata",
-         additionalkeywords = "NOT (phylog* OR taxonom*)")
-
-# Title, abstract, and keywords
-CountSpTAK(db = "scopus",
-           genus = "Bettongia", species = "penicillata",
-           additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)")
-CountSpTAK(db = "scopus",
-           genus = "Bettongia", species = "penicillata",
-           additionalkeywords = "(popul* W/5 ecolog*)")
-CountSpTAK(db = "scopus",
-           genus = "Bettongia", species = "penicillata", 
-           additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)")
-CountSpTAK(db = "scopus",
-           genus = "Bettongia", species = "penicillata",
-           additionalkeywords = "(popul* AND NOT popular)")
-CountSpTAK(db = "scopus",
-           genus = "Bettongia", species = "penicillata",
-           additionalkeywords = "NOT (phylog* OR taxonom*)")
+Count(db = "scopus",
+      search = "t",
+      level = "species",
+      genus = "Bettongia", species = "penicillata",
+      additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)")
+Count(db = "wos", 
+      search = "tak",
+      level = "genus",
+      genus = "Bettongia",
+      additionalkeywords = "(popul* W/5 ecolog*)")
+Count(db = "base", 
+      search = "t",
+      level = "species",
+      genus = "Osphranter", species = "rufus",
+      synonyms = "Macropus rufus",
+      additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)")
+Count(db = "wos",
+      search = "t",
+      level = "genus",
+      genus = "Osphranter",
+      synonyms = "Macropus",
+      additionalkeywords = "(popul* AND NOT popular)")
+Count(db = "base", 
+      search = "tak",
+      level = "species",
+      genus = "Bettongia", species = "penicillata",
+      additionalkeywords = "NOT (phylog* OR taxonom*)")
 ```
 
 If no additional keywords are parsed, the extraction will include all publications related to the species.
@@ -206,25 +184,34 @@ If no additional keywords are parsed, the extraction will include all publicatio
 Some species have had their classification changed in the past, resulting in multiple names and synonyms. Synonyms can be added to the search strings to get the maximum hits. If you have more than 1 synonym, you can parse a list (the list should be named "synonyms") into the argument.
 
 ```{r, eval=FALSE}
-CountSpT(db = "scopus",
-         genus = "Osphranter", species = "rufus",
-         synonyms = "Macropus rufus", additionalkeywords = "conserv*")
+Count(db = "scopus",
+      search = "t",
+      level = "species",
+      genus = "Osphranter", species = "rufus",
+      synonyms = "Macropus rufus",
+      additionalkeywords = "conserv*")
 ```
 
 ## Extracting citation records
 
-In the examples proceeding, I will be using species names instead of genus, and setting `db = "scopus"`. `CountSpTAK()` should yield more results since it also looks for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
+In the examples proceeding, I will be using species names instead of genus, and setting `db = "scopus"`. Setting `search = "tak` should yield more results since it also looks for the binomial name in the abstract and keywords, in addition to the title. Now that you know exactly how many publications there are for this species, and it is greater than 0, you can proceed to fetch the data. If your record count is 0, there might be a problem with the Latin name of the species, e.g. a typo.
 
 As you may expect, some species have been studied more than the others [@Simko2015; @Krause2017313], resulting in more publications. Therefore, if there are more than a few thousand citation records found, it will take a considerably longer time to download them all, unless you are using a computer with high processing power and fast internet connection.
 
-To fetch the citation records, you can run:
+For example, you can run:
 
 ```{r, eval=FALSE}
-# Title only
-FetchSpT(db = "scopus", genus = "Bettongia", species = "penicillata")
+# Title only; species level
+Fetch(db = "scopus",
+      search = "t",
+      level = "species",
+      genus = "Bettongia", species = "penicillata")
 
-#Title, abstract, and keywords
-FetchSpTAK(db = "scopus", genus = "Bettongia", species = "penicillata")
+#Title, abstract, and keywords; genus level
+Fetch(db = "scopus",
+      search = "tak",
+      level = "genus",
+      genus = "Bettongia")
 ```
 
 Similar to the Count functions above, Fetch functions also have the argument `additionalkeywords` that allows you to refine your search.
@@ -232,39 +219,33 @@ Similar to the Count functions above, Fetch functions also have the argument `ad
 For example, you can run:
 
 ```{r, eval=FALSE}
-# Title only
-FetchSpT(db = "scopus", 
-         genus = "Bettongia", species = "penicillata",
-         additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)")
-FetchSpT(db = "scopus", 
-         genus = "Bettongia", species = "penicillata",
-         additionalkeywords = "(popul* W/5 ecolog*)")
-FetchSpT(db = "scopus", 
-         genus = "Bettongia", species = "penicillata",
-         additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)")
-FetchSpT(db = "scopus", 
-         genus = "Bettongia", species = "penicillata",
-         additionalkeywords = "(popul* AND NOT popular)")
-FetchSpT(db = "scopus", 
-         genus = "Bettongia", species = "penicillata",
-         additionalkeywords = "NOT (phylog* OR taxonom*)")
-
-# Title, abstract, and keywords
-FetchSpTAK(db = "scopus", 
-           genus = "Bettongia", species = "penicillata",
-           additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)")
-FetchSpTAK(db = "scopus", 
-           genus = "Bettongia", species = "penicillata",
-           additionalkeywords = "(popul* W/5 ecolog*)")
-FetchSpTAK(db = "scopus", 
-           genus = "Bettongia", species = "penicillata",
-           additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)")
-FetchSpTAK(db = "scopus", 
-           genus = "Bettongia", species = "penicillata",
-           additionalkeywords = "(popul* AND NOT popular)")
-FetchSpTAK(db = "scopus", 
-           genus = "Bettongia", species = "penicillata",
-           additionalkeywords = "NOT (phylog* OR taxonom*)")
+Fetch(db = "scopus",
+      search = "t",
+      level = "species",
+      genus = "Bettongia", species = "penicillata",
+      additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)")
+Fetch(db = "wos", 
+      search = "tak",
+      level = "genus",
+      genus = "Bettongia",
+      additionalkeywords = "(popul* W/5 ecolog*)")
+Fetch(db = "scopus", 
+      search = "t",
+      level = "species",
+      genus = "Osphranter", species = "rufus",
+      synonyms = "Macropus rufus",
+      additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)")
+Fetch(db = "wos",
+      search = "tak",
+      level = "genus",
+      genus = "Osphranter",
+      synonyms = "Macropus",
+      additionalkeywords = "(popul* AND NOT popular)")
+Fetch(db = "scopus", 
+      search = "tak",
+      level = "species",
+      genus = "Bettongia", species = "penicillata",
+      additionalkeywords = "NOT (phylog* OR taxonom*)")
 ```
 
 In larger datasets, duplicates may appear, although usually in low numbers. It is up to the user to decide which documents to keep or remove.
@@ -276,7 +257,11 @@ The default of the parameter `language` is set to 0. To retrieve the language fo
 For example, if you want to retrieve documents with the language variable, you can run:
 
 ```{r, eval=FALSE}
-FetchSpT(db = "scopus", genus = "Ailuropoda", species = "melanoleuca", language = 1)
+Fetch(db = "scopus",
+      search = "t",
+      level = "species",
+      genus = "Ailuropoda", species = "melanoleuca",
+      language = 1)
 ```
 
 ### Possible errors
@@ -380,7 +365,8 @@ Rather than calling each function to calculate the indices in turn, you can get 
 For example:
 
 ```{r, warning=FALSE}
-Allindices(data = Woylie, genus = "Bettongia", species = "penicillata")
+Allindices(data = Woylie,
+           genus = "Bettongia", species = "penicillata")
 ```
 
 There is an additional argument `sourcetype` with the default set to `sourcetype = 0`. If set to `sourcetype = 1`, the output of `Allindices()` will include the output of `SourceType()`.
@@ -389,7 +375,7 @@ For multiple species, `rbind()` (or `dplyr::bind_rows()` if `sourcetype = 1`) ca
 
 # Worked examples with Scopus
 
-To demonstrate how the specieshindex package could be helpful in the real world, I will be comparing the citations of 4 species of marsupials. They are the woylie (*Bettongia penicillata*), quokka (*Setonix brachyurus*), platypus (*Ornithorhynchus anatinus*), and koala (*Phascolarctos cinereus*). I used `FetchSpTAK()` for all of these datasets. I have included these sets of data in the package but you can also extract the data from Scopus for the most updated records.
+To demonstrate how the specieshindex package could be helpful in the real world, I will be comparing the citations of 4 species of marsupials. They are the woylie (*Bettongia penicillata*), quokka (*Setonix brachyurus*), platypus (*Ornithorhynchus anatinus*), and koala (*Phascolarctos cinereus*). I used `Fetch(db = "scopus", search = "tak", level = "species"` for all of these datasets. I have included these sets of data in the package but you can also extract the data from Scopus for the most updated records.
 
 ```{r}
 dim(Woylie)
@@ -405,10 +391,14 @@ As shown here, there were 113 records (publications) for the woylie, 242 records
 Next, we calculate research productivity and influence indices using the `Allindices()` function:
 
 ```{r, warning=FALSE}
-W <- Allindices(data = Woylie, genus = "Bettongia", species = "penicillata")
-Q <- Allindices(data = Quokka, genus = "Setonix", species = "brachyurus")
-P <- Allindices(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
-K <- Allindices(data = Koala, genus = "Phascolarctos", species = "cinereus")
+W <- Allindices(data = Woylie,
+                genus = "Bettongia", species = "penicillata")
+Q <- Allindices(data = Quokka,
+                genus = "Setonix", species = "brachyurus")
+P <- Allindices(data = Platypus,
+                genus = "Ornithorhynchus", species = "anatinus")
+K <- Allindices(data = Koala,
+                genus = "Phascolarctos", species = "cinereus")
 ```
 
 If you want to compare and analyse them against each other, you can use the function `rbind()` to combine indices for all four species into a single dataframe:
@@ -424,20 +414,26 @@ After preparing the data, we are ready to make some plots. The in-built function
 plotAllindices(CombineSp)
 ```
 
+**Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of the Woylie (*Bettongia penicillata*), Platypus (*Ornithorhynchus anatinus*), Koala (*Phascolarctos cinereus*), and Quokka (*Setonix brachyurus*).
+
 \
-To see the total output by year, you can use the functions `getYear()` and `plotPub()`. Below is an example using the same datasets as above. First, we need to extract the year from the output of `FetchSpT()` (or any other Fetch functions) with `getYear()`. Remember to supply the binomial name of the species.
+To see the total output by year, you can use the functions `getYear()` and `plotPub()`. Below is an example using the same datasets as above. First, we need to extract the year from the output of `Fetch()` (or any other Fetch functions) with `getYear()`. Remember to supply the binomial name of the species.
 
 ```{r}
-extract_year_W <- getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
+extract_year_W <- getYear(data = Woylie,
+                          genus = "Bettongia", species = "penicillata")
 extract_year_W
 ```
 
 If you have multiple species to visualise, you can combine them with using `rbind()`.
 
 ```{r}
-extract_year_Q <- getYear(data = Quokka, genus = "Setonix", species = "brachyurus")
-extract_year_P <- getYear(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
-extract_year_K <- getYear(data = Koala, genus = "Phascolarctos", species = "cinereus")
+extract_year_Q <- getYear(data = Quokka,
+                          genus = "Setonix", species = "brachyurus")
+extract_year_P <- getYear(data = Platypus,
+                          genus = "Ornithorhynchus", species = "anatinus")
+extract_year_K <- getYear(data = Koala,
+                          genus = "Phascolarctos", species = "cinereus")
 Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
 ```
 
@@ -447,12 +443,20 @@ To plot the output, simply use the `plotPub()` function.
 plotPub(Combine_pub)
 ```
 
+**Figure 2.** The total number of publications per year of the Woylie (*Bettongia penicillata*), Platypus (*Ornithorhynchus anatinus*), Koala (*Phascolarctos cinereus*), and Quokka (*Setonix brachyurus*).
+
 \
 You can add a custom colour palette of choice for further customisation.
 
 # Concrete example
 
 To see a concrete example, @tam_lagisz_cornwell_nakagawa_2021 has applied this package to study taxonomic bias among mammals by quantifying the scientific interest of 7,521 species of mammals.
+
+```{r, echo=FALSE, fig.align='center'}
+knitr::include_graphics("../vignettes/h100_text_2.png")
+```
+
+**Figure 3.** Species *h*-index of mammals with a species *h*-index of *h* = 100 and larger (adapted from @tam_lagisz_cornwell_nakagawa_2021).
 
 # Limitations
 

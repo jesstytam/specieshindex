@@ -7,7 +7,7 @@
 Allindices(data, genus, species, sourcetype = 0)
 }
 \arguments{
-\item{data}{The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.}
+\item{data}{The dataframe generated from \code{\link{Fetch}}.}
 
 \item{genus}{Genus classification from the binomial name.}
 
@@ -23,6 +23,8 @@ This function returns a dataframe of the summary of all of the indices.
 }
 \examples{
 data(Woylie)
-Allindices(Woylie, genus = "genus_name", species = "species_name", sourcetype = 0)
+Allindices(Woylie,
+           genus = "genus_name", species = "species_name",
+           sourcetype = 0)
 
 }

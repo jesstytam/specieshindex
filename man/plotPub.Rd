@@ -16,10 +16,14 @@ ggplot
 Plots the publication by year of a single species or combined.
 }
 \examples{
-extract_year_W <- getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
-extract_year_Q <- getYear(data = Quokka, genus = "Setonix", species = "brachyurus")
-extract_year_P <- getYear(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
-extract_year_K <- getYear(data = Koala, genus = "Phascolarctos", species = "cinereus")
+extract_year_W <- getYear(data = Woylie,
+                          genus = "Bettongia", species = "penicillata")
+extract_year_Q <- getYear(data = Quokka,
+                          genus = "Setonix", species = "brachyurus")
+extract_year_P <- getYear(data = Platypus,
+                          genus = "Ornithorhynchus", species = "anatinus")
+extract_year_K <- getYear(data = Koala,
+                          genus = "Phascolarctos", species = "cinereus")
 Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
 plotPub(Combine_pub)
 

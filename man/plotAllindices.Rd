@@ -16,10 +16,14 @@ ggplot
 Plots the indices of a single species or combined.
 }
 \examples{
-W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
-Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
-P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
-K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
+W <- Allindices(Woylie,
+                genus = "Bettongia", species = "penicillata")
+Q <- Allindices(Quokka,
+                genus = "Setonix", species = "brachyurus")
+P <- Allindices(Platypus,
+                genus = "Ornithorhynchus", species = "anatinus")
+K <- Allindices(Koala,
+                genus = "Phascolarctos", species = "cinereus")
 CombineSp <- dplyr::bind_rows(W, Q, P, K)
 plotAllindices(CombineSp)
 

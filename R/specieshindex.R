@@ -1,255 +1,131 @@
-#' This is a wrapper function for \code{\link{CountSpT_scopus}}, \code{\link{CountSpT_wos}}, and \code{\link{CountSpT_base}}.
+#' This function counts the total number of search results from Scopus, Web of Science, or BASE.
+#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
 #' 
-#' @title CountSpT wrapper
+#' @title Search count of literature
 #'
 #' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
+#' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
+#' @param level Taxonomic level. Genus ("genus") or species ("species").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
-#' 
-#' @return Search count of the species with the given \code{genus} and \code{species}.
+#'
+#' @return Search count of the genus or species with the given \code{genus} and/or \code{species}.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' CountSpT("scopus", genus = "Osphranter", species = "rufus")
+#' Count(db = "scopus",
+#'       search = "t",
+#'       level = "species",
+#'       genus = "Osphranter", species = "rufus")
 #' }
 #' \dontrun{
-#' CountSpT("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*")
+#' Count(db = "scopus",
+#'       search = "t",
+#'       level = "species",
+#'       genus = "Osphranter", species = "rufus",
+#'       synonyms = "Macropus rufus",
+#'       additionalkeywords = "conserv*")
 #' }
-CountSpT <- function(db, genus, species, synonyms, additionalkeywords) {
-  if (db == "scopus") {
-    countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos") {
-    countsp <- CountSpT_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "base") {
-    countsp <- CountSpT_base(genus, species, synonyms, additionalkeywords)
-  } 
-  return(countsp)
+Count <- function(db,
+                  search,
+                  level,
+                  genus,
+                  species,
+                  synonyms,
+                  additionalkeywords) {
+if (db == "scopus" && search == "t" && level == "species") {
+  countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords)
+} else if (db == "wos" && search == "t" && level == "species") {
+  countsp <- CountSpT_wos(genus, species, synonyms, additionalkeywords)
+} else if (db == "base" && search == "t" && level == "species") {
+  countsp <- CountSpT_base(genus, species, synonyms, additionalkeywords)
+} else if (db == "scopus" && search == "tak" && level == "species") {
+  countsp <- CountSpTAK_scopus(genus, species, synonyms, additionalkeywords)
+} else if (db == "wos" && search == "tak" && level == "species") {
+  countsp <- CountSpTAK_wos(genus, species, synonyms, additionalkeywords)
+} else if (db == "base" && search == "tak" && level == "species") {
+  countsp <- CountSpTAK_base(genus, species, synonyms, additionalkeywords)
+} else if (db == "scopus" && search == "t" && level == "genus") {
+  countsp <- CountGenusT_scopus(genus, synonyms, additionalkeywords)
+} else if (db == "wos" && search == "t" && level == "genus") {
+  countsp <- CountGenusT_wos(genus, synonyms, additionalkeywords)
+} else if (db == "base" && search == "t" && level == "genus") {
+  countsp <- CountGenusT_base(genus, synonyms, additionalkeywords)
+} else if (db == "scopus" && search == "tak" && level == "genus") {
+  countsp <- CountGenusTAK_scopus(genus, synonyms, additionalkeywords)
+} else if (db == "wos" && search == "tak" && level == "genus") {
+  countsp <- CountGenusTAK_wos(genus, synonyms, additionalkeywords)
+} else if (db == "base" && search == "tak" && level == "genus") {
+  countsp <- CountGenusTAK_base(genus, synonyms, additionalkeywords)
+} 
+return(countsp)
 }
 
 
 
-#' This is a wrapper function for \code{\link{CountSpTAK_scopus}}, \code{\link{CountSpTAK_wos}}, and \code{\link{CountSpTAK_base}}.
+#' This function fetches citation information from Scopus, Web of Science, or BASE.
+#' Duplicates are to be removed by the user after fetching the data.
 #' 
-#' @title CountSpTAK wrapper
+#' @title Fetch citation records
 #'
 #' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#' 
-#' @return Search count of the species with the given \code{genus} and \code{species}.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' CountSpTAK("scopus", genus = "Osphranter", species = "rufus")
-#' }
-#' \dontrun{
-#' CountSpTAK("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*")
-#' }
-CountSpTAK <- function(db, genus, species, synonyms, additionalkeywords) {
-  if (db == "scopus") {
-    countsp <- CountSpTAK_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos") {
-    countsp <- CountSpTAK_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "base") {
-    countsp <- CountSpTAK_base(genus, species, synonyms, additionalkeywords)
-  }
-  return(countsp)
-}
-
-
-
-#' This is a wrapper function for \code{\link{CountGenusT_scopus}}, \code{\link{CountGenusT_wos}}, and \code{\link{CountGenusT_base}}.
-#' 
-#' @title CountSpT wrapper
-#'
-#' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#' 
-#' @return Search count of the genus with the given \code{genus}.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' CountGenusT("scopus", genus = "Osphranter")
-#' }
-#' \dontrun{
-#' CountGenusT("scopus", genus = "Osphranter", synonyms = "Macropus", additionalkeywords = "conserv*")
-#' }
-CountGenusT <- function(db, genus, synonyms, additionalkeywords) {
-  if (db == "scopus") {
-    countgenus <- CountGenusT_scopus(genus, synonyms, additionalkeywords)
-  } else if (db == "wos") {
-    countgenus <- CountGenusT_wos(genus, synonyms, additionalkeywords)
-  } else if (db == "base") {
-    countgenus <- CountGenusT_base(genus, synonyms, additionalkeywords)
-  }
-  return(countgenus)
-}
-
-
-
-#' This is a wrapper function for \code{\link{CountGenusTAK_scopus}}, \code{\link{CountGenusTAK_wos}}, and \code{\link{CountGenusTAK_base}}.
-#' 
-#' @title CountSpTAK wrapper
-#'
-#' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#' 
-#' @return Search count of the genus with the given \code{genus}.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' CountGenusTAK("scopus", genus = "Osphranter")
-#' }
-#' \dontrun{
-#' CountGenusTAK("scopus", genus = "Osphranter", synonyms = "Macropus", additionalkeywords = "conserv*")
-#' }
-CountGenusTAK <- function(db, genus, synonyms, additionalkeywords) {
-  if (db == "scopus") {
-    countgenus <- CountGenusTAK_scopus(genus, synonyms, additionalkeywords)
-  } else if (db == "wos") {
-    countgenus <- CountGenusTAK_wos(genus, synonyms, additionalkeywords)
-  } else if (db == "base") {
-    countgenus <- CountGenusTAK_base(genus, synonyms, additionalkeywords)
-  } 
-  return(countgenus)
-}
-
-
-
-#' This is a wrapper function for \code{\link{FetchSpT_scopus}}, and \code{\link{FetchSpT_wos}}.
-#' 
-#' @title FetchSpT wrapper
-#'
-#' @param db Literature database. Scopus ("scopus") or Web of Science ("wos").
+#' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
+#' @param level Taxonomic level. Genus ("genus") or species ("species").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
 #' @param language Language of the paper; default is 0, enter 1 to retrieve the variable. Scopus only.
-#' 
-#' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
+#'
+#' @return A dataframe of the genus' or species' citation records with the given \code{genus} and/or \code{species}.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' FetchSpT("scopus", genus = "Osphranter", species = "rufus")
+#' Fetch(db = "scopus",
+#'       search = "t",
+#'       level = "species",
+#'       genus = "Osphranter", species = "rufus")
 #' }
 #' \dontrun{
-#' FetchSpT("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*")
+#' Fetch(db = "scopus",
+#'       search = "t",
+#'       level = "species",
+#'       genus = "Osphranter", species = "rufus",
+#'       synonyms = "Macropus rufus",
+#'       additionalkeywords = "conserv*")
 #' }
-FetchSpT <- function(db, genus, species, synonyms, additionalkeywords, language = 0) {
-  if (db == "scopus") {
+Fetch <- function(db,
+                  search,
+                  level,
+                  genus,
+                  species,
+                  synonyms,
+                  additionalkeywords,
+                  language = 0) {
+  if (db == "scopus" && search == "t" && level == "species") {
     fetchsp <- FetchSpT_scopus(genus, species, synonyms, additionalkeywords, language)
-  } else if (db == "wos") {
+  } else if (db == "wos" && search == "t" && level == "species") {
     fetchsp <- FetchSpT_wos(genus, species, synonyms, additionalkeywords)
-  }
-  return(fetchsp)
-}
-
-
-
-#' This is a wrapper function for \code{\link{FetchSpTAK_scopus}}, and \code{\link{FetchSpTAK_wos}}.
-#' 
-#' @title FetchSpTAK wrapper
-#'
-#' @param db Literature database. Scopus ("scopus") or Web of Science ("wos").
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#' @param language Language of the paper; default is 0, enter 1 to retrieve the variable. Scopus only.
-#' 
-#' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' FetchSpTAK("scopus", genus = "Osphranter", species = "rufus")
-#' }
-#' \dontrun{
-#' FetchSpTAK("scopus", genus = "Osphranter", species = "rufus", synonyms = "Macropus rufus", additionalkeywords = "conserv*")
-#' }
-FetchSpTAK <- function(db, genus, species, synonyms, additionalkeywords, language = 0) {
-  if (db == "scopus") {
+  } else if (db == "scopus" && search == "tak" && level == "species") {
     fetchsp <- FetchSpTAK_scopus(genus, species, synonyms, additionalkeywords, language)
-  } else if (db == "wos") {
+  } else if (db == "wos" && search == "tak" && level == "species") {
     fetchsp <- FetchSpTAK_wos(genus, species, synonyms, additionalkeywords)
-  }
+  } else if (db == "scopus" && search == "t" && level == "genus") {
+    fetchsp <- FetchGenusT_scopus(genus, synonyms, additionalkeywords, language)
+  } else if (db == "wos" && search == "t" && level == "genus") {
+    fetchsp <- FetchGenusT_wos(genus, synonyms, additionalkeywords)
+  } else if (db == "scopus" && search == "tak" && level == "genus") {
+    fetchsp <- FetchGenusTAK_scopus(genus, synonyms, additionalkeywords, language)
+  } else if (db == "wos" && search == "tak" && level == "genus") {
+    fetchsp <- FetchGenusTAK_wos(genus, synonyms, additionalkeywords)
+  } else if (db == "base") {
+    stop("Data extraction is not available for BASE")
+  } 
   return(fetchsp)
-}
-
-
-
-#' This is a wrapper function for \code{\link{FetchSpT_scopus}}, and \code{\link{FetchSpT_wos}}.
-#' 
-#' @title FetchGenusT wrapper
-#'
-#' @param db Literature database. Scopus ("scopus") or Web of Science ("wos").
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#' @param language Language of the paper; default is 0, enter 1 to retrieve the variable. Scopus only.
-#' 
-#' @return A dataframe of the genus' citation records with the given \code{genus}.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' FetchGenusT("scopus", genus = "Osphranter")
-#' }
-#' \dontrun{
-#' FetchGenusT("scopus", genus = "Osphranter", synonyms = "Macropus", additionalkeywords = "conserv*")
-#' }
-FetchGenusT <- function(db, genus, synonyms, additionalkeywords, language = 0) {
-  if (db == "scopus") {
-    fetchgenus <- FetchGenusT_scopus(genus, synonyms, additionalkeywords, language)
-  } else if (db == "wos") {
-    fetchgenus <- FetchGenusT_wos(genus, synonyms, additionalkeywords)
-  }
-  return(fetchgenus)
-}
-
-
-
-#' This is a wrapper function for \code{\link{FetchGenusTAK_scopus}}, and \code{\link{FetchGenusTAK_wos}}.
-#' 
-#' @title FetchGenusTAK wrapper
-#'
-#' @param db Literature database. Scopus ("scopus") or Web of Science ("wos").
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#' @param language Language of the paper; default is 0, enter 1 to retrieve the variable. Scopus only.
-#' 
-#' @return A dataframe of the genus' citation records with the given \code{genus}.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' FetchGenusTAK("scopus", genus = "Osphranter")
-#' }
-#' \dontrun{
-#' FetchGenusTAK("scopus", genus = "Osphranter", synonyms = "Macropus", additionalkeywords = "conserv*")
-#' }
-FetchGenusTAK <- function(db, genus, synonyms, additionalkeywords, language = 0) {
-  if (db == "scopus") {
-    fetchgenus <- FetchGenusTAK_scopus(genus, synonyms, additionalkeywords, language)
-  } else if (db == "wos") {
-    fetchgenus <- FetchGenusTAK_wos(genus, synonyms, additionalkeywords)
-  }
-  return(fetchgenus)
 }
 
 
@@ -464,6 +340,7 @@ CountGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, datatype =
 #' @param language Language of the paper; default is 0, enter 1 to retrieve the variable.
 #'
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
+#' @importFrom utils read.csv
 #' @export 
 #'
 #' @examples
@@ -637,6 +514,7 @@ FetchSpT_scopus <- function(genus, species, synonyms, additionalkeywords, langua
 #' @param language Language of the paper; default is 0, enter 1 to retrieve the variable.
 #'
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
+#' @importFrom utils read.csv
 #' @export 
 #'
 #' @examples
@@ -809,6 +687,8 @@ FetchSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, lang
 #' @param language Language of the paper; default is 0, enter 1 to retrieve the variable.
 #'
 #' @return A dataframe of the genus' citation records with the given \code{genus}.
+#' @importFrom utils read.csv
+#' @importFrom stats na.omit
 #' @export 
 #'
 #' @examples
@@ -1328,6 +1208,7 @@ CountGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
 #'
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 #' @importFrom data.table rbindlist setDT .SD
+#' @importFrom stats na.omit
 #' @export
 #'
 #' @examples
@@ -1383,6 +1264,7 @@ FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 #'
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 #' @importFrom data.table rbindlist setDT .SD
+#' @importFrom stats na.omit
 #' @export
 #'
 #' @examples
@@ -1437,6 +1319,7 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #'
 #' @return A dataframe of the genus' citation records with the given \code{genus}.
 #' @importFrom data.table rbindlist setDT .SD
+#' @importFrom stats na.omit
 #' @export
 #'
 #' @examples
@@ -1467,7 +1350,7 @@ FetchGenusT_wos <- function(genus, synonyms, additionalkeywords) {
   query <- wosr::pull_wos(query = create_query_string_T_wos_genus(genus, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(data.table:::.SD, function(x) toString(na.omit(x))), by = ut]
+  results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
@@ -1491,6 +1374,7 @@ FetchGenusT_wos <- function(genus, synonyms, additionalkeywords) {
 #'
 #' @return A dataframe of the genus' citation records with the given \code{genus}.
 #' @importFrom data.table rbindlist setDT .SD
+#' @importFrom stats na.omit
 #' @export
 #'
 #' @examples
@@ -1521,7 +1405,7 @@ FetchGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
   query <- wosr::pull_wos(query = create_query_string_TAK_wos_genus(genus, synonyms, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(data.table:::.SD, function(x) toString(na.omit(x))), by = ut]
+  results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
@@ -1728,7 +1612,7 @@ CountGenusTAK_base <- function(genus, synonyms, additionalkeywords) {
 #'
 #' @title Total publications
 #'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param data The dataframe generated from \code{\link{Fetch}}.
 #'
 #' @return An integer of the total number of publications.
 #' @export
@@ -1748,7 +1632,7 @@ TotalPub <- function(data) {
 #'
 #' @title Total citations
 #'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param data The dataframe generated from \code{\link{Fetch}}.
 #'
 #' @return A numerical value of the total number of citations.
 #' @export
@@ -1769,7 +1653,7 @@ TotalCite <- function(data) {
 #'
 #' @title Total journals
 #'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param data The dataframe generated from \code{\link{Fetch}}.
 #'
 #' @return An integer of the total number of journals.
 #' @export
@@ -1790,7 +1674,7 @@ TotalJournals <- function(data) {
 #' 
 #' @title Source type
 #'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param data The dataframe generated from \code{\link{Fetch}}.
 #'
 #' @return A dataframe with each document and their counts.
 #' @export
@@ -1814,7 +1698,7 @@ SourceType <- function(data) {
 #'
 #' @title Years since first publication
 #'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param data The dataframe generated from \code{\link{Fetch}}.
 #'
 #' @return Number of years.
 #' @export
@@ -1836,7 +1720,7 @@ YearsPublishing <- function(data) {
 #'
 #' @title Species h-index
 #'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param data The dataframe generated from \code{\link{Fetch}}.
 #'
 #' @return H-index.
 #' @export
@@ -1868,7 +1752,7 @@ SpHindex <- function(data) {
 #'
 #' @title Species m-index
 #'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param data The dataframe generated from \code{\link{Fetch}}.
 #'
 #' @return M-index.
 #' @export
@@ -1902,7 +1786,7 @@ SpMindex <- function(data) {
 #'
 #' @title Species i10 index
 #' 
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param data The dataframe generated from \code{\link{Fetch}}.
 #'
 #' @return i10 index.
 #' @export
@@ -1927,7 +1811,7 @@ Spi10 <- function(data) {
 #' 
 #' @title Species h5 index
 #'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param data The dataframe generated from \code{\link{Fetch}}.
 #'
 #' @return H5 index.
 #' @export
@@ -1957,7 +1841,7 @@ SpH5 <- function(data) {
 #' 
 #' @title Species h-index with a given time frame
 #'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param data The dataframe generated from \code{\link{Fetch}}.
 #' @param date The lower limit of the timeframe.
 #'
 #' @return H-index of the given time period.
@@ -1983,7 +1867,7 @@ SpHAfterdate <- function(data, date) {
 #' 
 #' @title Index summary
 #'
-#' @param data The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.
+#' @param data The dataframe generated from \code{\link{Fetch}}.
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param sourcetype Source type; default is 0, enter 1 to add SourceType variables.
@@ -1993,7 +1877,9 @@ SpHAfterdate <- function(data, date) {
 #'
 #' @examples
 #' data(Woylie)
-#' Allindices(Woylie, genus = "genus_name", species = "species_name", sourcetype = 0)
+#' Allindices(Woylie,
+#'            genus = "genus_name", species = "species_name",
+#'            sourcetype = 0)
 #' 
 Allindices <- function(data, genus, species, sourcetype = 0) {
   if (sourcetype == 1 & all.equal(0, data$citations) == FALSE) {
@@ -2041,10 +1927,14 @@ Allindices <- function(data, genus, species, sourcetype = 0) {
 #' @export
 #'
 #' @examples
-#' W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
-#' Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
-#' P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
-#' K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
+#' W <- Allindices(Woylie,
+#'                 genus = "Bettongia", species = "penicillata")
+#' Q <- Allindices(Quokka,
+#'                 genus = "Setonix", species = "brachyurus")
+#' P <- Allindices(Platypus,
+#'                 genus = "Ornithorhynchus", species = "anatinus")
+#' K <- Allindices(Koala,
+#'                 genus = "Phascolarctos", species = "cinereus")
 #' CombineSp <- dplyr::bind_rows(W, Q, P, K)
 #' plotAllindices(CombineSp)
 #' 
@@ -2105,7 +1995,8 @@ plotAllindices <- function(data) {
 #' @export
 #'
 #' @examples
-#' getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
+#' getYear(data = Woylie,
+#'         genus = "Bettongia", species = "penicillata")
 #' 
 getYear <- function(data, genus, species) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
@@ -2129,10 +2020,14 @@ getYear <- function(data, genus, species) {
 #' @export
 #'
 #' @examples
-#' extract_year_W <- getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
-#' extract_year_Q <- getYear(data = Quokka, genus = "Setonix", species = "brachyurus")
-#' extract_year_P <- getYear(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
-#' extract_year_K <- getYear(data = Koala, genus = "Phascolarctos", species = "cinereus")
+#' extract_year_W <- getYear(data = Woylie,
+#'                           genus = "Bettongia", species = "penicillata")
+#' extract_year_Q <- getYear(data = Quokka,
+#'                           genus = "Setonix", species = "brachyurus")
+#' extract_year_P <- getYear(data = Platypus,
+#'                           genus = "Ornithorhynchus", species = "anatinus")
+#' extract_year_K <- getYear(data = Koala,
+#'                           genus = "Phascolarctos", species = "cinereus")
 #' Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
 #' plotPub(Combine_pub)
 #' 

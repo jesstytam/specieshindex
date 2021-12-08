@@ -20,6 +20,7 @@ A dataframe with the year and frequency of the publications
 Extracts the year of each publication of the output from any of the Fetch functions and counts the number of publications each year.
 }
 \examples{
-getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
+getYear(data = Woylie,
+        genus = "Bettongia", species = "penicillata")
 
 }

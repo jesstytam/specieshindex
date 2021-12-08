@@ -7,7 +7,7 @@
 SpHAfterdate(data, date)
 }
 \arguments{
-\item{data}{The dataframe generated from \code{\link{FetchSpT}} or \code{\link{FetchSpTAK}}.}
+\item{data}{The dataframe generated from \code{\link{Fetch}}.}
 
 \item{date}{The lower limit of the timeframe.}
 }

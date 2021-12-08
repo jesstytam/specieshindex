@@ -3,8 +3,6 @@
 
 # specieshindex
 
-[![CRAN
-status](https://www.r-pkg.org/badges/version/specieshindex)](https://CRAN.R-project.org/package=specieshindex)
 ![R-CMD-check](https://github.com/jessicatytam/specieshindex/workflows/CI/badge.svg)
 [![codecov](https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg?token=Y8N1QW0I1C)](https://codecov.io/gh/jessicatytam/specieshindex)
 [![Github All
@@ -40,25 +38,6 @@ vignette("specieshindex")
 
 ## Before you start
 
-### :dart: Additional keywords
-
-The Count and Fetch functions allow the addition of keywords using
-Boolean operators to restrict the domain of the search. Although you can
-simply use keywords such as “conservation”, you will find that using
-“conserv\*” will yield more results. The “\*” (or wildcard) used here
-searches for any words with the prefix “conserv”, e.g. conservation,
-conserve, conservatory, etc. Find out more about search language
-[here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and
-[here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
-
-### :boar: Synonyms
-
-Some species have had their classification changed in the past,
-resulting in multiple binomial names and synonyms. Synonyms can be added
-to the search strings to get the maximum hits. If you have more than 1
-synonym, you can parse a list (the list should be named “synonyms”) into
-the argument.
-
 ### :mega: Connecting to Scopus
 
 **Functions that extract data will only run if you or your institution
@@ -88,10 +67,6 @@ API is accessed via the IP address.
 You must have your IP address whitelisted. You can do it
 [here](https://www.base-search.net/about/en/contact.php).
 
-## Examples
-
-Here is a quick demonstration of how the package works.
-
 ### :jigsaw: Setting up keys
 
 You will need to set up your API key / session ID before gaining access
@@ -108,71 +83,73 @@ You won’t have to set this again until your next session. You are
 required to be at your institution for this to work since the API is
 accessed via the IP address.
 
-### :pencil2: Count and Fetch Syntax
+## Examples
 
-Multiple databases have been incorporated into `specieshindex`,
-including Scopus, Web of Science, and Lens. To differentiate between
-them, the suffix of the Count and Fetch functions have been labeled with
-the database’s name, with the exception of Scopus.
-
-``` r
-#Scopus requests
-CountSpT(db = "scopus", genus = "Bettongia", species = "penicillata")
-FetchSpT(db = "scopus", genus = "Bettongia", species = "penicillata")
-CountGenusT(db = "scopus", genus = "Bettongia")
-FetchGenusT(db = "scopus", genus = "Bettongia")
-
-#Web of science requests
-#No tokens or api keys needed if session ID has been set as shown previously
-CountSpT(db = "wos", genus = "Bettongia", species = "penicillata")
-FetchSpT(db = "wos", genus = "Bettongia", species = "penicillata")
-CountGenusT(db = "wos", genus = "Bettongia")
-FetchGenusT(db = "wos", genus = "Bettongia")
-
-#BASE requests
-#Fetch functions are not available for BASE
-CountSpT(db = "base", genus = "Bettongia", species = "penicillata")
-CountGenusT(db = "base", genus = "Bettongia")
-```
+Here is a quick demonstration of how the package works.
 
 ### :abacus: Counting citation records
 
-If you are only interested in knowing how many publications there are on
-Scopus, you can run the Count functions. Use `CountSpT()` for title only
-or `CountSpTAK()` for title+abstract+keywords.
+Multiple databases have been incorporated into `specieshindex`, namely
+Scopus, Web of Science, and BASE. To differentiate between them, set the
+`db` parameter to your desired database. If you are only interested in
+knowing how many publications there are, you can run the `Count()`
+functions.
 
 ``` r
-#Count citation data
-CountSpT("scopus", "Bettongia", "penicillata")
-CountSpTAK("scopus", "Bettongia", "penicillata")
+# Title only; species level
+Count(db = "scopus",
+      search = "t",
+      level = "species",
+      genus = "Bettongia", species = "penicillata")
 
-#Example including additional keywords
-CountSpTAK("scopus", "Phascolarctos", "cinereus",
-           additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)")
-#search string: TITLE-ABS-KEY("Phascolarctos cinereus" AND (consrv* OR protect* OR reintrod* OR restor*))
-
-#Example including synonyms
-CountSpT("scopus", "Osphranter", "rufus",
-         synonyms = "Macropus rufus", additionalkeywords = "conserv*")
-#search string: TITLE(("Osphranter rufus" OR "Macropus rufus") AND conserv*)
+#Title, abstract, and keywords; genus level
+Count(db = "scopus",
+      search = "tak",
+      level = "genus",
+      genus = "Bettongia")
 ```
 
 ### :fishing\_pole\_and\_fish: Extracting citaiton records
 
 In order to calculate the indices, you will need to download the
-citation records. The parameters of the Count and Fetch functions are
-exactly the same. Let’s say you want to compare the species h-index of a
-few marsupials. First, you would need to download the citation
-information using either `FetchSpT()` for title only or `FetchSpTAK()`
-for title+abstract+keywords. Remember to use binomial names.
+citation records. The parameters of `Count()` and `Fetch()` are exactly
+the same. Let’s say you want to compare the species *h*-index of a few
+marsupials. First, you would need to download the citation information
+using `Fetch()`. Remember to use binomial names.
 
 ``` r
-#Extract citation data
-Woylie <- FetchSpTAK("scopus", "Bettongia", "penicillata")
-Quokka <- FetchSpTAK("scopus", "Setonix", "brachyurus")
-Platypus <- FetchSpTAK("scopus", "Ornithorhynchus", "anatinus")
-Koala <- FetchSpTAK("scopus", "Phascolarctos", "cinereus")
+# Title only; species level
+Fetch(db = "scopus",
+      search = "t",
+      level = "species",
+      genus = "Bettongia", species = "penicillata")
+
+#Title, abstract, and keywords; genus level
+Fetch(db = "scopus",
+      search = "tak",
+      level = "genus",
+      genus = "Bettongia")
 ```
+
+### :dart: Additional keywords
+
+The `Count()` and `Fetch()` functions allow the addition of keywords
+using Boolean operators to restrict the domain of the search. Although
+you can simply use keywords such as “conservation”, you will find that
+using “conserv\*” will yield more results. The “\*” (or wildcard) used
+here searches for any words with the prefix “conserv”,
+e.g. conservation, conserve, conservatory, etc. Find out more about
+search language
+[here](https://guides.library.illinois.edu/c.php?g=980380&p=7089537) and
+[here](http://schema.elsevier.com/dtds/document/bkapi/search/SCOPUSSearchTips.htm).
+
+### :boar: Synonyms
+
+Some species have had their classification changed in the past,
+resulting in multiple binomial names and synonyms. Synonyms can be added
+to the search strings to get the maximum hits. If you have more than 1
+synonym, you can parse a list (the list should be named “synonyms”) into
+the argument.
 
 ### :bar\_chart: Index calculation and plotting
 
@@ -181,10 +158,14 @@ create a dataframe that shows their indices.
 
 ``` r
 # Calculate indices
-W <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
-Q <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
-P <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
-K <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
+W <- Allindices(Woylie,
+                genus = "Bettongia", species = "penicillata")
+Q <- Allindices(Quokka,
+                genus = "Setonix", species = "brachyurus")
+P <- Allindices(Platypus,
+                genus = "Ornithorhynchus", species = "anatinus")
+K <- Allindices(Koala,
+                genus = "Phascolarctos", species = "cinereus")
 
 CombineSp <- dplyr::bind_rows(W, Q, P, K) #combining the citation records
 CombineSp
@@ -208,7 +189,7 @@ Using `plotAllindices()`, we can compare the indices against each other.
 plotAllindices(CombineSp)
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
 **Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of
 the Woylie, Platypus, Koala, and Quokka.
@@ -219,15 +200,19 @@ You can also visualise the total publication per year with `getYear()`
 and `plotPub()`.
 
 ``` r
-extract_year_W <- getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
-extract_year_Q <- getYear(data = Quokka, genus = "Setonix", species = "brachyurus")
-extract_year_P <- getYear(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
-extract_year_K <- getYear(data = Koala, genus = "Phascolarctos", species = "cinereus")
+extract_year_W <- getYear(data = Woylie,
+                          genus = "Bettongia", species = "penicillata")
+extract_year_Q <- getYear(data = Quokka,
+                          genus = "Setonix", species = "brachyurus")
+extract_year_P <- getYear(data = Platypus,
+                          genus = "Ornithorhynchus", species = "anatinus")
+extract_year_K <- getYear(data = Koala,
+                          genus = "Phascolarctos", species = "cinereus")
 Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
 plotPub(Combine_pub)
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
 **Figure 2.** The total number of publications per year of the Woylie,
 Platypus, Koala, and Quokka.
@@ -240,6 +225,12 @@ To see a concrete example, [Tam et
 al. (2021)](https://ecoevorxiv.org/gd7cv/) has applied this package to
 study taxonomic bias among mammals by quantifying the scientific
 interest of 7,521 species of mammals.
+
+<img src="README_files/figure-gfm/h100_text_2.png" alt="h100" />
+
+**Figure 3.** Species *h*-index of mammals with a species *h*-index of
+*h* = 100 and larger (adapted from [Tam et
+al. (2021)](https://ecoevorxiv.org/gd7cv/)).
 
 ## :rocket: Acknowledgements
 

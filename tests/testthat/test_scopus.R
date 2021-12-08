@@ -10,9 +10,8 @@ with_mock_api({ #pass
 })
 
 # test_that("CountSpT_scopus_works", {
-#   # response_data <- XML::xmlParse(t_scopus) #parse the data to extract values
-#   # resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue))
-#   resultCount <- jsonlite::fromJSON(rawToChar(t_scopus$content))
+#   response_data <- XML::xmlParse(t_scopus_xml) #parse the data to extract values
+#   resultCount <- as.numeric(XML::xpathSApply(t_scopus_xml,"//opensearch:totalResults", XML::xmlValue))
 #   expect_equal(CountSpT("scopus", "Bettongia", "penicillata"), resultCount)
 #   expect_identical(CountSpT("scopus", "Bettongia", "penicillata"), CountSpT_scopus("Bettongia", "penicillata"))
 # })
@@ -32,7 +31,7 @@ test_that("FetchSpT_scopus_works", {
 })
 
 
-#TITLE + ABSTRACT +KEYWORDS
+#TITLE + ABSTRACT + KEYWORDS
 tak_scopus <- httr::GET("http://api.elsevier.com/content/search/scopus-97ddc6")
 
 with_mock_api({ #pass

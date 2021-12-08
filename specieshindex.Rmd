@@ -876,30 +876,30 @@ sppub_plot_theme <- function() {
 ```{r}
 #count() wrapper
 Count <- function(db, search, level, genus, species, synonyms, additionalkeywords) {
-  if (db == "scopus" && search == "t" && level == "species") {
+  if (db == "scopus" & search == "t" & level == "species") {
     countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos" && search == "t" && level == "species") {
+  } else if (db == "wos" & search == "t" & level == "species") {
     countsp <- CountSpT_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "base" && search == "t" && level == "species") {
+  } else if (db == "base" & search == "t" & level == "species") {
     countsp <- CountSpT_base(genus, species, synonyms, additionalkeywords)
-  } else if (db == "scopus" && search == "tak" && level == "species") {
+  } else if (db == "scopus" & search == "tak" & level == "species") {
     countsp <- CountSpTAK_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos" && search == "tak" && level == "species") {
+  } else if (db == "wos" & search == "tak" & level == "species") {
     countsp <- CountSpTAK_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "base" && search == "tak" && level == "species") {
+  } else if (db == "base" & search == "tak" & level == "species") {
     countsp <- CountSpTAK_base(genus, species, synonyms, additionalkeywords)
-  } else if (db == "scopus" && search == "t" && level == "genus") {
-    countsp <- CountGenusT_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos" && search == "t" && level == "genus") {
-    countsp <- CountGenusT_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "base" && search == "t" && level == "genus") {
-    countsp <- CountGenusT_base(genus, species, synonyms, additionalkeywords)
-  } else if (db == "scopus" && search == "tak" && level == "genus") {
-    countsp <- CountGenusTAK_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos" && search == "tak" && level == "genus") {
-    countsp <- CountGenusTAK_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "base" && search == "tak" && level == "genus") {
-    countsp <- CountGenusTAK_base(genus, species, synonyms, additionalkeywords)
+  } else if (db == "scopus" & search == "t" & level == "genus") {
+    countsp <- CountGenusT_scopus(genus, synonyms, additionalkeywords)
+  } else if (db == "wos" & search == "t" & level == "genus") {
+    countsp <- CountGenusT_wos(genus, synonyms, additionalkeywords)
+  } else if (db == "base" & search == "t" & level == "genus") {
+    countsp <- CountGenusT_base(genus, synonyms, additionalkeywords)
+  } else if (db == "scopus" & search == "tak" & level == "genus") {
+    countsp <- CountGenusTAK_scopus(genus, synonyms, additionalkeywords)
+  } else if (db == "wos" & search == "tak" & level == "genus") {
+    countsp <- CountGenusTAK_wos(genus, synonyms, additionalkeywords)
+  } else if (db == "base" & search == "tak" & level == "genus") {
+    countsp <- CountGenusTAK_base(genus, synonyms, additionalkeywords)
   } 
   return(countsp)
 }
@@ -963,23 +963,23 @@ CountGenusTAK <- function(db, genus, synonyms, additionalkeywords) {
 
 ```{r}
 #fetch() wrapper
-Fetch <- function(db, search, level, genus, species, synonyms, additionalkeywords) {
-  if (db == "scopus" && search == "t" && level == "species") {
-    fetchsp <- FetchSpT_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos" && search == "t" && level == "species") {
+Fetch <- function(db, search, level, genus, species, synonyms, additionalkeywords, language = 0) {
+  if (db == "scopus" & search == "t" & level == "species") {
+    fetchsp <- FetchSpT_scopus(genus, species, synonyms, additionalkeywords, language)
+  } else if (db == "wos" & search == "t" & level == "species") {
     fetchsp <- FetchSpT_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "scopus" && search == "tak" && level == "species") {
-    fetchsp <- FetchSpTAK_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos" && search == "tak" && level == "species") {
+  } else if (db == "scopus" & search == "tak" & level == "species") {
+    fetchsp <- FetchSpTAK_scopus(genus, species, synonyms, additionalkeywords, language)
+  } else if (db == "wos" & search == "tak" & level == "species") {
     fetchsp <- FetchSpTAK_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "scopus" && search == "t" && level == "genus") {
-    fetchsp <- FetchGenusT_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos" && search == "t" && level == "genus") {
-    fetchsp <- FetchGenusT_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "scopus" && search == "tak" && level == "genus") {
-    fetchsp <- FetchGenusTAK_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos" && search == "tak" && level == "genus") {
-    fetchsp <- FetchGenusTAK_wos(genus, species, synonyms, additionalkeywords)
+  } else if (db == "scopus" & search == "t" & level == "genus") {
+    fetchsp <- FetchGenusT_scopus(genus, synonyms, additionalkeywords, language)
+  } else if (db == "wos" & search == "t" & level == "genus") {
+    fetchsp <- FetchGenusT_wos(genus, synonyms, additionalkeywords)
+  } else if (db == "scopus" & search == "tak" & level == "genus") {
+    fetchsp <- FetchGenusTAK_scopus(genus, synonyms, additionalkeywords, language)
+  } else if (db == "wos" & search == "tak" & level == "genus") {
+    fetchsp <- FetchGenusTAK_wos(genus, synonyms, additionalkeywords)
   } else if (db == "base") {
     stop("Data extraction is not available for BASE")
   } 
@@ -1711,7 +1711,7 @@ FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
   query <- wosr::pull_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(data.table:::.SD, function(x) toString(na.omit(x))), by = ut]
+  results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
@@ -1735,7 +1735,7 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
   query <- wosr::pull_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(data.table:::.SD, function(x) toString(na.omit(x))), by = ut]
+  results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
@@ -1759,7 +1759,7 @@ FetchGenusT_wos <- function(genus, synonyms, additionalkeywords) {
   query <- wosr::pull_wos(query = create_query_string_T_wos_genus(genus, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(data.table:::.SD, function(x) toString(na.omit(x))), by = ut]
+  results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
@@ -1783,7 +1783,7 @@ FetchGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
   query <- wosr::pull_wos(query = create_query_string_TAK_wos_genus(genus, synonyms, additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(data.table:::.SD, function(x) toString(na.omit(x))), by = ut]
+  results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
@@ -2208,143 +2208,6 @@ plotPub <- function(data) {
 }
 ```
 
-
-**Tests**
-
-```{r, woylie}
-#test done on 10 july
-CountSpT("Bettongia", "penicillata", myAPI) #45
-CountSpTAK("Bettongia", "penicillata", myAPI) #113
-FetchSpTAK("Bettongia", "penicillata", myAPI) #no duplicates
-
-TotalPub(Woylie) #113
-TotalCite(Woylie) #1897
-TotalJournals(Woylie) #55
-TotalArt(Woylie) #110
-TotalRev(Woylie) #3
-ARRatio(Woylie) #97.35 : 2.655
-
-YearsPublishing(Woylie) #43
-SpHindex(Woylie) #26
-SpMindex(Woylie) #0.6046512
-Spi10(Woylie) #54
-SpH5(Woylie) #8
-SpHAfterdate(Woylie, "2000-01-01") #20
-
-B_penicillata <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
-```
-
-```{r, quokka}
-#test done on 10 july
-CountSpTAK("Setonix", "brachyurus", myAPI) #242
-Quokka <- FetchSpTAK("Setonix", "brachyurus", myAPI) #no duplicates
-
-TotalPub(Quokka) #242
-TotalCite(Quokka) #3423
-TotalJournals(Quokka) #107
-TotalArt(Quokka) #237
-TotalRev(Quokka) #5
-ARRatio(Quokka) #97.93 : 2.066
-
-YearsPublishing(Quokka) #66
-SpHindex(Quokka) #29
-SpMindex(Quokka) #0.4393939
-Spi10(Quokka) #121
-SpH5(Quokka) #3
-SpHAfterdate(Quokka, "2000-01-01") #17
-
-S_brachyurus <- Allindices(Quokka, genus = "Setonix", species = "brachyurus")
-```
-
-```{r, platypus}
-#test done on 10 july
-CountSpTAK #321
-Platypus <- FetchSpTAK("Ornithorhynchus", "anatinus", myAPI) #no duplicates
-
-TotalPub(Platypus) #321
-TotalCite(Platypus) #6363
-TotalJournals(Platypus) #153
-TotalArt(Platypus) #308
-TotalRev(Platypus) #13
-ARRatio(Platypus) #95.95 : 4.05
-
-YearsPublishing(Platypus) #67
-SpHindex(Platypus) #41
-SpMindex(Platypus) #0.6119403
-Spi10(Platypus) #177
-SpH5(Platypus) #7
-SpHAfterdate(Platypus, "2000-01-01") #32
-
-O_anatinus <- Allindices(Platypus, genus = "Ornithorhynchus", species = "anatinus")
-```
-
-```{r, koala}
-#test done on 10 july
-CountSpTAK("Phascolarctos", "cinereus", myAPI) #777
-FetchSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #3
-FetchSpT("Phascolarctos", "cinereus", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #446; 3 duplicates
-
-CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #3
-CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(popul* W/5 ecolog*)", "442b9048417ef20cf680a0ae26ee4d86") #0
-CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", "442b9048417ef20cf680a0ae26ee4d86") #21
-CountSpT("Phascolarctos", "cinereus", additionalkeywords = "(popul* AND NOT popular)", "442b9048417ef20cf680a0ae26ee4d86") #49
-CountSpT("Phascolarctos", "cinereus", additionalkeywords = "NOT (phylog* OR taxonom*)", "442b9048417ef20cf680a0ae26ee4d86") #447
-CountSpT("Phascolarctos", "cinereus", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #449
-
-CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)", "442b9048417ef20cf680a0ae26ee4d86") #70
-CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(popul* W/5 ecolog*)", "442b9048417ef20cf680a0ae26ee4d86") #11
-CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)", "442b9048417ef20cf680a0ae26ee4d86") #143
-CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "(popul* AND NOT popular)", "442b9048417ef20cf680a0ae26ee4d86") #322
-CountSpTAK("Phascolarctos", "cinereus", additionalkeywords = "NOT (phylog* OR taxonom*)", "442b9048417ef20cf680a0ae26ee4d86") #758
-CountSpTAK("Phascolarctos", "cinereus", APIkey = "442b9048417ef20cf680a0ae26ee4d86") #826
-
-TotalPub(Koala) #773
-TotalCite(Koala) #14291
-TotalJournals(Koala) #227
-TotalArt(Koala) #744
-TotalRev(Koala) #29
-ARRatio(Koala) #96.25 : 3.752
-
-YearsPublishing(Koala) #139
-SpHindex(Koala) #53
-SpMindex(Koala) #0.381295
-Spi10(Koala) #427
-SpH5(Koala) #15
-SpHAfterdate(Koala, "2000-01-01") #44
-
-P_cinereus <- Allindices(Koala, genus = "Phascolarctos", species = "cinereus")
-```
-
-```{r, combining the datasets}
-Combinedata <- rbind(B_penicillata, S_brachyurus, O_anatinus, P_cinereus)
-
-plot(Combinedata$publications)
-plot(Combinedata$citations)
-plot(Combinedata$journals)
-plot(Combinedata$articles)
-plot(Combinedata$reviews)
-plot(Combinedata$years_publishing)
-plot(Combinedata$h)
-plot(Combinedata$m) #this is quite interesting
-plot(Combinedata$i10)
-plot(Combinedata$h5) #woylie has a pretty high index here
-```
-
-```{r, manual tests}
-#test with dummy data
-dummy1 <- data.frame("citations" = c(12, 5, 0, 21, 3, 4, 9, 17, 1, 10,
-                                     10, 1, 0, 16, 26, 24, 15, 34, 31, 29),
-                     "cover_date" = c(2000, 2015, 1986, 1994, 1972, 2002, 2006, 2019, 2016, 2006,
-                                      1997, 1989, 2007, 2010, 2013, 2020, 2017, 1994, 1999, 2016))
-SpHindex(dummy1) #10
-YearsPublishing(dummy1) #48
-SpMindex(dummy1) #0.2083333
-Spi10(dummy1) #12
-
-```
-
-
-
 ```{r, testing}
 
 apikey <- "442b9048417ef20cf680a0ae26ee4d86"
@@ -2353,26 +2216,20 @@ sid <- auth(username = NULL, password = NULL)
 
 #testing
 
-CountSpT("scopus", "macropus", "rufus") #114
-CountSpT("wos", "macropus", "rufus") #113
-CountSpT("base", "macropus", "rufus") #152
-CountSpT(db = "base", genus = "Bettongia", species = "penicillata") #99
-FetchGenusT(db = "scopus", genus = "Bettongia") #this works
+Count(db = "scopus", search = "t", level = "species", genus = "Bettongia", species = "penicillata") #45
+Count(db = "scopus", search = "tak", level = "species", genus = "Bettongia", species = "penicillata") #121
+Count(db = "wos", search = "t", level = "species", genus = "Bettongia", species = "penicillata") #42
+Count(db = "wos", search = "tak", level = "species", genus = "Bettongia", species = "penicillata") #102
+Count(db = "base", search = "t", level = "species", genus = "Bettongia", species = "penicillata") #99
+Count(db = "base", search = "tak", level = "species", genus = "Bettongia", species = "penicillata") #239
+Count(db = "scopus", search = "t", level = "genus", genus = "Bettongia") #123
+Count(db = "scopus", search = "tak", level = "genus", genus = "Bettongia") #318
+Count(db = "wos", search = "t", level = "genus", genus = "Bettongia") #109
+Count(db = "wos", search = "tak", level = "genus", genus = "Bettongia") #244
+Count(db = "base", search = "t", level = "genus", genus = "Bettongia") #257
+Count(db = "base", search = "tak", level = "genus", genus = "Bettongia") #540
+Fetch(db = "scopus", search = "t", level = "species", genus = "Bettongia", species = "penicillata") #works
 
-
-genus <- "Bettongia"
-species <- "penicillata"
-
-response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
-                        query = list(func = "PerformSearch",
-                                     query = specieshindex:::create_query_string_T_base(genus, species)))
-httr::stop_for_status(response) #pass any HTTP errors to the R console
-response_data <- XML::xmlParse(response) #working only on my linus pc ugh
-resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
-
-content_test <- jsonlite::fromJSON(rawToChar(response$content)) #content is xml so this isn't suppose to work i guess idk
-content_test <- content(response, as = "text", encoding = "UTF-8") #YES
-
-fromJSON(content_test, flatten = TRUE) #nope
+CountGenusT_wos(genus = "Bettongia") #109
 
 ```

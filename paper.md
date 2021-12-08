@@ -5,7 +5,7 @@ tags:
 - h-index
 - species
 - ecology
-date: "21 September 2021"
+date: "8 December 2021"
 output:
   pdf_document: default
   html_document:
@@ -41,7 +41,7 @@ Over the last decade, the quantification of research biases have gained populari
 
 The package `specieshindex` connects to the Scopus and Web of Science databases (interdisciplinary broad-range databases of academic literature) and extracts citation records of relevant publications, as identified via a search query. It returns blibliometric information including the publication title, number of citations, publication type, etc. The binomial or genus names of the species should be used in the search query, instead of their common names, since the latter are less specific and may refer to more than 1, and even unrelated species. An example of such is 'pig', which can refer to the domestic pig (*Sus scrofa* - an ungulate), or the guinea pig (*Cavia porcellus* - a rodent). Although this package also connects to Bielefeld Academic Search Engine (BASE), article extraction is not available, hence *h*-index calculation is unavailable with BASE.
 
-There are two types of functions that connect to the literature databases. The count functions, e.g. `CountSpT()` and `CountSpTAK()` for species, and `CountGenusT()` and `CountGenusTAK()` for genus, return the total publication count without extracting any citation records. Whereas the fetch functions, e.g. `FetchSpT()` and `FetchSpTAK()` for species, and `FetchSpT()` and `FetchSpTAK()` for genus, extract citation records for index calculations. These functions are further distinguished by their suffixes "T" and "TAK". "T" functions only find publications with the species' name in the publication title, whereas "TAK" functions query articles' title, abstract and keywords. Apart from the *h*-index, `specieshindex` can also compute other established influence indices, including the *h5* index, the *m*-index, and the *i10* index. The *h5* index is the *h*-index of articles published in the most recent 5 years [@crotty2017other]. The *m*-index is the *h*-index divided by the number of years since the first publication [@hirsch_index_2005]. The *i10* index is the total number of articles with 10 or more citations; it is currently used by Google Scholar [@jacso2021].
+There are two main functions that connect to the literature databases. The `Count()` function returns the total publication count without extracting any citation records. Whereas the `Fetch()` function extracts citation records for index calculations. Apart from the *h*-index, `specieshindex` can also compute other established influence indices, including the *h5* index, the *m*-index, and the *i10* index. The *h5* index is the *h*-index of articles published in the most recent 5 years [@crotty2017other]. The *m*-index is the *h*-index divided by the number of years since the first publication [@hirsch_index_2005]. The *i10* index is the total number of articles with 10 or more citations; it is currently used by Google Scholar [@jacso2021].
 
 # Implementation
 
@@ -97,7 +97,7 @@ sid <- auth(username = NULL, password = NULL)
 
 ## Connecting to BASE
 
-Bielefeld Academic Search Engine (BASE) is a literature database that contains both scholarly and grey literature. Since it does not provide citation information, data extraction is not available. Having a whitelisted IP address is essential when gaining access to the BASE database, which you can get on <https://www.base-search.net/about/en/contact.php>. A token or API key, however, is not required. Only count functions, e.g. `CountSpT()` and `CountSpTAK()`, are available as BASE does not return citation counts. Hence, index calculations will also be unavailable using this database.
+Bielefeld Academic Search Engine (BASE) is a literature database that contains both scholarly and grey literature. Since it does not provide citation information, data extraction is not available. Having a whitelisted IP address is essential when gaining access to the BASE database, which you can get on <https://www.base-search.net/about/en/contact.php>. A token or API key, however, is not required. Only the `Count()` function is available as BASE does not return citation counts. Hence, index calculations will also be unavailable using this database.
 
 ## Example
 
@@ -105,20 +105,36 @@ The following example will demonstrate the calculation of various indices with c
 
 ```{r}
 # Extract citation data
-Woylie <- FetchSpTAK(db = "scopus', genus = "Bettongia", species = "penicillata")
-Quokka <- FetchSpTAK(db = "scopus', genus = "Setonix", species = "brachyurus")
-Platypus <- FetchSpTAK(db = "scopus', genus = "Ornithorhynchus", species = "anatinus")
-Koala <- FetchSpTAK(db = "scopus', genus = "Phascolarctos", species = "cinereus")
+Woylie <- Fetch(db = "scopus',
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+Quokka <- Fetch(db = "scopus',
+                search = "tak",
+                level = "species",
+                genus = "Setonix", species = "brachyurus")
+Platypus <- Fetch(db = "scopus',
+                  search = "tak",
+                  level = "species",
+                  genus = "Ornithorhynchus", species = "anatinus")
+Koala <- Fetch(db = "scopus',
+               search = "tak",
+               level = "species",
+               genus = "Phascolarctos", species = "cinereus")
 ```
 
 These four datasets are readily available within the package. An efficient way to calculate all of the indices at once is to use the function `Allindices()`.
 
 ```{r}
 # Calculate indices
-W <- Allindices(data = Woylie, genus = "Bettongia", species = "penicillata")
-Q <- Allindices(data = Quokka, genus = "Setonix", species = "brachyurus")
-P <- Allindices(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
-K <- Allindices(data = Koala, genus = "Phascolarctos", species = "cinereus")
+W <- Allindices(data = Woylie,
+                genus = "Bettongia", species = "penicillata")
+Q <- Allindices(data = Quokka,
+                genus = "Setonix", species = "brachyurus")
+P <- Allindices(data = Platypus,
+                genus = "Ornithorhynchus", species = "anatinus")
+K <- Allindices(data = Koala,
+                genus = "Phascolarctos", species = "cinereus")
 
 # Combine citation records into a single dataframe
 CombineSp <- rbind(W, Q, P, K)
@@ -145,7 +161,7 @@ This package has 2 built-in plotting functions. They are `plotAllindices()` and 
 plotAllindices(CombineSp)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)
 
 **Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of the Woylie (*Bettongia penicillata*), Platypus (*Ornithorhynchus anatinus*), Koala (*Phascolarctos cinereus*), and Quokka (*Setonix brachyurus*).
 
@@ -153,10 +169,14 @@ plotAllindices(CombineSp)
 
 ```{r}
 # Extract year and frequency
-extract_year_W <- getYear(data = Woylie, genus = "Bettongia", species = "penicillata")
-extract_year_Q <- getYear(data = Quokka, genus = "Setonix", species = "brachyurus")
-extract_year_P <- getYear(data = Platypus, genus = "Ornithorhynchus", species = "anatinus")
-extract_year_K <- getYear(data = Koala, genus = "Phascolarctos", species = "cinereus")
+extract_year_W <- getYear(data = Woylie,
+                          genus = "Bettongia", species = "penicillata")
+extract_year_Q <- getYear(data = Quokka,
+                          genus = "Setonix", species = "brachyurus")
+extract_year_P <- getYear(data = Platypus,
+                          genus = "Ornithorhynchus", species = "anatinus")
+extract_year_K <- getYear(data = Koala,
+                          genus = "Phascolarctos", species = "cinereus")
 
 # Combine year and frequency into a single dataframe
 Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
@@ -165,7 +185,7 @@ Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_yea
 plotPub(Combine_pub)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)
 
 **Figure 2.** The total number of publications per year of the Woylie (*Bettongia penicillata*), Platypus (*Ornithorhynchus anatinus*), Koala (*Phascolarctos cinereus*), and Quokka (*Setonix brachyurus*).
 
