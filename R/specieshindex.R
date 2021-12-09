@@ -36,29 +36,29 @@ Count <- function(db,
                   species,
                   synonyms,
                   additionalkeywords) {
-if (db == "scopus" && search == "t" && level == "species") {
+if (db == "scopus" & search == "t" & level == "species") {
   countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords)
-} else if (db == "wos" && search == "t" && level == "species") {
+} else if (db == "wos" & search == "t" & level == "species") {
   countsp <- CountSpT_wos(genus, species, synonyms, additionalkeywords)
-} else if (db == "base" && search == "t" && level == "species") {
+} else if (db == "base" & search == "t" & level == "species") {
   countsp <- CountSpT_base(genus, species, synonyms, additionalkeywords)
-} else if (db == "scopus" && search == "tak" && level == "species") {
+} else if (db == "scopus" & search == "tak" & level == "species") {
   countsp <- CountSpTAK_scopus(genus, species, synonyms, additionalkeywords)
-} else if (db == "wos" && search == "tak" && level == "species") {
+} else if (db == "wos" & search == "tak" & level == "species") {
   countsp <- CountSpTAK_wos(genus, species, synonyms, additionalkeywords)
-} else if (db == "base" && search == "tak" && level == "species") {
+} else if (db == "base" & search == "tak" & level == "species") {
   countsp <- CountSpTAK_base(genus, species, synonyms, additionalkeywords)
-} else if (db == "scopus" && search == "t" && level == "genus") {
+} else if (db == "scopus" & search == "t" & level == "genus") {
   countsp <- CountGenusT_scopus(genus, synonyms, additionalkeywords)
-} else if (db == "wos" && search == "t" && level == "genus") {
+} else if (db == "wos" & search == "t" & level == "genus") {
   countsp <- CountGenusT_wos(genus, synonyms, additionalkeywords)
-} else if (db == "base" && search == "t" && level == "genus") {
+} else if (db == "base" & search == "t" & level == "genus") {
   countsp <- CountGenusT_base(genus, synonyms, additionalkeywords)
-} else if (db == "scopus" && search == "tak" && level == "genus") {
+} else if (db == "scopus" & search == "tak" & level == "genus") {
   countsp <- CountGenusTAK_scopus(genus, synonyms, additionalkeywords)
-} else if (db == "wos" && search == "tak" && level == "genus") {
+} else if (db == "wos" & search == "tak" & level == "genus") {
   countsp <- CountGenusTAK_wos(genus, synonyms, additionalkeywords)
-} else if (db == "base" && search == "tak" && level == "genus") {
+} else if (db == "base" & search == "tak" & level == "genus") {
   countsp <- CountGenusTAK_base(genus, synonyms, additionalkeywords)
 } 
 return(countsp)
@@ -106,21 +106,21 @@ Fetch <- function(db,
                   synonyms,
                   additionalkeywords,
                   language = 0) {
-  if (db == "scopus" && search == "t" && level == "species") {
+  if (db == "scopus" & search == "t" & level == "species") {
     fetchsp <- FetchSpT_scopus(genus, species, synonyms, additionalkeywords, language)
-  } else if (db == "wos" && search == "t" && level == "species") {
+  } else if (db == "wos" & search == "t" & level == "species") {
     fetchsp <- FetchSpT_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "scopus" && search == "tak" && level == "species") {
+  } else if (db == "scopus" & search == "tak" & level == "species") {
     fetchsp <- FetchSpTAK_scopus(genus, species, synonyms, additionalkeywords, language)
-  } else if (db == "wos" && search == "tak" && level == "species") {
+  } else if (db == "wos" & search == "tak" & level == "species") {
     fetchsp <- FetchSpTAK_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "scopus" && search == "t" && level == "genus") {
+  } else if (db == "scopus" & search == "t" & level == "genus") {
     fetchsp <- FetchGenusT_scopus(genus, synonyms, additionalkeywords, language)
-  } else if (db == "wos" && search == "t" && level == "genus") {
+  } else if (db == "wos" & search == "t" & level == "genus") {
     fetchsp <- FetchGenusT_wos(genus, synonyms, additionalkeywords)
-  } else if (db == "scopus" && search == "tak" && level == "genus") {
+  } else if (db == "scopus" & search == "tak" & level == "genus") {
     fetchsp <- FetchGenusTAK_scopus(genus, synonyms, additionalkeywords, language)
-  } else if (db == "wos" && search == "tak" && level == "genus") {
+  } else if (db == "wos" & search == "tak" & level == "genus") {
     fetchsp <- FetchGenusTAK_wos(genus, synonyms, additionalkeywords)
   } else if (db == "base") {
     stop("Data extraction is not available for BASE")
@@ -143,7 +143,7 @@ Fetch <- function(db,
 #' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
@@ -193,7 +193,7 @@ CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, dataty
 #' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
@@ -242,7 +242,7 @@ CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, data
 #' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
 #'
 #' @return Search count of the genus with the given \code{genus}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
@@ -291,7 +291,7 @@ CountGenusT_scopus <- function(genus, synonyms, additionalkeywords, datatype = "
 #' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
 #'
 #' @return Search count of the genus with the given \code{genus}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
@@ -341,7 +341,7 @@ CountGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, datatype =
 #'
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 #' @importFrom utils read.csv
-#' @export 
+#' 
 #'
 #' @examples
 #' \dontrun{
@@ -515,7 +515,7 @@ FetchSpT_scopus <- function(genus, species, synonyms, additionalkeywords, langua
 #'
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 #' @importFrom utils read.csv
-#' @export 
+#' 
 #'
 #' @examples
 #' \dontrun{
@@ -689,7 +689,7 @@ FetchSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, lang
 #' @return A dataframe of the genus' citation records with the given \code{genus}.
 #' @importFrom utils read.csv
 #' @importFrom stats na.omit
-#' @export 
+#' 
 #'
 #' @examples
 #' \dontrun{
@@ -861,7 +861,7 @@ FetchGenusT_scopus <- function(genus, synonyms, additionalkeywords, language = 0
 #' @param language Language of the paper; default is 0, enter 1 to retrieve the variable.
 #'
 #' @return A dataframe of the genus' citation records with the given \code{genus}.
-#' @export 
+#' 
 #'
 #' @examples
 #' \dontrun{
@@ -1034,7 +1034,7 @@ FetchGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, language =
 #' @param additionalkeywords Optional search terms.
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
@@ -1078,7 +1078,7 @@ CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' @param additionalkeywords Optional search terms.
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
@@ -1121,7 +1121,7 @@ CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' @param additionalkeywords Optional search terms.
 #'
 #' @return Search count of the genus with the given \code{genus}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
@@ -1164,7 +1164,7 @@ CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
 #' @param additionalkeywords Optional search terms.
 #'
 #' @return Search count of the genus with the given \code{genus}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
@@ -1209,7 +1209,7 @@ CountGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 #' @importFrom data.table rbindlist setDT .SD
 #' @importFrom stats na.omit
-#' @export
+#' 
 #'
 #' @examples
 #' \dontrun{
@@ -1265,7 +1265,7 @@ FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' @return A dataframe of the species' citation records with the given \code{genus} and \code{species}.
 #' @importFrom data.table rbindlist setDT .SD
 #' @importFrom stats na.omit
-#' @export
+#' 
 #'
 #' @examples
 #' \dontrun{
@@ -1320,7 +1320,7 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' @return A dataframe of the genus' citation records with the given \code{genus}.
 #' @importFrom data.table rbindlist setDT .SD
 #' @importFrom stats na.omit
-#' @export
+#' 
 #'
 #' @examples
 #' \dontrun{
@@ -1375,7 +1375,7 @@ FetchGenusT_wos <- function(genus, synonyms, additionalkeywords) {
 #' @return A dataframe of the genus' citation records with the given \code{genus}.
 #' @importFrom data.table rbindlist setDT .SD
 #' @importFrom stats na.omit
-#' @export
+#' 
 #'
 #' @examples
 #' \dontrun{
@@ -1430,7 +1430,7 @@ FetchGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
 #' @param additionalkeywords Optional search terms.
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
@@ -1478,7 +1478,7 @@ CountSpT_base <- function(genus, species, synonyms, additionalkeywords) {
 #' @param additionalkeywords Optional search terms.
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
@@ -1525,7 +1525,7 @@ CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
 #' @param additionalkeywords Optional search terms.
 #'
 #' @return Search count of the genus with the given \code{genus}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
@@ -1572,7 +1572,7 @@ CountGenusT_base <- function(genus, synonyms, additionalkeywords) {
 #' @param additionalkeywords Optional search terms.
 #'
 #' @return Search count of the genus with the given \code{genus}.
-#' @export
+#' 
 #' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
