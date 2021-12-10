@@ -58,7 +58,9 @@ install.packages("httr")
 install.packages("dplyr")
 install.packages("data.table")
 install.packages("tidyr")
-remotes::install_github("jessicatytam/specieshindex", build_vignettes = TRUE, dependencies = TRUE)
+remotes::install_github("jessicatytam/specieshindex",
+                         build_vignettes = TRUE,
+                         dependencies = TRUE)
 
 # Load the library
 library(specieshindex)
@@ -179,7 +181,10 @@ extract_year_K <- getYear(data = Koala,
                           genus = "Phascolarctos", species = "cinereus")
 
 # Combine year and frequency into a single dataframe
-Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
+Combine_pub <- rbind(extract_year_W,
+                     extract_year_Q,
+                     extract_year_P,
+                     extract_year_K)
 
 # Plot the number of publications by year
 plotPub(Combine_pub)
