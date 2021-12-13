@@ -91,12 +91,15 @@ Here is a quick demonstration of how the package works.
 
 Multiple databases have been incorporated into `specieshindex`, namely
 Scopus, Web of Science, and BASE. To differentiate between them, set the
-`db` parameter to your desired database. If you are only interested in
-knowing how many publications there are, you can run the `Count()`
-functions.
+`db` parameter to your desired database. You can set `search = "t"` for
+search terms in the title only and `search = "tak"` for search terms in
+the title, abstract, or keywords. To find articles of species, set
+`level = "species"`. To find articles of genera, set `level = "genus"`.
+If you are only interested in knowing how many publications there are,
+you can run the `Count()` functions.
 
 ``` r
-# Title only; species level
+#Title only; species level
 Count(db = "scopus",
       search = "t",
       level = "species",
@@ -118,17 +121,22 @@ marsupials. First, you would need to download the citation information
 using `Fetch()`. Remember to use binomial names.
 
 ``` r
-# Title only; species level
-Fetch(db = "scopus",
-      search = "t",
-      level = "species",
-      genus = "Bettongia", species = "penicillata")
-
-#Title, abstract, and keywords; genus level
-Fetch(db = "scopus",
-      search = "tak",
-      level = "genus",
-      genus = "Bettongia")
+Woylie <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+Quokka <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Setonix", species = "brachyurus")
+Platypus <- Fetch(db = "scopus",
+                  search = "tak",
+                  level = "species",
+                  genus = "Ornithorhynchus", species = "anatinus")
+Koala <- Fetch(db = "scopus",
+               search = "tak",
+               level = "species",
+               genus = "Phascolarctos", species = "cinereus")
 ```
 
 ### :dart: Additional keywords
@@ -157,7 +165,7 @@ Now that you have the data, you can use the `Allindices()` function to
 create a dataframe that shows their indices.
 
 ``` r
-# Calculate indices
+#Calculate indices
 W <- Allindices(Woylie,
                 genus = "Bettongia", species = "penicillata")
 Q <- Allindices(Quokka,

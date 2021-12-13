@@ -20,7 +20,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-```{r, include = FALSE}
+```{r, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -121,7 +121,7 @@ Bielefeld Academic Search Engine (BASE) is a literature database that contains b
 
 The searches are performed using species Latin name. The relevant functions take either a Latin binominal species name as their main parameters, e.g. "*Bettongia*", "*penicillata*”, or their genus name, e.g. "*Bettongia*". Make sure you are using binomial names instead of common names as required by the code.
 
-We have implemented functions that check the available number of relevant records (`Count()`) and functions that download these records (`Fetch()`) for a given species. `specieshindex` supports multiple databases, including Scopus, Web of Science, and BASE. To differentiate between them, you can change the `db` parameter. You can set `search = "t"` for searches in the title only and `search = "tak"` for searches in the title, abstract, or keywords. To find articles of species, set `level = "species`. To find articles of genera, set `level = "genus`.
+We have implemented functions that check the available number of relevant records (`Count()`) and functions that download these records (`Fetch()`) for a given species. `specieshindex` supports multiple databases, including Scopus, Web of Science, and BASE. To differentiate between them, you can change the `db` parameter. You can set `search = "t"` for search terms in the title only and `search = "tak"` for search terms in the title, abstract, or keywords. To find articles of species, set `level = "species"`. To find articles of genera, set `level = "genus"`.
 
 We recommend that you run a quick search using the `Count()` function before running `Fetch()` to extract any data since this can be a tedious process for searches with many results. Both functions give a search count of the number of records found on the databases.
 
@@ -375,7 +375,26 @@ For multiple species, `rbind()` (or `dplyr::bind_rows()` if `sourcetype = 1`) ca
 
 # Worked examples with Scopus
 
-To demonstrate how the specieshindex package could be helpful in the real world, I will be comparing the citations of 4 species of marsupials. They are the woylie (*Bettongia penicillata*), quokka (*Setonix brachyurus*), platypus (*Ornithorhynchus anatinus*), and koala (*Phascolarctos cinereus*). I used `Fetch(db = "scopus", search = "tak", level = "species"` for all of these datasets. I have included these sets of data in the package but you can also extract the data from Scopus for the most updated records.
+To demonstrate how the specieshindex package could be helpful in the real world, I will be comparing the citations of 4 species of marsupials. They are the woylie (*Bettongia penicillata*), quokka (*Setonix brachyurus*), platypus (*Ornithorhynchus anatinus*), and koala (*Phascolarctos cinereus*). 
+
+```{r, eval=FALSE}
+Woylie <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+Quokka <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Setonix", species = "brachyurus")
+Platypus <- Fetch(db = "scopus",
+                  search = "tak",
+                  level = "species",
+                  genus = "Ornithorhynchus", species = "anatinus")
+Koala <- Fetch(db = "scopus",
+               search = "tak",
+               level = "species",
+               genus = "Phascolarctos", species = "cinereus")
+```
 
 ```{r}
 dim(Woylie)

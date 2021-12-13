@@ -4,6 +4,7 @@
 ## Updated documentation
 - Added a concrete example to documentation
 - Replaced all `Count*()` and `Fetch*()` functions with `Count()` and `Fetch()`.
+- Removed datasets from manual
 # specieshindex 0.3.1
 ## New features
 - Added `plotPub()` to plot publications by year.

@@ -24,68 +24,6 @@ remotes::install_github("jessicatytam/specieshindex", build_vignettes = TRUE, de
 library(specieshindex)
 ```
 
-**Functions**
-0.1. create_query_string_T
-  + creates a query string to make functions with a query cleaner
-  + title only
-0.2. create_query_string_TAK
-  + creates a query string to make functions with a query cleaner
-  + title + abstract + keywords
-0.3. create_query_string_T_wos
-  + creates a query string to make functions with a query cleaner
-  + title only
-0.4. create_query_string_TAK_wos
-  + creates a query string to make functions with a query cleaner
-  + title + abstract + keywords
-0.5. create_query_string_T_base
-  + creates a query string to make functions with a query cleaner
-  + title only
-0.6. create_query_string_TAK_base
-  + creates a query string to make functions with a query cleaner
-  + title + abstract + keywords
-0.7. create_query_string_T_lens
-  + creates a query string to make functions with a query cleaner
-  + title only
-0.8. create_query_string_TAK_lens
-  + creates a query string to make functions with a query cleaner
-  + title + abstract + keywords
-1. CountSpT
-  + counts the total number of search results on Scopus
-  + title only
-2. CountSpTAK
-  + counts the total number of search results on Scopus
-  + title + abstract + keywords
-3. FetchSpT
-  + fetches data from Scopus using genus and species name
-  + title only
-4. FetchSpTAK
-  + fetches data from Scopus using genus and species name
-  + title + abstract + keywords
-5. TotalPub
-  + counts the total number of publications
-6. TotalCite
-  + counts the total number of citations
-7. TotalJournals
-  + counts the total number of journals
-8. SourceType
-  + counts the total number of items for each document type
-9. SpHindex
-  + calculates h-index
-10. YearsPublishing
-  + calculates the number of years since the first publication
-11. SpMindex
-  + calculates m-index (h-index / total years)
-12. Spi10
-  + counts the publications with 10+ citations
-13. SpH5
-  + calculates h-index for the past 5 years
-14. SpHAfterdate
-  + calculates h-index with a given time frame
-15. Allindices
-  + shows a summary of the main indices
-
-
-
 ```{r, scopus query for title only searches}
 create_query_string_T_scopus <- function(genus, species, synonyms, additionalkeywords){
   if (missing(additionalkeywords) & missing(synonyms)) {
@@ -906,62 +844,6 @@ Count <- function(db, search, level, genus, species, synonyms, additionalkeyword
 ```
 
 ```{r}
-#countspt() wrapper
-CountSpT <- function(db, genus, species, synonyms, additionalkeywords) {
-  if (db == "scopus") {
-    countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos") {
-    countsp <- CountSpT_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "base") {
-    countsp <- CountSpT_base(genus, species, synonyms, additionalkeywords)
-  } 
-  return(countsp)
-}
-```
-
-```{r}
-#countsptak() wrapper
-CountSpTAK <- function(db, genus, species, synonyms, additionalkeywords) {
-  if (db == "scopus") {
-    countsp <- CountSpTAK_scopus(genus, species, synonyms, additionalkeywords)
-  } else if (db == "wos") {
-    countsp <- CountSpTAK_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "base") {
-    countsp <- CountSpTAK_base(genus, species, synonyms, additionalkeywords)
-  } 
-  return(countsp)
-}
-```
-
-```{r}
-#countgenust() wrapper
-CountGenusT <- function(db, genus, synonyms, additionalkeywords) {
-  if (db == "scopus") {
-    countgenus <- CountGenusT_scopus(genus, synonyms, additionalkeywords)
-  } else if (db == "wos") {
-    countgenus <- CountGenusT_wos(genus, synonyms, additionalkeywords)
-  } else if (db == "base") {
-    countgenus <- CountGenusT_base(genus, synonyms, additionalkeywords)
-  }
-  return(countgenus)
-}
-```
-
-```{r}
-#countgenustak() wrapper
-CountGenusTAK <- function(db, genus, synonyms, additionalkeywords) {
-  if (db == "scopus") {
-    countgenus <- CountGenusTAK_scopus(genus, synonyms, additionalkeywords)
-  } else if (db == "wos") {
-    countgenus <- CountGenusTAK_wos(genus, synonyms, additionalkeywords)
-  } else if (db == "base") {
-    countgenus <- CountGenusTAK_base(genus, synonyms, additionalkeywords)
-  } 
-  return(countgenus)
-}
-```
-
-```{r}
 #fetch() wrapper
 Fetch <- function(db, search, level, genus, species, synonyms, additionalkeywords, language = 0) {
   if (db == "scopus" & search == "t" & level == "species") {
@@ -984,54 +866,6 @@ Fetch <- function(db, search, level, genus, species, synonyms, additionalkeyword
     stop("Data extraction is not available for BASE")
   } 
   return(fetchsp)
-}
-```
-
-```{r}
-#fetchspt() wrapper
-FetchSpT <- function(db, genus, species, synonyms, additionalkeywords, language = 0) {
-  if (db == "scopus") {
-    fetchsp <- FetchSpT_scopus(genus, species, synonyms, additionalkeywords, language)
-  } else if (db == "wos") {
-    fetchsp <- FetchSpT_wos(genus, species, synonyms, additionalkeywords)
-  }
-  return(fetchsp)
-}
-```
-
-```{r}
-#fetchsptak() wrapper
-FetchSpTAK <- function(db, genus, species, synonyms, additionalkeywords, language = 0) {
-  if (db == "scopus") {
-    fetchsp <- FetchSpTAK_scopus(genus, species, synonyms, additionalkeywords, language)
-  } else if (db == "wos") {
-    fetchsp <- FetchSpTAK_wos(genus, species, synonyms, additionalkeywords)
-  }
-  return(fetchsp)
-}
-```
-
-```{r}
-#fetchgenust() wrapper
-FetchGenusT <- function(db, genus, synonyms, additionalkeywords, language = 0) {
-  if (db == "scopus") {
-    fetchgenus <- FetchGenusT_scopus(genus, synonyms, additionalkeywords, language)
-  } else if (db == "wos") {
-    fetchgenus <- FetchGenusT_wos(genus, synonyms, additionalkeywords)
-  }
-  return(fetchgenus)
-}
-```
-
-```{r}
-#fetchgenustak() wrapper
-FetchGenusTAK <- function(db, genus, synonyms, additionalkeywords, language = 0) {
-  if (db == "scopus") {
-    fetchgenus <- FetchGenusTAK_scopus(genus, synonyms, additionalkeywords, language)
-  } else if (db == "wos") {
-    fetchgenus <- FetchGenusTAK_wos(genus, synonyms, additionalkeywords)
-  }
-  return(fetchgenus)
 }
 ```
 
@@ -2210,7 +2044,7 @@ plotPub <- function(data) {
 
 ```{r, testing}
 
-apikey <- "442b9048417ef20cf680a0ae26ee4d86"
+# apikey <- ""
 sid <- auth(username = NULL, password = NULL)
 
 
