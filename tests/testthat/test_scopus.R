@@ -3,7 +3,7 @@ t_scopus <- httr::GET("http://api.elsevier.com/content/search/scopus-ccc9dc")
 data(Woylie)
 
 with_mock_api({ #pass
-  test_that("t_scopus_requests_happen", {
+  test_that("t_count_scopus_requests_happen", {
     expect_s3_class(t_scopus, "response")
     expect_true(class(t_scopus$status_code)=="integer")
   })
@@ -35,7 +35,7 @@ test_that("FetchSpT_scopus_works", {
 tak_scopus <- httr::GET("http://api.elsevier.com/content/search/scopus-97ddc6")
 
 with_mock_api({ #pass
-  test_that("tak_scopus_requests_happen", {
+  test_that("tak_count_scopus_requests_happen", {
     expect_s3_class(tak_scopus, "response")
     expect_true(class(tak_scopus$status_code)=="integer")
   })

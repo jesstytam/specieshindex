@@ -16,7 +16,12 @@ H-index.
 This function calculates the h-index of a species.
 }
 \examples{
-data(Woylie)
+\dontrun{
+Woylie <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+}
 SpHindex(Woylie)
 
 }

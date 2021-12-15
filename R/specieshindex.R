@@ -166,7 +166,11 @@ Fetch <- function(db,
 #' 
 #' @noRd
 #' 
-CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
+CountSpT_scopus <- function(genus,
+                            species,
+                            synonyms,
+                            additionalkeywords,
+                            datatype = "application/xml") {
   sp_check(genus, species)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                         query = list(apiKey = apikey,
@@ -221,7 +225,11 @@ CountSpT_scopus <- function(genus, species, synonyms, additionalkeywords, dataty
 #' 
 #' @noRd
 #' 
-CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, datatype = "application/xml") {
+CountSpTAK_scopus <- function(genus,
+                              species,
+                              synonyms,
+                              additionalkeywords,
+                              datatype = "application/xml") {
   sp_check(genus, species)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                         query = list(apiKey = apikey,
@@ -275,7 +283,10 @@ CountSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, data
 #' 
 #' @noRd
 #' 
-CountGenusT_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
+CountGenusT_scopus <- function(genus,
+                               synonyms,
+                               additionalkeywords,
+                               datatype = "application/xml") {
   genus_check(genus)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                         query = list(apiKey = apikey,
@@ -328,7 +339,10 @@ CountGenusT_scopus <- function(genus, synonyms, additionalkeywords, datatype = "
 #' 
 #' @noRd
 #' 
-CountGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, datatype = "application/xml") {
+CountGenusTAK_scopus <- function(genus,
+                                 synonyms,
+                                 additionalkeywords,
+                                 datatype = "application/xml") {
   genus_check(genus)
   response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                         query = list(apiKey = apikey,
@@ -379,8 +393,15 @@ CountGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, datatype =
 #' 
 #' @noRd
 #' 
-FetchSpT_scopus <- function(genus, species, synonyms, additionalkeywords, language = 0) {
-  count <- CountSpT_scopus(genus, species, synonyms, additionalkeywords) #check the number of records
+FetchSpT_scopus <- function(genus,
+                            species,
+                            synonyms,
+                            additionalkeywords,
+                            language = 0) {
+  count <- CountSpT_scopus(genus,
+                           species,
+                           synonyms,
+                           additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
@@ -627,8 +648,15 @@ FetchSpT_scopus <- function(genus, species, synonyms, additionalkeywords, langua
 #' 
 #' @noRd
 #' 
-FetchSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, language = 0) {
-  count <- CountSpTAK_scopus(genus, species, synonyms, additionalkeywords) #check the number of records
+FetchSpTAK_scopus <- function(genus,
+                              species,
+                              synonyms,
+                              additionalkeywords,
+                              language = 0) {
+  count <- CountSpTAK_scopus(genus,
+                             species,
+                             synonyms,
+                             additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
@@ -875,8 +903,13 @@ FetchSpTAK_scopus <- function(genus, species, synonyms, additionalkeywords, lang
 #' 
 #' @noRd
 #' 
-FetchGenusT_scopus <- function(genus, synonyms, additionalkeywords, language = 0) {
-  count <- CountGenusT_scopus(genus, synonyms, additionalkeywords) #check the number of records
+FetchGenusT_scopus <- function(genus,
+                               synonyms,
+                               additionalkeywords,
+                               language = 0) {
+  count <- CountGenusT_scopus(genus,
+                              synonyms,
+                              additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
@@ -1105,8 +1138,13 @@ FetchGenusT_scopus <- function(genus, synonyms, additionalkeywords, language = 0
 #' 
 #' @noRd
 #' 
-FetchGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, language = 0) {
-  count <- CountGenusTAK_scopus(genus, synonyms, additionalkeywords) #check the number of records
+FetchGenusTAK_scopus <- function(genus,
+                                 synonyms,
+                                 additionalkeywords,
+                                 language = 0) {
+  count <- CountGenusTAK_scopus(genus,
+                                synonyms,
+                                additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
@@ -1339,9 +1377,15 @@ FetchGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, language =
 #' 
 #' @noRd
 #' 
-CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
+CountSpT_wos <- function(genus,
+                         species,
+                         synonyms,
+                         additionalkeywords) {
   sp_check(genus, species)
-  count <- wosr::query_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
+  count <- wosr::query_wos(query = create_query_string_T_wos(genus,
+                                                             species,
+                                                             synonyms,
+                                                             additionalkeywords),
                            sid = sid) 
   return(count)
 }
@@ -1383,9 +1427,15 @@ CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' @noRd
 #' 
-CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
+CountSpTAK_wos <- function(genus,
+                           species,
+                           synonyms,
+                           additionalkeywords) {
   sp_check(genus, species)
-  count <- wosr::query_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
+  count <- wosr::query_wos(query = create_query_string_TAK_wos(genus,
+                                                               species,
+                                                               synonyms,
+                                                               additionalkeywords),
                            sid = sid) 
   return(count)
 }
@@ -1426,9 +1476,13 @@ CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' @noRd
 #' 
-CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
+CountGenusT_wos <- function(genus,
+                            synonyms,
+                            additionalkeywords) {
   genus_check(genus)
-  count <- wosr::query_wos(query = create_query_string_T_wos_genus(genus, synonyms, additionalkeywords),
+  count <- wosr::query_wos(query = create_query_string_T_wos_genus(genus,
+                                                                   synonyms,
+                                                                   additionalkeywords),
                            sid = sid) 
   return(count)
 }
@@ -1469,9 +1523,13 @@ CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
 #' 
 #' @noRd
 #' 
-CountGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
+CountGenusTAK_wos <- function(genus,
+                              synonyms,
+                              additionalkeywords) {
   genus_check(genus)
-  count <- wosr::query_wos(query = create_query_string_TAK_wos_genus(genus, synonyms, additionalkeywords),
+  count <- wosr::query_wos(query = create_query_string_TAK_wos_genus(genus,
+                                                                     synonyms,
+                                                                     additionalkeywords),
                            sid = sid) 
   return(count)
 }
@@ -1511,14 +1569,23 @@ CountGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
 #' 
 #' @noRd
 #' 
-FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
-  count <- CountSpT_wos(genus, species, synonyms, additionalkeywords) #check the number of records
+FetchSpT_wos <- function(genus,
+                         species,
+                         synonyms,
+                         additionalkeywords) {
+  count <- CountSpT_wos(genus,
+                        species,
+                        synonyms,
+                        additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
     return(noCitations)
   }
-  query <- wosr::pull_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
+  query <- wosr::pull_wos(query = create_query_string_T_wos(genus,
+                                                            species,
+                                                            synonyms,
+                                                            additionalkeywords),
                           sid = sid) 
   results <- rbindlist(query, fill = TRUE)
   results <- setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
@@ -1567,14 +1634,23 @@ FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' @noRd
 #' 
-FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
-  count <- CountSpTAK_wos(genus, species, synonyms, additionalkeywords) #check the number of records
+FetchSpTAK_wos <- function(genus,
+                           species,
+                           synonyms,
+                           additionalkeywords) {
+  count <- CountSpTAK_wos(genus,
+                          species,
+                          synonyms,
+                          additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
     return(noCitations)
   }
-  query <- wosr::pull_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
+  query <- wosr::pull_wos(query = create_query_string_TAK_wos(genus,
+                                                              species,
+                                                              synonyms, 
+                                                              additionalkeywords),
                           sid = sid) 
   results <- rbindlist(query, fill = TRUE)
   results <- setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
@@ -1622,14 +1698,20 @@ FetchSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' @noRd
 #' 
-FetchGenusT_wos <- function(genus, synonyms, additionalkeywords) {
-  count <- CountGenusT_wos(genus, synonyms, additionalkeywords) #check the number of records
+FetchGenusT_wos <- function(genus,
+                            synonyms,
+                            additionalkeywords) {
+  count <- CountGenusT_wos(genus,
+                           synonyms,
+                           additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
     return(noCitations)
   }
-  query <- wosr::pull_wos(query = create_query_string_T_wos_genus(genus, additionalkeywords),
+  query <- wosr::pull_wos(query = create_query_string_T_wos_genus(genus,
+                                                                  synonyms,
+                                                                  additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
   results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
@@ -1677,14 +1759,20 @@ FetchGenusT_wos <- function(genus, synonyms, additionalkeywords) {
 #' 
 #' @noRd
 #' 
-FetchGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
-  count <- CountGenusTAK_wos(genus, synonyms, additionalkeywords) #check the number of records
+FetchGenusTAK_wos <- function(genus,
+                              synonyms,
+                              additionalkeywords) {
+  count <- CountGenusTAK_wos(genus,
+                             synonyms,
+                             additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
     return(noCitations)
   }
-  query <- wosr::pull_wos(query = create_query_string_TAK_wos_genus(genus, synonyms, additionalkeywords),
+  query <- wosr::pull_wos(query = create_query_string_TAK_wos_genus(genus,
+                                                                    synonyms,
+                                                                    additionalkeywords),
                           sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
   results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
@@ -1735,11 +1823,17 @@ FetchGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
 #' 
 #' @noRd
 #' 
-CountSpT_base <- function(genus, species, synonyms, additionalkeywords) {
+CountSpT_base <- function(genus,
+                          species,
+                          synonyms,
+                          additionalkeywords) {
   sp_check(genus, species)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
                         query = list(func = "PerformSearch",
-                                     query = create_query_string_T_base(genus, species, synonyms, additionalkeywords)))
+                                     query = create_query_string_T_base(genus,
+                                                                        species,
+                                                                        synonyms,
+                                                                        additionalkeywords)))
   httr::stop_for_status(response) #pass any HTTP errors to the R console
   response_data <- XML::xmlParse(response)
   resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
@@ -1783,11 +1877,17 @@ CountSpT_base <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' @noRd
 #' 
-CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
+CountSpTAK_base <- function(genus,
+                            species,
+                            synonyms,
+                            additionalkeywords) {
   sp_check(genus, species)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
                         query = list(func = "PerformSearch",
-                                     query = create_query_string_TAK_base(genus, species, synonyms, additionalkeywords)))
+                                     query = create_query_string_TAK_base(genus,
+                                                                          species,
+                                                                          synonyms,
+                                                                          additionalkeywords)))
   httr::stop_for_status(response) #pass any HTTP errors to the R console
   response_data <- XML::xmlParse(response)
   resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
@@ -1830,11 +1930,15 @@ CountSpTAK_base <- function(genus, species, synonyms, additionalkeywords) {
 #' 
 #' @noRd
 #' 
-CountGenusT_base <- function(genus, synonyms, additionalkeywords) {
+CountGenusT_base <- function(genus,
+                             synonyms,
+                             additionalkeywords) {
   genus_check(genus)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
                         query = list(func = "PerformSearch",
-                                     query = create_query_string_T_base_genus(genus, synonyms, additionalkeywords)))
+                                     query = create_query_string_T_base_genus(genus,
+                                                                              synonyms,
+                                                                              additionalkeywords)))
   httr::stop_for_status(response) #pass any HTTP errors to the R console
   response_data <- XML::xmlParse(response)
   resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
@@ -1877,11 +1981,15 @@ CountGenusT_base <- function(genus, synonyms, additionalkeywords) {
 #' 
 #' @noRd
 #' 
-CountGenusTAK_base <- function(genus, synonyms, additionalkeywords) {
+CountGenusTAK_base <- function(genus,
+                               synonyms,
+                               additionalkeywords) {
   genus_check(genus)
   response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
                         query = list(func = "PerformSearch",
-                                     query = create_query_string_TAK_base_genus(genus, synonyms, additionalkeywords)))
+                                     query = create_query_string_TAK_base_genus(genus,
+                                                                                synonyms, 
+                                                                                additionalkeywords)))
   httr::stop_for_status(response) #pass any HTTP errors to the R console
   response_data <- XML::xmlParse(response)
   resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
@@ -1900,7 +2008,12 @@ CountGenusTAK_base <- function(genus, synonyms, additionalkeywords) {
 #' @export
 #'
 #' @examples
-#' data(Woylie)
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' TotalPub(Woylie)
 #' 
 TotalPub <- function(data) {
@@ -1920,7 +2033,12 @@ TotalPub <- function(data) {
 #' @export
 #'
 #' @examples
-#' data(Woylie)
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' TotalCite(Woylie)
 #' 
 TotalCite <- function(data) {
@@ -1941,7 +2059,12 @@ TotalCite <- function(data) {
 #' @export
 #'
 #' @examples
-#' data(Woylie)
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' TotalJournals(Woylie)
 #' 
 TotalJournals <- function(data) {
@@ -1962,7 +2085,12 @@ TotalJournals <- function(data) {
 #' @export
 #'
 #' @examples
-#' data(Woylie)
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' SourceType(Woylie)
 #' 
 SourceType <- function(data) {
@@ -1986,7 +2114,12 @@ SourceType <- function(data) {
 #' @export
 #'
 #' @examples
-#' data(Woylie)
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' YearsPublishing(Woylie)
 #' 
 YearsPublishing <- function(data) {
@@ -2012,7 +2145,12 @@ YearsPublishing <- function(data) {
 #' Hirsch, J. (2005). An index to quantify an individual's scientific research output. \emph{Proceedings of the National Academy of Sciences of the United States of America, 102}(46), 16569-16572.
 #'
 #' @examples
-#' data(Woylie)
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' SpHindex(Woylie)
 #' 
 SpHindex <- function(data) {
@@ -2043,7 +2181,12 @@ SpHindex <- function(data) {
 #' University of Pittsburgh (2019). \emph{Research Impact and Metrics: Author metrics.} Retrieved from \url{https://pitt.libguides.com/bibliometricIndicators/AuthorMetrics}.
 #' 
 #' @examples
-#' data(Woylie)
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' SpMindex(Woylie)
 #' 
 SpMindex <- function(data) {
@@ -2077,7 +2220,12 @@ SpMindex <- function(data) {
 #' Cornell University (2019). \emph{i10-index.} Retrieved from \url{https://guides.library.cornell.edu/c.php?g=32272&p=203393}.
 #'
 #' @examples
-#' data(Woylie)
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' Spi10(Woylie)
 #' 
 Spi10 <- function(data) {
@@ -2102,7 +2250,12 @@ Spi10 <- function(data) {
 #' Suzuki, H. (2012). \emph{Google Scholar Metrics for Publications.} Retrieved from \url{https://scholar.googleblog.com/2012/04/google-scholar-metrics-for-publications.html}.
 #'
 #' @examples
-#' data(Woylie)
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' SpH5(Woylie)
 #' 
 SpH5 <- function(data) { 
@@ -2130,7 +2283,12 @@ SpH5 <- function(data) {
 #' @export 
 #'
 #' @examples
-#' data(Woylie)
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' SpHAfterdate(Woylie, "2000-01-01")
 #' 
 SpHAfterdate <- function(data, date) {
@@ -2158,32 +2316,81 @@ SpHAfterdate <- function(data, date) {
 #' @export
 #'
 #' @examples
-#' data(Woylie)
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' Allindices(Woylie,
-#'            genus = "genus_name", species = "species_name",
+#'            genus = "Bettongia", species = "penicillata",
 #'            sourcetype = 0)
 #' 
 Allindices <- function(data, genus, species, sourcetype = 0) {
   if (sourcetype == 1 & all.equal(0, data$citations) == FALSE) {
-    combine <- data.frame(paste0(genus, " ", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
-                          TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+    combine <- data.frame(paste0(genus, " ", species),
+                          paste0(species),
+                          paste0(genus),
+                          TotalPub(data),
+                          TotalCite(data),
+                          TotalJournals(data),
+                          YearsPublishing(data),
+                          SpHindex(data),
+                          SpMindex(data),
+                          Spi10(data),
+                          SpH5(data))
     combine[is.na(combine)] <- 0 #replace NA values with 0
     combine_st <- cbind(combine, SourceType(data))
-    colnames(combine_st) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing",
-                              "h", "m", "i10", "h5", names(SourceType(data)))
+    colnames(combine_st) <- c("genus_species",
+                              "species",
+                              "genus",
+                              "publications",
+                              "citations",
+                              "journals",
+                              "years_publishing",
+                              "h",
+                              "m",
+                              "i10",
+                              "h5",
+                              names(SourceType(data)))
     return(combine_st)
   } else if (all.equal(0, data$citations) == TRUE) {
     zeroIndex <- data.frame(genus_species = paste0(genus, " ", species),
                             species = paste0(species),
                             genus = paste0(genus),
-                            publications = 0, citations = 0, journals = 0, years_publishing = NA, h = 0, m = 0, i10 = 0, h5 = 0)
+                            publications = 0,
+                            citations = 0,
+                            journals = 0,
+                            years_publishing = NA,
+                            h = 0,
+                            m = 0,
+                            i10 = 0,
+                            h5 = 0)
     return(zeroIndex)
   } else {
-    combine <- data.frame(paste0(genus, " ", species), paste0(species), paste0(genus), TotalPub(data), TotalCite(data),
-                          TotalJournals(data), YearsPublishing(data), SpHindex(data), SpMindex(data), Spi10(data), SpH5(data))
+    combine <- data.frame(paste0(genus, " ", species),
+                          paste0(species),
+                          paste0(genus),
+                          TotalPub(data),
+                          TotalCite(data),
+                          TotalJournals(data),
+                          YearsPublishing(data),
+                          SpHindex(data),
+                          SpMindex(data),
+                          Spi10(data),
+                          SpH5(data))
     combine[is.na(combine)] <- 0 #replace NA values with 0
-    colnames(combine) <- c("genus_species", "species", "genus","publications", "citations", "journals", "years_publishing",
-                           "h", "m", "i10", "h5")
+    colnames(combine) <- c("genus_species",
+                           "species",
+                           "genus",
+                           "publications",
+                           "citations",
+                           "journals",
+                           "years_publishing",
+                           "h",
+                           "m",
+                           "i10",
+                           "h5")
     return(combine)
   } 
   cat("\n", genus, species, "\n",
@@ -2209,6 +2416,24 @@ Allindices <- function(data, genus, species, sourcetype = 0) {
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' Quokka <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Setonix", species = "brachyurus")
+#' Platypus <- Fetch(db = "scopus",
+#'                   search = "tak",
+#'                   level = "species",
+#'                   genus = "Ornithorhynchus", species = "anatinus")
+#' Koala <- Fetch(db = "scopus",
+#'                search = "tak",
+#'                level = "species",
+#'                genus = "Phascolarctos", species = "cinereus")
+#' }
 #' W <- Allindices(Woylie,
 #'                 genus = "Bettongia", species = "penicillata")
 #' Q <- Allindices(Quokka,
@@ -2277,6 +2502,12 @@ plotAllindices <- function(data) {
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' }
 #' getYear(data = Woylie,
 #'         genus = "Bettongia", species = "penicillata")
 #' 
@@ -2302,6 +2533,24 @@ getYear <- function(data, genus, species) {
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' Woylie <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Bettongia", species = "penicillata")
+#' Quokka <- Fetch(db = "scopus",
+#'                 search = "tak",
+#'                 level = "species",
+#'                 genus = "Setonix", species = "brachyurus")
+#' Platypus <- Fetch(db = "scopus",
+#'                   search = "tak",
+#'                   level = "species",
+#'                   genus = "Ornithorhynchus", species = "anatinus")
+#' Koala <- Fetch(db = "scopus",
+#'                search = "tak",
+#'                level = "species",
+#'                genus = "Phascolarctos", species = "cinereus")
+#' }
 #' extract_year_W <- getYear(data = Woylie,
 #'                           genus = "Bettongia", species = "penicillata")
 #' extract_year_Q <- getYear(data = Quokka,

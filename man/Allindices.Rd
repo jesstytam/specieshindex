@@ -22,9 +22,14 @@ A datarame of all of the indices in the package.
 This function returns a dataframe of the summary of all of the indices.
 }
 \examples{
-data(Woylie)
+\dontrun{
+Woylie <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+}
 Allindices(Woylie,
-           genus = "genus_name", species = "species_name",
+           genus = "Bettongia", species = "penicillata",
            sourcetype = 0)
 
 }

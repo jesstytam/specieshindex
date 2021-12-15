@@ -16,7 +16,12 @@ An integer of the total number of publications.
 This function calculates the total number of publications.
 }
 \examples{
-data(Woylie)
+\dontrun{
+Woylie <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+}
 TotalPub(Woylie)
 
 }

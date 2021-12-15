@@ -18,7 +18,12 @@ H-index of the given time period.
 This function calculates the h-index using a given date up till the newest record.
 }
 \examples{
-data(Woylie)
+\dontrun{
+Woylie <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+}
 SpHAfterdate(Woylie, "2000-01-01")
 
 }

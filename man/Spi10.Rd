@@ -17,7 +17,12 @@ This function calculates the i10 index of a species.
 i10 index counts all of the publications with 10 or more citations.
 }
 \examples{
-data(Woylie)
+\dontrun{
+Woylie <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+}
 Spi10(Woylie)
 
 }

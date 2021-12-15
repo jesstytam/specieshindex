@@ -16,7 +16,12 @@ An integer of the total number of journals.
 This function calculates the total number of journals.
 }
 \examples{
-data(Woylie)
+\dontrun{
+Woylie <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+}
 TotalJournals(Woylie)
 
 }

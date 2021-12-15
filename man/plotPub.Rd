@@ -16,6 +16,24 @@ ggplot
 Plots the publication by year of a single species or combined.
 }
 \examples{
+\dontrun{
+Woylie <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+Quokka <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Setonix", species = "brachyurus")
+Platypus <- Fetch(db = "scopus",
+                  search = "tak",
+                  level = "species",
+                  genus = "Ornithorhynchus", species = "anatinus")
+Koala <- Fetch(db = "scopus",
+               search = "tak",
+               level = "species",
+               genus = "Phascolarctos", species = "cinereus")
+}
 extract_year_W <- getYear(data = Woylie,
                           genus = "Bettongia", species = "penicillata")
 extract_year_Q <- getYear(data = Quokka,

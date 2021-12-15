@@ -16,7 +16,12 @@ A dataframe with each document and their counts.
 This function calculates the total number of items for each document type.
 }
 \examples{
-data(Woylie)
+\dontrun{
+Woylie <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+}
 SourceType(Woylie)
 
 }

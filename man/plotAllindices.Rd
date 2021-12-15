@@ -16,6 +16,24 @@ ggplot
 Plots the indices of a single species or combined.
 }
 \examples{
+\dontrun{
+Woylie <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Bettongia", species = "penicillata")
+Quokka <- Fetch(db = "scopus",
+                search = "tak",
+                level = "species",
+                genus = "Setonix", species = "brachyurus")
+Platypus <- Fetch(db = "scopus",
+                  search = "tak",
+                  level = "species",
+                  genus = "Ornithorhynchus", species = "anatinus")
+Koala <- Fetch(db = "scopus",
+               search = "tak",
+               level = "species",
+               genus = "Phascolarctos", species = "cinereus")
+}
 W <- Allindices(Woylie,
                 genus = "Bettongia", species = "penicillata")
 Q <- Allindices(Quokka,
