@@ -10,7 +10,7 @@ with_mock_api({ #pass
 })
 
 #TITLE + ABSTRACT + KEYWORDS
-tak_wos <- httr::GET("http://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi-1213bf")
+tak_base <- httr::GET("http://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi-1213bf")
 
 with_mock_api({ #pass
   test_that("tak_count_base_requests_happen", {
