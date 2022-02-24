@@ -2453,17 +2453,17 @@ plotAllindices <- function(data) {
   facet_data$index <- factor(facet_data$index,
                              levels = c("h", "m", "i10", "h5"),
                              labels = c("h-index", "m-index", "i10 index", "h5 index"))
-  p <- ggplot(data = facet_data,
-              aes(x = genus_species,
-                  y = value,
-                  colour = genus_species)) +
-    geom_point(size = 2) +
-    labs(colour = "Species") +
+  p <- ggplot2::ggplot(data = facet_data,
+                       ggplot2::aes(x = genus_species,
+                                    y = value,
+                                    colour = genus_species)) +
+    ggplot2::geom_point(size = 2) +
+    ggplot2::labs(colour = "Species") +
     spindex_plot_theme() +
-    facet_wrap(~index,
-               scales = "free",
-               nrow = 2,
-               ncol = 2)
+    ggplot2::facet_wrap(~index,
+                        scales = "free",
+                        nrow = 2,
+                        ncol = 2)
   return(p)
 }
 

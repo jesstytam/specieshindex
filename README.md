@@ -57,31 +57,53 @@ key.
     `Create API Key`.
 4.  Read the legal documents and check the boxes.
 
+After acquiring your key, make sure to store it safely. The following
+steps will enable you to save it as an environment variable.
+
+``` r
+file.edit("~/.Renviron")
+```
+
+This will bring up an empty file, which is where you will save your key
+into.
+
+``` r
+scopus_api_key = "a_string_of_numbers"
+```
+
+Restart your session for this to work. To retrieve your key, use
+`Sys.getenv()`:
+
+``` r
+Sys.getenv("scopus_api_key")
+#> [1] "a_string_of_numbers"
+```
+
+You can then load it to your environment without having the secret key
+in your script or console as follows:
+
+``` r
+apikey <- Sys.getenv("scopus_api_key")
+```
+
 ### :mega: Connecting to Web of Science
 
 You are required to be at your institution for this to work since the
-API is accessed via the IP address.
-
-### :mega: Connecting to BASE
-
-You must have your IP address whitelisted. You can do it
-[here](https://www.base-search.net/about/en/contact.php).
-
-### :jigsaw: Setting up keys
-
-You will need to set up your API key / session ID before gaining access
-to the databases. Run the following lines of code to do so.
+API is accessed via the IP address. Run the following line of code to do
+so:
 
 ``` r
-#Scopus
-apikey <- "your_scopus_api_key"
-#Web of Science
 sid <- auth(username = NULL, password = NULL)
 ```
 
 You won’t have to set this again until your next session. You are
 required to be at your institution for this to work since the API is
 accessed via the IP address.
+
+### :mega: Connecting to BASE
+
+You must have your IP address whitelisted. You can do it
+[here](https://www.base-search.net/about/en/contact.php).
 
 ## Examples
 
@@ -185,10 +207,10 @@ CombineSp
     ## 3 Ornithorhynchus anatinus    anatinus Ornithorhynchus          321      6365
     ## 4   Phascolarctos cinereus    cinereus   Phascolarctos          773     14291
     ##   journals years_publishing  h     m i10 h5
-    ## 1       55               44 26 0.591  54  6
-    ## 2      107               67 29 0.433 121  3
-    ## 3      153               68 41 0.603 177  6
-    ## 4      227              140 53 0.379 427 10
+    ## 1       55               45 26 0.578  54  6
+    ## 2      107               68 29 0.426 121  3
+    ## 3      153               69 41 0.594 177  5
+    ## 4      227              141 53 0.376 427  9
 
 Once you are happy with your dataset, you can make some nice plots.
 Using `plotAllindices()`, we can compare the indices against each other.
@@ -197,7 +219,7 @@ Using `plotAllindices()`, we can compare the indices against each other.
 plotAllindices(CombineSp)
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
 
 **Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of
 the Woylie, Platypus, Koala, and Quokka.
@@ -220,7 +242,7 @@ Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_yea
 plotPub(Combine_pub)
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
 
 **Figure 2.** The total number of publications per year of the Woylie,
 Platypus, Koala, and Quokka.

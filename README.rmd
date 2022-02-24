@@ -49,26 +49,44 @@ To connect and download citation information from Scopus legally, you will **abs
 3. Go to the `My API Key` tab on top of the page and click `Create API Key`.
 4. Read the legal documents and check the boxes. 
 
-### :mega: Connecting to Web of Science
-
-You are required to be at your institution for this to work since the API is accessed via the IP address.
-
-### :mega: Connecting to BASE
-
-You must have your IP address whitelisted. You can do it [here](https://www.base-search.net/about/en/contact.php).
-
-### :jigsaw: Setting up keys
-
-You will need to set up your API key / session ID before gaining access to the databases. Run the following lines of code to do so.
+After acquiring your key, make sure to store it safely. The following steps will enable you to save it as an environment variable.
 
 ```{r, eval=FALSE}
-#Scopus
-apikey <- "your_scopus_api_key"
-#Web of Science
+file.edit("~/.Renviron")
+```
+
+This will bring up an empty file, which is where you will save your key into.
+
+```{r, eval=FALSE}
+scopus_api_key = "a_string_of_numbers"
+```
+
+Restart your session for this to work. To retrieve your key, use `Sys.getenv()`:
+
+```{r, eval=FALSE}
+Sys.getenv("scopus_api_key")
+#> [1] "a_string_of_numbers"
+```
+
+You can then load it to your environment without having the secret key in your script or console as follows:
+
+```{r}
+apikey <- Sys.getenv("scopus_api_key")
+```
+
+### :mega: Connecting to Web of Science
+
+You are required to be at your institution for this to work since the API is accessed via the IP address. Run the following line of code to do so:
+
+```{r, eval=FALSE}
 sid <- auth(username = NULL, password = NULL)
 ```
 
 You won't have to set this again until your next session. You are required to be at your institution for this to work since the API is accessed via the IP address.
+
+### :mega: Connecting to BASE
+
+You must have your IP address whitelisted. You can do it [here](https://www.base-search.net/about/en/contact.php).
 
 ## Examples
 
