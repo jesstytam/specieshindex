@@ -2446,47 +2446,25 @@ Allindices <- function(data, genus, species, sourcetype = 0) {
 #' plotAllindices(CombineSp)
 #' 
 plotAllindices <- function(data) {
-  #h-index
-  h_plot <- ggplot2::ggplot(data = data,
-                            ggplot2::aes(x = genus_species,
-                                         y = h,
-                                         colour = genus_species)) +
-    ggplot2::geom_point(size = 2) +
-    ggplot2::labs(title = "h-index",
-                  colour = "Species") +
-    spindex_plot_theme()
-  #m-index
-  m_plot <- ggplot2::ggplot(data = data,
-                            ggplot2::aes(x = genus_species,
-                                         y = m,
-                                         colour = genus_species)) +
-    ggplot2::geom_point(size = 2) +
-    ggplot2::labs(title = "m-index",
-                  colour = "Species") +
-    spindex_plot_theme()
-  #i10
-  i10_plot <- ggplot2::ggplot(data = data,
-                              ggplot2::aes(x = genus_species,
-                                           y = i10,
-                                           colour = genus_species)) +
-    ggplot2::geom_point(size = 2) +
-    ggplot2::labs(title = "i10 index",
-                  colour = "Species") +
-    spindex_plot_theme()
-  #h5
-  h5_plot <- ggplot2::ggplot(data = data,
-                             ggplot2::aes(x = genus_species,
-                                          y = h5,
-                                          colour = genus_species)) +
-    ggplot2::geom_point(size = 2) +
-    ggplot2::labs(title = "h5 index",
-                  colour = "Species") +
-    spindex_plot_theme()
-  #combining the plots
-  combine_plot <- ggpubr::ggarrange(h_plot, m_plot, i10_plot, h5_plot,
-                                    common.legend = TRUE,
-                                    legend = "right")
-  return(combine_plot)
+  facet_data <- data %>% 
+    tidyr::pivot_longer(cols = h:h5,
+                        names_to = "index",
+                        values_to = "value")
+  facet_data$index <- factor(facet_data$index,
+                             levels = c("h", "m", "i10", "h5"),
+                             labels = c("h-index", "m-index", "i10 index", "h5 index"))
+  p <- ggplot(data = facet_data,
+              aes(x = genus_species,
+                  y = value,
+                  colour = genus_species)) +
+    geom_point(size = 2) +
+    labs(colour = "Species") +
+    spindex_plot_theme() +
+    facet_wrap(~index,
+               scales = "free",
+               nrow = 2,
+               ncol = 2)
+  return(p)
 }
 
 
@@ -3078,22 +3056,27 @@ create_query_string_TAK_base_genus <- function(genus, synonyms, additionalkeywor
 #' @noRd
 #' 
 spindex_plot_theme <- function() {
-  ggplot2::theme(title = element_text(size = 12,
-                                      face = "bold"),
+  ggplot2::theme(title = element_blank(),
                  axis.title.x = element_blank(),
                  axis.text.x = element_blank(),
                  axis.ticks.x = element_blank(),
                  axis.line.x = element_line(colour = "grey20"),
                  axis.title.y = element_blank(),
                  axis.text.y = element_text(size = 10),
+                 strip.background = element_rect(fill = "white"),
+                 strip.text = element_text(size = 16,
+                                           face = "bold",
+                                           hjust = -0.02),
+                 legend.title = element_text(size = 12,
+                                             face = "bold"),
                  legend.key = element_rect(fill = "white"),
                  plot.background = element_rect(fill = "white"),
                  panel.background = element_rect(fill = "white"),
                  panel.grid.major.y = element_line(colour = "grey90"),
                  panel.grid.minor.y = element_line(colour = "grey90",
                                                    linetype = "longdash"),
-                 panel.grid.major.x = element_blank(),
-                 panel.grid.minor.x = element_blank())
+                 panel.grid.major.x = ggplot2::element_blank(),
+                 panel.grid.minor.x = ggplot2::element_blank())
 }
 
 
