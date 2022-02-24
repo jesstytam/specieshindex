@@ -769,27 +769,22 @@ genus_check <- function(genus) {
 ```{r}
 #theme for ggplot
 spindex_plot_theme <- function() {
-  ggplot2::theme(title = element_blank(),
+  ggplot2::theme(title = element_text(size = 12,
+                                      face = "bold"),
                  axis.title.x = element_blank(),
                  axis.text.x = element_blank(),
                  axis.ticks.x = element_blank(),
                  axis.line.x = element_line(colour = "grey20"),
                  axis.title.y = element_blank(),
                  axis.text.y = element_text(size = 10),
-                 strip.background = element_rect(fill = "white"),
-                 strip.text = element_text(size = 16,
-                                           face = "bold",
-                                           hjust = -0.02),
-                 legend.title = element_text(size = 12,
-                                             face = "bold"),
                  legend.key = element_rect(fill = "white"),
                  plot.background = element_rect(fill = "white"),
                  panel.background = element_rect(fill = "white"),
                  panel.grid.major.y = element_line(colour = "grey90"),
                  panel.grid.minor.y = element_line(colour = "grey90",
                                                    linetype = "longdash"),
-                 panel.grid.major.x = ggplot2::element_blank(),
-                 panel.grid.minor.x = ggplot2::element_blank())
+                 panel.grid.major.x = element_blank(),
+                 panel.grid.minor.x = element_blank())
 }
 ```
 
@@ -813,6 +808,22 @@ sppub_plot_theme <- function() {
                                                    linetype = "longdash"),
                  panel.grid.major.x = ggplot2::element_blank(),
                  panel.grid.minor.x = ggplot2::element_blank())
+}
+```
+
+```{r}
+individualIndex <- function(data, y, title) {
+  ifelse(w$index=="m-index", round(w$value, 3), round(w$value, 0))
+  p <- ggplot2::ggplot(data = data,
+                       ggplot2::aes(x = genus_species,
+                                    {{y}},
+                                    colour = genus_species)) +
+  ggplot2::geom_point(size = 2) +
+  ggplot2::labs(title = paste0(title),
+                colour = "Species") ++
+  scale_y_continuous(labels = scales::label_number(drop0trailing = T)) +
+    spindex_plot_theme()
+  return(p)
 }
 ```
 
@@ -1973,47 +1984,19 @@ Allindices <- function(data, genus, species, sourcetype = 0) {
 ```{r}
 #plotting data from Allindices()
 plotAllindices <- function(data) {
+  ifelse(data$index=="m-index", round(data$value, 3), round(data$value, 0))
   #h-index
-  h_plot <- ggplot2::ggplot(data = data,
-                            ggplot2::aes(x = genus_species,
-                                         y = h,
-                                         colour = genus_species)) +
-  ggplot2::geom_point(size = 2) +
-  ggplot2::labs(title = "h-index",
-                colour = "Species") +
-    spindex_plot_theme()
+  h_plot <- individualIndex(data, h, "h-index")
   #m-index
-  m_plot <- ggplot2::ggplot(data = data,
-                            ggplot2::aes(x = genus_species,
-                                         y = m,
-                                         colour = genus_species)) +
-    ggplot2::geom_point(size = 2) +
-    ggplot2::labs(title = "m-index",
-                  colour = "Species") +
-    spindex_plot_theme()
+  m_plot <- individualIndex(data, m, "m-index")
   #i10
-  i10_plot <- ggplot2::ggplot(data = data,
-                              ggplot2::aes(x = genus_species,
-                                           y = i10,
-                                           colour = genus_species)) +
-    ggplot2::geom_point(size = 2) +
-    ggplot2::labs(title = "i10 index",
-                  colour = "Species") +
-    spindex_plot_theme()
+  i10_plot <- individualIndex(data, i10, "i10 index")
   #h5
-  h5_plot <- ggplot2::ggplot(data = data,
-                             ggplot2::aes(x = genus_species,
-                                          y = h5,
-                                          colour = genus_species)) +
-    ggplot2::geom_point(size = 2) +
-    ggplot2::labs(title = "h5 index",
-                  colour = "Species") +
-    spindex_plot_theme()
+  h5_plot <- individualIndex(data, h5, "h5 index")
   #combining the plots
-  # combine_plot <- ggpubr::ggarrange(h_plot, m_plot, i10_plot, h5_plot,
-  #                                   common.legend = TRUE,
-  #                                   legend = "right")
-    combine_plot <- ggplot2::facet_wrap(h_plot, m_plot, i10_plot, h5_plot)
+  combine_plot <- ggpubr::ggarrange(h_plot, m_plot, i10_plot, h5_plot,
+                                    common.legend = TRUE,
+                                    legend = "right")
   return(combine_plot)
 }
 ```
@@ -2073,37 +2056,46 @@ Fetch(db = "scopus", search = "t", level = "species", genus = "Bettongia", speci
 CountGenusT_wos(genus = "Bettongia") #109
 
 w <- Allindices(Woylie, genus = "Bettongia", species = "penicillata")
-w <- w %>% 
+plotAllindices(w)
+individualIndex(w, h, "h-index")
+
+
+#facet_warp
+
+w_facet <- w %>% 
   pivot_longer(cols = h:h5,
                names_to = "index",
                values_to = "value")
 
-w$index <- factor(w$index,
-                  levels = c("h", "m", "i10", "h5"),
-                  labels = c("h-index", "m-index", "i10 index", "h5 index"))
+w_facet$index <- factor(w_facet$index,
+                        levels = c("h", "m", "i10", "h5"),
+                        labels = c("h-index", "m-index", "i10 index", "h5 index"))
 
-ifelse(w$index=="m-index", round(w$value, 3), round(w$value, 0))
+# ifelse(w_facet$index=="m-index", round(w_facet$value, 3), round(w_facet$value, 0))
+# 
+# for (i in 1:length(w_facet$genus_species)) {
+#   ifelse(w_facet$index[i]=="m-index",
+#          w_facet$value[i] <- round(w_facet$value[i], 3),
+#          w_facet$value[i] <- round(w_facet$value[i], 0))
+#   print(paste(w_facet$value[i]))
+# }
+# 
+# for (i in 1:length(w_facet$genus_species)) {
+#   if (w_facet$index[i]=="m-index"){
+#     w_facet$value[i] <- round(w_facet$value[i], 3)
+#   } else {
+#     w_facet$value[i] <- round(w_facet$value[i], 0)
+#   }
+#   print(paste(w_facet$value[i]))
+# }
 
-for (i in 1:length(w$genus_species)) {
-  ifelse(w$index[i]=="m-index",
-         w$value[i] <- round(w$value[i], 3),
-         w$value[i] <- round(w$value[i], 0))
-  print(paste(w$value[i]))
-}
-
-for (i in 1:length(w$genus_species)) {
-  if (w$index[i]=="m-index"){
-    w$value[i] <- round(w$value[i], 3)
-  } else {
-    w$value[i] <- round(w$value[i], 0)
+d <- function() {
+  function(x) {
+    ifelse(w_facet$index=="m-index", round(w_facet$value, 3), round(w_facet$value, 0))
   }
-  print(paste(w$value[i]))
 }
 
-w$value <- as.character(w$value)
-
-
-ggplot(data = w,
+ggplot(data = w_facet,
        aes(x = genus_species,
            y = value,
            colour = genus_species)) +
@@ -2113,9 +2105,6 @@ ggplot(data = w,
   facet_wrap(~index,
              scales = "free",
              nrow = 2,
-             ncol = 2) +
-  scale_y_continuous(breaks = function(y) seq(floor(min(y, digits = 1)), 
-                                              ceiling(max(y, digits = 1)), 
-                                              by = 0.05))
+             ncol = 2) 
 
 ```
