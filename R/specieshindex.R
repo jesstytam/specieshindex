@@ -134,8 +134,9 @@ Fetch <- function(db,
 #' It counts the publications with the binomial name in the title only.
 #' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
 #' 
-#' @title Search count from Scopus - title only
+#' @title Search count from Scopus 
 #'
+#' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
@@ -144,217 +145,54 @@ Fetch <- function(db,
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
 #' 
-#' 
 #' @references 
 #' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
+#' 
 #' @examples
 #' \dontrun{
-#' CountSpT_scopus("Bettongia", "penicillata")
+#' Count_scopus(search = "t", genus = "Bettongia", species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' CountSpT_scopus("bettongia", "penicillata")
+#' Count_scopus(search = "t", genus = "Bettongia", species = "penicillata")
 #' }
 #' \dontrun{
-#' CountSpT_scopus("Bettongia", "penicillata", "conserv*")
+#' Count_scopus(search = "t", genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' CountSpT_scopus("bettongia", "penicillata", "conserv*")
+#' Count_scopus(search = "t", genus = "bettongia", species = "penicillata", additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
 #' 
-CountSpT_scopus <- function(genus,
-                            species,
-                            synonyms,
-                            additionalkeywords,
-                            datatype = "application/xml") {
-  sp_check(genus, species)
-  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                        query = list(apiKey = apikey,
-                                     query = create_query_string_T_scopus(genus,
-                                                                          species,
-                                                                          synonyms,
-                                                                          additionalkeywords),
-                                     httpAccept = "application/xml")) #format the URL to be sent to the API
-  httr::stop_for_status(response) #pass any HTTP errors to the R console
-  response_data <- XML::xmlParse(response) #parse the data to extract values
-  resultCount <- as.numeric(XML::xpathSApply(response_data,
-                                             "//opensearch:totalResults",
-                                             XML::xmlValue)) #get the total number of search results for the string
-  return(resultCount)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the binomial name in the title, abstract, and keywords.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
-#' 
-#' @title Search count from Scopus - title, abstract, and keywords
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
-#'
-#' @return Search count of the species with the given \code{genus} and \code{species}.
-#' 
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountSpTAK_scopus("Bettongia", "penicillata")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountSpTAK_scopus("bettongia", "penicillata")
-#' }
-#' \dontrun{
-#' CountSpTAK_scopus("Bettongia", "penicillata")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountSpTAK_scopus("bettongia", "penicillata")
-#' }
-#' 
-#' @noRd
-#' 
-CountSpTAK_scopus <- function(genus,
-                              species,
-                              synonyms,
-                              additionalkeywords,
-                              datatype = "application/xml") {
-  sp_check(genus, species)
-  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                        query = list(apiKey = apikey,
-                                     query = create_query_string_TAK_scopus(genus,
-                                                                            species,
+Count_scopus <- function(search,
+                         genus,
+                         species = NULL,
+                         synonyms,
+                         additionalkeywords,
+                         datatype = "application/xml") {
+  test_check(genus, species = paste(species))
+  if (search == "t") {
+    response <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                          query = list(apiKey = apikey,
+                                       query = create_query_string_T_scopus(genus,
+                                                                            species = paste(species),
                                                                             synonyms,
                                                                             additionalkeywords),
-                                     httpAccept = "application/xml")) #format the URL to be sent to the API
+                                       httpAccept = "application/xml")) #format the URL to be sent to the API
+  } else if (search == "tak") {
+    response <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                          query = list(apiKey = apikey,
+                                       query = create_query_string_TAK_scopus(genus,
+                                                                              species = paste(species),
+                                                                              synonyms,
+                                                                              additionalkeywords),
+                                       httpAccept = "application/xml")) #format the URL to be sent to the API
+  }
   httr::stop_for_status(response) #pass any HTTP errors to the R console
   response_data <- XML::xmlParse(response) #parse the data to extract values
-  resultCount <- as.numeric(XML::xpathSApply(response_data,
-                                             "//opensearch:totalResults",
-                                             XML::xmlValue)) #get the total number of search results for the string
-  return(resultCount)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the genus name in the title only.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
-#' 
-#' @title Search count from Scopus - title only
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
-#'
-#' @return Search count of the genus with the given \code{genus}.
-#' 
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountGenusT_scopus("Bettongia")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusT_scopus("bettongia")
-#' }
-#' \dontrun{
-#' CountGenusT_scopus("Bettongia", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusT_scopus("bettongia", "conserv*")
-#' }
-#' 
-#' @noRd
-#' 
-CountGenusT_scopus <- function(genus,
-                               synonyms,
-                               additionalkeywords,
-                               datatype = "application/xml") {
-  genus_check(genus)
-  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                        query = list(apiKey = apikey,
-                                     query = create_query_string_T_scopus_genus(genus,
-                                                                                synonyms,
-                                                                                additionalkeywords),
-                                     httpAccept = "application/xml")) #format the URL to be sent to the API
-  httr::stop_for_status(response) #pass any HTTP errors to the R console
-  response_data <- XML::xmlParse(response) #parse the data to extract values
-  resultCount <- as.numeric(XML::xpathSApply(response_data,
-                                             "//opensearch:totalResults",
-                                             XML::xmlValue)) #get the total number of search results for the string
-  return(resultCount)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the genus name in the title, abstract, and keywords.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
-#' 
-#' @title Search count from Scopus - title, abstract, and keywords
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#' @param datatype Formats the URL to be sent to the API. The default is "application/xml".
-#'
-#' @return Search count of the genus with the given \code{genus}.
-#' 
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountGenusTAK_scopus("Bettongia")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusTAK_scopus("bettongia")
-#' }
-#' \dontrun{
-#' CountGenusTAK_scopus("Bettongia")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusTAK_scopus("bettongia")
-#' }
-#' 
-#' @noRd
-#' 
-CountGenusTAK_scopus <- function(genus,
-                                 synonyms,
-                                 additionalkeywords,
-                                 datatype = "application/xml") {
-  genus_check(genus)
-  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                        query = list(apiKey = apikey,
-                                     query = create_query_string_TAK_scopus_genus(genus,
-                                                                                  synonyms,
-                                                                                  additionalkeywords),
-                                     httpAccept = "application/xml")) #format the URL to be sent to the API
-  httr::stop_for_status(response) #pass any HTTP errors to the R console
-  response_data <- XML::xmlParse(response) #parse the data to extract values
-  resultCount <- as.numeric(XML::xpathSApply(response_data,
-                                             "//opensearch:totalResults",
-                                             XML::xmlValue)) #get the total number of search results for the string
+  resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
   return(resultCount)
 }
 
@@ -424,72 +262,23 @@ FetchSpT_scopus <- function(genus,
       resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
       if (resultCount > 0) {
         #search begins
-        search2020 <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 2019 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search2020 <- scopus_request_t('" AND PUBYEAR > 2019 AND LANGUAGE(", lang$language[j], ")"')
         search2020df <- rscopus::entries_to_citation_df(search2020$entries)
-        searchloopdf <- data.frame()
+        searchloopdf = data.frame()
         for (i in 2019:1990) {
-          searchloop <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                              paste0(" AND PUBYEAR = ", i, " AND LANGUAGE(", lang$language[j], ")")),
-                                               api_key = apikey,
-                                               verbose = TRUE,
-                                               wait_time = 3)
+          searchloop <- scopus_request_t('" AND PUBYEAR = ", i, " AND LANGUAGE(", lang$language[j], ")"')
           searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
           searchloopdf <- dplyr::bind_rows(searchloopdf, searchlooplist)
         }
-        search1985 <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1984 AND PUBYEAR < 1990 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search1985 <- scopus_request_t('" AND PUBYEAR > 1984 AND PUBYEAR < 1990 AND LANGUAGE(", lang$language[j], ")"')
         search1985df <- rscopus::entries_to_citation_df(search1985$entries)
-        search1980 <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1979 AND PUBYEAR < 1985 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search1980 <- scopus_request_t('" AND PUBYEAR > 1979 AND PUBYEAR < 1985 AND LANGUAGE(", lang$language[j], ")"')
         search1980df <- rscopus::entries_to_citation_df(search1980$entries)
-        search1975 <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1974 AND PUBYEAR < 1980 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search1975 <- scopus_request_t('" AND PUBYEAR > 1974 AND PUBYEAR < 1980 AND LANGUAGE(", lang$language[j], ")"')
         search1975df <- rscopus::entries_to_citation_df(search1975$entries)
-        search1970 <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1969 AND PUBYEAR < 1975 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)  
+        search1970 <- scopus_request_t('" AND PUBYEAR > 1969 AND PUBYEAR < 1975 AND LANGUAGE(", lang$language[j], ")"')
         search1970df <- rscopus::entries_to_citation_df(search1970$entries)
-        search_old <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR < 1970 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search_old <- scopus_request_t('" AND PUBYEAR < 1970 AND LANGUAGE(", lang$language[j], ")"')
         search_olddf <- rscopus::entries_to_citation_df(search_old$entries)
         langlist <- dplyr::bind_rows(search2020df,
                                      searchloopdf,
@@ -509,7 +298,7 @@ FetchSpT_scopus <- function(genus,
     if (count <= 5000) {
       step_size <- 1000 #the number of records to retrieve in each loop
       start_record <- 0
-      datalist <- data.frame()
+      datalist = data.frame()
       looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
       #loop starts
       for (i in 0:looprepeat) { 
@@ -531,77 +320,28 @@ FetchSpT_scopus <- function(genus,
         #loop ends
       }} else {
         #search begins
-        search2020 <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 2019")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search2020 <- scopus_request_t('" AND PUBYEAR > 2019"')
         search2020df <- rscopus::entries_to_citation_df(search2020$entries)
-        searchloopdf <- data.frame()
+        searchloopdf = data.frame()
         for (i in 2019:1990) {
-          searchloop <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                              paste0(" AND PUBYEAR = ", i)),
-                                               api_key = apikey,
-                                               verbose = TRUE,
-                                               wait_time = 3)
+          searchloop <- scopus_request_t('" AND PUBYEAR = ", i')
           searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
           searchloopdf <- dplyr::bind_rows(searchloopdf, searchlooplist)
         }
-        search1985 <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1984 AND PUBYEAR < 1990")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search1985 <- scopus_request_t('" AND PUBYEAR > 1984 AND PUBYEAR < 1990"')
         search1985df <- rscopus::entries_to_citation_df(search1985$entries)
-        search1980 <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1979 AND PUBYEAR < 1985")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search1980 <- scopus_request_t('" AND PUBYEAR > 1979 AND PUBYEAR < 1985"')
         search1980df <- rscopus::entries_to_citation_df(search1980$entries)
-        search1975 <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1974 AND PUBYEAR < 1980")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)  
+        search1975 <- scopus_request_t('" AND PUBYEAR > 1974 AND PUBYEAR < 1980"')
         search1975df <- rscopus::entries_to_citation_df(search1975$entries)
-        search1970 <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1969 AND PUBYEAR < 1975")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)  
+        search1970 <- scopus_request_t('" AND PUBYEAR > 1969 AND PUBYEAR < 1975"')
         search1970df <- rscopus::entries_to_citation_df(search1970$entries)
-        search_old <- rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                                         species,
-                                                                                         synonyms,
-                                                                                         additionalkeywords),
-                                                            paste0(" AND PUBYEAR < 1970")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)  
+        search_old <- scopus_request_t('" AND PUBYEAR < 1970"')
         search_olddf <- rscopus::entries_to_citation_df(search_old$entries)
         datalist <- dplyr::bind_rows(search2020df,
                                      searchloopdf,
                                      search1985df,
-                                     search1980df,
+                                     search1980df, 
                                      search1975df,
                                      search1970df,
                                      search_olddf)
@@ -679,72 +419,23 @@ FetchSpTAK_scopus <- function(genus,
       resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
       if (resultCount > 0) {
         #search begins
-        search2020 <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 2019 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search2020 <- scopus_request_tak('" AND PUBYEAR > 2019 AND LANGUAGE(", lang$language[j], ")"')
         search2020df <- rscopus::entries_to_citation_df(search2020$entries)
-        searchloopdf <- data.frame()
+        searchloopdf = data.frame()
         for (i in 2019:1990) {
-          searchloop <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                             species,
-                                                                                             synonyms,
-                                                                                             additionalkeywords),
-                                                              paste0(" AND PUBYEAR = ", i, " AND LANGUAGE(", lang$language[j], ")")),
-                                               api_key = apikey,
-                                               verbose = TRUE,
-                                               wait_time = 3)
+          searchloop <- scopus_request_tak('" AND PUBYEAR = ", i, " AND LANGUAGE(", lang$language[j], ")"')
           searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
           searchloopdf <- dplyr::bind_rows(searchloopdf, searchlooplist)
         }
-        search1985 <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1984 AND PUBYEAR < 1990 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search1985 <- scopus_request_tak('" AND PUBYEAR > 1984 AND PUBYEAR < 1990 AND LANGUAGE(", lang$language[j], ")"')
         search1985df <- rscopus::entries_to_citation_df(search1985$entries)
-        search1980 <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1979 AND PUBYEAR < 1985 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search1980 <- scopus_request_tak('" AND PUBYEAR > 1979 AND PUBYEAR < 1985 AND LANGUAGE(", lang$language[j], ")"')
         search1980df <- rscopus::entries_to_citation_df(search1980$entries)
-        search1975 <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1974 AND PUBYEAR < 1980 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search1975 <- scopus_request_tak('" AND PUBYEAR > 1974 AND PUBYEAR < 1980 AND LANGUAGE(", lang$language[j], ")"')
         search1975df <- rscopus::entries_to_citation_df(search1975$entries)
-        search1970 <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1969 AND PUBYEAR < 1975 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)  
+        search1970 <- scopus_request_tak('" AND PUBYEAR > 1969 AND PUBYEAR < 1975 AND LANGUAGE(", lang$language[j], ")"')
         search1970df <- rscopus::entries_to_citation_df(search1970$entries)
-        search_old <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR < 1970 AND LANGUAGE(", lang$language[j], ")")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search_old <- scopus_request_tak('" AND PUBYEAR < 1970 AND LANGUAGE(", lang$language[j], ")"')
         search_olddf <- rscopus::entries_to_citation_df(search_old$entries)
         langlist <- dplyr::bind_rows(search2020df,
                                      searchloopdf,
@@ -764,7 +455,7 @@ FetchSpTAK_scopus <- function(genus,
     if (count <= 5000) {
       step_size <- 1000 #the number of records to retrieve in each loop
       start_record <- 0
-      datalist <- data.frame()
+      datalist = data.frame()
       looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
       #loop starts
       for (i in 0:looprepeat) { 
@@ -772,7 +463,7 @@ FetchSpTAK_scopus <- function(genus,
         print(paste("Fetching records now."))
         search <- rscopus::scopus_search(query = create_query_string_TAK_scopus(genus,
                                                                                 species,
-                                                                                synonyms,
+                                                                                synonyms, 
                                                                                 additionalkeywords),
                                          api_key = apikey,
                                          verbose = TRUE,
@@ -786,72 +477,23 @@ FetchSpTAK_scopus <- function(genus,
         #loop ends
       }} else {
         #search begins
-        search2020 <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 2019")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search2020 <- scopus_request_tak('" AND PUBYEAR > 2019"')
         search2020df <- rscopus::entries_to_citation_df(search2020$entries)
-        searchloopdf <- data.frame()
+        searchloopdf = data.frame()
         for (i in 2019:1990) {
-          searchloop <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                             species,
-                                                                                             synonyms,
-                                                                                             additionalkeywords),
-                                                              paste0(" AND PUBYEAR = ", i)),
-                                               api_key = apikey,
-                                               verbose = TRUE,
-                                               wait_time = 3)
+          searchloop <- scopus_request_tak('" AND PUBYEAR = ", i')
           searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
           searchloopdf <- dplyr::bind_rows(searchloopdf, searchlooplist)
         }
-        search1985 <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1984 AND PUBYEAR < 1990")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search1985 <- scopus_request_tak('" AND PUBYEAR > 1984 AND PUBYEAR < 1990"')
         search1985df <- rscopus::entries_to_citation_df(search1985$entries)
-        search1980 <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1979 AND PUBYEAR < 1985")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)
+        search1980 <- scopus_request_tak('" AND PUBYEAR > 1979 AND PUBYEAR < 1985"')
         search1980df <- rscopus::entries_to_citation_df(search1980$entries)
-        search1975 <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1974 AND PUBYEAR < 1980")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)  
+        search1975 <- scopus_request_tak('" AND PUBYEAR > 1974 AND PUBYEAR < 1980"')
         search1975df <- rscopus::entries_to_citation_df(search1975$entries)
-        search1970 <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR > 1969 AND PUBYEAR < 1975")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)  
+        search1970 <- scopus_request_tak('" AND PUBYEAR > 1969 AND PUBYEAR < 1975"')
         search1970df <- rscopus::entries_to_citation_df(search1970$entries)
-        search_old <- rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                           species,
-                                                                                           synonyms,
-                                                                                           additionalkeywords),
-                                                            paste0(" AND PUBYEAR < 1970")),
-                                             api_key = apikey,
-                                             verbose = TRUE,
-                                             wait_time = 3)  
+        search_old <- scopus_request_tak('" AND PUBYEAR < 1970"')
         search_olddf <- rscopus::entries_to_citation_df(search_old$entries)
         datalist <- dplyr::bind_rows(search2020df,
                                      searchloopdf,
