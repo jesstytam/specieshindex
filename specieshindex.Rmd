@@ -25,15 +25,18 @@ library(specieshindex)
 ```
 
 ```{r, scopus query for title only searches}
-create_query_string_T_scopus <- function(genus, species, synonyms, additionalkeywords){
+create_query_string_T_scopus <- function(genus,
+                                         species = NULL,
+                                         synonyms,
+                                         additionalkeywords){
   if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TITLE("', genus, ' ', species, '")'))
+    return(paste0('TITLE("', genus, ' ', species = paste0(species), '")'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TITLE("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
+    return(paste0('TITLE("', genus, ' ', species = paste0(species), '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TITLE("', genus, ' ', species, '" OR "', synonyms[1], '"')
+    temp_string <- paste0('TITLE("', genus, ' ', species = paste0(species), '" OR "', synonyms[1], '"')
     if (length(synonyms)==1) {
       return(paste0(temp_string, ')'))
     }
@@ -45,21 +48,25 @@ create_query_string_T_scopus <- function(genus, species, synonyms, additionalkey
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TITLE(("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
+    return(paste0('TITLE(("', genus, ' ', species = paste0(species), '" OR "',
+                  synonyms, '") AND ', additionalkeywords, ')'))
   } 
 }
 ```
 
 ```{r, scopus query for title, abstract, and keywords searches}
-create_query_string_TAK_scopus <- function(genus, species, synonyms, additionalkeywords){
+create_query_string_TAK_scopus <- function(genus,
+                                           species = NULL,
+                                           synonyms,
+                                           additionalkeywords){
   if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TITLE-ABS-KEY("', genus, ' ', species, '")'))
+    return(paste0('TITLE-ABS-KEY("', genus, ' ', species = paste0(species), '")'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TITLE-ABS-KEY("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
+    return(paste0('TITLE-ABS-KEY("', genus, ' ', species = paste0(species), '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TITLE-ABS-KEY("', genus, ' ', species, '" OR "', synonyms[1], '"')
+    temp_string <- paste0('TITLE-ABS-KEY("', genus, ' ', species = paste0(species), '" OR "', synonyms[1], '"')
     if (length(synonyms)==1) {
       return(paste0(temp_string, ')'))
     }
@@ -71,7 +78,8 @@ create_query_string_TAK_scopus <- function(genus, species, synonyms, additionalk
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TITLE-ABS-KEY(("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
+    return(paste0('TITLE-ABS-KEY(("', genus, ' ', species = paste0(species), '" OR "',
+                  synonyms, '") AND ', additionalkeywords, ')'))
   } 
 }
 ```
@@ -129,63 +137,73 @@ create_query_string_TAK_scopus_genus <- function(genus, synonyms, additionalkeyw
 ```
 
 ```{r, wos query for title only searches}
-create_query_string_T_wos <- function(genus, species, synonyms, additionalkeywords){
+create_query_string_T_wos <- function(genus,
+                                      species = NULL,
+                                      synonyms,
+                                      additionalkeywords){
   if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TI = "', genus, ' ', species, '"'))
+    return(paste0('TI = "', genus, ' ', species = paste0(species), '"'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TI = ("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
+    return(paste0('TI = ("', genus, ' ', species = paste0(species), '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TI = ("', genus, ' ', species, '" OR "', synonyms[1], '")')
+    temp_string <- paste0('TI = ("', genus, ' ', species = paste0(species), '" OR "', synonyms[1], '")')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
     }
     else {
       for (i in 2:length(synonyms)){
-        temp_string <- paste0('TI = ("', genus, ' ', species, '" OR "', synonyms[i], '")')
+        temp_string <- paste0('TI = ("', genus, ' ', species = paste0(species), '" OR "', synonyms[i], '")')
       }
       return(paste0(temp_string))
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TI = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
+    return(paste0('TI = (("', genus, ' ', species = paste0(species), '" OR "',
+                  synonyms, '") AND ', additionalkeywords, ')'))
   } 
 }
 ```
 
 ```{r, wos query for title only searches}
-create_query_string_TAK_wos <- function(genus, species, synonyms, additionalkeywords){
+create_query_string_TAK_wos <- function(genus,
+                                        species = NULL,
+                                        synonyms,
+                                        additionalkeywords){
   if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TI = "', genus, ' ', species,
-                  '" OR AB = "', genus, ' ', species,
-                  '" OR AK = "', genus, ' ', species, '"'))
+    return(paste0('TI = "', genus, ' ', species = paste0(species),
+                  '" OR AB = "', genus, ' ', species = paste0(species),
+                  '" OR AK = "', genus, ' ', species = paste0(species), '"'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('TI = ("', genus, ' ', species, '" AND ', additionalkeywords, ')',
-                  ' OR AB = ("', genus, ' ', species, '" AND ', additionalkeywords, ')',
-                  ' OR AK = ("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
+    return(paste0('TI = ("', genus, ' ', species = paste0(species), '" AND ', additionalkeywords, ')',
+                  ' OR AB = ("', genus, ' ', species = paste0(species), '" AND ', additionalkeywords, ')',
+                  ' OR AK = ("', genus, ' ', species = paste0(species), '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('TI = ("', genus, ' ', species, '" OR "', synonyms[1], '")',
-                          ' OR AB = ("', genus, ' ', species, '" OR "', synonyms[1], '")',
-                          ' OR AK = ("', genus, ' ', species, '" OR "', synonyms[1], '")')
+    temp_string <- paste0('TI = ("', genus, ' ', species = paste0(species), '" OR "', synonyms[1], '")',
+                          ' OR AB = ("', genus, ' ', species = paste0(species), '" OR "', synonyms[1], '")',
+                          ' OR AK = ("', genus, ' ', species = paste0(species), '" OR "', synonyms[1], '")')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
     }
     else {
       for (i in 2:length(synonyms)){
-        temp_string <- paste0('TI = ("', genus, ' ', species, '" OR "', synonyms[i], '")',
-                              ' OR AB = ("', genus, ' ', species, '" OR "', synonyms[i], '")',
-                              ' OR AK = ("', genus, ' ', species, '" OR "', synonyms[i], '")')
+        temp_string <- paste0('TI = ("', genus, ' ', species = paste0(species), '" OR "', synonyms[i], '")',
+                              ' OR AB = ("', genus, ' ', species = paste0(species), '" OR "', synonyms[i], '")',
+                              ' OR AK = ("', genus, ' ', species = paste0(species), '" OR "', synonyms[i], '")')
       }
       return(paste0(temp_string))
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('TI = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')',
-                  ' OR AB = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')',
-                  ' OR AK = (("', genus, ' ', species, '" OR "', synonyms, '") AND ', additionalkeywords, ')'))
+    return(paste0('TI = (("', genus, ' ', species = paste0(species), '" OR "',
+                  synonyms, '") AND ', additionalkeywords, ')',
+                  ' OR AB = (("', genus, ' ', species = paste0(species), '" OR "',
+                  synonyms, '") AND ', additionalkeywords, ')',
+                  ' OR AK = (("', genus, ' ', species = paste0(species), '" OR "',
+                  synonyms, '") AND ', additionalkeywords, ')'))
   } 
 }
 ```
@@ -253,15 +271,18 @@ create_query_string_TAK_wos_genus <- function(genus, synonyms, additionalkeyword
 ```
 
 ```{r, base query for title only searches}
-create_query_string_T_base <- function(genus, species, synonyms, additionalkeywords){
+create_query_string_T_base <- function(genus,
+                                       species = NULL,
+                                       synonyms,
+                                       additionalkeywords){
   if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('dctitle:"', genus, ' ', species, '"'))
+    return(paste0('dctitle:"', genus, ' ', species = paste0(species), '"'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('dctitle:("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
+    return(paste0('dctitle:("', genus, ' ', species = paste0(species), '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[1])
+    temp_string <- paste0('dctitle:("', genus, ' ', species = paste0(species), '" OR ', synonyms[1])
     if (length(synonyms)==1) {
       return(paste0(temp_string, ')'))
     }
@@ -273,43 +294,53 @@ create_query_string_T_base <- function(genus, species, synonyms, additionalkeywo
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('dctitle:(("', genus, ' ', species, '" OR ', synonyms, ') AND ', additionalkeywords, ')'))
+    return(paste0('dctitle:(("', genus, ' ', species = paste0(species), '" OR ',
+                  synonyms, ') AND ', additionalkeywords, ')'))
   } 
 }
 ```
 
 ```{r, base query for title, abstract and keyword searches}
-create_query_string_TAK_base <- function(genus, species, synonyms, additionalkeywords){
+create_query_string_TAK_base <- function(genus,
+                                         species = NULL,
+                                         synonyms,
+                                         additionalkeywords){
   if (missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('dctitle:"', genus, ' ', species, '"',
-                  ' OR dcdescription:"', genus, ' ', species, '"',
-                  ' OR dcsubject:"', genus, ' ', species, '"'))
+    return(paste0('dctitle:"', genus, ' ', species = paste0(species), '"',
+                  ' OR dcdescription:"', genus, ' ', species = paste0(species), '"',
+                  ' OR dcsubject:"', genus, ' ', species = paste0(species), '"'))
   } 
   if (!missing(additionalkeywords) & missing(synonyms)) {
-    return(paste0('dctitle:("', genus, ' ', species, '" AND ', additionalkeywords, ')',
-                  ' OR dcdescription:("', genus, ' ', species, '" AND ', additionalkeywords, ')',
-                  ' OR dcsubject:("', genus, ' ', species, '" AND ', additionalkeywords, ')'))
+    return(paste0('dctitle:("', genus, ' ', species = paste0(species), '" AND ', additionalkeywords, ')',
+                  ' OR dcdescription:("', genus, ' ', species = paste0(species), '" AND ', additionalkeywords, ')',
+                  ' OR dcsubject:("', genus, ' ', species = paste0(species), '" AND ', additionalkeywords, ')'))
   }
   if (missing(additionalkeywords) & !missing(synonyms)) {
-    temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[1], ')',
-                          ' OR dcdescription:("', genus, ' ', species, '" OR ', synonyms[1], ')',
-                          ' OR dcsubject:("', genus, ' ', species, '" OR ', synonyms[1], ')')
+    temp_string <- paste0('dctitle:("', genus, ' ', species = paste0(species), '" OR ', synonyms[1], ')',
+                          ' OR dcdescription:("', genus, ' ', species = paste0(species), '" OR ', synonyms[1], ')',
+                          ' OR dcsubject:("', genus, ' ', species = paste0(species), '" OR ', synonyms[1], ')')
     if (length(synonyms)==1) {
       return(paste0(temp_string))
     }
     else {
       for (i in 2:length(synonyms)){
-        temp_string <- paste0('dctitle:("', genus, ' ', species, '" OR ', synonyms[i], ')',
-                              ' OR dcdescription:("', genus, ' ', species, '" OR ', synonyms[i], ')',
-                              ' OR dcsubject:("', genus, ' ', species, '" OR ', synonyms[i], ')')
+        temp_string <- paste0('dctitle:("', genus, ' ', species = paste0(species), '" OR ',
+                              synonyms[i], ')',
+                              ' OR dcdescription:("', genus, ' ', species = paste0(species), '" OR ',
+                              synonyms[i], ')',
+                              ' OR dcsubject:("', genus, ' ', species = paste0(species), '" OR ',
+                              synonyms[i], ')')
       }
       return(paste0(temp_string))
     }
   }
   if (!missing(additionalkeywords) & !missing(synonyms)) {
-    return(paste0('dctitle:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
-                  ' OR dcdescription:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')',
-                  ' OR dcsubject:(("', genus, ' ', species, '"', ' OR ', synonyms, ') AND ', additionalkeywords, ')'))
+    return(paste0('dctitle:(("', genus, ' ', species = paste0(species), '"', ' OR ',
+                  synonyms, ') AND ', additionalkeywords, ')',
+                  ' OR dcdescription:(("', genus, ' ', species = paste0(species), '"', ' OR ',
+                  synonyms, ') AND ', additionalkeywords, ')',
+                  ' OR dcsubject:(("', genus, ' ', species = paste0(species), '"', ' OR ',
+                  synonyms, ') AND ', additionalkeywords, ')'))
   } 
 }
 ```
@@ -733,7 +764,7 @@ create_query_string_TAK_lens_genus <- function(genus, synonyms, additionalkeywor
 ```{r}
 scopus_request_t <- function(request) {
   rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                     species,
+                                                                     species = NULL,
                                                                      synonyms,
                                                                      additionalkeywords),
                                         paste0(request)),
@@ -746,7 +777,7 @@ scopus_request_t <- function(request) {
 ```{r}
 scopus_request_tak <- function(request) {
   rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                       species,
+                                                                       species = NULL,
                                                                        synonyms,
                                                                        additionalkeywords),
                                         paste0(request)),
@@ -758,7 +789,7 @@ scopus_request_tak <- function(request) {
 
 ```{r}
 #species check
-sp_check <- function(genus, species) {
+sp_check_old <- function(genus, species) {
   findname <- taxize::gnr_resolve(sci = paste(genus, species),
                                   data_source_ids = list("1", "3", "4", "12")) #check if the species exist
   if (length(findname>0)) {
@@ -776,7 +807,7 @@ sp_check <- function(genus, species) {
 
 ```{r}
 #genus check
-genus_check <- function(genus) {
+genus_check_old <- function(genus) {
   findname <- taxize::gnr_resolve(sci = genus,
                                   data_source_ids = list("1", "3", "4", "12")) #check if the species exist
   if (length(findname>0)) {
@@ -794,7 +825,7 @@ genus_check <- function(genus) {
 
 ```{r}
 #species check
-test_check <- function(genus, species = NULL) {
+sp_check <- function(genus, species = NULL) {
   findname <- taxize::gnr_resolve(sci = paste(genus, species = paste(species)),
                                   data_source_ids = list("1", "3", "4", "12")) #check if the species exist
   if (length(findname>0)) {
@@ -919,18 +950,19 @@ Fetch <- function(db, search, level, genus, species, synonyms, additionalkeyword
 ```
 
 ```{r, this works}
-Count_scopus <- function(level,
+Count_scopus <- function(search,
                          genus,
                          species = NULL,
                          synonyms,
                          additionalkeywords,
                          datatype = "application/xml") {
-  test_check(genus, species = paste(species))
+  sp_check(genus,
+           species = paste0(species))
   if (search == "t") {
     response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                       query = list(apiKey = apikey,
                                    query = create_query_string_T_scopus(genus,
-                                                                        species = paste(species),
+                                                                        species = paste0(species),
                                                                         synonyms,
                                                                         additionalkeywords),
                                    httpAccept = "application/xml")) #format the URL to be sent to the API
@@ -938,10 +970,12 @@ Count_scopus <- function(level,
     response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                       query = list(apiKey = apikey,
                                    query = create_query_string_TAK_scopus(genus,
-                                                                          species = paste(species),
+                                                                          species = paste0(species),
                                                                           synonyms,
                                                                           additionalkeywords),
                                    httpAccept = "application/xml")) #format the URL to be sent to the API
+  } else {
+    stop('Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, and keywords.')
   }
   httr::stop_for_status(response) #pass any HTTP errors to the R console
   response_data <- XML::xmlParse(response) #parse the data to extract values
@@ -1012,15 +1046,14 @@ CountGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, datatype =
 
 ```{r, fetch from scopus using title only, message=FALSE}
 #this function downloads citation data from scopus
-FetchSpT_scopus <- function(level = "t",
-                            genus,
-                            species,
-                            synonyms,
-                            additionalkeywords,
-                            language = 0) {
-  count <- Count_scopus(level,
+FetchT_scopus <- function(genus,
+                         species = NULL,
+                         synonyms,
+                         additionalkeywords,
+                         language = 0) {
+  count <- Count_scopus(search = "t",
                         genus,
-                        species,
+                        species = paste0(species),
                         synonyms,
                         additionalkeywords) #check the number of records
   print(paste(count, "records found."))
@@ -1035,7 +1068,7 @@ FetchSpT_scopus <- function(level = "t",
       response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                           query = list(apiKey = apikey,
                                        query = paste0(create_query_string_T_scopus(genus,
-                                                                                   species,
+                                                                                   species = paste0(species),
                                                                                    synonyms,
                                                                                    additionalkeywords),
                                                       " AND LANGUAGE(", lang$language[j], ")"),
@@ -1051,7 +1084,8 @@ FetchSpT_scopus <- function(level = "t",
         for (i in 2019:1990) {
           searchloop <- scopus_request_t('" AND PUBYEAR = ", i, " AND LANGUAGE(", lang$language[j], ")"')
           searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
-          searchloopdf <- dplyr::bind_rows(searchloopdf, searchlooplist)
+          searchloopdf <- dplyr::bind_rows(searchloopdf,
+                                           searchlooplist)
           }
         search1985 <- scopus_request_t('" AND PUBYEAR > 1984 AND PUBYEAR < 1990 AND LANGUAGE(", lang$language[j], ")"')
         search1985df <- rscopus::entries_to_citation_df(search1985$entries)
@@ -1072,7 +1106,8 @@ FetchSpT_scopus <- function(level = "t",
                                      search_olddf)
         langlist$language <- lang$language[j]
         #search ends
-        datalist <- dplyr::bind_rows(datalist, langlist)
+        datalist <- dplyr::bind_rows(datalist,
+                                     langlist)
       }
       }
     datalist <- datalist[!is.na(datalist$title), ] #remove NA papers
@@ -1088,7 +1123,7 @@ FetchSpT_scopus <- function(level = "t",
         print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
         print(paste("Fetching records now."))
         search <- rscopus::scopus_search(query = create_query_string_T_scopus(genus,
-                                                                              species,
+                                                                              species = paste0(species),
                                                                               synonyms,
                                                                               additionalkeywords),
                                          api_key = apikey,
@@ -1099,7 +1134,8 @@ FetchSpT_scopus <- function(level = "t",
         start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
         searchdf <- rscopus::entries_to_citation_df(search$entries)
         list <- data.frame(searchdf)
-        datalist <- dplyr::bind_rows(datalist, list)
+        datalist <- dplyr::bind_rows(datalist,
+                                     list)
         #loop ends
         }} else {
           #search begins
@@ -1139,15 +1175,16 @@ FetchSpT_scopus <- function(level = "t",
 
 ```{r, fetch from scopus using title+abs+key, message=FALSE}
 #this function downloads citation data from scopus
-FetchSpTAK_scopus <- function(genus,
-                              species,
-                              synonyms,
-                              additionalkeywords,
-                              language = 0) {
-  count <- CountSpTAK_scopus(genus,
-                             species,
-                             synonyms,
-                             additionalkeywords) #check the number of records
+FetchTAK_scopus <- function(genus,
+                            species = NULL,
+                            synonyms,
+                            additionalkeywords,
+                            language = 0) {
+  count <- Count_scopus(search = "tak",
+                        genus,
+                        species = paste0(species),
+                        synonyms,
+                        additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
@@ -1160,7 +1197,7 @@ FetchSpTAK_scopus <- function(genus,
       response <- httr::GET("http://api.elsevier.com/content/search/scopus",
                           query = list(apiKey = apikey,
                                        query = paste0(create_query_string_TAK_scopus(genus,
-                                                                                     species,
+                                                                                     species = paste0(species),
                                                                                      synonyms,
                                                                                      additionalkeywords),
                                                       " AND LANGUAGE(", lang$language[j], ")"),
@@ -1176,7 +1213,8 @@ FetchSpTAK_scopus <- function(genus,
         for (i in 2019:1990) {
           searchloop <- scopus_request_tak('" AND PUBYEAR = ", i, " AND LANGUAGE(", lang$language[j], ")"')
           searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
-          searchloopdf <- dplyr::bind_rows(searchloopdf, searchlooplist)
+          searchloopdf <- dplyr::bind_rows(searchloopdf,
+                                           searchlooplist)
           }
         search1985 <- scopus_request_tak('" AND PUBYEAR > 1984 AND PUBYEAR < 1990 AND LANGUAGE(", lang$language[j], ")"')
         search1985df <- rscopus::entries_to_citation_df(search1985$entries)
@@ -1197,7 +1235,8 @@ FetchSpTAK_scopus <- function(genus,
                                      search_olddf)
         langlist$language <- lang$language[j]
         #search ends
-        datalist <- dplyr::bind_rows(datalist, langlist)
+        datalist <- dplyr::bind_rows(datalist,
+                                     langlist)
       }
       }
     datalist <- datalist[!is.na(datalist$title), ] #remove NA papers
@@ -1213,7 +1252,7 @@ FetchSpTAK_scopus <- function(genus,
         print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
         print(paste("Fetching records now."))
         search <- rscopus::scopus_search(query = create_query_string_TAK_scopus(genus,
-                                                                                species,
+                                                                                species = paste0(species),
                                                                                 synonyms, 
                                                                                 additionalkeywords),
                                          api_key = apikey,
@@ -1224,7 +1263,8 @@ FetchSpTAK_scopus <- function(genus,
         start_record <- as.numeric(summary(search)[1,1]) #move the pointer of starting record for each iteration to a new value
         searchdf <- rscopus::entries_to_citation_df(search$entries)
         list <- data.frame(searchdf)
-        datalist <- dplyr::bind_rows(datalist, list)
+        datalist <- dplyr::bind_rows(datalist,
+                                     list)
         #loop ends
         }} else {
           #search begins
@@ -1546,7 +1586,34 @@ FetchGenusTAK_scopus <- function(genus, synonyms, additionalkeywords, language =
 }
 ```
 
-```{r, function to get result count from scopus title only}
+```{r, function to get result count from wos}
+Count_wos <- function(search,
+                      genus,
+                      species = NULL,
+                      synonyms,
+                      additionalkeywords) {
+  sp_check(genus,
+           species = paste0(species))
+  if (search == "t") {
+    count <- wosr::query_wos(query = create_query_string_T_wos(genus,
+                                                               species = paste0(species),
+                                                               synonyms,
+                                                               additionalkeywords),
+                             sid = sid) 
+  } else if (search == "tak") {
+    count <- wosr::query_wos(query = create_query_string_TAK_wos(genus,
+                                                                 species = paste0(species),
+                                                                 synonyms,
+                                                                 additionalkeywords),
+                             sid = sid) 
+  } else {
+    stop('Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, and keywords.')
+  }
+  return(count)
+}
+```
+
+```{r, function to get result count from wos title only}
 CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
   sp_check(genus, species)
   count <- wosr::query_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
@@ -1555,7 +1622,7 @@ CountSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
 }
 ```
 
-```{r, function to get result count from scopus title+abs+key}
+```{r, function to get result count from wos title+abs+key}
 CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
   sp_check(genus, species)
   count <- wosr::query_wos(query = create_query_string_TAK_wos(genus, species, synonyms, additionalkeywords),
@@ -1564,7 +1631,7 @@ CountSpTAK_wos <- function(genus, species, synonyms, additionalkeywords) {
 }
 ```
 
-```{r, function to get result count from scopus title only; genus}
+```{r, function to get result count from wos title only; genus}
 CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
   genus_check(genus)
   count <- wosr::query_wos(query = create_query_string_T_wos_genus(genus, synonyms, additionalkeywords),
@@ -1573,36 +1640,12 @@ CountGenusT_wos <- function(genus, synonyms, additionalkeywords) {
 }
 ```
 
-```{r, function to get result count from scopus title+abs+key; genus}
+```{r, function to get result count from wos title+abs+key; genus}
 CountGenusTAK_wos <- function(genus, synonyms, additionalkeywords) {
   genus_check(genus)
   count <- wosr::query_wos(query = create_query_string_TAK_wos_genus(genus, synonyms, additionalkeywords),
                            sid = sid) 
   return(count)
-}
-```
-
-```{r, fetch from wos using title, message=FALSE}
-#this function downloads citation data from wos
-FetchSpT_wos <- function(genus, species, synonyms, additionalkeywords) {
-  count <- CountSpT_wos(genus, speices, synonyms, additionalkeywords) #check the number of records
-  print(paste(count, "records found."))
-  if (count < 1) {
-    noCitations <- data.frame(citations = 0)
-    return(noCitations)
-  }
-  query <- wosr::pull_wos(query = create_query_string_T_wos(genus, species, synonyms, additionalkeywords),
-                          sid = sid) 
-  results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
-  #renaming columns
-  names(results)[names(results) == "tot_cites"] <- "citations"
-  names(results)[names(results) == "doc_type"] <- "description"
-  names(results)[names(results) == "date"] <- "cover_date"
-  #showing final list of records
-  returned <- nrow(results)
-  print(paste(returned, "records retrived in total."))
-  return(results)
 }
 ```
 
@@ -2074,11 +2117,24 @@ plotPub <- function(data) {
 apikey <- Sys.getenv("myscopusAPI")
 sid <- auth(username = NULL, password = NULL)
 
-Count_test(level = "T", genus = "Osphranter", species = "rufus")
 
-test <- Fetch(db = "scopus",
-              search = "t",
-              level = "species",
-              genus = "Osphranter", species = "rufus")
+Count_scopus(search = "t", genus = "Osphranter", species = "rufus") #6
+Count_scopus(search = "tak", genus = "Osphranter", species = "rufus") #19
+Count_scopus(search = "t", genus = "Osphranter") #10
+Count_scopus(search = "tak", genus = "Osphranter") #45
+
+FetchT_scopus(genus = "Osphranter", species = "rufus") #6
+FetchTAK_scopus(genus = "Osphranter", species = "rufus") #19
+FetchT_scopus(genus = "Osphranter") #10
+FetchTAK_scopus(genus = "Osphranter") #45
+
+Count_wos(search = "t", genus = "Osphranter", species = "rufus") 
+Count_wos(search = "tak", genus = "Osphranter", species = "rufus") 
+Count_wos(search = "t", genus = "Osphranter") 
+Count_wos(search = "tak", genus = "Osphranter") 
+
+
+cat(create_query_string_TAK_scopus(genus = "Osphranter", species = "rufus"))
+cat(create_query_string_TAK_scopus(genus = "Osphranter"))
 
 ```
