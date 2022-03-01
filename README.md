@@ -57,8 +57,11 @@ key.
     `Create API Key`.
 4.  Read the legal documents and check the boxes.
 
+#### Using your API key securely
+
 After acquiring your key, make sure to store it safely. The following
-steps will enable you to save it as an environment variable.
+steps will enable you to save it as an environment variable, without
+saving it in the console or script.
 
 ``` r
 file.edit("~/.Renviron")
@@ -79,8 +82,7 @@ Sys.getenv("scopus_api_key")
 #> [1] "a_long_string"
 ```
 
-You can then load it to your environment without having the secret key
-in your script or console as follows:
+You can then load it to your environment as follows:
 
 ``` r
 apikey <- Sys.getenv("scopus_api_key")
