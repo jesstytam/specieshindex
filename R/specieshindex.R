@@ -210,11 +210,11 @@ FetchT_scopus <- function(genus,
                           synonyms,
                           additionalkeywords,
                           language = 0) {
-  count <- CountSpT_scopus(search = "t",
-                           genus,
-                           species = paste0(species),
-                           synonyms,
-                           additionalkeywords) #check the number of records
+  count <- Count_scopus(search = "t",
+                        genus,
+                        species = paste0(species),
+                        synonyms,
+                        additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
