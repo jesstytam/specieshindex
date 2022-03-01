@@ -7,7 +7,6 @@
 Fetch(
   db,
   search,
-  level,
   genus,
   species = NULL,
   synonyms,

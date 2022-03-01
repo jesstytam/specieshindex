@@ -4,7 +4,7 @@
 \alias{Count}
 \title{Search count of literature}
 \usage{
-Count(db, search, level, genus, species = NULL, synonyms, additionalkeywords)
+Count(db, search, genus, species = NULL, synonyms, additionalkeywords)
 }
 \arguments{
 \item{db}{Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").}

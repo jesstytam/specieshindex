@@ -28,7 +28,6 @@
 #' }
 Count <- function(db,
                   search,
-                  level,
                   genus,
                   species = NULL,
                   synonyms,
@@ -82,7 +81,6 @@ Count <- function(db,
 #' }
 Fetch <- function(db,
                   search,
-                  level,
                   genus,
                   species = NULL,
                   synonyms,
@@ -1720,3 +1718,143 @@ sp_check <- function(genus,
     stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
   }
 }
+
+
+#' Koala.
+#'
+#' A dataset with some literature on Koalas
+#'
+#' @format A data frame :
+#' \describe{
+#'   \item{citations}{number of cites}
+#'   \item{journal}{journal}
+#'   \item{authkeywords}{authkeywords}
+#'   \item{cover_date}{cover_date}
+#'   \item{cover_display_date}{cover_display_date}
+#'   \item{dc_creator}{dc_creator}
+#'   \item{dc_description}{dc_description}
+#'   \item{dc_identifier}{dc_identifier}
+#'   \item{description}{description}
+#'   \item{doi}{doi}
+#'   \item{eid}{eid}
+#'   \item{pii}{pii}
+#'   \item{prism_aggregationType}{prism_aggregationType}
+#'   \item{prism_eIssn}{prism_eIssn}
+#'   \item{prism_issn}{prism_issn}
+#'   \item{prism_pageRange}{prism_pageRange}
+#'   \item{prism_url}{prism_url}
+#'   \item{source_id}{source_id}
+#'   \item{subtype}{subtype}
+#'   \item{title}{title}
+#'   ...
+#' }
+#' @source \url{http://www.diamondse.info/}
+"Koala"
+
+
+#' Platypus
+#'
+#' A dataset with some literature on Platypus
+#'
+#' @format A data frame :
+#' \describe{
+#'   \item{citations}{number of cites}
+#'   \item{journal}{journal}
+#'   \item{authkeywords}{authkeywords}
+#'   \item{cover_date}{cover_date}
+#'   \item{cover_display_date}{cover_display_date}
+#'   \item{dc_creator}{dc_creator}
+#'   \item{dc_description}{dc_description}
+#'   \item{dc_identifier}{dc_identifier}
+#'   \item{description}{description}
+#'   \item{doi}{doi}
+#'   \item{eid}{eid}
+#'   \item{pii}{pii}
+#'   \item{prism_aggregationType}{prism_aggregationType}
+#'   \item{prism_eIssn}{prism_eIssn}
+#'   \item{prism_issn}{prism_issn}
+#'   \item{prism_pageRange}{prism_pageRange}
+#'   \item{prism_url}{prism_url}
+#'   \item{source_id}{source_id}
+#'   \item{subtype}{subtype}
+#'   \item{title}{title}
+#'   ...
+#' }
+#' @source WOS
+"Platypus"
+
+#' Quokka
+#'
+#' A dataset with some literature on Quokka
+#'
+#' @format A data frame :
+#' \describe{
+#'   \item{citations}{number of cites}
+#'   \item{journal}{journal}
+#'   \item{authkeywords}{authkeywords}
+#'   \item{cover_date}{cover_date}
+#'   \item{cover_display_date}{cover_display_date}
+#'   \item{dc_creator}{dc_creator}
+#'   \item{dc_description}{dc_description}
+#'   \item{dc_identifier}{dc_identifier}
+#'   \item{description}{description}
+#'   \item{doi}{doi}
+#'   \item{eid}{eid}
+#'   \item{pii}{pii}
+#'   \item{prism_aggregationType}{prism_aggregationType}
+#'   \item{prism_eIssn}{prism_eIssn}
+#'   \item{prism_issn}{prism_issn}
+#'   \item{prism_pageRange}{prism_pageRange}
+#'   \item{prism_url}{prism_url}
+#'   \item{source_id}{source_id}
+#'   \item{subtype}{subtype}
+#'   \item{title}{title}
+#'   ...
+#' }
+#' @source WOS
+"Quokka"
+
+#' Woylie
+#'
+#' A dataset with some literature on Woylie
+#'
+#' @format A data frame :
+#' \describe{
+#'   \item{citations}{number of cites}
+#'   \item{journal}{journal}
+#'   \item{authkeywords}{authkeywords}
+#'   \item{cover_date}{cover_date}
+#'   \item{cover_display_date}{cover_display_date}
+#'   \item{dc_creator}{dc_creator}
+#'   \item{dc_description}{dc_description}
+#'   \item{dc_identifier}{dc_identifier}
+#'   \item{description}{description}
+#'   \item{doi}{doi}
+#'   \item{eid}{eid}
+#'   \item{pii}{pii}
+#'   \item{prism_aggregationType}{prism_aggregationType}
+#'   \item{prism_eIssn}{prism_eIssn}
+#'   \item{prism_issn}{prism_issn}
+#'   \item{prism_pageRange}{prism_pageRange}
+#'   \item{prism_url}{prism_url}
+#'   \item{source_id}{source_id}
+#'   \item{subtype}{subtype}
+#'   \item{title}{title}
+#'   ...
+#' }
+#' @source WOS
+"Woylie"
+
+#' languages
+#'
+#' A dataset with some literature on languages
+#'
+#' @format A data frame :
+#' \describe{
+#'   \item{language}{names of languages}
+#'   ...
+#' }
+#' @source somewhere?
+"languages"
+
+
