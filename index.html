@@ -113,7 +113,10 @@
 <li>Go to the <code>My API Key</code> tab on top of the page and click <code>Create API Key</code>.</li>
 <li>Read the legal documents and check the boxes.</li>
 </ol>
-<p>After acquiring your key, make sure to store it safely. The following steps will enable you to save it as an environment variable.</p>
+<div class="section level4">
+<h4 id="using-your-api-key-securely">Using your API key securely<a class="anchor" aria-label="anchor" href="#using-your-api-key-securely"></a>
+</h4>
+<p>After acquiring your key, make sure to store it safely. The following steps will enable you to save it as an environment variable, without saving it in the console or script.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="st">"~/.Renviron"</span><span class="op">)</span></code></pre></div>
 <p>This will bring up an empty file, which is where you will save your key into.</p>
@@ -123,9 +126,10 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"scopus_api_key"</span><span class="op">)</span>
 <span class="co">#&gt; [1] "a_long_string"</span></code></pre></div>
-<p>You can then load it to your environment without having the secret key in your script or console as follows:</p>
+<p>You can then load it to your environment as follows:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">apikey</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"scopus_api_key"</span><span class="op">)</span></code></pre></div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="-connecting-to-web-of-science">
