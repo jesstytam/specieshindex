@@ -38,9 +38,9 @@ Count <- function(db,
   } else if (db == "scopus" & search == "tak") {
     countsp <- Count_scopus(search = "tak", genus, species, synonyms, additionalkeywords)
   } else if (db == "wos" & search == "t") {
-    countsp <- Count_wos(saerch = "t", genus, species, synonyms, additionalkeywords)
+    countsp <- Count_wos(search = "t", genus, species, synonyms, additionalkeywords)
   } else if (db == "wos" & search == "tak") {
-    countsp <- Count_wos(saerch = "tak", genus, species, synonyms, additionalkeywords)
+    countsp <- Count_wos(search = "tak", genus, species, synonyms, additionalkeywords)
   } else if (db == "base" & search == "t") {
     countsp <- Count_base(search = "t", genus, species, synonyms, additionalkeywords)
   } else if (db == "base" & search == "tak") {
