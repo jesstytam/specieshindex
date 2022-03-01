@@ -37,6 +37,15 @@
     <loc>/reference/Fetch.html</loc>
   </url>
   <url>
+    <loc>/reference/Koala.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Platypus.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Quokka.html</loc>
+  </url>
+  <url>
     <loc>/reference/SourceType.html</loc>
   </url>
   <url>
@@ -64,6 +73,9 @@
     <loc>/reference/TotalPub.html</loc>
   </url>
   <url>
+    <loc>/reference/Woylie.html</loc>
+  </url>
+  <url>
     <loc>/reference/YearsPublishing.html</loc>
   </url>
   <url>
@@ -71,6 +83,9 @@
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/languages.html</loc>
   </url>
   <url>
     <loc>/reference/plotAllindices.html</loc>
