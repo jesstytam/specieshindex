@@ -9,7 +9,7 @@ Fetch(
   search,
   level,
   genus,
-  species,
+  species = NULL,
   synonyms,
   additionalkeywords,
   language = 0
@@ -19,8 +19,6 @@ Fetch(
 \item{db}{Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").}
 
 \item{search}{Search fields. Title only ("t") or title, abstract, and keywords ("tak").}
-
-\item{level}{Taxonomic level. Genus ("genus") or species ("species").}
 
 \item{genus}{Genus classification from the binomial name.}
 
@@ -43,13 +41,11 @@ Duplicates are to be removed by the user after fetching the data.
 \dontrun{
 Fetch(db = "scopus",
       search = "t",
-      level = "species",
       genus = "Osphranter", species = "rufus")
 }
 \dontrun{
 Fetch(db = "scopus",
       search = "t",
-      level = "species",
       genus = "Osphranter", species = "rufus",
       synonyms = "Macropus rufus",
       additionalkeywords = "conserv*")

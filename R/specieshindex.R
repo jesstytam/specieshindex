@@ -5,7 +5,6 @@
 #'
 #' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
 #' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
-#' @param level Taxonomic level. Genus ("genus") or species ("species").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
@@ -18,13 +17,11 @@
 #' \dontrun{
 #' Count(db = "scopus",
 #'       search = "t",
-#'       level = "species",
 #'       genus = "Osphranter", species = "rufus")
 #' }
 #' \dontrun{
 #' Count(db = "scopus",
 #'       search = "t",
-#'       level = "species",
 #'       genus = "Osphranter", species = "rufus",
 #'       synonyms = "Macropus rufus",
 #'       additionalkeywords = "conserv*")
@@ -33,35 +30,23 @@ Count <- function(db,
                   search,
                   level,
                   genus,
-                  species,
+                  species = NULL,
                   synonyms,
                   additionalkeywords) {
-if (db == "scopus" & search == "t" & level == "species") {
-  countsp <- CountSpT_scopus(genus, species, synonyms, additionalkeywords)
-} else if (db == "wos" & search == "t" & level == "species") {
-  countsp <- CountSpT_wos(genus, species, synonyms, additionalkeywords)
-} else if (db == "base" & search == "t" & level == "species") {
-  countsp <- CountSpT_base(genus, species, synonyms, additionalkeywords)
-} else if (db == "scopus" & search == "tak" & level == "species") {
-  countsp <- CountSpTAK_scopus(genus, species, synonyms, additionalkeywords)
-} else if (db == "wos" & search == "tak" & level == "species") {
-  countsp <- CountSpTAK_wos(genus, species, synonyms, additionalkeywords)
-} else if (db == "base" & search == "tak" & level == "species") {
-  countsp <- CountSpTAK_base(genus, species, synonyms, additionalkeywords)
-} else if (db == "scopus" & search == "t" & level == "genus") {
-  countsp <- CountGenusT_scopus(genus, synonyms, additionalkeywords)
-} else if (db == "wos" & search == "t" & level == "genus") {
-  countsp <- CountGenusT_wos(genus, synonyms, additionalkeywords)
-} else if (db == "base" & search == "t" & level == "genus") {
-  countsp <- CountGenusT_base(genus, synonyms, additionalkeywords)
-} else if (db == "scopus" & search == "tak" & level == "genus") {
-  countsp <- CountGenusTAK_scopus(genus, synonyms, additionalkeywords)
-} else if (db == "wos" & search == "tak" & level == "genus") {
-  countsp <- CountGenusTAK_wos(genus, synonyms, additionalkeywords)
-} else if (db == "base" & search == "tak" & level == "genus") {
-  countsp <- CountGenusTAK_base(genus, synonyms, additionalkeywords)
-} 
-return(countsp)
+  if (db == "scopus" & search == "t") {
+    countsp <- Count_scopus(search = "t", genus, species, synonyms, additionalkeywords)
+  } else if (db == "scopus" & search == "tak") {
+    countsp <- Count_scopus(search = "tak", genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" & search == "t") {
+    countsp <- Count_wos(saerch = "t", genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" & search == "tak") {
+    countsp <- Count_wos(saerch = "tak", genus, species, synonyms, additionalkeywords)
+  } else if (db == "base" & search == "t") {
+    countsp <- Count_base(search = "t", genus, species, synonyms, additionalkeywords)
+  } else if (db == "base" & search == "tak") {
+    countsp <- Count_base(search = "tak", genus, species, synonyms, additionalkeywords)
+  } 
+  return(countsp)
 }
 
 
@@ -73,7 +58,6 @@ return(countsp)
 #'
 #' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
 #' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
-#' @param level Taxonomic level. Genus ("genus") or species ("species").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
@@ -87,13 +71,11 @@ return(countsp)
 #' \dontrun{
 #' Fetch(db = "scopus",
 #'       search = "t",
-#'       level = "species",
 #'       genus = "Osphranter", species = "rufus")
 #' }
 #' \dontrun{
 #' Fetch(db = "scopus",
 #'       search = "t",
-#'       level = "species",
 #'       genus = "Osphranter", species = "rufus",
 #'       synonyms = "Macropus rufus",
 #'       additionalkeywords = "conserv*")
@@ -102,26 +84,18 @@ Fetch <- function(db,
                   search,
                   level,
                   genus,
-                  species,
+                  species = NULL,
                   synonyms,
                   additionalkeywords,
                   language = 0) {
-  if (db == "scopus" & search == "t" & level == "species") {
-    fetchsp <- FetchSpT_scopus(genus, species, synonyms, additionalkeywords, language)
-  } else if (db == "wos" & search == "t" & level == "species") {
-    fetchsp <- FetchSpT_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "scopus" & search == "tak" & level == "species") {
-    fetchsp <- FetchSpTAK_scopus(genus, species, synonyms, additionalkeywords, language)
-  } else if (db == "wos" & search == "tak" & level == "species") {
-    fetchsp <- FetchSpTAK_wos(genus, species, synonyms, additionalkeywords)
-  } else if (db == "scopus" & search == "t" & level == "genus") {
-    fetchsp <- FetchGenusT_scopus(genus, synonyms, additionalkeywords, language)
-  } else if (db == "wos" & search == "t" & level == "genus") {
-    fetchsp <- FetchGenusT_wos(genus, synonyms, additionalkeywords)
-  } else if (db == "scopus" & search == "tak" & level == "genus") {
-    fetchsp <- FetchGenusTAK_scopus(genus, synonyms, additionalkeywords, language)
-  } else if (db == "wos" & search == "tak" & level == "genus") {
-    fetchsp <- FetchGenusTAK_wos(genus, synonyms, additionalkeywords)
+  if (db == "scopus" & search == "t") {
+    fetchsp <- FetchT_scopus(genus, species, synonyms, additionalkeywords, language)
+  } else if (db == "scopus" & search == "tak") {
+    fetchsp <- FetchTAK_scopus(genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" & search == "t") {
+    fetchsp <- FetchT_wos(genus, species, synonyms, additionalkeywords)
+  } else if (db == "wos" & search == "tak") {
+    fetchsp <- FetchTAK_wos(genus, species, synonyms, additionalkeywords)
   } else if (db == "base") {
     stop("Data extraction is not available for BASE")
   } 
@@ -131,7 +105,6 @@ Fetch <- function(db,
 
 
 #' This function counts the total number of search results.
-#' It counts the publications with the binomial name in the title only.
 #' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
 #' 
 #' @title Search count from Scopus 
@@ -524,11 +497,11 @@ FetchTAK_scopus <- function(genus,
 
 
 #' This function counts the total number of search results.
-#' It counts the publications with the binomial name in the title only.
 #' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
 #' 
-#' @title Search count from Web of Science - title only
+#' @title Search count from Web of Science
 #'
+#' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
@@ -536,182 +509,46 @@ FetchTAK_scopus <- function(genus,
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
 #' 
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
 #' @examples
 #' \dontrun{
-#' CountSpT_wos("Bettongia", "penicillata")
+#' Count_wos(search = "t", genus = "Bettongia", species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' CountSpT_wos("bettongia", "penicillata")
+#' Count_wos(search = "t", genus = "bettongia", species = "penicillata")
 #' }
 #' \dontrun{
-#' CountSpT_wos("Bettongia", "penicillata", "conserv*")
+#' Count_wos(search = "t", genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' CountSpT_wos("bettongia", "penicillata", "conserv*")
+#' Count_wos(search = "t", genus = "bettongia", species = "penicillata", additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
 #' 
-CountSpT_wos <- function(genus,
-                         species,
-                         synonyms,
-                         additionalkeywords) {
-  sp_check(genus, species)
-  count <- wosr::query_wos(query = create_query_string_T_wos(genus,
-                                                             species,
-                                                             synonyms,
-                                                             additionalkeywords),
-                           sid = sid) 
-  return(count)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the binomial name in the title, abstract and author keywords.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
-#' 
-#' @title Search count from Web of Science - title, abstract and author keywords
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#'
-#' @return Search count of the species with the given \code{genus} and \code{species}.
-#' 
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountSpTAK_wos("Bettongia", "penicillata")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountSpTAK_wos("bettongia", "penicillata")
-#' }
-#' \dontrun{
-#' CountSpTAK_wos("Bettongia", "penicillata", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountSpTAK_wos("bettongia", "penicillata", "conserv*")
-#' }
-#' 
-#' @noRd
-#' 
-CountSpTAK_wos <- function(genus,
-                           species,
-                           synonyms,
-                           additionalkeywords) {
-  sp_check(genus, species)
-  count <- wosr::query_wos(query = create_query_string_TAK_wos(genus,
-                                                               species,
+Count_wos <- function(search,
+                      genus,
+                      species = NULL,
+                      synonyms,
+                      additionalkeywords) {
+  sp_check(genus,
+           species = paste0(species))
+  if (search == "t") {
+    count <- wosr::query_wos(query = create_query_string_T_wos(genus,
+                                                               species = paste0(species),
                                                                synonyms,
                                                                additionalkeywords),
-                           sid = sid) 
-  return(count)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the genus name in the title only.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
-#' 
-#' @title Search count from Web of Science - title only
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#'
-#' @return Search count of the genus with the given \code{genus}.
-#' 
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountGenusT_wos("Bettongia")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusT_wos("bettongia")
-#' }
-#' \dontrun{
-#' CountGenusT_wos("Bettongia", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusT_wos("bettongia", "conserv*")
-#' }
-#' 
-#' @noRd
-#' 
-CountGenusT_wos <- function(genus,
-                            synonyms,
-                            additionalkeywords) {
-  genus_check(genus)
-  count <- wosr::query_wos(query = create_query_string_T_wos_genus(genus,
-                                                                   synonyms,
-                                                                   additionalkeywords),
-                           sid = sid) 
-  return(count)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the genus name in the title, abstract and author keywords.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
-#' 
-#' @title Search count from Web of Science - title, abstract and author keywords
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#'
-#' @return Search count of the genus with the given \code{genus}.
-#' 
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountGenusTAK_wos("Bettongia")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusTAK_wos("bettongia")
-#' }
-#' \dontrun{
-#' CountGenusTAK_wos("Bettongia", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusTAK_wos("bettongia", "conserv*")
-#' }
-#' 
-#' @noRd
-#' 
-CountGenusTAK_wos <- function(genus,
-                              synonyms,
-                              additionalkeywords) {
-  genus_check(genus)
-  count <- wosr::query_wos(query = create_query_string_TAK_wos_genus(genus,
-                                                                     synonyms,
-                                                                     additionalkeywords),
-                           sid = sid) 
+                             sid = sid) 
+  } else if (search == "tak") {
+    count <- wosr::query_wos(query = create_query_string_TAK_wos(genus,
+                                                                 species = paste0(species),
+                                                                 synonyms,
+                                                                 additionalkeywords),
+                             sid = sid) 
+  } else {
+    stop('Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, and keywords.')
+  }
   return(count)
 }
 
@@ -731,45 +568,45 @@ CountGenusTAK_wos <- function(genus,
 #' @importFrom data.table rbindlist setDT .SD
 #' @importFrom stats na.omit
 #' 
-#'
 #' @examples
 #' \dontrun{
-#' FetchSpT_wos("Bettongia", "penicillata")
+#' FetchT_wos(genus = "Bettongia", species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchSpT_wos("bettongia", "penicillata")
+#' FetchT_wos(genus = "bettongia", species = "penicillata")
 #' }
 #' \dontrun{
-#' FetchSpT_wos("Bettongia", "penicillata", "conserv*")
+#' FetchT_wos(genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchSpT_wos("bettongia", "penicillata", "conserv*")
+#' FetchT_wos(genus = "bettongia", species = "penicillata", additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
 #' 
-FetchSpT_wos <- function(genus,
-                         species,
-                         synonyms,
-                         additionalkeywords) {
-  count <- CountSpT_wos(genus,
-                        species,
-                        synonyms,
-                        additionalkeywords) #check the number of records
+FetchT_wos <- function(genus,
+                       species = NULL,
+                       synonyms,
+                       additionalkeywords) {
+  count <- Count_wos(search = "t",
+                     genus,
+                     species = paste0(species),
+                     synonyms,
+                     additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
     return(noCitations)
   }
   query <- wosr::pull_wos(query = create_query_string_T_wos(genus,
-                                                            species,
+                                                            species = paste0(species), 
                                                             synonyms,
                                                             additionalkeywords),
                           sid = sid) 
-  results <- rbindlist(query, fill = TRUE)
-  results <- setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
+  results <- data.table::rbindlist(query, fill = TRUE)
+  results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
   names(results)[names(results) == "tot_cites"] <- "citations"
   names(results)[names(results) == "doc_type"] <- "description"
@@ -796,165 +633,43 @@ FetchSpT_wos <- function(genus,
 #' @importFrom data.table rbindlist setDT .SD
 #' @importFrom stats na.omit
 #' 
-#'
 #' @examples
 #' \dontrun{
-#' FetchSpTAK_wos("Bettongia", "penicillata")
+#' FetchTAK_wos(genus = "Bettongia", species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchSpTAK_wos("bettongia", "penicillata")
+#' FetchTAK_wos(genus = "bettongia", species = "penicillata")
 #' }
 #' \dontrun{
-#' FetchSpTAK_wos("Bettongia", "penicillata", "conserv*")
+#' FetchTAK_wos(genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchSpTAK_wos("bettongia", "penicillata", "conserv*")
+#' FetchTAK_wos(genus = "bettongia", species = "penicillata", additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
 #' 
-FetchSpTAK_wos <- function(genus,
-                           species,
-                           synonyms,
-                           additionalkeywords) {
-  count <- CountSpTAK_wos(genus,
-                          species,
-                          synonyms,
-                          additionalkeywords) #check the number of records
+FetchTAK_wos <- function(genus,
+                         species = NULL,
+                         synonyms,
+                         additionalkeywords) {
+  count <- Count_wos(search = "tak",
+                     genus,
+                     species = paste0(species),
+                     synonyms,
+                     additionalkeywords) #check the number of records
   print(paste(count, "records found."))
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
     return(noCitations)
   }
   query <- wosr::pull_wos(query = create_query_string_TAK_wos(genus,
-                                                              species,
-                                                              synonyms, 
+                                                              species = paste0(species), 
+                                                              synonyms,
                                                               additionalkeywords),
                           sid = sid) 
-  results <- rbindlist(query, fill = TRUE)
-  results <- setDT(results)[, lapply(.SD, function(x) toString(na.omit(x))), by = ut]
-  #renaming columns
-  names(results)[names(results) == "tot_cites"] <- "citations"
-  names(results)[names(results) == "doc_type"] <- "description"
-  names(results)[names(results) == "date"] <- "cover_date"
-  #showing final list of records
-  returned <- nrow(results)
-  print(paste(returned, "records retrived in total."))
-  return(results)
-}
-
-
-
-#' This function fetches citation information from Web of Science using genus name found in the title of the publications.
-#' Duplicates are to be removed by the user after fetching the data.
-#'
-#' @title Fetch data from Web of Science - title only
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#'
-#' @return A dataframe of the genus' citation records with the given \code{genus}.
-#' @importFrom data.table rbindlist setDT .SD
-#' @importFrom stats na.omit
-#' 
-#'
-#' @examples
-#' \dontrun{
-#' FetchGenusT_wos("Bettongia")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' FetchGenusT_wos("bettongia")
-#' }
-#' \dontrun{
-#' FetchGenusT_wos("Bettongia", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' FetchGenusT_wos("bettongia", "conserv*")
-#' }
-#' 
-#' @noRd
-#' 
-FetchGenusT_wos <- function(genus,
-                            synonyms,
-                            additionalkeywords) {
-  count <- CountGenusT_wos(genus,
-                           synonyms,
-                           additionalkeywords) #check the number of records
-  print(paste(count, "records found."))
-  if (count < 1) {
-    noCitations <- data.frame(citations = 0)
-    return(noCitations)
-  }
-  query <- wosr::pull_wos(query = create_query_string_T_wos_genus(genus,
-                                                                  synonyms,
-                                                                  additionalkeywords),
-                          sid = sid) 
-  results <- data.table::rbindlist(query, fill = TRUE)
-  results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
-  #renaming columns
-  names(results)[names(results) == "tot_cites"] <- "citations"
-  names(results)[names(results) == "doc_type"] <- "description"
-  names(results)[names(results) == "date"] <- "cover_date"
-  #showing final list of records
-  returned <- nrow(results)
-  print(paste(returned, "records retrived in total."))
-  return(results)
-}
-
-
-
-#' This function fetches citation information from Web of Science using genus name found in the title, abstract and author keywords of the publications.
-#' Duplicates are to be removed by the user after fetching the data.
-#'
-#' @title Fetch data from Web of Science - title, abstract and author keywords.
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#'
-#' @return A dataframe of the genus' citation records with the given \code{genus}.
-#' @importFrom data.table rbindlist setDT .SD
-#' @importFrom stats na.omit
-#' 
-#'
-#' @examples
-#' \dontrun{
-#' FetchGenusTAK_wos("Bettongia")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' FetchGenusTAK_wos("bettongia")
-#' }
-#' \dontrun{
-#' FetchGenusTAK_wos("Bettongia", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' FetchGenusTAK_wos("bettongia", "conserv*")
-#' }
-#' 
-#' @noRd
-#' 
-FetchGenusTAK_wos <- function(genus,
-                              synonyms,
-                              additionalkeywords) {
-  count <- CountGenusTAK_wos(genus,
-                             synonyms,
-                             additionalkeywords) #check the number of records
-  print(paste(count, "records found."))
-  if (count < 1) {
-    noCitations <- data.frame(citations = 0)
-    return(noCitations)
-  }
-  query <- wosr::pull_wos(query = create_query_string_TAK_wos_genus(genus,
-                                                                    synonyms,
-                                                                    additionalkeywords),
-                          sid = sid) 
   results <- data.table::rbindlist(query, fill = TRUE)
   results <- data.table::setDT(results)[, lapply(data.table::.SD, function(x) toString(na.omit(x))), by = ut]
   #renaming columns
@@ -970,207 +685,60 @@ FetchGenusTAK_wos <- function(genus,
 
 
 #' This function counts the total number of search results.
-#' It counts the publications with the binomial name in the title only.
 #' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
 #' 
-#' @title Search count from BASE - title only
+#' @title Search count from BASE
 #'
+#' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
 #' @param additionalkeywords Optional search terms.
 #'
 #' @return Search count of the species with the given \code{genus} and \code{species}.
-#' 
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
 #'
 #' @examples
 #' \dontrun{
-#' CountSpT_base("Bettongia", "penicillata")
+#' Count_base(search = "t", genus = "Bettongia", species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' CountSpT_base("bettongia", "penicillata")
+#' Count_base(search = "t", genus = "bettongia", species = "penicillata")
 #' }
 #' \dontrun{
-#' CountSpT_base("Bettongia", "penicillata", "conserv*")
+#' Count_base(search = "t", genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' CountSpT_base("bettongia", "penicillata", "conserv*")
+#' Count_base(search = "t", genus = "bettongia", species = "penicillata", additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
 #' 
-CountSpT_base <- function(genus,
-                          species,
-                          synonyms,
-                          additionalkeywords) {
-  sp_check(genus, species)
-  response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
-                        query = list(func = "PerformSearch",
-                                     query = create_query_string_T_base(genus,
-                                                                        species,
-                                                                        synonyms,
-                                                                        additionalkeywords)))
-  httr::stop_for_status(response) #pass any HTTP errors to the R console
-  response_data <- XML::xmlParse(response)
-  resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
-  return(resultCount)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the binomial name in the title, abstract and author keywords.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus and species names.
-#' 
-#' @title Search count from BASE - title, abstract and author keywords
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
-#' @param additionalkeywords Optional search terms.
-#'
-#' @return Search count of the species with the given \code{genus} and \code{species}.
-#' 
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountSpTAK_base("Bettongia", "penicillata")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountSpTAK_base("bettongia", "penicillata")
-#' }
-#' \dontrun{
-#' CountSpTAK_base("Bettongia", "penicillata", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountSpTAK_base("bettongia", "penicillata", "conserv*")
-#' }
-#' 
-#' @noRd
-#' 
-CountSpTAK_base <- function(genus,
-                            species,
-                            synonyms,
-                            additionalkeywords) {
-  sp_check(genus, species)
-  response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
-                        query = list(func = "PerformSearch",
-                                     query = create_query_string_TAK_base(genus,
-                                                                          species,
+Count_base <- function(search,
+                       genus,
+                       species = NULL,
+                       synonyms,
+                       additionalkeywords) {
+  sp_check(genus,
+           species = paste0(species))
+  if (search == "t") {
+    response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
+                          query = list(func = "PerformSearch",
+                                       query = create_query_string_T_base(genus,
+                                                                          species = paste0(species),
                                                                           synonyms,
                                                                           additionalkeywords)))
-  httr::stop_for_status(response) #pass any HTTP errors to the R console
-  response_data <- XML::xmlParse(response)
-  resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
-  return(resultCount)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the genus name in the title only.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
-#' 
-#' @title Search count from BASE - title only
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#'
-#' @return Search count of the genus with the given \code{genus}.
-#' 
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountGenusT_base("Bettongia")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusT_base("bettongia")
-#' }
-#' \dontrun{
-#' CountGenusT_base("Bettongia", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusT_base("bettongia", "conserv*")
-#' }
-#' 
-#' @noRd
-#' 
-CountGenusT_base <- function(genus,
-                             synonyms,
-                             additionalkeywords) {
-  genus_check(genus)
-  response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
-                        query = list(func = "PerformSearch",
-                                     query = create_query_string_T_base_genus(genus,
-                                                                              synonyms,
-                                                                              additionalkeywords)))
-  httr::stop_for_status(response) #pass any HTTP errors to the R console
-  response_data <- XML::xmlParse(response)
-  resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
-  return(resultCount)
-}
-
-
-
-#' This function counts the total number of search results.
-#' It counts the publications with the genus name in the title, abstract and author keywords.
-#' A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the genus name.
-#' 
-#' @title Search count from BASE - title, abstract and author keywords
-#'
-#' @param genus Genus classification from the binomial name.
-#' @param synonyms Alternate genus names.
-#' @param additionalkeywords Optional search terms.
-#'
-#' @return Search count of the genus with the given \code{genus}.
-#' 
-#' 
-#' @references 
-#' Chamberlain, S. & Szocs, E. (2013). taxize - taxonomic search and retrieval in R. \emph{F1000Research, 2}, 191.
-#'
-#' @examples
-#' \dontrun{
-#' CountGenusTAK_base("Bettongia")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusTAK_base("bettongia")
-#' }
-#' \dontrun{
-#' CountGenusTAK_base("Bettongia", "conserv*")
-#' 
-#' #lower case letter in genus is also accepted and will return identical results
-#' 
-#' CountGenusTAK_base("bettongia", "conserv*")
-#' }
-#' 
-#' @noRd
-#' 
-CountGenusTAK_base <- function(genus,
-                               synonyms,
-                               additionalkeywords) {
-  genus_check(genus)
-  response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
-                        query = list(func = "PerformSearch",
-                                     query = create_query_string_TAK_base_genus(genus,
-                                                                                synonyms, 
-                                                                                additionalkeywords)))
+  } else if (search == "tak") {
+    response <- httr::GET("https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi",
+                          query = list(func = "PerformSearch",
+                                       query = create_query_string_TAK_base(genus,
+                                                                            species = paste0(species),
+                                                                            synonyms,
+                                                                            additionalkeywords)))
+  } else {
+    stop('Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, and keywords.')
+  }
   httr::stop_for_status(response) #pass any HTTP errors to the R console
   response_data <- XML::xmlParse(response)
   resultCount <- as.numeric(XML::xpathSApply(response_data, "//response/result/@numFound"))
@@ -1965,7 +1533,7 @@ create_query_string_T_base <- function(genus,
 
 
 #' Creates a query string for BASE to make functions with a query cleaner.
-#' Title, abstract, and keywords; genus species.
+#' Title, abstract, and keywords.
 #'
 #' @title Query string for BASE
 #' 
@@ -2017,6 +1585,50 @@ create_query_string_TAK_base <- function(genus,
                   ' OR dcsubject:(("', genus, ' ', species = paste0(species), '"', ' OR ',
                   synonyms, ') AND ', additionalkeywords, ')'))
   } 
+}
+
+
+
+#' Function to parse request query to the Scopus API.
+#' Title only.
+#' 
+#' @title Scopus query; title
+#'
+#' @param request Scopus request parsed to the API.
+#'
+#' @noRd
+#' 
+scopus_request_t <- function(request, species = NULL) {
+  rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
+                                                                     species = paste0(species),
+                                                                     synonyms,
+                                                                     additionalkeywords),
+                                        paste0(request)),
+                         api_key = apikey,
+                         verbose = TRUE,
+                         wait_time = 3)
+}
+
+
+
+#' Function to parse request query to the Scopus API.
+#' Title, abstract, and keywords.
+#' 
+#' @title Scopus query; title 
+#'
+#' @param request Scopus request parsed to the API.
+#'
+#' @noRd
+#' 
+scopus_request_tak <- function(request, species = NULL) {
+  rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
+                                                                       species = paste0(species),
+                                                                       synonyms,
+                                                                       additionalkeywords),
+                                        paste0(request)),
+                         api_key = apikey,
+                         verbose = TRUE,
+                         wait_time = 3)
 }
 
 
@@ -2108,30 +1720,4 @@ sp_check <- function(genus,
   } else {
     stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
   }
-}
-
-
-
-scopus_request_t <- function(request) {
-  rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
-                                                                     species = NULL,
-                                                                     synonyms,
-                                                                     additionalkeywords),
-                                        paste0(request)),
-                         api_key = apikey,
-                         verbose = TRUE,
-                         wait_time = 3)
-}
-
-
-
-scopus_request_tak <- function(request) {
-  rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
-                                                                       species = NULL,
-                                                                       synonyms,
-                                                                       additionalkeywords),
-                                        paste0(request)),
-                         api_key = apikey,
-                         verbose = TRUE,
-                         wait_time = 3)
 }

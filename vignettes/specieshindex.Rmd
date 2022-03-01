@@ -131,13 +131,11 @@ Here are some variations of `Count()` connecting to Scopus:
 # Title only; species level
 Count(db = "scopus",
       search = "t",
-      level = "species",
       genus = "Bettongia", species = "penicillata")
 
 #Title, abstract, and keywords; genus level
 Count(db = "scopus",
       search = "tak",
-      level = "genus",
       genus = "Bettongia")
 ```
 
@@ -150,29 +148,24 @@ Here are some examples of searches including additional keywords:
 ```{r, eval=FALSE}
 Count(db = "scopus",
       search = "t",
-      level = "species",
       genus = "Bettongia", species = "penicillata",
       additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)")
 Count(db = "wos", 
       search = "tak",
-      level = "genus",
       genus = "Bettongia",
       additionalkeywords = "(popul* W/5 ecolog*)")
 Count(db = "base", 
       search = "t",
-      level = "species",
       genus = "Osphranter", species = "rufus",
       synonyms = "Macropus rufus",
       additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)")
 Count(db = "wos",
       search = "t",
-      level = "genus",
       genus = "Osphranter",
       synonyms = "Macropus",
       additionalkeywords = "(popul* AND NOT popular)")
 Count(db = "base", 
       search = "tak",
-      level = "species",
       genus = "Bettongia", species = "penicillata",
       additionalkeywords = "NOT (phylog* OR taxonom*)")
 ```
@@ -186,7 +179,6 @@ Some species have had their classification changed in the past, resulting in mul
 ```{r, eval=FALSE}
 Count(db = "scopus",
       search = "t",
-      level = "species",
       genus = "Osphranter", species = "rufus",
       synonyms = "Macropus rufus",
       additionalkeywords = "conserv*")
@@ -204,13 +196,11 @@ For example, you can run:
 # Title only; species level
 Fetch(db = "scopus",
       search = "t",
-      level = "species",
       genus = "Bettongia", species = "penicillata")
 
 #Title, abstract, and keywords; genus level
 Fetch(db = "scopus",
       search = "tak",
-      level = "genus",
       genus = "Bettongia")
 ```
 
@@ -221,29 +211,24 @@ For example, you can run:
 ```{r, eval=FALSE}
 Fetch(db = "scopus",
       search = "t",
-      level = "species",
       genus = "Bettongia", species = "penicillata",
       additionalkeywords = "(consrv* OR protect* OR reintrod* OR restor*)")
 Fetch(db = "wos", 
       search = "tak",
-      level = "genus",
       genus = "Bettongia",
       additionalkeywords = "(popul* W/5 ecolog*)")
 Fetch(db = "scopus", 
       search = "t",
-      level = "species",
       genus = "Osphranter", species = "rufus",
       synonyms = "Macropus rufus",
       additionalkeywords = "(breed* OR reprod* OR fertil* OR fecund*)")
 Fetch(db = "wos",
       search = "tak",
-      level = "genus",
       genus = "Osphranter",
       synonyms = "Macropus",
       additionalkeywords = "(popul* AND NOT popular)")
 Fetch(db = "scopus", 
       search = "tak",
-      level = "species",
       genus = "Bettongia", species = "penicillata",
       additionalkeywords = "NOT (phylog* OR taxonom*)")
 ```
@@ -380,19 +365,15 @@ To demonstrate how the specieshindex package could be helpful in the real world,
 ```{r, eval=FALSE}
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                level = "species",
                 genus = "Bettongia", species = "penicillata")
 Quokka <- Fetch(db = "scopus",
                 search = "tak",
-                level = "species",
                 genus = "Setonix", species = "brachyurus")
 Platypus <- Fetch(db = "scopus",
                   search = "tak",
-                  level = "species",
                   genus = "Ornithorhynchus", species = "anatinus")
 Koala <- Fetch(db = "scopus",
                search = "tak",
-               level = "species",
                genus = "Phascolarctos", species = "cinereus")
 ```
 

@@ -4,14 +4,12 @@
 \alias{Count}
 \title{Search count of literature}
 \usage{
-Count(db, search, level, genus, species, synonyms, additionalkeywords)
+Count(db, search, level, genus, species = NULL, synonyms, additionalkeywords)
 }
 \arguments{
 \item{db}{Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").}
 
 \item{search}{Search fields. Title only ("t") or title, abstract, and keywords ("tak").}
-
-\item{level}{Taxonomic level. Genus ("genus") or species ("species").}
 
 \item{genus}{Genus classification from the binomial name.}
 
@@ -32,13 +30,11 @@ A check will be conducted via \code{\link[taxize]{gnr_resolve}} to validate the 
 \dontrun{
 Count(db = "scopus",
       search = "t",
-      level = "species",
       genus = "Osphranter", species = "rufus")
 }
 \dontrun{
 Count(db = "scopus",
       search = "t",
-      level = "species",
       genus = "Osphranter", species = "rufus",
       synonyms = "Macropus rufus",
       additionalkeywords = "conserv*")

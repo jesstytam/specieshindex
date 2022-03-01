@@ -124,13 +124,11 @@ you can run the `Count()` functions.
 #Title only; species level
 Count(db = "scopus",
       search = "t",
-      level = "species",
       genus = "Bettongia", species = "penicillata")
 
 #Title, abstract, and keywords; genus level
 Count(db = "scopus",
       search = "tak",
-      level = "genus",
       genus = "Bettongia")
 ```
 
@@ -145,19 +143,15 @@ using `Fetch()`. Remember to use binomial names.
 ``` r
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                level = "species",
                 genus = "Bettongia", species = "penicillata")
 Quokka <- Fetch(db = "scopus",
                 search = "tak",
-                level = "species",
                 genus = "Setonix", species = "brachyurus")
 Platypus <- Fetch(db = "scopus",
                   search = "tak",
-                  level = "species",
                   genus = "Ornithorhynchus", species = "anatinus")
 Koala <- Fetch(db = "scopus",
                search = "tak",
-               level = "species",
                genus = "Phascolarctos", species = "cinereus")
 ```
 
@@ -207,7 +201,7 @@ CombineSp
     ## 3 Ornithorhynchus anatinus    anatinus Ornithorhynchus          321      6365
     ## 4   Phascolarctos cinereus    cinereus   Phascolarctos          773     14291
     ##   journals years_publishing  h     m i10 h5
-    ## 1       55               45 26 0.578  54  6
+    ## 1       55               45 26 0.578  54  5
     ## 2      107               68 29 0.426 121  3
     ## 3      153               69 41 0.594 177  5
     ## 4      227              141 53 0.376 427  9
