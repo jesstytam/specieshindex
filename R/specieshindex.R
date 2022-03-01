@@ -1198,8 +1198,7 @@ Allindices <- function(data,
 #' plotAllindices(CombineSp)
 #' 
 plotAllindices <- function(data) {
-  facet_data <- data %>% 
-    tidyr::pivot_longer(cols = h:h5,
+  facet_data <- tidyr::pivot_longer(data, cols = h:h5,
                         names_to = "index",
                         values_to = "value")
   facet_data$index <- factor(facet_data$index,

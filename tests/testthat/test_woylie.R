@@ -1,5 +1,3 @@
-context("testing_indices")
-
 test_that("Woylie_stats", {
   data(Woylie)
   expect_true(is.data.frame(Woylie))

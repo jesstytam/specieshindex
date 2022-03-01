@@ -1,5 +1,3 @@
-context("testing_plots")
-
 test_that("preparing_data_for_plots", {
   data(Woylie)
   Woylie_source <- SourceType(Woylie)
@@ -13,7 +11,7 @@ test_that("preparing_data_for_plots", {
 test_that("plotting", {
   B_penicillata <- Allindices(Woylie, "Bettongia", "penicillata")
   index_plot <- plotAllindices(B_penicillata)
-  expect_identical(class(index_plot$layers[[1]]$geom)[1], "GeomDrawGrob")
+  expect_identical(class(index_plot$layers[[1]]$geom)[1], "GeomPoint")
   expect_identical(class(index_plot$layers[[1]]$stat)[1], "StatIdentity")
   Woylie_year <- getYear(Woylie, "Bettongia", "penicillata")
   pub_plot <- plotPub(Woylie_year)
