@@ -68,7 +68,7 @@ This will bring up an empty file, which is where you will save your key
 into.
 
 ``` r
-scopus_api_key = "a_string_of_numbers"
+scopus_api_key = "a_long_string"
 ```
 
 Restart your session for this to work. To retrieve your key, use
@@ -76,7 +76,7 @@ Restart your session for this to work. To retrieve your key, use
 
 ``` r
 Sys.getenv("scopus_api_key")
-#> [1] "a_string_of_numbers"
+#> [1] "a_long_string"
 ```
 
 You can then load it to your environment without having the secret key
@@ -115,10 +115,9 @@ Multiple databases have been incorporated into `specieshindex`, namely
 Scopus, Web of Science, and BASE. To differentiate between them, set the
 `db` parameter to your desired database. You can set `search = "t"` for
 search terms in the title only and `search = "tak"` for search terms in
-the title, abstract, or keywords. To find articles of species, set
-`level = "species"`. To find articles of genera, set `level = "genus"`.
-If you are only interested in knowing how many publications there are,
-you can run the `Count()` functions.
+the title, abstract, or keywords. For genus-level searches, leave the
+`species` parameter empty. If you are only interested in knowing how
+many publications there are, you can run the `Count()` functions.
 
 ``` r
 #Title only; species level
