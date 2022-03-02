@@ -1,5 +1,5 @@
 
-<img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" />
+<img src="man/figures/stickerfile.png" alt="hexsticker" height="120px" align="right" />
 
 # specieshindex
 
@@ -251,7 +251,7 @@ al. (2021)](https://ecoevorxiv.org/gd7cv/) has applied this package to
 study taxonomic bias among mammals by quantifying the scientific
 interest of 7,521 species of mammals.
 
-<img src="README_files/figure-gfm/h100_text_2.png" alt="h100" />
+<img src="man/figures/h100_text_2.png" alt="h100" />
 
 **Figure 3.** Species *h*-index of mammals with a species *h*-index of
 *h* = 100 and larger (adapted from [Tam et
