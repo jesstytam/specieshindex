@@ -68,10 +68,12 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
+<p><img src="reference/figures/stickerfile.png" alt="hexsticker" height="250px" align="right"></p>
 <div class="section level1">
 <div class="page-header"><h1 id="specieshindex">specieshindex<a class="anchor" aria-label="anchor" href="#specieshindex"></a>
 </h1></div>
-
+<p><a href="https://github.com/jessicatytam/specieshindex/actions" class="external-link"><img src="https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <a href="https://codecov.io/gh/jessicatytam/specieshindex" class="external-link"><img src="https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg?token=Y8N1QW0I1C" alt="codecov"></a> <a href=""><img src="https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg" alt="Github All Releases"></a></p>
 <p><code>specieshindex</code> is a package that aims to gauge scientific influence of different species (or higher taxa) mainly using the <em>h</em>-index.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -224,6 +226,7 @@
 <p>Once you are happy with your dataset, you can make some nice plots. Using <code><a href="reference/plotAllindices.html">plotAllindices()</a></code>, we can compare the indices against each other.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/plotAllindices.html">plotAllindices</a></span><span class="op">(</span><span class="va">CombineSp</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/unnamed-chunk-11-1.png" alt="h100" align="centre"></p>
 <p><strong>Figure 1.</strong> The <em>h</em>-index, <em>m</em>-index, <em>i10</em> index, and <em>h5</em> index of the Woylie, Platypus, Koala, and Quokka.</p>
 <p><br></p>
 <p>You can also visualise the total publication per year with <code><a href="reference/getYear.html">getYear()</a></code> and <code><a href="reference/plotPub.html">plotPub()</a></code>.</p>
@@ -238,6 +241,7 @@
                           genus <span class="op">=</span> <span class="st">"Phascolarctos"</span>, species <span class="op">=</span> <span class="st">"cinereus"</span><span class="op">)</span>
 <span class="va">Combine_pub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">extract_year_W</span>, <span class="va">extract_year_Q</span>, <span class="va">extract_year_P</span>, <span class="va">extract_year_K</span><span class="op">)</span>
 <span class="fu"><a href="reference/plotPub.html">plotPub</a></span><span class="op">(</span><span class="va">Combine_pub</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/unnamed-chunk-12-1.png" alt="h100" align="centre"></p>
 <p><strong>Figure 2.</strong> The total number of publications per year of the Woylie, Platypus, Koala, and Quokka.</p>
 <p><br></p>
 </div>
@@ -263,6 +267,7 @@
 <p>To propose any bug fixes or new features, please refer to our <a href="https://github.com/jessicatytam/specieshindex/blob/52a1d30c86dc425de2b3966cfa6d802260b7229a/.github/CONTRIBUTING.md" class="external-link">community guidelines</a>.</p>
 </div>
 </div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -303,14 +308,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/jessicatytam/specieshindex/actions" class="external-link"><img src="https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://codecov.io/gh/jessicatytam/specieshindex" class="external-link"><img src="https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg?token=Y8N1QW0I1C" alt="codecov"></a></li>
-<li><a href=""><img src="https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg" alt="Github All Releases"></a></li>
-</ul>
-</div>
+
 
   </div>
 </div>
