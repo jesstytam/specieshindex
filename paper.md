@@ -81,11 +81,31 @@ An API key from Scopus is required to extract citation records from their databa
 3.  Go to the `My API Key` tab on top of the page and click `Create API Key`.
 4.  Read the legal documents and check the boxes.
 
-Afterwards, run the following line of code to gain access to the Scopus database:
+### Using your API key securely
+
+After acquiring your key, make sure to store it safely. The following steps will enable you to save it as an environment variable, without saving it in the console or script.
 
 ```{r}
-# Setup API key
-apikey <- "your_api_key_from_scopus"
+file.edit("~/.Renviron")
+```
+
+This will bring up an empty file, which is where you will save your key into.
+
+```{r}
+scopus_api_key = "a_long_string"
+```
+
+Restart your session for this to work. To retrieve your key, use `Sys.getenv()`:
+
+```{r}
+Sys.getenv("scopus_api_key")
+#> [1] "a_long_string"
+```
+
+You can then load it to your environment as follows:
+
+```{r}
+apikey <- Sys.getenv("scopus_api_key")
 ```
 
 ## Connecting to Web of Science
@@ -109,19 +129,15 @@ The following example will demonstrate the calculation of various indices with c
 # Extract citation data
 Woylie <- Fetch(db = "scopus',
                 search = "tak",
-                level = "species",
                 genus = "Bettongia", species = "penicillata")
 Quokka <- Fetch(db = "scopus',
                 search = "tak",
-                level = "species",
                 genus = "Setonix", species = "brachyurus")
 Platypus <- Fetch(db = "scopus',
                   search = "tak",
-                  level = "species",
                   genus = "Ornithorhynchus", species = "anatinus")
 Koala <- Fetch(db = "scopus',
                search = "tak",
-               level = "species",
                genus = "Phascolarctos", species = "cinereus")
 ```
 
@@ -163,7 +179,7 @@ This package has 2 built-in plotting functions. They are `plotAllindices()` and 
 plotAllindices(CombineSp)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)
+![](man/figures/unnamed-chunk-11-1.png)
 
 **Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of the Woylie (*Bettongia penicillata*), Platypus (*Ornithorhynchus anatinus*), Koala (*Phascolarctos cinereus*), and Quokka (*Setonix brachyurus*).
 
@@ -190,7 +206,7 @@ Combine_pub <- rbind(extract_year_W,
 plotPub(Combine_pub)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)
+![](man/figures/unnamed-chunk-12-1.png)
 
 **Figure 2.** The total number of publications per year of the Woylie (*Bettongia penicillata*), Platypus (*Ornithorhynchus anatinus*), Koala (*Phascolarctos cinereus*), and Quokka (*Setonix brachyurus*).
 
@@ -198,7 +214,7 @@ plotPub(Combine_pub)
 
 To see a concrete example, @tam_lagisz_cornwell_nakagawa_2021 has applied this package to study taxonomic bias among mammals by quantifying the scientific interest of 7,521 species of mammals.
 
-![](README_files/figure-gfm/h100_text_2.png)
+![](man/figures/h100_text_2.png)
 
 **Figure 3.** Species *h*-index of mammals with a species *h*-index of *h* = 100 and larger (adapted from @tam_lagisz_cornwell_nakagawa_2021).
 

@@ -4,10 +4,10 @@
 #' @title Search count of literature
 #'
 #' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
-#' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
+#' @param search Search fields. Title only ("t") or title, abstract, or keywords ("tak").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
+#' @param synonyms Alternate species names; optional.
 #' @param additionalkeywords Optional search terms.
 #'
 #' @return Search count of the genus or species with the given \code{genus} and/or \code{species}.
@@ -66,10 +66,10 @@ Count <- function(db,
 #' @title Fetch citation records
 #'
 #' @param db Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").
-#' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
+#' @param search Search fields. Title only ("t") or title, abstract, or keywords ("tak").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
-#' @param synonyms Alternate species names.
+#' @param synonyms Alternate species names; optional.
 #' @param additionalkeywords Optional search terms.
 #' @param language Language of the paper; default is 0, enter 1 to retrieve the variable. Scopus only.
 #'
@@ -127,7 +127,7 @@ Fetch <- function(db,
 #' 
 #' @title Search count from Scopus 
 #'
-#' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
+#' @param search Search fields. Title only ("t") or title, abstract, or keywords ("tak").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
@@ -182,7 +182,7 @@ Count_scopus <- function(search,
                                                                               additionalkeywords),
                                        httpAccept = "application/xml")) #format the URL to be sent to the API
   } else {
-    stop('Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, and keywords.')
+    stop('Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, or keywords.')
   }
   httr::stop_for_status(response) #pass any HTTP errors to the R console
   response_data <- XML::xmlParse(response) #parse the data to extract values
@@ -519,7 +519,7 @@ FetchTAK_scopus <- function(genus,
 #' 
 #' @title Search count from Web of Science
 #'
-#' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
+#' @param search Search fields. Title only ("t") or title, abstract, or keywords ("tak").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
@@ -565,7 +565,7 @@ Count_wos <- function(search,
                                                                  additionalkeywords),
                              sid = sid) 
   } else {
-    stop('Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, and keywords.')
+    stop('Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, or keywords.')
   }
   return(count)
 }
@@ -707,7 +707,7 @@ FetchTAK_wos <- function(genus,
 #' 
 #' @title Search count from BASE
 #'
-#' @param search Search fields. Title only ("t") or title, abstract, and keywords ("tak").
+#' @param search Search fields. Title only ("t") or title, abstract, or keywords ("tak").
 #' @param genus Genus classification from the binomial name.
 #' @param species Species classification from the binomial name.
 #' @param synonyms Alternate species names.
@@ -755,7 +755,7 @@ Count_base <- function(search,
                                                                             synonyms,
                                                                             additionalkeywords)))
   } else {
-    stop('Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, and keywords.')
+    stop('Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, or keywords.')
   }
   httr::stop_for_status(response) #pass any HTTP errors to the R console
   response_data <- XML::xmlParse(response)
@@ -1349,7 +1349,7 @@ create_query_string_T_scopus <- function(genus,
 
 
 #' Creates a query string for Scopus to make functions with a query cleaner.
-#' Title, abstract, and keywords.
+#' Title, abstract, or keywords.
 #' 
 #' @title Query string for Scopus
 #'
@@ -1434,7 +1434,7 @@ create_query_string_T_wos <- function(genus,
 
 
 #' Creates a query string for Web of Science to make functions with a query cleaner.
-#' Title, abstract, and keywords.
+#' Title, abstract, or keywords.
 #'
 #' @title Query string for Web of Science
 #' 
@@ -1530,7 +1530,7 @@ create_query_string_T_base <- function(genus,
 
 
 #' Creates a query string for BASE to make functions with a query cleaner.
-#' Title, abstract, and keywords.
+#' Title, abstract, or keywords.
 #'
 #' @title Query string for BASE
 #' 
@@ -1609,7 +1609,7 @@ scopus_request_t <- function(request, species = NULL) {
 
 
 #' Function to parse request query to the Scopus API.
-#' Title, abstract, and keywords.
+#' Title, abstract, or keywords.
 #' 
 #' @title Scopus query; title 
 #'
@@ -1710,12 +1710,12 @@ sp_check <- function(genus,
   if (length(findname>0)) {
     findname <- findname[order(-findname$score),]
   } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
+    stop("Genus or species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
   }
   if (findname$score[1]>=0.75) {
     print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
   } else {
-    stop("Species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
+    stop("Genus or species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
   }
 }
 

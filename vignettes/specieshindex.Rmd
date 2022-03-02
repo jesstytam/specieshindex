@@ -42,9 +42,9 @@ knitr::include_graphics("../vignettes/Banner.png")
 
 There are many ways to gauge research influence. We can simply sum up the number of publications or citations, which is a straight forward way without the need of any complicated mathematical formulas. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the *h*-index, *m*-index, i10 index, h5 index, etc.
 
-*H*-index [@Hirsch200516569] is one of the main methods to measure publication influence objectively. It is calculated using the formula *h* = total publications (**n**) that have at least been cited **n** times, after sorting the publications by their citation counts in a descending order. 
+Hirsch's *h*-index [@Hirsch200516569] is one of the main methods to measure publication influence objectively. It is calculated using the formula *h* = total publications (**n**) that have at least been cited **n** times, after sorting the publications by their citation counts in a descending order. 
 
-Currently, *h*-index is commonly used for assessing influence and academic productivity of authors, research institutions and journals [@Braun20058]. Recently, this index has been also applied to quantify the research effort and influence associated with different species of living organisms [@Fleming2016241].
+Currently, the *h*-index is commonly used for assessing influence and academic productivity of authors, research institutions and journals [@Braun20058]. Recently, this index has been also applied to quantify the research effort and influence associated with different species of living organisms [@Fleming2016241].
 
 With this package, we can create a similar profile for different living organisms that would show their citation metrics, including total publications, total citations, *h*-index, etc. This will allow us to understand which species are receiving more research interest and develop the solutions to rectify the biases.
 
@@ -76,7 +76,7 @@ vignette("specieshindex")
 
 # Workflow
 
-Specieshindex package performs two main steps that simplify calculating *h*-indices for different species:
+`specieshindex` performs two main steps that simplify calculating *h*-indices for different species:
 
 1. Connecting to a literature database and downloading citation data for a given species
 2. Computing various indices (including *h*-index) for a given species
@@ -93,6 +93,8 @@ Before initiating the retrieval of any data, make sure you have registered an AP
 2. Create an account and log in.
 3. Go to the `My API Key` tab on top of the page and click `Create API Key`.
 4. Read the legal documents and check the boxes.
+
+### Using your API key securely
 
 After acquiring your key, make sure to store it safely. The following steps will enable you to save it as an environment variable, without saving it in the console or script.
 
@@ -146,12 +148,12 @@ We recommend that you run a quick search using the `Count()` function before run
 Here are some variations of `Count()` connecting to Scopus:
 
 ```{r, eval=FALSE}
-# Title only; species level
+# Title only
 Count(db = "scopus",
       search = "t",
       genus = "Bettongia", species = "penicillata")
 
-#Title, abstract, and keywords; genus level
+#Title, abstract, or keywords
 Count(db = "scopus",
       search = "tak",
       genus = "Bettongia")
@@ -211,12 +213,12 @@ As you may expect, some species have been studied more than the others [@Simko20
 For example, you can run:
 
 ```{r, eval=FALSE}
-# Title only; species level
+# Title only
 Fetch(db = "scopus",
       search = "t",
       genus = "Bettongia", species = "penicillata")
 
-#Title, abstract, and keywords; genus level
+#Title, abstract, or keywords
 Fetch(db = "scopus",
       search = "tak",
       genus = "Bettongia")

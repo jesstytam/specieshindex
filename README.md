@@ -1,5 +1,5 @@
 
-<img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" />
+<!-- <img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" /> -->
 
 # specieshindex
 
@@ -127,13 +127,13 @@ Count(db = "scopus",
       search = "t",
       genus = "Bettongia", species = "penicillata")
 
-#Title, abstract, and keywords; genus level
+#Title, abstract, or keywords; genus level
 Count(db = "scopus",
       search = "tak",
       genus = "Bettongia")
 ```
 
-### :fishing_pole_and_fish: Extracting citaiton records
+### :fishing\_pole\_and\_fish: Extracting citaiton records
 
 In order to calculate the indices, you will need to download the
 citation records. The parameters of `Count()` and `Fetch()` are exactly
@@ -176,7 +176,7 @@ to the search strings to get the maximum hits. If you have more than 1
 synonym, you can parse a list (the list should be named “synonyms”) into
 the argument.
 
-### :bar_chart: Index calculation and plotting
+### :bar\_chart: Index calculation and plotting
 
 Now that you have the data, you can use the `Allindices()` function to
 create a dataframe that shows their indices.
@@ -213,12 +213,6 @@ Using `plotAllindices()`, we can compare the indices against each other.
 plotAllindices(CombineSp)
 ```
 
-<<<<<<< HEAD
-<img src="man/figures/unnamed-chunk-11-1.png" alt="h100" align="centre" />
-=======
-<img src="man/figures/README-unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
->>>>>>> 2ea98d6df52d101faad6205c2e6bdbc7803c2234
-
 **Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of
 the Woylie, Platypus, Koala, and Quokka.
 
@@ -239,12 +233,6 @@ extract_year_K <- getYear(data = Koala,
 Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
 plotPub(Combine_pub)
 ```
-
-<<<<<<< HEAD
-<img src="man/figures/unnamed-chunk-12-1.png" alt="h100" align="centre" />
-=======
-<img src="man/figures/README-unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
->>>>>>> 2ea98d6df52d101faad6205c2e6bdbc7803c2234
 
 **Figure 2.** The total number of publications per year of the Woylie,
 Platypus, Koala, and Quokka.
