@@ -2,6 +2,14 @@
 output: github_document
 ---
 
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-"
+)
+```
+
 <img src="man/figures/stickerfile.png" alt="hexsticker" height="120px" align="right" />
 
 # specieshindex
