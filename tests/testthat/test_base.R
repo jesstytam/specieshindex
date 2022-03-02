@@ -29,5 +29,9 @@
   test_that("missing genus errors", {
     expect_error(Fetch("base",search = "t"))
   })
-  
+
+test_that("string construction", {  
+  expect_type(specieshindex:::create_query_string_T_base("Bettongia"),"character")
+  expect_type(specieshindex:::create_query_string_T_base("Bettongia",additionalkeywords="cons",synonyms="Woylie"),"character")
+})
   
