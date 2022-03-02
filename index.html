@@ -167,7 +167,8 @@
       genus <span class="op">=</span> <span class="st">"Bettongia"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="fishing_pole_and_fish-extracting-citaiton-records">:fishing_pole_and_fish: Extracting citaiton records<a class="anchor" aria-label="anchor" href="#fishing_pole_and_fish-extracting-citaiton-records"></a>
+<h3 id="-extracting-citaiton-records">
+<span class="emoji" data-emoji="fishing_pole_and_fish">🎣</span> Extracting citaiton records<a class="anchor" aria-label="anchor" href="#-extracting-citaiton-records"></a>
 </h3>
 <p>In order to calculate the indices, you will need to download the citation records. The parameters of <code><a href="reference/Count.html">Count()</a></code> and <code><a href="reference/Fetch.html">Fetch()</a></code> are exactly the same. Let’s say you want to compare the species <em>h</em>-index of a few marsupials. First, you would need to download the citation information using <code><a href="reference/Fetch.html">Fetch()</a></code>. Remember to use binomial names.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -197,7 +198,8 @@
 <p>Some species have had their classification changed in the past, resulting in multiple binomial names and synonyms. Synonyms can be added to the search strings to get the maximum hits. If you have more than 1 synonym, you can parse a list (the list should be named “synonyms”) into the argument.</p>
 </div>
 <div class="section level3">
-<h3 id="bar_chart-index-calculation-and-plotting">:bar_chart: Index calculation and plotting<a class="anchor" aria-label="anchor" href="#bar_chart-index-calculation-and-plotting"></a>
+<h3 id="-index-calculation-and-plotting">
+<span class="emoji" data-emoji="bar_chart">📊</span> Index calculation and plotting<a class="anchor" aria-label="anchor" href="#-index-calculation-and-plotting"></a>
 </h3>
 <p>Now that you have the data, you can use the <code><a href="reference/Allindices.html">Allindices()</a></code> function to create a dataframe that shows their indices.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -212,25 +214,25 @@
                 genus <span class="op">=</span> <span class="st">"Phascolarctos"</span>, species <span class="op">=</span> <span class="st">"cinereus"</span><span class="op">)</span>
 
 <span class="va">CombineSp</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">W</span>, <span class="va">Q</span>, <span class="va">P</span>, <span class="va">K</span><span class="op">)</span> <span class="co">#combining the citation records</span>
-<span class="va">CombineSp</span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">##              genus_species     species           genus publications citations</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="co">## 1    Bettongia penicillata penicillata       Bettongia          113      1903</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="co">## 2       Setonix brachyurus  brachyurus         Setonix          242      3427</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="co">## 3 Ornithorhynchus anatinus    anatinus Ornithorhynchus          321      6365</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="co">## 4   Phascolarctos cinereus    cinereus   Phascolarctos          773     14291</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="co">##   journals years_publishing  h     m i10 h5</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a><span class="co">## 1       55               45 26 0.578  54  5</span></span>
-<span id="cb10-8"><a href="#cb10-8"></a><span class="co">## 2      107               68 29 0.426 121  3</span></span>
-<span id="cb10-9"><a href="#cb10-9"></a><span class="co">## 3      153               69 41 0.594 177  5</span></span>
-<span id="cb10-10"><a href="#cb10-10"></a><span class="co">## 4      227              141 53 0.376 427  9</span></span></code></pre></div>
+<span class="va">CombineSp</span>
+<span class="co">#&gt;              genus_species     species           genus publications citations</span>
+<span class="co">#&gt; 1    Bettongia penicillata penicillata       Bettongia          113      1903</span>
+<span class="co">#&gt; 2       Setonix brachyurus  brachyurus         Setonix          242      3427</span>
+<span class="co">#&gt; 3 Ornithorhynchus anatinus    anatinus Ornithorhynchus          321      6365</span>
+<span class="co">#&gt; 4   Phascolarctos cinereus    cinereus   Phascolarctos          773     14291</span>
+<span class="co">#&gt;   journals years_publishing  h     m i10 h5</span>
+<span class="co">#&gt; 1       55               45 26 0.578  54  5</span>
+<span class="co">#&gt; 2      107               68 29 0.426 121  3</span>
+<span class="co">#&gt; 3      153               69 41 0.594 177  5</span>
+<span class="co">#&gt; 4      227              141 53 0.376 427  9</span></code></pre></div>
 <p>Once you are happy with your dataset, you can make some nice plots. Using <code><a href="reference/plotAllindices.html">plotAllindices()</a></code>, we can compare the indices against each other.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/plotAllindices.html">plotAllindices</a></span><span class="op">(</span><span class="va">CombineSp</span><span class="op">)</span></code></pre></div>
-<p><img src="README_files/figure-gfm/unnamed-chunk-11-1.png" style="display: block; margin: auto;"></p>
+<p><img src="reference/figures/README-unnamed-chunk-12-1.png" style="display: block; margin: auto;"></p>
 <p><strong>Figure 1.</strong> The <em>h</em>-index, <em>m</em>-index, <em>i10</em> index, and <em>h5</em> index of the Woylie, Platypus, Koala, and Quokka.</p>
 <p><br></p>
 <p>You can also visualise the total publication per year with <code><a href="reference/getYear.html">getYear()</a></code> and <code><a href="reference/plotPub.html">plotPub()</a></code>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">extract_year_W</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/getYear.html">getYear</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Woylie</span>,
                           genus <span class="op">=</span> <span class="st">"Bettongia"</span>, species <span class="op">=</span> <span class="st">"penicillata"</span><span class="op">)</span>
 <span class="va">extract_year_Q</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/getYear.html">getYear</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Quokka</span>,
@@ -241,7 +243,7 @@
                           genus <span class="op">=</span> <span class="st">"Phascolarctos"</span>, species <span class="op">=</span> <span class="st">"cinereus"</span><span class="op">)</span>
 <span class="va">Combine_pub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">extract_year_W</span>, <span class="va">extract_year_Q</span>, <span class="va">extract_year_P</span>, <span class="va">extract_year_K</span><span class="op">)</span>
 <span class="fu"><a href="reference/plotPub.html">plotPub</a></span><span class="op">(</span><span class="va">Combine_pub</span><span class="op">)</span></code></pre></div>
-<p><img src="README_files/figure-gfm/unnamed-chunk-12-1.png" style="display: block; margin: auto;"></p>
+<p><img src="reference/figures/README-unnamed-chunk-13-1.png" style="display: block; margin: auto;"></p>
 <p><strong>Figure 2.</strong> The total number of publications per year of the Woylie, Platypus, Koala, and Quokka.</p>
 <p><br></p>
 </div>
