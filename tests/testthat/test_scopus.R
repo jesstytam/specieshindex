@@ -21,7 +21,7 @@ with_mock_api({ #pass
 with_mock_api({
   test_that("FetchSpT_scopus_works", {
     expect_s3_class(Woylie, "data.frame")
-    # expect_equal(FetchSpT("scopus", "Bettongia", "penicillata"), Woylie) #nope
+    # expect_equal(specieshindex:::FetchT_scopus("Bettongia", "penicillata"), Woylie) #nope
     # expect_identical(FetchSpT("scopus", "Bettongia", "penicillata"), FetchSpT_scopus("Bettongia", "penicillata")) #nope
   })
 })

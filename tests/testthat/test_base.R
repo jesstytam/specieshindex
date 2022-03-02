@@ -19,4 +19,15 @@
      expect_s3_class(tak_base, "response")
      expect_true(class(tak_base$status_code)=="integer")
    })
+ }) 
+   
+  
+  test_that("base errors", {
+     expect_error(Fetch("base",search = "t",genus="Bettongia"))
  })
+
+  test_that("missing genus errors", {
+    expect_error(Fetch("base",search = "t"))
+  })
+  
+  

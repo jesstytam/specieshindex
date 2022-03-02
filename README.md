@@ -1,5 +1,5 @@
 
-<img src="man/figures/stickerfile.png" alt="hexsticker" height="120px" align="right" />
+<img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" />
 
 # specieshindex
 
@@ -214,7 +214,7 @@ Using `plotAllindices()`, we can compare the indices against each other.
 plotAllindices(CombineSp)
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/unnamed-chunk-11-1.png" alt="h100" align="centre" />
 
 **Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of
 the Woylie, Platypus, Koala, and Quokka.
@@ -237,7 +237,7 @@ Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_yea
 plotPub(Combine_pub)
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/unnamed-chunk-12-1.png" alt="h100" align="centre" />
 
 **Figure 2.** The total number of publications per year of the Woylie,
 Platypus, Koala, and Quokka.
