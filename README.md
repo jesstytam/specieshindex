@@ -133,7 +133,7 @@ Count(db = "scopus",
       genus = "Bettongia")
 ```
 
-### :fishing\_pole\_and\_fish: Extracting citaiton records
+### :fishing_pole_and_fish: Extracting citaiton records
 
 In order to calculate the indices, you will need to download the
 citation records. The parameters of `Count()` and `Fetch()` are exactly
@@ -176,7 +176,7 @@ to the search strings to get the maximum hits. If you have more than 1
 synonym, you can parse a list (the list should be named “synonyms”) into
 the argument.
 
-### :bar\_chart: Index calculation and plotting
+### :bar_chart: Index calculation and plotting
 
 Now that you have the data, you can use the `Allindices()` function to
 create a dataframe that shows their indices.
@@ -194,18 +194,17 @@ K <- Allindices(Koala,
 
 CombineSp <- dplyr::bind_rows(W, Q, P, K) #combining the citation records
 CombineSp
+#>              genus_species     species           genus publications citations
+#> 1    Bettongia penicillata penicillata       Bettongia          113      1903
+#> 2       Setonix brachyurus  brachyurus         Setonix          242      3427
+#> 3 Ornithorhynchus anatinus    anatinus Ornithorhynchus          321      6365
+#> 4   Phascolarctos cinereus    cinereus   Phascolarctos          773     14291
+#>   journals years_publishing  h     m i10 h5
+#> 1       55               45 26 0.578  54  5
+#> 2      107               68 29 0.426 121  3
+#> 3      153               69 41 0.594 177  5
+#> 4      227              141 53 0.376 427  9
 ```
-
-    ##              genus_species     species           genus publications citations
-    ## 1    Bettongia penicillata penicillata       Bettongia          113      1903
-    ## 2       Setonix brachyurus  brachyurus         Setonix          242      3427
-    ## 3 Ornithorhynchus anatinus    anatinus Ornithorhynchus          321      6365
-    ## 4   Phascolarctos cinereus    cinereus   Phascolarctos          773     14291
-    ##   journals years_publishing  h     m i10 h5
-    ## 1       55               45 26 0.578  54  5
-    ## 2      107               68 29 0.426 121  3
-    ## 3      153               69 41 0.594 177  5
-    ## 4      227              141 53 0.376 427  9
 
 Once you are happy with your dataset, you can make some nice plots.
 Using `plotAllindices()`, we can compare the indices against each other.
@@ -214,7 +213,11 @@ Using `plotAllindices()`, we can compare the indices against each other.
 plotAllindices(CombineSp)
 ```
 
+<<<<<<< HEAD
 <img src="man/figures/unnamed-chunk-11-1.png" alt="h100" align="centre" />
+=======
+<img src="man/figures/README-unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
+>>>>>>> 2ea98d6df52d101faad6205c2e6bdbc7803c2234
 
 **Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of
 the Woylie, Platypus, Koala, and Quokka.
@@ -237,7 +240,11 @@ Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_yea
 plotPub(Combine_pub)
 ```
 
+<<<<<<< HEAD
 <img src="man/figures/unnamed-chunk-12-1.png" alt="h100" align="centre" />
+=======
+<img src="man/figures/README-unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
+>>>>>>> 2ea98d6df52d101faad6205c2e6bdbc7803c2234
 
 **Figure 2.** The total number of publications per year of the Woylie,
 Platypus, Koala, and Quokka.
