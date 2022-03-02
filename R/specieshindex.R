@@ -32,6 +32,16 @@ Count <- function(db,
                   species = NULL,
                   synonyms,
                   additionalkeywords) {
+  if (missing(db)) {
+    stop('Pick a database by setting db = "scopus" / "wos" / "base".')
+  }
+  if (missing(search)) {
+    stop('Pick the search field(s) by setting search = "t" for title only
+         or search = "tak" for title, absract, and keywords')
+  }
+  if (missing(genus)) {
+    stop('Genus is missing from your query.')
+  }
   if (db == "scopus" & search == "t") {
     countsp <- Count_scopus(search = "t", genus, species, synonyms, additionalkeywords)
   } else if (db == "scopus" & search == "tak") {
@@ -86,6 +96,16 @@ Fetch <- function(db,
                   synonyms,
                   additionalkeywords,
                   language = 0) {
+  if (missing(db)) {
+    stop('Pick a database by setting db = "scopus" / "wos" / "base".')
+  }
+  if (missing(search)) {
+    stop('Pick the search field(s) by setting search = "t" for title only
+         or search = "tak" for title, absract, and keywords')
+  }
+  if (missing(genus)) {
+    stop('Genus is missing from your query.')
+  }
   if (db == "scopus" & search == "t") {
     fetchsp <- FetchT_scopus(genus, species, synonyms, additionalkeywords, language)
   } else if (db == "scopus" & search == "tak") {
