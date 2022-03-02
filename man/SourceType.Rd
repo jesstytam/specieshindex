@@ -19,7 +19,6 @@ This function calculates the total number of items for each document type.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                level = "species",
                 genus = "Bettongia", species = "penicillata")
 }
 SourceType(Woylie)

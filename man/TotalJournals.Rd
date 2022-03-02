@@ -19,7 +19,6 @@ This function calculates the total number of journals.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                level = "species",
                 genus = "Bettongia", species = "penicillata")
 }
 TotalJournals(Woylie)

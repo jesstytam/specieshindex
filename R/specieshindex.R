@@ -758,7 +758,6 @@ Count_base <- function(search,
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' TotalPub(Woylie)
@@ -783,7 +782,6 @@ TotalPub <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' TotalCite(Woylie)
@@ -809,7 +807,6 @@ TotalCite <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' TotalJournals(Woylie)
@@ -835,7 +832,6 @@ TotalJournals <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' SourceType(Woylie)
@@ -864,7 +860,6 @@ SourceType <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' YearsPublishing(Woylie)
@@ -895,7 +890,6 @@ YearsPublishing <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' SpHindex(Woylie)
@@ -931,7 +925,6 @@ SpHindex <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' SpMindex(Woylie)
@@ -970,7 +963,6 @@ SpMindex <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' Spi10(Woylie)
@@ -1000,7 +992,6 @@ Spi10 <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' SpH5(Woylie)
@@ -1033,7 +1024,6 @@ SpH5 <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' SpHAfterdate(Woylie, "2000-01-01")
@@ -1066,7 +1056,6 @@ SpHAfterdate <- function(data, date) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' Allindices(Woylie,
@@ -1169,19 +1158,15 @@ Allindices <- function(data,
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' Quokka <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Setonix", species = "brachyurus")
 #' Platypus <- Fetch(db = "scopus",
 #'                   search = "tak",
-#'                   level = "species",
 #'                   genus = "Ornithorhynchus", species = "anatinus")
 #' Koala <- Fetch(db = "scopus",
 #'                search = "tak",
-#'                level = "species",
 #'                genus = "Phascolarctos", species = "cinereus")
 #' }
 #' W <- Allindices(Woylie,
@@ -1232,7 +1217,6 @@ plotAllindices <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' }
 #' getYear(data = Woylie,
@@ -1263,19 +1247,15 @@ getYear <- function(data, genus, species) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Bettongia", species = "penicillata")
 #' Quokka <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 level = "species",
 #'                 genus = "Setonix", species = "brachyurus")
 #' Platypus <- Fetch(db = "scopus",
 #'                   search = "tak",
-#'                   level = "species",
 #'                   genus = "Ornithorhynchus", species = "anatinus")
 #' Koala <- Fetch(db = "scopus",
 #'                search = "tak",
-#'                level = "species",
 #'                genus = "Phascolarctos", species = "cinereus")
 #' }
 #' extract_year_W <- getYear(data = Woylie,

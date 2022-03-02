@@ -19,7 +19,6 @@ This function calculates the total number of citations.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                level = "species",
                 genus = "Bettongia", species = "penicillata")
 }
 TotalCite(Woylie)

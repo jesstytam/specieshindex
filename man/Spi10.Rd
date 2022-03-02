@@ -20,7 +20,6 @@ i10 index counts all of the publications with 10 or more citations.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                level = "species",
                 genus = "Bettongia", species = "penicillata")
 }
 Spi10(Woylie)
