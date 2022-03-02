@@ -1,15 +1,13 @@
 
-<img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" />
+# specieshindex <img src="man/figures/stickerfile.png" alt="hexsticker" width="120px" align="right" />
 
-# specieshindex
-
-![R-CMD-check](https://github.com/jessicatytam/specieshindex/workflows/CI/badge.svg)
+[![R-CMD-check](https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg)](https://github.com/jessicatytam/specieshindex/actions)
 [![codecov](https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg?token=Y8N1QW0I1C)](https://codecov.io/gh/jessicatytam/specieshindex)
 [![Github All
 Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg)]()
 
 `specieshindex` is a package that aims to gauge scientific influence of
-different species mainly using the *h*-index.
+different species (or higher taxa) mainly using the *h*-index.
 
 ## Installation
 
@@ -213,11 +211,7 @@ Using `plotAllindices()`, we can compare the indices against each other.
 plotAllindices(CombineSp)
 ```
 
-<<<<<<< HEAD
 <img src="man/figures/unnamed-chunk-11-1.png" alt="h100" align="centre" />
-=======
-<img src="man/figures/README-unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
->>>>>>> 2ea98d6df52d101faad6205c2e6bdbc7803c2234
 
 **Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of
 the Woylie, Platypus, Koala, and Quokka.
@@ -240,11 +234,7 @@ Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_yea
 plotPub(Combine_pub)
 ```
 
-<<<<<<< HEAD
 <img src="man/figures/unnamed-chunk-12-1.png" alt="h100" align="centre" />
-=======
-<img src="man/figures/README-unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
->>>>>>> 2ea98d6df52d101faad6205c2e6bdbc7803c2234
 
 **Figure 2.** The total number of publications per year of the Woylie,
 Platypus, Koala, and Quokka.

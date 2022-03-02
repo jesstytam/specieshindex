@@ -2,9 +2,6 @@
 output: github_document
 ---
 
-<<<<<<< HEAD
-<img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" />
-=======
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -13,16 +10,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-<img src="man/figures/stickerfile.png" alt="hexsticker" height="120px" align="right" />
->>>>>>> 2ea98d6df52d101faad6205c2e6bdbc7803c2234
 
-# specieshindex
 
-![R-CMD-check](https://github.com/jessicatytam/specieshindex/workflows/CI/badge.svg)
+# specieshindex <img src="man/figures/stickerfile.png" alt="hexsticker" width="120px" align="right" />
+
+[![R-CMD-check](https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg)](https://github.com/jessicatytam/specieshindex/actions)
 [![codecov](https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg?token=Y8N1QW0I1C)](https://codecov.io/gh/jessicatytam/specieshindex)
 [![Github All Releases](https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg)]()
 
-`specieshindex` is a package that aims to gauge scientific influence of different species mainly using the *h*-index.
+`specieshindex` is a package that aims to gauge scientific influence of different species (or higher taxa) mainly using the *h*-index.
 
 ## Installation
 
