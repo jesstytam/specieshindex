@@ -69,12 +69,9 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<p><img src="reference/figures/stickerfile.png" alt="hexsticker" height="250px" align="right"></p>
-<div class="section level1">
-<div class="page-header"><h1 id="specieshindex">specieshindex<a class="anchor" aria-label="anchor" href="#specieshindex"></a>
-</h1></div>
-<p><img src="https://github.com/jessicatytam/specieshindex/workflows/CI/badge.svg" alt="R-CMD-check"><a href="https://codecov.io/gh/jessicatytam/specieshindex" class="external-link"><img src="https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg?token=Y8N1QW0I1C" alt="codecov"></a> <a href=""><img src="https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg" alt="Github All Releases"></a></p>
-<p><code>specieshindex</code> is a package that aims to gauge scientific influence of different species mainly using the <em>h</em>-index.</p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD <!-- <img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" /> --> ======= # specieshindex <img src="reference/figures/stickerfile.png" alt="hexsticker" width="120px" align="right"> &gt;&gt;&gt;&gt;&gt;&gt;&gt; fd19a14d99566b1edfd899935dd061b257e6054e</p>
+<p><a href="https://github.com/jessicatytam/specieshindex/actions" class="external-link"><img src="https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <a href="https://codecov.io/gh/jessicatytam/specieshindex" class="external-link"><img src="https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg?token=Y8N1QW0I1C" alt="codecov"></a> <a href=""><img src="https://img.shields.io/github/downloads/jessicatytam/specieshindex/total.svg" alt="Github All Releases"></a></p>
+<p><code>specieshindex</code> is a package that aims to gauge scientific influence of different species (or higher taxa) mainly using the <em>h</em>-index.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -161,14 +158,13 @@
       search <span class="op">=</span> <span class="st">"t"</span>,
       genus <span class="op">=</span> <span class="st">"Bettongia"</span>, species <span class="op">=</span> <span class="st">"penicillata"</span><span class="op">)</span>
 
-<span class="co">#Title, abstract, and keywords; genus level</span>
+<span class="co">#Title, abstract, or keywords; genus level</span>
 <span class="fu"><a href="reference/Count.html">Count</a></span><span class="op">(</span>db <span class="op">=</span> <span class="st">"scopus"</span>,
       search <span class="op">=</span> <span class="st">"tak"</span>,
       genus <span class="op">=</span> <span class="st">"Bettongia"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="-extracting-citaiton-records">
-<span class="emoji" data-emoji="fishing_pole_and_fish">🎣</span> Extracting citaiton records<a class="anchor" aria-label="anchor" href="#-extracting-citaiton-records"></a>
+<h3 id="fishing_pole_and_fish-extracting-citaiton-records">:fishing_pole_and_fish: Extracting citaiton records<a class="anchor" aria-label="anchor" href="#fishing_pole_and_fish-extracting-citaiton-records"></a>
 </h3>
 <p>In order to calculate the indices, you will need to download the citation records. The parameters of <code><a href="reference/Count.html">Count()</a></code> and <code><a href="reference/Fetch.html">Fetch()</a></code> are exactly the same. Let’s say you want to compare the species <em>h</em>-index of a few marsupials. First, you would need to download the citation information using <code><a href="reference/Fetch.html">Fetch()</a></code>. Remember to use binomial names.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -198,8 +194,7 @@
 <p>Some species have had their classification changed in the past, resulting in multiple binomial names and synonyms. Synonyms can be added to the search strings to get the maximum hits. If you have more than 1 synonym, you can parse a list (the list should be named “synonyms”) into the argument.</p>
 </div>
 <div class="section level3">
-<h3 id="-index-calculation-and-plotting">
-<span class="emoji" data-emoji="bar_chart">📊</span> Index calculation and plotting<a class="anchor" aria-label="anchor" href="#-index-calculation-and-plotting"></a>
+<h3 id="bar_chart-index-calculation-and-plotting">:bar_chart: Index calculation and plotting<a class="anchor" aria-label="anchor" href="#bar_chart-index-calculation-and-plotting"></a>
 </h3>
 <p>Now that you have the data, you can use the <code><a href="reference/Allindices.html">Allindices()</a></code> function to create a dataframe that shows their indices.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -228,8 +223,27 @@
 <p>Once you are happy with your dataset, you can make some nice plots. Using <code><a href="reference/plotAllindices.html">plotAllindices()</a></code>, we can compare the indices against each other.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/plotAllindices.html">plotAllindices</a></span><span class="op">(</span><span class="va">CombineSp</span><span class="op">)</span></code></pre></div>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD <img src="reference/figures/unnamed-chunk-11-1.png" alt="h100" align="centre"> ======= <img src="reference/figures/README-unnamed-chunk-12-1.png" style="display: block; margin: auto;"> &gt;&gt;&gt;&gt;&gt;&gt;&gt; 2ea98d6df52d101faad6205c2e6bdbc7803c2234</p>
-<p><strong>Figure 1.</strong> The <em>h</em>-index, <em>m</em>-index, <em>i10</em> index, and <em>h5</em> index of the Woylie, Platypus, Koala, and Quokka.</p>
+</div>
+</div>
+<div class="section level1">
+<div class="page-header"><h1 id="-head">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<a class="anchor" aria-label="anchor" href="#-head"></a>
+</h1></div>
+<p><img src="reference/figures/unnamed-chunk-11-1.png" alt="h100" align="centre"></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>fd19a14d99566b1edfd899935dd061b257e6054e <strong>Figure 1.</strong> The <em>h</em>-index, <em>m</em>-index, <em>i10</em> index, and <em>h5</em> index of the Woylie, Platypus, Koala, and Quokka.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
 <p><br></p>
 <p>You can also visualise the total publication per year with <code><a href="reference/getYear.html">getYear()</a></code> and <code><a href="reference/plotPub.html">plotPub()</a></code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -243,11 +257,27 @@
                           genus <span class="op">=</span> <span class="st">"Phascolarctos"</span>, species <span class="op">=</span> <span class="st">"cinereus"</span><span class="op">)</span>
 <span class="va">Combine_pub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">extract_year_W</span>, <span class="va">extract_year_Q</span>, <span class="va">extract_year_P</span>, <span class="va">extract_year_K</span><span class="op">)</span>
 <span class="fu"><a href="reference/plotPub.html">plotPub</a></span><span class="op">(</span><span class="va">Combine_pub</span><span class="op">)</span></code></pre></div>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD <img src="reference/figures/unnamed-chunk-12-1.png" alt="h100" align="centre"> ======= <img src="reference/figures/README-unnamed-chunk-13-1.png" style="display: block; margin: auto;"> &gt;&gt;&gt;&gt;&gt;&gt;&gt; 2ea98d6df52d101faad6205c2e6bdbc7803c2234</p>
-<p><strong>Figure 2.</strong> The total number of publications per year of the Woylie, Platypus, Koala, and Quokka.</p>
+</div>
+<div class="section level1">
+<h1 id="-head-1">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<a class="anchor" aria-label="anchor" href="#-head-1"></a>
+</h1>
+<p><img src="reference/figures/unnamed-chunk-12-1.png" alt="h100" align="centre"></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>fd19a14d99566b1edfd899935dd061b257e6054e <strong>Figure 2.</strong> The total number of publications per year of the Woylie, Platypus, Koala, and Quokka.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
 <p><br></p>
-</div>
-</div>
 <div class="section level2">
 <h2 id="concrete-example">Concrete example<a class="anchor" aria-label="anchor" href="#concrete-example"></a>
 </h2>

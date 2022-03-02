@@ -83,8 +83,8 @@
     
 <p><img src="../articles/Banner.png" width="100%"></p>
 <p>There are many ways to gauge research influence. We can simply sum up the number of publications or citations, which is a straight forward way without the need of any complicated mathematical formulas. On the other hand, there are more in-depth ways of quantifying research influence by using statistical indices. Some examples include the <em>h</em>-index, <em>m</em>-index, i10 index, h5 index, etc.</p>
-<p><em>H</em>-index <span class="citation">(Hirsch <a href="#ref-Hirsch200516569" role="doc-biblioref">2005</a>)</span> is one of the main methods to measure publication influence objectively. It is calculated using the formula <em>h</em> = total publications (<strong>n</strong>) that have at least been cited <strong>n</strong> times, after sorting the publications by their citation counts in a descending order.</p>
-<p>Currently, <em>h</em>-index is commonly used for assessing influence and academic productivity of authors, research institutions and journals <span class="citation">(Braun, Glänzel, and Schubert <a href="#ref-Braun20058" role="doc-biblioref">2005</a>)</span>. Recently, this index has been also applied to quantify the research effort and influence associated with different species of living organisms <span class="citation">(Fleming and Bateman <a href="#ref-Fleming2016241" role="doc-biblioref">2016</a>)</span>.</p>
+<p>Hirsch’s <em>h</em>-index <span class="citation">(Hirsch <a href="#ref-Hirsch200516569" role="doc-biblioref">2005</a>)</span> is one of the main methods to measure publication influence objectively. It is calculated using the formula <em>h</em> = total publications (<strong>n</strong>) that have at least been cited <strong>n</strong> times, after sorting the publications by their citation counts in a descending order.</p>
+<p>Currently, the <em>h</em>-index is commonly used for assessing influence and academic productivity of authors, research institutions and journals <span class="citation">(Braun, Glänzel, and Schubert <a href="#ref-Braun20058" role="doc-biblioref">2005</a>)</span>. Recently, this index has been also applied to quantify the research effort and influence associated with different species of living organisms <span class="citation">(Fleming and Bateman <a href="#ref-Fleming2016241" role="doc-biblioref">2016</a>)</span>.</p>
 <p>With this package, we can create a similar profile for different living organisms that would show their citation metrics, including total publications, total citations, <em>h</em>-index, etc. This will allow us to understand which species are receiving more research interest and develop the solutions to rectify the biases.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -112,7 +112,7 @@
 <div class="section level2">
 <h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
 </h2>
-<p>Specieshindex package performs two main steps that simplify calculating <em>h</em>-indices for different species:</p>
+<p><code>specieshindex</code> performs two main steps that simplify calculating <em>h</em>-indices for different species:</p>
 <ol style="list-style-type: decimal">
 <li>Connecting to a literature database and downloading citation data for a given species</li>
 <li>Computing various indices (including <em>h</em>-index) for a given species</li>
@@ -129,6 +129,9 @@
 <li>Go to the <code>My API Key</code> tab on top of the page and click <code>Create API Key</code>.</li>
 <li>Read the legal documents and check the boxes.</li>
 </ol>
+<div class="section level4">
+<h4 id="using-your-api-key-securely">Using your API key securely<a class="anchor" aria-label="anchor" href="#using-your-api-key-securely"></a>
+</h4>
 <p>After acquiring your key, make sure to store it safely. The following steps will enable you to save it as an environment variable, without saving it in the console or script.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="st">"~/.Renviron"</span><span class="op">)</span></code></pre></div>
@@ -142,6 +145,7 @@
 <p>You can then load it to your environment as follows:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">apikey</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"scopus_api_key"</span><span class="op">)</span></code></pre></div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="connecting-to-web-of-science">Connecting to Web of Science<a class="anchor" aria-label="anchor" href="#connecting-to-web-of-science"></a>
@@ -167,12 +171,12 @@
 <p>We recommend that you run a quick search using the <code><a href="../reference/Count.html">Count()</a></code> function before running <code><a href="../reference/Fetch.html">Fetch()</a></code> to extract any data since this can be a tedious process for searches with many results. Both functions give a search count of the number of records found on the databases.</p>
 <p>Here are some variations of <code><a href="../reference/Count.html">Count()</a></code> connecting to Scopus:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Title only; species level</span>
+<code class="sourceCode R"><span class="co"># Title only</span>
 <span class="fu"><a href="../reference/Count.html">Count</a></span><span class="op">(</span>db <span class="op">=</span> <span class="st">"scopus"</span>,
       search <span class="op">=</span> <span class="st">"t"</span>,
       genus <span class="op">=</span> <span class="st">"Bettongia"</span>, species <span class="op">=</span> <span class="st">"penicillata"</span><span class="op">)</span>
 
-<span class="co">#Title, abstract, and keywords; genus level</span>
+<span class="co">#Title, abstract, or keywords</span>
 <span class="fu"><a href="../reference/Count.html">Count</a></span><span class="op">(</span>db <span class="op">=</span> <span class="st">"scopus"</span>,
       search <span class="op">=</span> <span class="st">"tak"</span>,
       genus <span class="op">=</span> <span class="st">"Bettongia"</span><span class="op">)</span></code></pre></div>
@@ -226,12 +230,12 @@
 <p>As you may expect, some species have been studied more than the others <span class="citation">(Simko <a href="#ref-Simko2015" role="doc-biblioref">2015</a>; Krause and Robinson <a href="#ref-Krause2017313" role="doc-biblioref">2017</a>)</span>, resulting in more publications. Therefore, if there are more than a few thousand citation records found, it will take a considerably longer time to download them all, unless you are using a computer with high processing power and fast internet connection.</p>
 <p>For example, you can run:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Title only; species level</span>
+<code class="sourceCode R"><span class="co"># Title only</span>
 <span class="fu"><a href="../reference/Fetch.html">Fetch</a></span><span class="op">(</span>db <span class="op">=</span> <span class="st">"scopus"</span>,
       search <span class="op">=</span> <span class="st">"t"</span>,
       genus <span class="op">=</span> <span class="st">"Bettongia"</span>, species <span class="op">=</span> <span class="st">"penicillata"</span><span class="op">)</span>
 
-<span class="co">#Title, abstract, and keywords; genus level</span>
+<span class="co">#Title, abstract, or keywords</span>
 <span class="fu"><a href="../reference/Fetch.html">Fetch</a></span><span class="op">(</span>db <span class="op">=</span> <span class="st">"scopus"</span>,
       search <span class="op">=</span> <span class="st">"tak"</span>,
       genus <span class="op">=</span> <span class="st">"Bettongia"</span><span class="op">)</span></code></pre></div>

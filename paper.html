@@ -91,9 +91,18 @@
 <li>Create an account and log in.</li>
 <li>Go to the <code>My API Key</code> tab on top of the page and click <code>Create API Key</code>.</li>
 <li>Read the legal documents and check the boxes.</li>
-</ol><p>Afterwards, run the following line of code to gain access to the Scopus database:</p>
-<pre class="{r}"><code><span class="co"># Setup API key</span>
-<span class="va">apikey</span> <span class="op">&lt;-</span> <span class="st">"your_api_key_from_scopus"</span></code></pre>
+</ol><div class="section level3">
+<h3 id="using-your-api-key-securely">Using your API key securely<a class="anchor" aria-label="anchor" href="#using-your-api-key-securely"></a></h3>
+<p>After acquiring your key, make sure to store it safely. The following steps will enable you to save it as an environment variable, without saving it in the console or script.</p>
+<pre class="{r}"><code><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="st">"~/.Renviron"</span><span class="op">)</span></code></pre>
+<p>This will bring up an empty file, which is where you will save your key into.</p>
+<pre class="{r}"><code><span class="va">scopus_api_key</span> <span class="op">=</span> <span class="st">"a_long_string"</span></code></pre>
+<p>Restart your session for this to work. To retrieve your key, use <code><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv()</a></code>:</p>
+<pre class="{r}"><code><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"scopus_api_key"</span><span class="op">)</span>
+<span class="co">#&gt; [1] "a_long_string"</span></code></pre>
+<p>You can then load it to your environment as follows:</p>
+<pre class="{r}"><code><span class="va">apikey</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"scopus_api_key"</span><span class="op">)</span></code></pre>
+</div>
 </div>
 <div class="section level2">
 <h2 id="connecting-to-web-of-science">Connecting to Web of Science<a class="anchor" aria-label="anchor" href="#connecting-to-web-of-science"></a></h2>
@@ -111,19 +120,15 @@
 <pre class="{r}"><code># Extract citation data
 Woylie &lt;- Fetch(db = "scopus',
                 search = "tak",
-                level = "species",
                 genus = "Bettongia", species = "penicillata")
 Quokka &lt;- Fetch(db = "scopus',
                 search = "tak",
-                level = "species",
                 genus = "Setonix", species = "brachyurus")
 Platypus &lt;- Fetch(db = "scopus',
                   search = "tak",
-                  level = "species",
                   genus = "Ornithorhynchus", species = "anatinus")
 Koala &lt;- Fetch(db = "scopus',
                search = "tak",
-               level = "species",
                genus = "Phascolarctos", species = "cinereus")</code></pre>
 <p>These four datasets are readily available within the package. An efficient way to calculate all of the indices at once is to use the function <code><a href="reference/Allindices.html">Allindices()</a></code>.</p>
 <pre class="{r}"><code><span class="co"># Calculate indices</span>
@@ -139,22 +144,22 @@ Koala &lt;- Fetch(db = "scopus',
 <span class="co"># Combine citation records into a single dataframe</span>
 <span class="va">CombineSp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">W</span>, <span class="va">Q</span>, <span class="va">P</span>, <span class="va">K</span><span class="op">)</span>
 <span class="va">CombineSp</span></code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">##              genus_species     species           genus publications citations</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="co">## 1    Bettongia_penicillata penicillata       Bettongia          113      1903</span></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="co">## 2       Setonix_brachyurus  brachyurus         Setonix          242      3427</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="co">## 3 Ornithorhynchus_anatinus    anatinus Ornithorhynchus          321      6365</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co">## 4   Phascolarctos_cinereus    cinereus   Phascolarctos          773     14291</span></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="co">##   journals articles reviews years_publishing  h     m i10 h5</span></span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="co">## 1       55      110       3               43 26 0.605  54  7</span></span>
-<span id="cb6-8"><a href="#cb6-8"></a><span class="co">## 2      107      237       5               66 29 0.439 121  4</span></span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="co">## 3      153      308      13               67 41 0.612 177  7</span></span>
-<span id="cb6-10"><a href="#cb6-10"></a><span class="co">## 4      227      744      29              139 53 0.381 427 14</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">##              genus_species     species           genus publications citations</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="co">## 1    Bettongia_penicillata penicillata       Bettongia          113      1903</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co">## 2       Setonix_brachyurus  brachyurus         Setonix          242      3427</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co">## 3 Ornithorhynchus_anatinus    anatinus Ornithorhynchus          321      6365</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co">## 4   Phascolarctos_cinereus    cinereus   Phascolarctos          773     14291</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="co">##   journals articles reviews years_publishing  h     m i10 h5</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co">## 1       55      110       3               43 26 0.605  54  7</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co">## 2      107      237       5               66 29 0.439 121  4</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="co">## 3      153      308      13               67 41 0.612 177  7</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a><span class="co">## 4      227      744      29              139 53 0.381 427 14</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="plots">Plots<a class="anchor" aria-label="anchor" href="#plots"></a></h3>
 <p>This package has 2 built-in plotting functions. They are <code><a href="reference/plotAllindices.html">plotAllindices()</a></code> and <code><a href="reference/plotPub.html">plotPub()</a></code>. <code><a href="reference/plotAllindices.html">plotAllindices()</a></code> plots the <em>h</em>-index, <em>m</em>-index, <em>i10</em> index, and <em>h5</em> index in the same plot.</p>
 <pre class="{r}"><code><span class="co"># Plot the indices</span>
 <span class="fu"><a href="reference/plotAllindices.html">plotAllindices</a></span><span class="op">(</span><span class="va">CombineSp</span><span class="op">)</span></code></pre>
-<p><img src="README_files/figure-gfm/unnamed-chunk-7-1.png"></p>
+<p><img src="reference/figures/unnamed-chunk-11-1.png"></p>
 <p><strong>Figure 1.</strong> The <em>h</em>-index, <em>m</em>-index, <em>i10</em> index, and <em>h5</em> index of the Woylie (<em>Bettongia penicillata</em>), Platypus (<em>Ornithorhynchus anatinus</em>), Koala (<em>Phascolarctos cinereus</em>), and Quokka (<em>Setonix brachyurus</em>).</p>
 <p><code><a href="reference/plotPub.html">plotPub()</a></code> plots the total publications per year for species, after extracting data on years and number of publications per year with the <code><a href="reference/getYear.html">getYear()</a></code> function.</p>
 <pre class="{r}"><code><span class="co"># Extract year and frequency</span>
@@ -175,14 +180,14 @@ Koala &lt;- Fetch(db = "scopus',
 
 <span class="co"># Plot the number of publications by year</span>
 <span class="fu"><a href="reference/plotPub.html">plotPub</a></span><span class="op">(</span><span class="va">Combine_pub</span><span class="op">)</span></code></pre>
-<p><img src="README_files/figure-gfm/unnamed-chunk-8-1.png"></p>
+<p><img src="reference/figures/unnamed-chunk-12-1.png"></p>
 <p><strong>Figure 2.</strong> The total number of publications per year of the Woylie (<em>Bettongia penicillata</em>), Platypus (<em>Ornithorhynchus anatinus</em>), Koala (<em>Phascolarctos cinereus</em>), and Quokka (<em>Setonix brachyurus</em>).</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="concrete-example">Concrete example<a class="anchor" aria-label="anchor" href="#concrete-example"></a></h2>
 <p>To see a concrete example, @tam_lagisz_cornwell_nakagawa_2021 has applied this package to study taxonomic bias among mammals by quantifying the scientific interest of 7,521 species of mammals.</p>
-<p><img src="README_files/figure-gfm/h100_text_2.png"></p>
+<p><img src="reference/figures/h100_text_2.png"></p>
 <p><strong>Figure 3.</strong> Species <em>h</em>-index of mammals with a species <em>h</em>-index of <em>h</em> = 100 and larger (adapted from @tam_lagisz_cornwell_nakagawa_2021).</p>
 </div>
 </div>
