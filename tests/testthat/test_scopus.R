@@ -48,14 +48,14 @@ with_mock_api({ #pass
 #fromJSON((rawToChar(t_scopus$content)))
 
 with_mock_api({
-  test_that("FetchSpT_scopus_works", {
+  test_that("FetchT_scopus_works", {
     expect_s3_class(Woylie, "data.frame")
     # expect_equal(specieshindex:::FetchT_scopus("Bettongia", "penicillata"), Woylie) #nope
     # expect_identical(FetchSpT("scopus", "Bettongia", "penicillata"), FetchSpT_scopus("Bettongia", "penicillata")) #nope
   })
 })
 
-test_that("FetchSpT_scopus_works", {
+test_that("FetchT_scopus_works", {
   expect_s3_class(Woylie, "data.frame")
   # expect_equal(FetchSpT("scopus", "Bettongia", "penicillata"), Woylie) #nope
   # expect_identical(FetchSpT("scopus", "Bettongia", "penicillata"), FetchSpT_scopus("Bettongia", "penicillata")) #nope

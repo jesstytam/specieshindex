@@ -50,11 +50,11 @@ test_that("string construction", {
  }) 
    
   
-  test_that("base errors", {
-     expect_error(Fetch("base",search = "t",genus="Bettongia"))
- })
+test_that("base errors", {
+  expect_error(Fetch("base", search = "t",genus = "Bettongia"))
+  })
 
-  test_that("missing genus errors", {
-    expect_error(Fetch("base",search = "t"))
+test_that("missing genus errors", {
+  expect_error(Fetch("base", search = "t"))
   })
 
