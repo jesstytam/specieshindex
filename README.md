@@ -1,5 +1,5 @@
 
-<img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" />
+<img src="man/figures/stickerfile.png" alt="hexsticker" width="120" align="right" />
 
 # specieshindex
 
