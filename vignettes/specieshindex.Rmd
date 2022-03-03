@@ -14,6 +14,9 @@ output:
     highlight: kate
     toc: yes
     toc_float: yes
+resource_files:
+  - Banner.png
+  - h100_text_2.png
 vignette: >
   %\VignetteIndexEntry{specieshindex}
   %\VignetteEncoding{UTF-8}
