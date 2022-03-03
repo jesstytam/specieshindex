@@ -1,3 +1,32 @@
+#string construction
+test_that("string construction", {  
+  expect_type(specieshindex:::create_query_string_T_scopus("Bettongia"),
+              "character")
+  expect_type(specieshindex:::create_query_string_T_scopus("Bettongia",
+                                                           synonyms = "Woylie"),
+              "character")
+  expect_type(specieshindex:::create_query_string_T_scopus("Bettongia",
+                                                           additionalkeywords = "cons"),
+              "character")
+  expect_type(specieshindex:::create_query_string_T_scopus("Bettongia",
+                                                           additionalkeywords = "cons",
+                                                           synonyms = "Woylie"),
+              "character")
+  expect_type(specieshindex:::create_query_string_TAK_scopus("Bettongia"),
+              "character")
+  expect_type(specieshindex:::create_query_string_TAK_scopus("Bettongia",
+                                                             synonyms = "Woylie"),
+              "character")
+  expect_type(specieshindex:::create_query_string_TAK_scopus("Bettongia",
+                                                             additionalkeywords = "cons"),
+              "character")
+  expect_type(specieshindex:::create_query_string_TAK_scopus("Bettongia",
+                                                             additionalkeywords = "cons",
+                                                             synonyms = "Woylie"),
+              "character")
+  
+})
+
 #TITLE ONLY
 t_scopus <- httr::GET("http://api.elsevier.com/content/search/scopus-ccc9dc")
 data(Woylie)

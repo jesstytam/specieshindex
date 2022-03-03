@@ -1,3 +1,31 @@
+#string construction
+test_that("string construction", {  
+  expect_type(specieshindex:::create_query_string_T_base("Bettongia"),
+              "character")
+  expect_type(specieshindex:::create_query_string_T_base("Bettongia",
+                                                         synonyms = "Woylie"),
+              "character")
+  expect_type(specieshindex:::create_query_string_T_base("Bettongia",
+                                                         additionalkeywords = "cons"),
+              "character")
+  expect_type(specieshindex:::create_query_string_T_base("Bettongia",
+                                                         synonyms = "Woylie",
+                                                         additionalkeywords = "cons"),
+              "character")
+  expect_type(specieshindex:::create_query_string_TAK_base("Bettongia"),
+              "character")
+  expect_type(specieshindex:::create_query_string_TAK_base("Bettongia",
+                                                           synonyms = "Woylie"),
+              "character")
+  expect_type(specieshindex:::create_query_string_TAK_base("Bettongia",
+                                                           additionalkeywords = "cons"),
+              "character")
+  expect_type(specieshindex:::create_query_string_TAK_base("Bettongia",
+                                                           additionalkeywords = "cons",
+                                                           synonyms = "Woylie"),
+              "character")
+})
+
 #TITLE ONLY
 # 
  with_mock_api({ #pass
@@ -30,20 +58,3 @@
     expect_error(Fetch("base",search = "t"))
   })
 
-test_that("string construction", {  
-  expect_type(specieshindex:::create_query_string_T_base("Bettongia"),"character")
-  expect_type(specieshindex:::create_query_string_T_base("Bettongia",additionalkeywords="cons",synonyms="Woylie"),"character")
-  expect_type(specieshindex:::create_query_string_TAK_scopus("Bettongia"),"character")
-  expect_type(specieshindex:::create_query_string_TAK_scopus("Bettongia",additionalkeywords="cons",synonyms="Woylie"),"character")
-  expect_type(specieshindex:::create_query_string_T_wos("Bettongia"),"character")
-  expect_type(specieshindex:::create_query_string_T_wos("Bettongia",additionalkeywords="cons",synonyms="Woylie"),"character")
-  expect_type(specieshindex:::create_query_string_T_scopus("Bettongia"),"character")
-  expect_type(specieshindex:::create_query_string_T_scopus("Bettongia",additionalkeywords="cons",synonyms="Woylie"),"character")
-  expect_type(specieshindex:::create_query_string_TAK_base("Bettongia"),"character")
-  expect_type(specieshindex:::create_query_string_TAK_base("Bettongia",additionalkeywords="cons",synonyms="Woylie"),"character")
-  expect_type(specieshindex:::create_query_string_TAK_wos("Bettongia"),"character")
-  expect_type(specieshindex:::create_query_string_TAK_wos("Bettongia",additionalkeywords="cons",synonyms="Woylie"),"character")
-  
-})
-
-  

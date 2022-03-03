@@ -12,5 +12,8 @@ test_that("Woylie_stats", {
   expect_true(SpHAfterdate(Woylie, "2000-01-01")>=20)
   B_penicillata <- Allindices(Woylie, "Bettongia", "penicillata")
   expect_true(is.data.frame(B_penicillata))
+  expect_type(specieshindex:::sp_check("Bettongia", "penicillata"),
+              "character")
 })
-#
+
+
