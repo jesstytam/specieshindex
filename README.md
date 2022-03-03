@@ -1,9 +1,7 @@
 
-<<<<<<< HEAD
-<!-- <img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" /> -->
-=======
-# specieshindex <img src="man/figures/stickerfile.png" alt="hexsticker" width="120px" align="right" />
->>>>>>> fd19a14d99566b1edfd899935dd061b257e6054e
+<img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" />
+
+# specieshindex
 
 [![R-CMD-check](https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg)](https://github.com/jessicatytam/specieshindex/actions)
 [![codecov](https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg?token=Y8N1QW0I1C)](https://codecov.io/gh/jessicatytam/specieshindex)
@@ -215,11 +213,8 @@ Using `plotAllindices()`, we can compare the indices against each other.
 plotAllindices(CombineSp)
 ```
 
-<<<<<<< HEAD
-=======
 <img src="man/figures/unnamed-chunk-11-1.png" alt="h100" align="centre" />
 
->>>>>>> fd19a14d99566b1edfd899935dd061b257e6054e
 **Figure 1.** The *h*-index, *m*-index, *i10* index, and *h5* index of
 the Woylie, Platypus, Koala, and Quokka.
 
@@ -241,11 +236,8 @@ Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_yea
 plotPub(Combine_pub)
 ```
 
-<<<<<<< HEAD
-=======
 <img src="man/figures/unnamed-chunk-12-1.png" alt="h100" align="centre" />
 
->>>>>>> fd19a14d99566b1edfd899935dd061b257e6054e
 **Figure 2.** The total number of publications per year of the Woylie,
 Platypus, Koala, and Quokka.
 
