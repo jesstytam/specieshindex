@@ -4,7 +4,7 @@ output: github_document
 
 <img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" />
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.height=5}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",

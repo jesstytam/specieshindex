@@ -17,12 +17,14 @@
 #' \dontrun{
 #' Count(db = "scopus",
 #'       search = "t",
-#'       genus = "Osphranter", species = "rufus")
+#'       genus = "Osphranter",
+#'       species = "rufus")
 #' }
 #' \dontrun{
 #' Count(db = "scopus",
 #'       search = "t",
-#'       genus = "Osphranter", species = "rufus",
+#'       genus = "Osphranter",
+#'       species = "rufus",
 #'       synonyms = "Macropus rufus",
 #'       additionalkeywords = "conserv*")
 #' }
@@ -43,17 +45,41 @@ Count <- function(db,
     stop('Genus is missing from your query.')
   }
   if (db == "scopus" & search == "t") {
-    countsp <- Count_scopus(search = "t", genus, species, synonyms, additionalkeywords)
+    countsp <- Count_scopus(search = "t",
+                            genus,
+                            species,
+                            synonyms,
+                            additionalkeywords)
   } else if (db == "scopus" & search == "tak") {
-    countsp <- Count_scopus(search = "tak", genus, species, synonyms, additionalkeywords)
+    countsp <- Count_scopus(search = "tak",
+                            genus, 
+                            species,
+                            synonyms,
+                            additionalkeywords)
   } else if (db == "wos" & search == "t") {
-    countsp <- Count_wos(search = "t", genus, species, synonyms, additionalkeywords)
+    countsp <- Count_wos(search = "t",
+                         genus,
+                         species,
+                         synonyms,
+                         additionalkeywords)
   } else if (db == "wos" & search == "tak") {
-    countsp <- Count_wos(search = "tak", genus, species, synonyms, additionalkeywords)
+    countsp <- Count_wos(search = "tak",
+                         genus,
+                         species,
+                         synonyms,
+                         additionalkeywords)
   } else if (db == "base" & search == "t") {
-    countsp <- Count_base(search = "t", genus, species, synonyms, additionalkeywords)
+    countsp <- Count_base(search = "t",
+                          genus,
+                          species,
+                          synonyms,
+                          additionalkeywords)
   } else if (db == "base" & search == "tak") {
-    countsp <- Count_base(search = "tak", genus, species, synonyms, additionalkeywords)
+    countsp <- Count_base(search = "tak",
+                          genus,
+                          species,
+                          synonyms,
+                          additionalkeywords)
   } 
   return(countsp)
 }
@@ -85,7 +111,8 @@ Count <- function(db,
 #' \dontrun{
 #' Fetch(db = "scopus",
 #'       search = "t",
-#'       genus = "Osphranter", species = "rufus",
+#'       genus = "Osphranter",
+#'       species = "rufus",
 #'       synonyms = "Macropus rufus",
 #'       additionalkeywords = "conserv*")
 #' }
@@ -107,13 +134,26 @@ Fetch <- function(db,
     stop('Genus is missing from your query.')
   }
   if (db == "scopus" & search == "t") {
-    fetchsp <- FetchT_scopus(genus, species, synonyms, additionalkeywords, language)
+    fetchsp <- FetchT_scopus(genus,
+                             species,
+                             synonyms,
+                             additionalkeywords,
+                             language)
   } else if (db == "scopus" & search == "tak") {
-    fetchsp <- FetchTAK_scopus(genus, species, synonyms, additionalkeywords)
+    fetchsp <- FetchTAK_scopus(genus,
+                               species,
+                               synonyms,
+                               additionalkeywords)
   } else if (db == "wos" & search == "t") {
-    fetchsp <- FetchT_wos(genus, species, synonyms, additionalkeywords)
+    fetchsp <- FetchT_wos(genus,
+                          species,
+                          synonyms,
+                          additionalkeywords)
   } else if (db == "wos" & search == "tak") {
-    fetchsp <- FetchTAK_wos(genus, species, synonyms, additionalkeywords)
+    fetchsp <- FetchTAK_wos(genus,
+                            species,
+                            synonyms,
+                            additionalkeywords)
   } else if (db == "base") {
     stop("Data extraction is not available for BASE")
   } 
@@ -141,18 +181,28 @@ Fetch <- function(db,
 #' 
 #' @examples
 #' \dontrun{
-#' Count_scopus(search = "t", genus = "Bettongia", species = "penicillata")
+#' Count_scopus(search = "t",
+#'              genus = "Bettongia",
+#'              species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' Count_scopus(search = "t", genus = "Bettongia", species = "penicillata")
+#' Count_scopus(search = "t",
+#'              genus = "Bettongia",
+#'              species = "penicillata")
 #' }
 #' \dontrun{
-#' Count_scopus(search = "t", genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*")
+#' Count_scopus(search = "t",
+#'              genus = "Bettongia",
+#'              species = "penicillata",
+#'              additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' Count_scopus(search = "t", genus = "bettongia", species = "penicillata", additionalkeywords = "conserv*")
+#' Count_scopus(search = "t",
+#'              genus = "bettongia",
+#'              species = "penicillata",
+#'              additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
@@ -209,18 +259,24 @@ Count_scopus <- function(search,
 #'
 #' @examples
 #' \dontrun{
-#' FetchSpT_scopus("Bettongia", "penicillata")
+#' FetchT_scopus(genus = "Bettongia",
+#'               species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchSpT_scopus("bettongia", "penicillata")
+#' FetchT_scopus(genus = "bettongia",
+#'               species = "penicillata")
 #' }
 #' \dontrun{
-#' FetchSpT_scopus("Bettongia", "penicillata", "conserv*")
+#' FetchT_scopus(genus = "Bettongia",
+#'               species = "penicillata",
+#'               additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchSpT_scopus("bettongia", "penicillata", "conserv*")
+#' FetchT_scopus(genus = "bettongia",
+#'               species = "penicillata",
+#'               additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
@@ -259,7 +315,7 @@ FetchT_scopus <- function(genus,
         #search begins
         search2020 <- scopus_request_t('" AND PUBYEAR > 2019 AND LANGUAGE(", lang$language[j], ")"')
         search2020df <- rscopus::entries_to_citation_df(search2020$entries)
-        searchloopdf = data.frame()
+        searchloopdf <- data.frame()
         for (i in 2019:1990) {
           searchloop <- scopus_request_t('" AND PUBYEAR = ", i, " AND LANGUAGE(", lang$language[j], ")"')
           searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
@@ -295,7 +351,7 @@ FetchT_scopus <- function(genus,
     if (count <= 5000) {
       step_size <- 1000 #the number of records to retrieve in each loop
       start_record <- 0
-      datalist = data.frame()
+      datalist <- data.frame()
       looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
       #loop starts
       for (i in 0:looprepeat) { 
@@ -320,7 +376,7 @@ FetchT_scopus <- function(genus,
         #search begins
         search2020 <- scopus_request_t('" AND PUBYEAR > 2019"')
         search2020df <- rscopus::entries_to_citation_df(search2020$entries)
-        searchloopdf = data.frame()
+        searchloopdf <- data.frame()
         for (i in 2019:1990) {
           searchloop <- scopus_request_t('" AND PUBYEAR = ", i')
           searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
@@ -370,18 +426,24 @@ FetchT_scopus <- function(genus,
 #'
 #' @examples
 #' \dontrun{
-#' FetchSpTAK_scopus("Bettongia", "penicillata")
+#' FetchTAK_scopus(genus = "Bettongia",
+#'               species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchSpTAK_scopus("bettongia", "penicillata")
+#' FetchTAK_scopus(genus = "bettongia",
+#'               species = "penicillata")
 #' }
 #' \dontrun{
-#' FetchSpTAK_scopus("Bettongia", "penicillata", "conserv*")
+#' FetchTAK_scopus(genus = "Bettongia",
+#'                 species = "penicillata",
+#'                 additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchSpTAK_scopus("bettongia", "penicillata", "conserv*")
+#' FetchTAK_scopus(genus = "bettongia",
+#'                 species = "penicillata",
+#'                 additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
@@ -420,7 +482,7 @@ FetchTAK_scopus <- function(genus,
         #search begins
         search2020 <- scopus_request_tak('" AND PUBYEAR > 2019 AND LANGUAGE(", lang$language[j], ")"')
         search2020df <- rscopus::entries_to_citation_df(search2020$entries)
-        searchloopdf = data.frame()
+        searchloopdf <- data.frame()
         for (i in 2019:1990) {
           searchloop <- scopus_request_tak('" AND PUBYEAR = ", i, " AND LANGUAGE(", lang$language[j], ")"')
           searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
@@ -456,7 +518,7 @@ FetchTAK_scopus <- function(genus,
     if (count <= 5000) {
       step_size <- 1000 #the number of records to retrieve in each loop
       start_record <- 0
-      datalist = data.frame()
+      datalist <- data.frame()
       looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
       #loop starts
       for (i in 0:looprepeat) { 
@@ -481,7 +543,7 @@ FetchTAK_scopus <- function(genus,
         #search begins
         search2020 <- scopus_request_tak('" AND PUBYEAR > 2019"')
         search2020df <- rscopus::entries_to_citation_df(search2020$entries)
-        searchloopdf = data.frame()
+        searchloopdf <- data.frame()
         for (i in 2019:1990) {
           searchloop <- scopus_request_tak('" AND PUBYEAR = ", i')
           searchlooplist <- rscopus::entries_to_citation_df(searchloop$entries)
@@ -529,18 +591,28 @@ FetchTAK_scopus <- function(genus,
 #' 
 #' @examples
 #' \dontrun{
-#' Count_wos(search = "t", genus = "Bettongia", species = "penicillata")
+#' Count_wos(search = "t",
+#'           genus = "Bettongia",
+#'           species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' Count_wos(search = "t", genus = "bettongia", species = "penicillata")
+#' Count_wos(search = "t",
+#'           genus = "bettongia",
+#'           species = "penicillata")
 #' }
 #' \dontrun{
-#' Count_wos(search = "t", genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*")
+#' Count_wos(search = "t",
+#'           genus = "Bettongia",
+#'           species = "penicillata",
+#'           additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' Count_wos(search = "t", genus = "bettongia", species = "penicillata", additionalkeywords = "conserv*")
+#' Count_wos(search = "t",
+#'           genus = "bettongia",
+#'           species = "penicillata",
+#'           additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
@@ -588,18 +660,24 @@ Count_wos <- function(search,
 #' 
 #' @examples
 #' \dontrun{
-#' FetchT_wos(genus = "Bettongia", species = "penicillata")
+#' FetchT_wos(genus = "Bettongia",
+#'            species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchT_wos(genus = "bettongia", species = "penicillata")
+#' FetchT_wos(genus = "bettongia",
+#'            species = "penicillata")
 #' }
 #' \dontrun{
-#' FetchT_wos(genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*")
+#' FetchT_wos(genus = "Bettongia",
+#'            species = "penicillata",
+#'            additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchT_wos(genus = "bettongia", species = "penicillata", additionalkeywords = "conserv*")
+#' FetchT_wos(genus = "bettongia",
+#'            species = "penicillata",
+#'            additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
@@ -653,18 +731,24 @@ FetchT_wos <- function(genus,
 #' 
 #' @examples
 #' \dontrun{
-#' FetchTAK_wos(genus = "Bettongia", species = "penicillata")
+#' FetchTAK_wos(genus = "Bettongia",
+#'              species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchTAK_wos(genus = "bettongia", species = "penicillata")
+#' FetchTAK_wos(genus = "bettongia",
+#'              species = "penicillata")
 #' }
 #' \dontrun{
-#' FetchTAK_wos(genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*")
+#' FetchTAK_wos(genus = "Bettongia",
+#'              species = "penicillata",
+#'              additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' FetchTAK_wos(genus = "bettongia", species = "penicillata", additionalkeywords = "conserv*")
+#' FetchTAK_wos(genus = "bettongia",
+#'              species = "penicillata",
+#'              additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
@@ -717,18 +801,28 @@ FetchTAK_wos <- function(genus,
 #'
 #' @examples
 #' \dontrun{
-#' Count_base(search = "t", genus = "Bettongia", species = "penicillata")
+#' Count_base(search = "t",
+#'            genus = "Bettongia",
+#'            species = "penicillata")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' Count_base(search = "t", genus = "bettongia", species = "penicillata")
+#' Count_base(search = "t",
+#'            genus ="bettongia",
+#'            species = "penicillata")
 #' }
 #' \dontrun{
-#' Count_base(search = "t", genus = "Bettongia", species = "penicillata", additionalkeywords = "conserv*")
+#' Count_base(search = "t",
+#'            genus = "Bettongia",
+#'            species = "penicillata",
+#'            additionalkeywords = "conserv*")
 #' 
 #' #lower case letter in genus is also accepted and will return identical results
 #' 
-#' Count_base(search = "t", genus = "bettongia", species = "penicillata", additionalkeywords = "conserv*")
+#' Count_base(search = "t",
+#'            genus = "bettongia",
+#'            species = "penicillata",
+#'            additionalkeywords = "conserv*")
 #' }
 #' 
 #' @noRd
@@ -778,7 +872,8 @@ Count_base <- function(search,
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' }
 #' TotalPub(Woylie)
 #' 
@@ -802,7 +897,8 @@ TotalPub <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' }
 #' TotalCite(Woylie)
 #' 
@@ -827,7 +923,8 @@ TotalCite <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' }
 #' TotalJournals(Woylie)
 #' 
@@ -852,7 +949,8 @@ TotalJournals <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' }
 #' SourceType(Woylie)
 #' 
@@ -880,7 +978,8 @@ SourceType <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' }
 #' YearsPublishing(Woylie)
 #' 
@@ -910,7 +1009,8 @@ YearsPublishing <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' }
 #' SpHindex(Woylie)
 #' 
@@ -945,7 +1045,8 @@ SpHindex <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' }
 #' SpMindex(Woylie)
 #' 
@@ -983,7 +1084,8 @@ SpMindex <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' }
 #' Spi10(Woylie)
 #' 
@@ -1012,7 +1114,8 @@ Spi10 <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia", 
+#'                 species = "penicillata")
 #' }
 #' SpH5(Woylie)
 #' 
@@ -1044,7 +1147,8 @@ SpH5 <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' }
 #' SpHAfterdate(Woylie, "2000-01-01")
 #' 
@@ -1076,10 +1180,12 @@ SpHAfterdate <- function(data, date) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' }
 #' Allindices(Woylie,
-#'            genus = "Bettongia", species = "penicillata",
+#'            genus = "Bettongia",
+#'            species = "penicillata",
 #'            sourcetype = 0)
 #' 
 Allindices <- function(data,
@@ -1178,25 +1284,33 @@ Allindices <- function(data,
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' Quokka <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Setonix", species = "brachyurus")
+#'                 genus = "Setonix",
+#'                 species = "brachyurus")
 #' Platypus <- Fetch(db = "scopus",
 #'                   search = "tak",
-#'                   genus = "Ornithorhynchus", species = "anatinus")
+#'                   genus = "Ornithorhynchus",
+#'                   species = "anatinus")
 #' Koala <- Fetch(db = "scopus",
 #'                search = "tak",
-#'                genus = "Phascolarctos", species = "cinereus")
+#'                genus = "Phascolarctos",
+#'                species = "cinereus")
 #' }
 #' W <- Allindices(Woylie,
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' Q <- Allindices(Quokka,
-#'                 genus = "Setonix", species = "brachyurus")
+#'                 genus = "Setonix",
+#'                 species = "brachyurus")
 #' P <- Allindices(Platypus,
-#'                 genus = "Ornithorhynchus", species = "anatinus")
+#'                 genus = "Ornithorhynchus",
+#'                 species = "anatinus")
 #' K <- Allindices(Koala,
-#'                 genus = "Phascolarctos", species = "cinereus")
+#'                 genus = "Phascolarctos",
+#'                 species = "cinereus")
 #' CombineSp <- dplyr::bind_rows(W, Q, P, K)
 #' plotAllindices(CombineSp)
 #' 
@@ -1237,10 +1351,12 @@ plotAllindices <- function(data) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' }
 #' getYear(data = Woylie,
-#'         genus = "Bettongia", species = "penicillata")
+#'         genus = "Bettongia",
+#'         species = "penicillata")
 #' 
 getYear <- function(data, genus, species) {
   data$year <- as.numeric(substr(data$cover_date, 1, 4))
@@ -1267,26 +1383,37 @@ getYear <- function(data, genus, species) {
 #' \dontrun{
 #' Woylie <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Bettongia", species = "penicillata")
+#'                 genus = "Bettongia",
+#'                 species = "penicillata")
 #' Quokka <- Fetch(db = "scopus",
 #'                 search = "tak",
-#'                 genus = "Setonix", species = "brachyurus")
+#'                 genus = "Setonix",
+#'                 species = "brachyurus")
 #' Platypus <- Fetch(db = "scopus",
 #'                   search = "tak",
-#'                   genus = "Ornithorhynchus", species = "anatinus")
+#'                   genus = "Ornithorhynchus",
+#'                   species = "anatinus")
 #' Koala <- Fetch(db = "scopus",
 #'                search = "tak",
-#'                genus = "Phascolarctos", species = "cinereus")
+#'                genus = "Phascolarctos",
+#'                species = "cinereus")
 #' }
 #' extract_year_W <- getYear(data = Woylie,
-#'                           genus = "Bettongia", species = "penicillata")
+#'                           genus = "Bettongia",
+#'                           species = "penicillata")
 #' extract_year_Q <- getYear(data = Quokka,
-#'                           genus = "Setonix", species = "brachyurus")
+#'                           genus = "Setonix",
+#'                           species = "brachyurus")
 #' extract_year_P <- getYear(data = Platypus,
-#'                           genus = "Ornithorhynchus", species = "anatinus")
+#'                           genus = "Ornithorhynchus",
+#'                           species = "anatinus")
 #' extract_year_K <- getYear(data = Koala,
-#'                           genus = "Phascolarctos", species = "cinereus")
-#' Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
+#'                           genus = "Phascolarctos",
+#'                           species = "cinereus")
+#' Combine_pub <- rbind(extract_year_W,
+#'                      extract_year_Q,
+#'                      extract_year_P,
+#'                      extract_year_K)
 #' plotPub(Combine_pub)
 #' 
 plotPub <- function(data) {
