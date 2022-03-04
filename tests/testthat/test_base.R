@@ -26,17 +26,38 @@ test_that("string construction", {
               "character")
 })
 
+#Count()
+without_internet({
+  test_that("base count title requests", {
+    expect_GET(specieshindex:::Count_base(search = "t",
+                                          genus = "Bettongia"),
+               "https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi")
+  })
+})
+
+without_internet({
+  test_that("base count titlt+abs+key requests", {
+    expect_GET(specieshindex:::Count_base(search = "tak",
+                                          genus = "Bettongia"),
+               "https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi")
+  })
+})
+
+test_that("base count errors", {
+  expect_error(specieshindex:::Count_base(genus = "Bettongia"))
+})
+
 #TITLE ONLY
 # 
  with_mock_api({ #pass
   t_base <- httr::GET("http://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi-8985d6")
   data(Woylie)
-
   test_that("t_count_base_requests_happen", {
      expect_s3_class(t_base, "response")
      expect_true(class(t_base$status_code)=="integer")
    })
  })
+ 
 # 
 # #TITLE + ABSTRACT + KEYWORDS
 # 
@@ -49,12 +70,3 @@ test_that("string construction", {
    })
  }) 
    
-  
-test_that("base errors", {
-  expect_error(Fetch("base", search = "t",genus = "Bettongia"))
-  })
-
-test_that("missing genus errors", {
-  expect_error(Fetch("base", search = "t"))
-  })
-

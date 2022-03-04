@@ -27,6 +27,35 @@ test_that("string construction", {
   
 })
 
+#Count()
+without_internet({
+  test_that("scopus count title requests", {
+    expect_GET(specieshindex:::Count_scopus(search = "t",
+                                            genus = "Bettongia"),
+               "http://api.elsevier.com/content/search/scopus")
+  })
+})
+
+without_internet({
+  test_that("scopus count titlt+abs+key requests", {
+    expect_GET(specieshindex:::Count_scopus(search = "tak",
+                                            genus = "Bettongia"),
+               "http://api.elsevier.com/content/search/scopus")
+  })
+})
+
+test_that("scopus count errors", {
+  expect_error(specieshindex:::Count_scopus(genus = "Bettongia"))
+})
+
+#Fetch()
+# without_internet({
+#   test_that("scopus query for title", {
+#     expect_GET(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"'),
+#                "http://api.elsevier.com/content/search/scopus")
+#   })
+# })
+
 #TITLE ONLY
 t_scopus <- httr::GET("http://api.elsevier.com/content/search/scopus-ccc9dc")
 data(Woylie)
@@ -79,3 +108,4 @@ with_mock_api({ #pass
 #   expect_equal(CountSpTAK("scopus", "Bettongia", "penicillata"), resultCount)
 #   expect_identical(CountSpTAK("scopus", "Bettongia", "penicillata"), CountSpTAK_scopus("Bettongia", "penicillata"))
 # })
+

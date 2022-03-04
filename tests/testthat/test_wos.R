@@ -26,6 +26,27 @@ test_that("string construction", {
               "character")
 })
 
+#Count()
+without_internet({
+  test_that("wos count title requests", {
+    expect_POST(specieshindex:::Count_wos(search = "t",
+                                          genus = "Bettongia"),
+               "http://search.webofknowledge.com/esti/wokmws/ws/WokSearch")
+  })
+})
+
+without_internet({
+  test_that("wos count titlt+abs+key requests", {
+    expect_POST(specieshindex:::Count_wos(search = "tak",
+                                             genus = "Bettongia"),
+               "http://search.webofknowledge.com/esti/wokmws/ws/WokSearch")
+  })
+})
+
+test_that("wos count errors", {
+  expect_error(specieshindex:::Count_wos(genus = "Bettongia"))
+})
+
 #TITLE ONLY
 # sid <- wosr::auth(username = NULL, password = NULL)
 # t_wos <- httr::GET("http://search.webofknowledge.com/esti/wokmws/ws/WokSearch-47b6e0-POST")
