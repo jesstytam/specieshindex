@@ -1,7 +1,5 @@
 
-<img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" />
-
-# specieshindex
+# specieshindex <img src="man/figures/stickerfile.png" alt="hexsticker" width="125px" align="right" />
 
 [![R-CMD-check](https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg)](https://github.com/jessicatytam/specieshindex/actions)
 [![codecov](https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg?token=Y8N1QW0I1C)](https://codecov.io/gh/jessicatytam/specieshindex)
@@ -133,7 +131,7 @@ Count(db = "scopus",
       genus = "Bettongia")
 ```
 
-### :fishing\_pole\_and\_fish: Extracting citaiton records
+### :fishing_pole_and_fish: Extracting citaiton records
 
 In order to calculate the indices, you will need to download the
 citation records. The parameters of `Count()` and `Fetch()` are exactly
@@ -176,7 +174,7 @@ to the search strings to get the maximum hits. If you have more than 1
 synonym, you can parse a list (the list should be named “synonyms”) into
 the argument.
 
-### :bar\_chart: Index calculation and plotting
+### :bar_chart: Index calculation and plotting
 
 Now that you have the data, you can use the `Allindices()` function to
 create a dataframe that shows their indices.

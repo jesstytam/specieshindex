@@ -2,7 +2,7 @@
 output: github_document
 ---
 
-<img src="man/figures/stickerfile.png" alt="hexsticker" height="250px" align="right" />
+
 
 ```{r, echo = FALSE, fig.height=3}
 knitr::opts_chunk$set(
@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# specieshindex 
+# specieshindex <img src="man/figures/stickerfile.png" alt="hexsticker" width="125px" align="right" />
 
 [![R-CMD-check](https://github.com/jessicatytam/specieshindex/workflows/R-CMD-check/badge.svg)](https://github.com/jessicatytam/specieshindex/actions)
 [![codecov](https://codecov.io/gh/jessicatytam/specieshindex/branch/master/graph/badge.svg?token=Y8N1QW0I1C)](https://codecov.io/gh/jessicatytam/specieshindex)
