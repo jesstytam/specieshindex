@@ -55,20 +55,26 @@ with_mock_api({
 #Fetch()
 # with_mock_api({ #failing
 #   test_that("scopus query for title", {
-#     # expect_s3_class(httr::GET("http://api.elsevier.com/content/search/scopus"),
-#     #                 "response")
+#     expect_GET(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"'),
+#                     "http://api.elsevier.com/content/search/scopus?query=TITLE%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")
+#   })
+# })
+# 
+# with_mock_api({ #failing
+#   test_that("scopus query for title", {
 #     expect_s3_class(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"'),
 #                     "response")
 #   })
 # })
-# 
-# 
-# test_that("scopus query for title", {
-#   # expect_s3_class(httr::GET("http://api.elsevier.com/content/search/scopus"),
-#   #                 "response")
-#   expect_s3_class(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"'),
-#                   "response")
-# })
+
+with_mock_api({
+  test_that("fetch scopus works", {
+    expect_GET(FetchT_scopus(genus = "Bettongia"),
+                "http://api.elsevier.com/content/search/scopus?query=TITLE%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")
+    
+  })
+})
+
 
 
 
