@@ -66,13 +66,13 @@ A check will be conducted via <code><a href="https://docs.ropensci.org/taxize/re
     <dl><dt>db</dt>
 <dd><p>Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").</p></dd>
 <dt>search</dt>
-<dd><p>Search fields. Title only ("t") or title, abstract, and keywords ("tak").</p></dd>
+<dd><p>Search fields. Title only ("t") or title, abstract, or keywords ("tak").</p></dd>
 <dt>genus</dt>
 <dd><p>Genus classification from the binomial name.</p></dd>
 <dt>species</dt>
 <dd><p>Species classification from the binomial name.</p></dd>
 <dt>synonyms</dt>
-<dd><p>Alternate species names.</p></dd>
+<dd><p>Alternate species names; optional.</p></dd>
 <dt>additionalkeywords</dt>
 <dd><p>Optional search terms.</p></dd>
 </dl></div>
@@ -86,12 +86,14 @@ A check will be conducted via <code><a href="https://docs.ropensci.org/taxize/re
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="fu">Count</span><span class="op">(</span>db <span class="op">=</span> <span class="st">"scopus"</span>,</span>
 <span class="r-in">      search <span class="op">=</span> <span class="st">"t"</span>,</span>
-<span class="r-in">      genus <span class="op">=</span> <span class="st">"Osphranter"</span>, species <span class="op">=</span> <span class="st">"rufus"</span><span class="op">)</span></span>
+<span class="r-in">      genus <span class="op">=</span> <span class="st">"Osphranter"</span>,</span>
+<span class="r-in">      species <span class="op">=</span> <span class="st">"rufus"</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="fu">Count</span><span class="op">(</span>db <span class="op">=</span> <span class="st">"scopus"</span>,</span>
 <span class="r-in">      search <span class="op">=</span> <span class="st">"t"</span>,</span>
-<span class="r-in">      genus <span class="op">=</span> <span class="st">"Osphranter"</span>, species <span class="op">=</span> <span class="st">"rufus"</span>,</span>
+<span class="r-in">      genus <span class="op">=</span> <span class="st">"Osphranter"</span>,</span>
+<span class="r-in">      species <span class="op">=</span> <span class="st">"rufus"</span>,</span>
 <span class="r-in">      synonyms <span class="op">=</span> <span class="st">"Macropus rufus"</span>,</span>
 <span class="r-in">      additionalkeywords <span class="op">=</span> <span class="st">"conserv*"</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>

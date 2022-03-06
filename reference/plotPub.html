@@ -74,26 +74,37 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="va">Woylie</span> <span class="op">&lt;-</span> <span class="fu"><a href="Fetch.html">Fetch</a></span><span class="op">(</span>db <span class="op">=</span> <span class="st">"scopus"</span>,</span>
 <span class="r-in">                search <span class="op">=</span> <span class="st">"tak"</span>,</span>
-<span class="r-in">                genus <span class="op">=</span> <span class="st">"Bettongia"</span>, species <span class="op">=</span> <span class="st">"penicillata"</span><span class="op">)</span></span>
+<span class="r-in">                genus <span class="op">=</span> <span class="st">"Bettongia"</span>,</span>
+<span class="r-in">                species <span class="op">=</span> <span class="st">"penicillata"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">Quokka</span> <span class="op">&lt;-</span> <span class="fu"><a href="Fetch.html">Fetch</a></span><span class="op">(</span>db <span class="op">=</span> <span class="st">"scopus"</span>,</span>
 <span class="r-in">                search <span class="op">=</span> <span class="st">"tak"</span>,</span>
-<span class="r-in">                genus <span class="op">=</span> <span class="st">"Setonix"</span>, species <span class="op">=</span> <span class="st">"brachyurus"</span><span class="op">)</span></span>
+<span class="r-in">                genus <span class="op">=</span> <span class="st">"Setonix"</span>,</span>
+<span class="r-in">                species <span class="op">=</span> <span class="st">"brachyurus"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">Platypus</span> <span class="op">&lt;-</span> <span class="fu"><a href="Fetch.html">Fetch</a></span><span class="op">(</span>db <span class="op">=</span> <span class="st">"scopus"</span>,</span>
 <span class="r-in">                  search <span class="op">=</span> <span class="st">"tak"</span>,</span>
-<span class="r-in">                  genus <span class="op">=</span> <span class="st">"Ornithorhynchus"</span>, species <span class="op">=</span> <span class="st">"anatinus"</span><span class="op">)</span></span>
+<span class="r-in">                  genus <span class="op">=</span> <span class="st">"Ornithorhynchus"</span>,</span>
+<span class="r-in">                  species <span class="op">=</span> <span class="st">"anatinus"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">Koala</span> <span class="op">&lt;-</span> <span class="fu"><a href="Fetch.html">Fetch</a></span><span class="op">(</span>db <span class="op">=</span> <span class="st">"scopus"</span>,</span>
 <span class="r-in">               search <span class="op">=</span> <span class="st">"tak"</span>,</span>
-<span class="r-in">               genus <span class="op">=</span> <span class="st">"Phascolarctos"</span>, species <span class="op">=</span> <span class="st">"cinereus"</span><span class="op">)</span></span>
+<span class="r-in">               genus <span class="op">=</span> <span class="st">"Phascolarctos"</span>,</span>
+<span class="r-in">               species <span class="op">=</span> <span class="st">"cinereus"</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"><span class="va">extract_year_W</span> <span class="op">&lt;-</span> <span class="fu"><a href="getYear.html">getYear</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Woylie</span>,</span>
-<span class="r-in">                          genus <span class="op">=</span> <span class="st">"Bettongia"</span>, species <span class="op">=</span> <span class="st">"penicillata"</span><span class="op">)</span></span>
+<span class="r-in">                          genus <span class="op">=</span> <span class="st">"Bettongia"</span>,</span>
+<span class="r-in">                          species <span class="op">=</span> <span class="st">"penicillata"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">extract_year_Q</span> <span class="op">&lt;-</span> <span class="fu"><a href="getYear.html">getYear</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Quokka</span>,</span>
-<span class="r-in">                          genus <span class="op">=</span> <span class="st">"Setonix"</span>, species <span class="op">=</span> <span class="st">"brachyurus"</span><span class="op">)</span></span>
+<span class="r-in">                          genus <span class="op">=</span> <span class="st">"Setonix"</span>,</span>
+<span class="r-in">                          species <span class="op">=</span> <span class="st">"brachyurus"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">extract_year_P</span> <span class="op">&lt;-</span> <span class="fu"><a href="getYear.html">getYear</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Platypus</span>,</span>
-<span class="r-in">                          genus <span class="op">=</span> <span class="st">"Ornithorhynchus"</span>, species <span class="op">=</span> <span class="st">"anatinus"</span><span class="op">)</span></span>
+<span class="r-in">                          genus <span class="op">=</span> <span class="st">"Ornithorhynchus"</span>,</span>
+<span class="r-in">                          species <span class="op">=</span> <span class="st">"anatinus"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">extract_year_K</span> <span class="op">&lt;-</span> <span class="fu"><a href="getYear.html">getYear</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Koala</span>,</span>
-<span class="r-in">                          genus <span class="op">=</span> <span class="st">"Phascolarctos"</span>, species <span class="op">=</span> <span class="st">"cinereus"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">Combine_pub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">extract_year_W</span>, <span class="va">extract_year_Q</span>, <span class="va">extract_year_P</span>, <span class="va">extract_year_K</span><span class="op">)</span></span>
+<span class="r-in">                          genus <span class="op">=</span> <span class="st">"Phascolarctos"</span>,</span>
+<span class="r-in">                          species <span class="op">=</span> <span class="st">"cinereus"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">Combine_pub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">extract_year_W</span>,</span>
+<span class="r-in">                     <span class="va">extract_year_Q</span>,</span>
+<span class="r-in">                     <span class="va">extract_year_P</span>,</span>
+<span class="r-in">                     <span class="va">extract_year_K</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">plotPub</span><span class="op">(</span><span class="va">Combine_pub</span><span class="op">)</span></span>
 <span class="r-plt img"><img src="plotPub-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
