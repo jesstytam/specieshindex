@@ -19,7 +19,8 @@ The number of years since the first publication in relation to the species.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                genus = "Bettongia", species = "penicillata")
+                genus = "Bettongia",
+                species = "penicillata")
 }
 YearsPublishing(Woylie)
 

@@ -19,7 +19,8 @@ This function calculates the total number of publications.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                genus = "Bettongia", species = "penicillata")
+                genus = "Bettongia",
+                species = "penicillata")
 }
 TotalPub(Woylie)
 

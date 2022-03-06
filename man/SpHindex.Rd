@@ -19,7 +19,8 @@ This function calculates the h-index of a species.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                genus = "Bettongia", species = "penicillata")
+                genus = "Bettongia",
+                species = "penicillata")
 }
 SpHindex(Woylie)
 

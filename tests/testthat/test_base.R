@@ -28,23 +28,23 @@ test_that("string construction", {
 
 #Count()
 without_internet({
-  test_that("base count title requests", {
+  test_that("base count requests", {
     expect_GET(specieshindex:::Count_base(search = "t",
                                           genus = "Bettongia"),
                "https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi")
-  })
-})
-
-without_internet({
-  test_that("base count titlt+abs+key requests", {
     expect_GET(specieshindex:::Count_base(search = "tak",
                                           genus = "Bettongia"),
                "https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi")
   })
 })
 
-test_that("base count errors", {
-  expect_error(specieshindex:::Count_base(genus = "Bettongia"))
+with_mock_api({
+  test_that("base count errors", {
+    expect_error(specieshindex:::Count_base(genus = "Bettongia"))
+    expect_error(specieshindex:::Count_base(search = " ",
+                                            genus = "Bettongia"),
+                 'Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, or keywords.')
+  })
 })
 
 #TITLE ONLY

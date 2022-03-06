@@ -18,3 +18,8 @@ test_that("fetch wrapper errors", {
                      search = "t"))
 })
 
+#sp_check
+test_that("sp_check() errors", {
+  expect_error(specieshindex:::sp_check("Betongia"),
+               "not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
+})

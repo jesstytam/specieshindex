@@ -25,10 +25,12 @@ This function returns a dataframe of the summary of all of the indices.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                genus = "Bettongia", species = "penicillata")
+                genus = "Bettongia",
+                species = "penicillata")
 }
 Allindices(Woylie,
-           genus = "Bettongia", species = "penicillata",
+           genus = "Bettongia",
+           species = "penicillata",
            sourcetype = 0)
 
 }

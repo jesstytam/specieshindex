@@ -23,9 +23,11 @@ Extracts the year of each publication of the output from any of the Fetch functi
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                genus = "Bettongia", species = "penicillata")
+                genus = "Bettongia",
+                species = "penicillata")
 }
 getYear(data = Woylie,
-        genus = "Bettongia", species = "penicillata")
+        genus = "Bettongia",
+        species = "penicillata")
 
 }

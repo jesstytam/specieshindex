@@ -29,32 +29,49 @@ test_that("string construction", {
 
 #Count()
 without_internet({
-  test_that("scopus count title requests", {
+  test_that("scopus count requests", {
     expect_GET(specieshindex:::Count_scopus(search = "t",
                                             genus = "Bettongia"),
                "http://api.elsevier.com/content/search/scopus")
-  })
-})
-
-without_internet({
-  test_that("scopus count titlt+abs+key requests", {
     expect_GET(specieshindex:::Count_scopus(search = "tak",
                                             genus = "Bettongia"),
                "http://api.elsevier.com/content/search/scopus")
+    # expect_type(specieshindex:::Count_scopus(search = "t",
+    #                                          genus = "Bettongia"),
+    #             "numeric")
   })
 })
 
-test_that("scopus count errors", {
-  expect_error(specieshindex:::Count_scopus(genus = "Bettongia"))
+with_mock_api({
+  test_that("scopus count errors", {
+    expect_error(specieshindex:::Count_scopus(genus = "Bettongia"))
+    expect_error(specieshindex:::Count_scopus(search = " ",
+                                              genus = "Bettongia"),
+                 'Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, or keywords.')
+  })
 })
 
+
 #Fetch()
-# without_internet({
+# with_mock_api({ #failing
 #   test_that("scopus query for title", {
-#     expect_GET(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"'),
-#                "http://api.elsevier.com/content/search/scopus")
+#     # expect_s3_class(httr::GET("http://api.elsevier.com/content/search/scopus"),
+#     #                 "response")
+#     expect_s3_class(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"'),
+#                     "response")
 #   })
 # })
+# 
+# 
+# test_that("scopus query for title", {
+#   # expect_s3_class(httr::GET("http://api.elsevier.com/content/search/scopus"),
+#   #                 "response")
+#   expect_s3_class(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"'),
+#                   "response")
+# })
+
+
+
 
 #TITLE ONLY
 t_scopus <- httr::GET("http://api.elsevier.com/content/search/scopus-ccc9dc")

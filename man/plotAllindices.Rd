@@ -19,25 +19,33 @@ Plots the indices of a single species or combined.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                genus = "Bettongia", species = "penicillata")
+                genus = "Bettongia",
+                species = "penicillata")
 Quokka <- Fetch(db = "scopus",
                 search = "tak",
-                genus = "Setonix", species = "brachyurus")
+                genus = "Setonix",
+                species = "brachyurus")
 Platypus <- Fetch(db = "scopus",
                   search = "tak",
-                  genus = "Ornithorhynchus", species = "anatinus")
+                  genus = "Ornithorhynchus",
+                  species = "anatinus")
 Koala <- Fetch(db = "scopus",
                search = "tak",
-               genus = "Phascolarctos", species = "cinereus")
+               genus = "Phascolarctos",
+               species = "cinereus")
 }
 W <- Allindices(Woylie,
-                genus = "Bettongia", species = "penicillata")
+                genus = "Bettongia",
+                species = "penicillata")
 Q <- Allindices(Quokka,
-                genus = "Setonix", species = "brachyurus")
+                genus = "Setonix",
+                species = "brachyurus")
 P <- Allindices(Platypus,
-                genus = "Ornithorhynchus", species = "anatinus")
+                genus = "Ornithorhynchus",
+                species = "anatinus")
 K <- Allindices(Koala,
-                genus = "Phascolarctos", species = "cinereus")
+                genus = "Phascolarctos",
+                species = "cinereus")
 CombineSp <- dplyr::bind_rows(W, Q, P, K)
 plotAllindices(CombineSp)
 

@@ -19,26 +19,37 @@ Plots the publication by year of a single species or combined.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                genus = "Bettongia", species = "penicillata")
+                genus = "Bettongia",
+                species = "penicillata")
 Quokka <- Fetch(db = "scopus",
                 search = "tak",
-                genus = "Setonix", species = "brachyurus")
+                genus = "Setonix",
+                species = "brachyurus")
 Platypus <- Fetch(db = "scopus",
                   search = "tak",
-                  genus = "Ornithorhynchus", species = "anatinus")
+                  genus = "Ornithorhynchus",
+                  species = "anatinus")
 Koala <- Fetch(db = "scopus",
                search = "tak",
-               genus = "Phascolarctos", species = "cinereus")
+               genus = "Phascolarctos",
+               species = "cinereus")
 }
 extract_year_W <- getYear(data = Woylie,
-                          genus = "Bettongia", species = "penicillata")
+                          genus = "Bettongia",
+                          species = "penicillata")
 extract_year_Q <- getYear(data = Quokka,
-                          genus = "Setonix", species = "brachyurus")
+                          genus = "Setonix",
+                          species = "brachyurus")
 extract_year_P <- getYear(data = Platypus,
-                          genus = "Ornithorhynchus", species = "anatinus")
+                          genus = "Ornithorhynchus",
+                          species = "anatinus")
 extract_year_K <- getYear(data = Koala,
-                          genus = "Phascolarctos", species = "cinereus")
-Combine_pub <- rbind(extract_year_W, extract_year_Q, extract_year_P, extract_year_K)
+                          genus = "Phascolarctos",
+                          species = "cinereus")
+Combine_pub <- rbind(extract_year_W,
+                     extract_year_Q,
+                     extract_year_P,
+                     extract_year_K)
 plotPub(Combine_pub)
 
 }

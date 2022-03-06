@@ -32,19 +32,19 @@ without_internet({
     expect_POST(specieshindex:::Count_wos(search = "t",
                                           genus = "Bettongia"),
                "http://search.webofknowledge.com/esti/wokmws/ws/WokSearch")
-  })
-})
-
-without_internet({
-  test_that("wos count titlt+abs+key requests", {
     expect_POST(specieshindex:::Count_wos(search = "tak",
-                                             genus = "Bettongia"),
-               "http://search.webofknowledge.com/esti/wokmws/ws/WokSearch")
+                                          genus = "Bettongia"),
+                "http://search.webofknowledge.com/esti/wokmws/ws/WokSearch")
   })
 })
 
-test_that("wos count errors", {
-  expect_error(specieshindex:::Count_wos(genus = "Bettongia"))
+with_mock_api({
+  test_that("wos count errors", {
+    expect_error(specieshindex:::Count_wos(genus = "Bettongia"))
+    expect_error(specieshindex:::Count_wos(search = " ",
+                                           genus = "Bettongia"),
+                 'Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, or keywords.')
+  })
 })
 
 #TITLE ONLY

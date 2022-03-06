@@ -17,13 +17,13 @@ Fetch(
 \arguments{
 \item{db}{Literature database. Scopus ("scopus"), Web of Science ("wos"), or Base ("base").}
 
-\item{search}{Search fields. Title only ("t") or title, abstract, and keywords ("tak").}
+\item{search}{Search fields. Title only ("t") or title, abstract, or keywords ("tak").}
 
 \item{genus}{Genus classification from the binomial name.}
 
 \item{species}{Species classification from the binomial name.}
 
-\item{synonyms}{Alternate species names.}
+\item{synonyms}{Alternate species names; optional.}
 
 \item{additionalkeywords}{Optional search terms.}
 
@@ -45,7 +45,8 @@ Fetch(db = "scopus",
 \dontrun{
 Fetch(db = "scopus",
       search = "t",
-      genus = "Osphranter", species = "rufus",
+      genus = "Osphranter",
+      species = "rufus",
       synonyms = "Macropus rufus",
       additionalkeywords = "conserv*")
 }

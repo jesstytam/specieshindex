@@ -20,7 +20,8 @@ M-index uses the h-index and divides it by the number of years of activity.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                genus = "Bettongia", species = "penicillata")
+                genus = "Bettongia",
+                species = "penicillata")
 }
 SpMindex(Woylie)
 

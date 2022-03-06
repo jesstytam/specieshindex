@@ -19,7 +19,8 @@ This function calculates the h-index of a species in the past 5 years.
 \dontrun{
 Woylie <- Fetch(db = "scopus",
                 search = "tak",
-                genus = "Bettongia", species = "penicillata")
+                genus = "Bettongia", 
+                species = "penicillata")
 }
 SpH5(Woylie)
 
