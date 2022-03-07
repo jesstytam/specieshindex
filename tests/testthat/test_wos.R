@@ -50,11 +50,14 @@ with_mock_api({
 #Fetch()
 with_mock_api({
   test_that("wos scopus works", {
-    expect_POST(FetchT_wos(genus = "Bettongia"),
-               'http://search.webofknowledge.com/esti/wokmws/ws/WokSearch <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"')
+    expect_POST(specieshindex:::FetchT_wos(genus = "Bettongia"),
+               'http://search.webofknowledge.com/esti/wokmws/ws/WokSearch <soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"')
+    expect_POST(specieshindex:::FetchTAK_wos(genus = "Bettongia"),
+                'http://search.webofknowledge.com/esti/wokmws/ws/WokSearch <soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"')
     
   })
 })
+
 
 #TITLE ONLY
 # sid <- wosr::auth(username = NULL, password = NULL)

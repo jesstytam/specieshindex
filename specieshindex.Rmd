@@ -1395,7 +1395,7 @@ plotPub <- function(data) {
 
 ```{r, testing}
 
-apikey <- Sys.getenv("myscopusAPI")
+apikey <- Sys.getenv("Elsevier_API")
 sid <- auth(username = NULL, password = NULL)
 
 
