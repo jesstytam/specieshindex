@@ -119,14 +119,14 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="st">"~/.Renviron"</span><span class="op">)</span></code></pre></div>
 <p>This will bring up an empty file, which is where you will save your key into.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">scopus_api_key</span> <span class="op">=</span> <span class="st">"a_long_string"</span></code></pre></div>
+<code class="sourceCode R"><span class="va">Elsevier_API</span> <span class="op">=</span> <span class="st">"a_long_string"</span></code></pre></div>
 <p>Restart your session for this to work. To retrieve your key, use <code><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"scopus_api_key"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"Elsevier_API"</span><span class="op">)</span>
 <span class="co">#&gt; [1] "a_long_string"</span></code></pre></div>
 <p>You can then load it to your environment as follows:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">apikey</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"scopus_api_key"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">apikey</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"Elsevier_API"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -165,8 +165,7 @@
       genus <span class="op">=</span> <span class="st">"Bettongia"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="-extracting-citaiton-records">
-<span class="emoji" data-emoji="fishing_pole_and_fish">🎣</span> Extracting citaiton records<a class="anchor" aria-label="anchor" href="#-extracting-citaiton-records"></a>
+<h3 id="fishing_pole_and_fish-extracting-citaiton-records">:fishing_pole_and_fish: Extracting citaiton records<a class="anchor" aria-label="anchor" href="#fishing_pole_and_fish-extracting-citaiton-records"></a>
 </h3>
 <p>In order to calculate the indices, you will need to download the citation records. The parameters of <code><a href="reference/Count.html">Count()</a></code> and <code><a href="reference/Fetch.html">Fetch()</a></code> are exactly the same. Let’s say you want to compare the species <em>h</em>-index of a few marsupials. First, you would need to download the citation information using <code><a href="reference/Fetch.html">Fetch()</a></code>. Remember to use binomial names.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -196,8 +195,7 @@
 <p>Some species have had their classification changed in the past, resulting in multiple binomial names and synonyms. Synonyms can be added to the search strings to get the maximum hits. If you have more than 1 synonym, you can parse a list (the list should be named “synonyms”) into the argument.</p>
 </div>
 <div class="section level3">
-<h3 id="-index-calculation-and-plotting">
-<span class="emoji" data-emoji="bar_chart">📊</span> Index calculation and plotting<a class="anchor" aria-label="anchor" href="#-index-calculation-and-plotting"></a>
+<h3 id="bar_chart-index-calculation-and-plotting">:bar_chart: Index calculation and plotting<a class="anchor" aria-label="anchor" href="#bar_chart-index-calculation-and-plotting"></a>
 </h3>
 <p>Now that you have the data, you can use the <code><a href="reference/Allindices.html">Allindices()</a></code> function to create a dataframe that shows their indices.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
