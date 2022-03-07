@@ -27,7 +27,7 @@ test_that("string construction", {
 })
 
 #Count()
-without_internet({
+with_mock_api({
   test_that("base count requests", {
     expect_GET(specieshindex:::Count_base(search = "t",
                                           genus = "Bettongia"),

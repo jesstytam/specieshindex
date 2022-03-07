@@ -108,20 +108,20 @@ file.edit("~/.Renviron")
 This will bring up an empty file, which is where you will save your key into.
 
 ```{r, eval=FALSE}
-scopus_api_key = "a_long_string"
+Elsevier_API = "a_long_string"
 ```
 
 Restart your session for this to work. To retrieve your key, use `Sys.getenv()`:
 
 ```{r, eval=FALSE}
-Sys.getenv("scopus_api_key")
+Sys.getenv("Elsevier_API")
 #> [1] "a_long_string"
 ```
 
 You can then load it to your environment as follows:
 
 ```{r}
-apikey <- Sys.getenv("scopus_api_key")
+apikey <- Sys.getenv("Elsevier_API")
 ```
 
 ## Connecting to Web of Science

@@ -69,21 +69,21 @@ This will bring up an empty file, which is where you will save your key
 into.
 
 ``` r
-scopus_api_key = "a_long_string"
+Elsevier_API = "a_long_string"
 ```
 
 Restart your session for this to work. To retrieve your key, use
 `Sys.getenv()`:
 
 ``` r
-Sys.getenv("scopus_api_key")
+Sys.getenv("Elsevier_API")
 #> [1] "a_long_string"
 ```
 
 You can then load it to your environment as follows:
 
 ``` r
-apikey <- Sys.getenv("scopus_api_key")
+apikey <- Sys.getenv("Elsevier_API")
 ```
 
 ### :mega: Connecting to Web of Science
@@ -131,7 +131,7 @@ Count(db = "scopus",
       genus = "Bettongia")
 ```
 
-### :fishing_pole_and_fish: Extracting citaiton records
+### :fishing\_pole\_and\_fish: Extracting citaiton records
 
 In order to calculate the indices, you will need to download the
 citation records. The parameters of `Count()` and `Fetch()` are exactly
@@ -174,7 +174,7 @@ to the search strings to get the maximum hits. If you have more than 1
 synonym, you can parse a list (the list should be named “synonyms”) into
 the argument.
 
-### :bar_chart: Index calculation and plotting
+### :bar\_chart: Index calculation and plotting
 
 Now that you have the data, you can use the `Allindices()` function to
 create a dataframe that shows their indices.

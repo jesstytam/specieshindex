@@ -27,7 +27,7 @@ test_that("string construction", {
 })
 
 #Count()
-without_internet({
+with_mock_api({
   test_that("wos count title requests", {
     expect_POST(specieshindex:::Count_wos(search = "t",
                                           genus = "Bettongia"),
@@ -55,6 +55,14 @@ with_mock_api({
     expect_POST(specieshindex:::FetchTAK_wos(genus = "Bettongia"),
                 'http://search.webofknowledge.com/esti/wokmws/ws/WokSearch <soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"')
     
+  })
+})
+
+with_mock_api({ 
+  test_that("wos query working", {
+    expect_POST(wosr::pull_wos('TS = ("Bettongia")',
+                               sid = sid),
+               'http://search.webofknowledge.com/esti/wokmws/ws/WokSearch <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"')
   })
 })
 
