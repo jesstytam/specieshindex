@@ -68,32 +68,15 @@ with_mock_api({
   })
 })
 
-with_mock_api({
-  test_that("scopus query working", {
-    expect_GET(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"'),
-               "https://api.elsevier.com/content/search/scopus?query=TITLE%28%28%22%20%22%20OR%20%22%22%29%20AND%2")
-    # expect_GET(specieshindex:::scopus_request_tak(request = '" AND PUBYEAR > 2019"'),
-    #            "https://api.elsevier.com/content/search/scopus?query=TITLE-ABS-KEY%28%28%22%20%22%20OR%20%22%22%29%20AND%20%29%22%20AND%20PUBYEAR%20%3E%202019%22&APIKey=442b9048417ef20cf680a0ae26ee4d86&count=200&start=0&view=STANDARD")
-  })
-})
+# with_mock_api({
+#   test_that("scopus query working", {
+#     expect_GET(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"'),
+#                "https://api.elsevier.com/content/search/scopus?query=TITLE%28%28%22%20%22%20OR%20%22%22%29%20AND%2")
+#     expect_GET(specieshindex:::scopus_request_tak(request = '" AND PUBYEAR > 2019"'),
+#                "https://api.elsevier.com/content/search/scopus?query=TITLE-ABS-KEY%28%28%22%20%22%20OR%20%22%22%29%20AND%20%29%22%20AND%20PUBYEAR%20%3E%202019%22&APIKey=442b9048417ef20cf680a0ae26ee4d86&count=200&start=0&view=STANDARD")
+#   })
+# })
 
-with_mock_api({
-  test_that("scopus query working", {
-    expect_GET(rscopus::scopus_search(query = paste0(specieshindex:::create_query_string_T_scopus("Bettongia"),
-                                                     paste0('" AND PUBYEAR > 2019"')),
-                                      api_key = apikey,
-                                      verbose = TRUE,
-                                      wait_time = 3),
-               "https://api.elsevier.com/content/search/scopus?query=TITLE%28%22Bettongia%20%22%29%20AND%20PUBYEAR%20%3E%202019&count=200&start=0&view=STANDARD")
-  })
-})
-
-with_mock_api({
-  test_that("scopus query test", {
-    expect_GET(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"'),
-               "https://api.elsevier.com/content/search/scopus?query=TITLE%28%28%22%20%22%20OR%20%22%22%29%20AND%20%29%22%20AND%20PUBYEAR%20%3E%202019%22&APIKey=442b9048417ef20cf680a0ae26ee4d86&count=200&start=0&view=STANDARD")
-  })
-})
 
 
 #TITLE ONLY
