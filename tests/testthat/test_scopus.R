@@ -55,15 +55,20 @@ with_mock_api({
 #Fetch()
 with_mock_api({
   test_that("fetch scopus works", {
-    expect_GET(FetchT_scopus(genus = "Bettongia"),
+    expect_GET(specieshindex:::FetchT_scopus(genus = "Bettongia"),
                "http://api.elsevier.com/content/search/scopus?query=TITLE%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")
-    expect_GET(FetchTAK_scopus(genus = "Bettongia"),
-               "http://api.elsevier.com/content/search/scopus?query=TITLE-ABS-KEY%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")   
+    expect_GET(specieshindex:::FetchT_scopus(genus = "Bettongia",
+                                             language = 1),
+               "http://api.elsevier.com/content/search/scopus?query=TITLE%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")
+    expect_GET(specieshindex:::FetchTAK_scopus(genus = "Bettongia"),
+               "http://api.elsevier.com/content/search/scopus?query=TITLE-ABS-KEY%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")
+    expect_GET(specieshindex:::FetchTAK_scopus(genus = "Bettongia",
+                                               language = 1),
+               "http://api.elsevier.com/content/search/scopus?query=TITLE-ABS-KEY%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")
   })
 })
 
-# with_mock_api({ 
-#   options("elsevier_api_key" = Sys.getenv("Elsevier_API"))
+# with_mock_api({
 #   test_that("scopus query working", {
 #     expect_GET(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"'),
 #                "https://api.elsevier.com/content/search/scopus?query=TITLE%28%28%22%20%22%20OR%20%22%22%29%20AND%20%29%22%20AND%20PUBYEAR%20%3E%202019%22&APIKey=442b9048417ef20cf680a0ae26ee4d86&count=200&start=0&view=STANDARD")
