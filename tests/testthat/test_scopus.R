@@ -55,10 +55,16 @@ with_mock_api({
 #Fetch()
 with_mock_api({
   test_that("fetch scopus works", {
-    expect_GET(FetchT_scopus(genus = "Bettongia"),
+    expect_GET(specieshindex:::FetchT_scopus(genus = "Bettongia"),
                "http://api.elsevier.com/content/search/scopus?query=TITLE%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")
-    expect_GET(FetchTAK_scopus(genus = "Bettongia"),
-               "http://api.elsevier.com/content/search/scopus?query=TITLE-ABS-KEY%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")   
+    expect_GET(specieshindex:::FetchT_scopus(genus = "Bettongia",
+                                             language = 1),
+               "http://api.elsevier.com/content/search/scopus?query=TITLE%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")
+    expect_GET(specieshindex:::FetchTAK_scopus(genus = "Bettongia"),
+               "http://api.elsevier.com/content/search/scopus?query=TITLE-ABS-KEY%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")
+    expect_GET(specieshindex:::FetchTAK_scopus(genus = "Bettongia",
+                                               language = 1),
+               "http://api.elsevier.com/content/search/scopus?query=TITLE-ABS-KEY%28%22Bettongia%20%22%29&httpAccept=application%2Fxml")
   })
 })
 
