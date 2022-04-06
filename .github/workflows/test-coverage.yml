@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      Elsevier_API: ${{ secrets.api_test }}
 
     steps:
       - uses: actions/checkout@v2
@@ -29,3 +28,6 @@ jobs:
       - name: Test coverage
         run: covr::codecov()
         shell: Rscript {0}
+        
+      - env:
+          Elsevier_API: ${{ secrets.api_test }}
