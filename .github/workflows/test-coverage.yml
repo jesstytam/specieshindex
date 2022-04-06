@@ -29,5 +29,7 @@ jobs:
         run: covr::codecov()
         shell: Rscript {0}
         
-      - env:
-          Elsevier_API: ${{ secrets.api_test }}
+      - name: Retrieve API key from .Renviron file
+        run: |
+          echo MY_SECRET="$api_test" >> ~/.Renviron
+          shell: bash
