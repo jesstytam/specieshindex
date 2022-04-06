@@ -22,6 +22,8 @@ jobs:
           use-public-rspm: true
 
       - name: Retrieve API key from .Renviron file
+        run: |
+          echo MY_SECRET="$api_test" >> ~/.Renviron
         env: 
           Elsevier_API: ${{ secrets.api_test }}
       
