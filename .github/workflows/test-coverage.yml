@@ -25,7 +25,7 @@ jobs:
       - name: Retrieve API key from .Renviron file
         run: |
           echo Elsevier_API ="$api_test" >> ~/.Renviron
-          shell: bash
+        shell: bash
       
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
