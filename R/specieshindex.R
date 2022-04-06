@@ -285,7 +285,8 @@ FetchT_scopus <- function(genus,
                           species = NULL,
                           synonyms,
                           additionalkeywords,
-                          language = 0) {
+                          language = 0,
+                          ...) {
   count <- Count_scopus(search = "t",
                         genus,
                         species = paste0(species),
@@ -452,7 +453,8 @@ FetchTAK_scopus <- function(genus,
                             species = NULL,
                             synonyms,
                             additionalkeywords,
-                            language = 0) {
+                            language = 0,
+                            ...) {
   count <- Count_scopus(search = "tak",
                         genus,
                         species = paste0(species),
@@ -1722,7 +1724,7 @@ create_query_string_TAK_base <- function(genus,
 #'
 #' @noRd
 #' 
-scopus_request_t <- function(request, species = NULL) {
+scopus_request_t <- function(request, species = NULL, ...) {
   rscopus::scopus_search(query = paste0(create_query_string_T_scopus(genus,
                                                                      species = paste0(species),
                                                                      synonyms,
@@ -1744,7 +1746,7 @@ scopus_request_t <- function(request, species = NULL) {
 #'
 #' @noRd
 #' 
-scopus_request_tak <- function(request, species = NULL) {
+scopus_request_tak <- function(request, species = NULL, ...) {
   rscopus::scopus_search(query = paste0(create_query_string_TAK_scopus(genus,
                                                                        species = paste0(species),
                                                                        synonyms,
