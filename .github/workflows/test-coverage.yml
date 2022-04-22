@@ -28,7 +28,7 @@ jobs:
           
       - name: Retrieve API key from .Renviron file
         run: |
-          echo Elsevier_API ="$Elsevier_API" >> ~/.Renviron
+          echo Elsevier_API ="$ELSEVIER_API" >> ~/.Renviron
         shell: bash
       
       - name: Test coverage
