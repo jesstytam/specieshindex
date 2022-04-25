@@ -8,17 +8,17 @@ output:
 ---
 
 ```{r, setup}
-pacman::p_load(tidyverse,
-               rscopus,
-               wosr,
-               rbace,
-               data.table,
-               httr,
-               XML,
-               jsonlite,
-               taxize,
-               gtools,
-               ggpubr)
+library(tidyverse)
+library(rscopus)
+library(wosr)
+library(rbace)
+library(data.table)
+library(httr)
+library(XML)
+library(jsonlite)
+library(taxize)
+library(gtools)
+library(ggpubr)
 
 remotes::install_github("jessicatytam/specieshindex", build_vignettes = TRUE, dependencies = TRUE)
 library(specieshindex)

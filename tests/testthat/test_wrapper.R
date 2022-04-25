@@ -1,4 +1,38 @@
 #count()
+with_mock_api({
+  test_that("count wrapper requests", {
+    expect_GET(Count(db = "scopus",
+                     search = "t",
+                     genus = "Bettongia"))
+    expect_GET(Count(db = "scopus",
+                     search = "tak",
+                     genus = "Bettongia"))
+    expect_POST(Count(db = "wos",
+                     search = "t",
+                     genus = "Bettongia"))
+    expect_POST(Count(db = "wos",
+                     search = "tak",
+                     genus = "Bettongia"))
+    expect_GET(Count(db = "base",
+                     search = "t",
+                     genus = "Bettongia"),
+               "https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi")
+    expect_GET(Count(db = "base",
+                     search = "tak",
+                     genus = "Bettongia"),
+               "https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi")
+  })
+})
+
+# with_mock_api({
+#   test_that("count request return", {
+#     expect_type(Count(db = "scopus",
+#                       search = "t",
+#                       genus = "Bettongia"),
+#                 "numeric")
+#   })
+# })
+
 test_that("count wrapper errors", {  
   expect_error(Count(search = "t",
                      genus = "Bettongia"))
