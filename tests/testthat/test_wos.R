@@ -54,17 +54,31 @@ with_mock_api({
                'http://search.webofknowledge.com/esti/wokmws/ws/WokSearch <soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"')
     expect_POST(specieshindex:::FetchTAK_wos(genus = "Bettongia"),
                 'http://search.webofknowledge.com/esti/wokmws/ws/WokSearch <soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"')
-    
   })
 })
 
 with_mock_api({ 
   test_that("wos query working", {
-    expect_POST(wosr::pull_wos('TS = ("Bettongia")',
+    expect_POST(wosr::pull_wos(create_query_string_T_wos(genus = "Bettongia"),
+                               sid = sid),
+               'http://search.webofknowledge.com/esti/wokmws/ws/WokSearch <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"')
+    expect_POST(wosr::pull_wos(create_query_string_TAK_wos(genus = "Bettongia"),
                                sid = sid),
                'http://search.webofknowledge.com/esti/wokmws/ws/WokSearch <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"')
   })
 })
+
+# with_mock_api({
+#   test_that("code within fetch wos works", {
+#     expect_output(specieshindex:::Count_wos(search = "t",
+#                                             genus = "Bettongia"),
+#                   "records found")
+#     # search.webofknowledge.com/esti/wokmws/ws/WokSearch-dd82ab-POST.json
+#     expect_output(specieshindex:::Count_wos(search = "tak",
+#                                             genus = "Bettongia"),
+#                   "records found")
+#   })
+# })
 
 
 #TITLE ONLY

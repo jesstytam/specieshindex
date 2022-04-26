@@ -68,6 +68,12 @@ with_mock_api({
   })
 })
 
+with_mock_api({
+  test_that("code within fetch scopus", {
+    
+  })
+})
+
 # with_mock_api({
 #   test_that("scopus query working", {
 #     expect_GET(specieshindex:::scopus_request_t(request = '" AND PUBYEAR > 2019"', api_key = Elsevier_API),

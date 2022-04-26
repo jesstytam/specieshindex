@@ -22,4 +22,6 @@ test_that("Allindices", {
   expect_true(is.data.frame(B_penicillata))
   expect_output(str(B_penicillata),
                 "1 obs")
+  expect_output(str(B_penicillata),
+                "11 variables")
 })
