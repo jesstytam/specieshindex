@@ -68,11 +68,11 @@ with_mock_api({
   })
 })
 
-with_mock_api({
-  test_that("code within fetch scopus", {
-    
-  })
-})
+# with_mock_api({
+#   test_that("code within fetch scopus", {
+#     
+#   })
+# })
 
 # with_mock_api({
 #   test_that("scopus query working", {
