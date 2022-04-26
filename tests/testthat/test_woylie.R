@@ -15,6 +15,11 @@ test_that("Woylie_stats", {
 })
 
 test_that("Allindices", {
-  B_penicillata <- Allindices(Woylie, "Bettongia", "penicillata")
+  data(Woylie)
+  B_penicillata <- Allindices(Woylie,
+                              "Bettongia",
+                              "penicillata")
   expect_true(is.data.frame(B_penicillata))
+  expect_output(str(B_penicillata),
+                "1 obs")
 })

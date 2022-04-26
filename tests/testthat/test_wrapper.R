@@ -43,6 +43,23 @@ test_that("count wrapper errors", {
 })
 
 #fetch()
+with_mock_api({
+  test_that("fetch wrapper requests", {
+    expect_GET(Fetch(db = "scopus",
+                     search = "t",
+                     genus = "Bettongia"))
+    expect_GET(Fetch(db = "scopus",
+                     search = "tak",
+                     genus = "Bettongia"))
+    expect_POST(Fetch(db = "wos",
+                      search = "t",
+                      genus = "Bettongia"))
+    expect_POST(Fetch(db = "wos",
+                      search = "tak",
+                      genus = "Bettongia"))
+  })
+})
+
 test_that("fetch wrapper errors", {  
   expect_error(Fetch(search = "t",
                      genus = "Bettongia"))
@@ -50,6 +67,9 @@ test_that("fetch wrapper errors", {
                      genus = "Bettongia"))
   expect_error(Fetch(db = "scopus",
                      search = "t"))
+  expect_error(Fetch(db = "base",
+                     search = "t",
+                     genus = "Bettongia"))
 })
 
 #sp_check
