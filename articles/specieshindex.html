@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Introduction to specieshindex</h1>
                         <h4 data-toc-skip class="author">Jessica Tam, Malgorzata (Losia) Lagisz, Shinichi Nakagawa, Will Cornwell</h4>
             
-            <h4 data-toc-skip class="date">April 26, 2022</h4>
+            <h4 data-toc-skip class="date">May 25, 2022</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jessicatytam/specieshindex/blob/HEAD/vignettes/specieshindex.Rmd" class="external-link"><code>vignettes/specieshindex.Rmd</code></a></small>
       <div class="hidden name"><code>specieshindex.Rmd</code></div>
@@ -327,7 +327,7 @@
 <p>For example:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/SpH5.html">SpH5</a></span><span class="op">(</span><span class="va">Woylie</span><span class="op">)</span>
-<span class="co">#&gt; [1] 5</span></code></pre></div>
+<span class="co">#&gt; [1] 4</span></code></pre></div>
 <p>You can calculate <em>h</em>-index for publications published after a certain date. To subset the time with a specific lower limit, you can use <code><a href="../reference/SpHAfterdate.html">SpHAfterdate()</a></code>. Make sure the date parameter is in the exact format of yyyy-mm-dd. Using a different format or using slashes or hyphens will return an error.</p>
 <p>For example:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
@@ -355,7 +355,7 @@
 <span class="co">#&gt;           genus_species     species     genus publications citations journals</span>
 <span class="co">#&gt; 1 Bettongia penicillata penicillata Bettongia          113      1903       55</span>
 <span class="co">#&gt;   years_publishing  h     m i10 h5</span>
-<span class="co">#&gt; 1               45 26 0.578  54  5</span></code></pre></div>
+<span class="co">#&gt; 1               45 26 0.578  54  4</span></code></pre></div>
 <p>There is an additional argument <code>sourcetype</code> with the default set to <code>sourcetype = 0</code>. If set to <code>sourcetype = 1</code>, the output of <code><a href="../reference/Allindices.html">Allindices()</a></code> will include the output of <code><a href="../reference/SourceType.html">SourceType()</a></code>.</p>
 <p>For multiple species, <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> (or <code><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">dplyr::bind_rows()</a></code> if <code>sourcetype = 1</code>) can be used to stitch the outputs together, which will be used below.</p>
 </div>
@@ -410,7 +410,7 @@
 <span class="co">#&gt; 3 Ornithorhynchus anatinus    anatinus Ornithorhynchus          321      6365</span>
 <span class="co">#&gt; 4   Phascolarctos cinereus    cinereus   Phascolarctos          773     14291</span>
 <span class="co">#&gt;   journals years_publishing  h     m i10 h5</span>
-<span class="co">#&gt; 1       55               45 26 0.578  54  5</span>
+<span class="co">#&gt; 1       55               45 26 0.578  54  4</span>
 <span class="co">#&gt; 2      107               68 29 0.426 121  2</span>
 <span class="co">#&gt; 3      153               69 41 0.594 177  5</span>
 <span class="co">#&gt; 4      227              141 53 0.376 427  9</span></code></pre></div>
