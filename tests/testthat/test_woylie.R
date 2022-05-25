@@ -8,7 +8,7 @@ test_that("Woylie_stats", {
   expect_true(SpHindex(Woylie)>=26)
   expect_true(SpMindex(Woylie)>=0.5)
   expect_true(Spi10(Woylie)>=54)
-  expect_true(SpH5(Woylie)>=5)
+  expect_true(SpH5(Woylie)>=4)
   expect_true(SpHAfterdate(Woylie, "2000-01-01")>=20)
   expect_type(specieshindex:::sp_check("Bettongia", "penicillata"),
               "character")
