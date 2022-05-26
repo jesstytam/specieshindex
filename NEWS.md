@@ -1,3 +1,6 @@
+# specieshindex 0.4.2
+## Function changes
+- removing unused argument for `Allindices()`
 # specieshindex 0.4.1
 ## New functions
 - `Count()` and `Fetch()` have replaces all other previous `Count*()` and `Fetch*()` functions.

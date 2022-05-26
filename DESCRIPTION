@@ -1,8 +1,8 @@
 Package: specieshindex
 Type: Package
 Title: How (scientifically) popular is a given species?
-Version: 0.4.1
-Date: 2021-01-19
+Version: 0.4.2
+Date: 2022-05-26
 Author: Jessica Tam
 Maintainer: Jessica Tam <tamtinying@gmail.com>
 Description: Finds the h-index of a species. 
