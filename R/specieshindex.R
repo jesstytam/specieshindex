@@ -1191,7 +1191,7 @@ SpHAfterdate <- function(data, date) {
 Allindices <- function(data,
                        genus,
                        species) {
-  if (all.equal(0, data$citations) == TRUE) {
+  if (all(data$citations == 0)) {
     zeroIndex <- data.frame(genus_species = paste0(genus, " ", species),
                             species = paste0(species),
                             genus = paste0(genus),
