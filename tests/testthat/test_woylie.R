@@ -21,6 +21,15 @@ test_that("Allindices", {
   B_penicillata <- Allindices(Woylie,
                               "Bettongia",
                               "penicillata")
+  expect_snapshot(Allindices(Woylie,
+                             "Bettongia",
+                             "penicillata"))
+  woy_with_no_citations<-Woylie
+  woy_with_no_citations$citations<-0
+  w_no_cites <- Allindices(woy_with_no_citations,
+                              "Bettongia",
+                              "penicillata")
+  expect_true(is.data.frame(w_no_cites))
   combine <- data.frame(paste0(genus, " ", species),
                         paste0(species),
                         paste0(genus),
