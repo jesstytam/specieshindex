@@ -30,7 +30,7 @@ Suggests:
     testthat (>= 3.0.0)
 License: MIT + file LICENSE
 URL: https://github.com/jessicatytam/specieshindex
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 VignetteBuilder: knitr
 Encoding: UTF-8
 Config/testthat/edition: 3

@@ -1228,8 +1228,21 @@ Allindices <- function(data,
                            "m",
                            "i10",
                            "h5")
+    print_allindices(data,genus,species)
     return(combine)
   } 
+}  
+  
+#' Print all indices output
+#' Title only.
+#' 
+#' @title Print all indices output
+#'
+#' @param data from allindices
+#'
+#' @noRd
+#'
+print_allindices<-function(data,genus,species){
   cat("\n", genus, species, "\n",
       TotalPub(data), "publications", "\n",
       TotalCite(data), "citations", "\n",
