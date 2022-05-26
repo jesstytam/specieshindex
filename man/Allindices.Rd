@@ -4,7 +4,7 @@
 \alias{Allindices}
 \title{Index summary}
 \usage{
-Allindices(data, genus, species, sourcetype = 0)
+Allindices(data, genus, species)
 }
 \arguments{
 \item{data}{The dataframe generated from \code{\link{Fetch}}.}
@@ -12,8 +12,6 @@ Allindices(data, genus, species, sourcetype = 0)
 \item{genus}{Genus classification from the binomial name.}
 
 \item{species}{Species classification from the binomial name.}
-
-\item{sourcetype}{Source type; default is 0, enter 1 to add SourceType variables.}
 }
 \value{
 A datarame of all of the indices in the package.
@@ -30,7 +28,6 @@ Woylie <- Fetch(db = "scopus",
 }
 Allindices(Woylie,
            genus = "Bettongia",
-           species = "penicillata",
-           sourcetype = 0)
+           species = "penicillata",)
 
 }
