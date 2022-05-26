@@ -4,7 +4,6 @@
 ^doc$
 ^Meta$
 ^\.github$
-docs
 paper.bib
 paper.md
 README_cache
