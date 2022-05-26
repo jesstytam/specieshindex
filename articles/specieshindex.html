@@ -352,6 +352,16 @@
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/Allindices.html">Allindices</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Woylie</span>,
            genus <span class="op">=</span> <span class="st">"Bettongia"</span>, species <span class="op">=</span> <span class="st">"penicillata"</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  Bettongia penicillata </span>
+<span class="co">#&gt;  113 publications </span>
+<span class="co">#&gt;  1903 citations </span>
+<span class="co">#&gt;  55 journals </span>
+<span class="co">#&gt;  45 years of publishing </span>
+<span class="co">#&gt;  h: 26 </span>
+<span class="co">#&gt;  m: 0.578 </span>
+<span class="co">#&gt;  i10: 54 </span>
+<span class="co">#&gt;  h5: 4</span>
 <span class="co">#&gt;           genus_species     species     genus publications citations journals</span>
 <span class="co">#&gt; 1 Bettongia penicillata penicillata Bettongia          113      1903       55</span>
 <span class="co">#&gt;   years_publishing  h     m i10 h5</span>
@@ -394,12 +404,52 @@
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">W</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Allindices.html">Allindices</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Woylie</span>,
                 genus <span class="op">=</span> <span class="st">"Bettongia"</span>, species <span class="op">=</span> <span class="st">"penicillata"</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  Bettongia penicillata </span>
+<span class="co">#&gt;  113 publications </span>
+<span class="co">#&gt;  1903 citations </span>
+<span class="co">#&gt;  55 journals </span>
+<span class="co">#&gt;  45 years of publishing </span>
+<span class="co">#&gt;  h: 26 </span>
+<span class="co">#&gt;  m: 0.578 </span>
+<span class="co">#&gt;  i10: 54 </span>
+<span class="co">#&gt;  h5: 4</span>
 <span class="va">Q</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Allindices.html">Allindices</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Quokka</span>,
                 genus <span class="op">=</span> <span class="st">"Setonix"</span>, species <span class="op">=</span> <span class="st">"brachyurus"</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  Setonix brachyurus </span>
+<span class="co">#&gt;  242 publications </span>
+<span class="co">#&gt;  3427 citations </span>
+<span class="co">#&gt;  107 journals </span>
+<span class="co">#&gt;  68 years of publishing </span>
+<span class="co">#&gt;  h: 29 </span>
+<span class="co">#&gt;  m: 0.426 </span>
+<span class="co">#&gt;  i10: 121 </span>
+<span class="co">#&gt;  h5: 2</span>
 <span class="va">P</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Allindices.html">Allindices</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Platypus</span>,
                 genus <span class="op">=</span> <span class="st">"Ornithorhynchus"</span>, species <span class="op">=</span> <span class="st">"anatinus"</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  Ornithorhynchus anatinus </span>
+<span class="co">#&gt;  321 publications </span>
+<span class="co">#&gt;  6365 citations </span>
+<span class="co">#&gt;  153 journals </span>
+<span class="co">#&gt;  69 years of publishing </span>
+<span class="co">#&gt;  h: 41 </span>
+<span class="co">#&gt;  m: 0.594 </span>
+<span class="co">#&gt;  i10: 177 </span>
+<span class="co">#&gt;  h5: 5</span>
 <span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Allindices.html">Allindices</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Koala</span>,
-                genus <span class="op">=</span> <span class="st">"Phascolarctos"</span>, species <span class="op">=</span> <span class="st">"cinereus"</span><span class="op">)</span></code></pre></div>
+                genus <span class="op">=</span> <span class="st">"Phascolarctos"</span>, species <span class="op">=</span> <span class="st">"cinereus"</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  Phascolarctos cinereus </span>
+<span class="co">#&gt;  773 publications </span>
+<span class="co">#&gt;  14291 citations </span>
+<span class="co">#&gt;  227 journals </span>
+<span class="co">#&gt;  141 years of publishing </span>
+<span class="co">#&gt;  h: 53 </span>
+<span class="co">#&gt;  m: 0.376 </span>
+<span class="co">#&gt;  i10: 427 </span>
+<span class="co">#&gt;  h5: 9</span></code></pre></div>
 <p>If you want to compare and analyse them against each other, you can use the function <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> to combine indices for all four species into a single dataframe:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">CombineSp</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">W</span>, <span class="va">Q</span>, <span class="va">P</span>, <span class="va">K</span><span class="op">)</span> <span class="co">#combining the citation records</span>
