@@ -4,3 +4,10 @@
 ^doc$
 ^Meta$
 ^\.github$
+docs
+paper.bib
+paper.md
+README_cache
+README.rmd
+specieshindex_0.4.1.pdf
+specieshindex.Rmd

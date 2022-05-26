@@ -1186,7 +1186,7 @@ SpHAfterdate <- function(data, date) {
 #' }
 #' Allindices(Woylie,
 #'            genus = "Bettongia",
-#'            species = "penicillata",)
+#'            species = "penicillata")
 #' 
 Allindices <- function(data,
                        genus,

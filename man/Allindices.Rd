@@ -28,6 +28,6 @@ Woylie <- Fetch(db = "scopus",
 }
 Allindices(Woylie,
            genus = "Bettongia",
-           species = "penicillata",)
+           species = "penicillata")
 
 }
