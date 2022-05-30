@@ -28,12 +28,16 @@
 #'       synonyms = "Macropus rufus",
 #'       additionalkeywords = "conserv*")
 #' }
-Count <- function(db,
-                  search,
+Count <- function(db = c("scopus", "wos", "base"),
+                  search = c("t", "tak"),
                   genus,
                   species = NULL,
                   synonyms,
                   additionalkeywords) {
+  
+  db <- match.arg(db)
+  search <- match.arg(search)
+  
   if (missing(db)) {
     stop('Pick a database by setting db = "scopus" / "wos" / "base".')
   }
@@ -116,13 +120,17 @@ Count <- function(db,
 #'       synonyms = "Macropus rufus",
 #'       additionalkeywords = "conserv*")
 #' }
-Fetch <- function(db,
-                  search,
+Fetch <- function(db = c("scopus", "wos", "base"),
+                  search = c("t", "tak"),
                   genus,
                   species = NULL,
                   synonyms,
                   additionalkeywords,
                   language = 0) {
+  
+  db <- match.arg(db)
+  search <- match.arg(search)
+  
   if (missing(db)) {
     stop('Pick a database by setting db = "scopus" / "wos" / "base".')
   }
@@ -207,12 +215,15 @@ Fetch <- function(db,
 #' 
 #' @noRd
 #' 
-Count_scopus <- function(search,
+Count_scopus <- function(search = c("t", "tak"),
                          genus,
                          species = NULL,
                          synonyms,
                          additionalkeywords,
                          datatype = "application/xml") {
+  
+  search <- match.arg(search)
+  
   sp_check(genus,
            species = paste0(species))
   if (search == "t") {
