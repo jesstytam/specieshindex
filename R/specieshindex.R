@@ -48,25 +48,20 @@ Count <- function(db = c("scopus", "wos", "base"),
   if (missing(genus)) {
     stop('Genus is missing from your query.')
   }
-  if (db == "scopus") {
-    countsp <- Count_scopus(search = search,
-                            genus,
-                            species,
-                            synonyms,
-                            additionalkeywords)
-  } else if (db == "wos") {
-    countsp <- Count_wos(search = search,
-                         genus,
-                         species,
-                         synonyms,
-                         additionalkeywords)
-  } else if (db == "base") {
-    countsp <- Count_base(search = search,
-                          genus,
-                          species,
-                          synonyms,
-                          additionalkeywords)
-  }
+  
+  Count_f <- switch(
+    db,
+    scopus = Count_scopus,
+    wos    = Count_wos,
+    base   = Count_base
+  )
+  
+    countsp <- Count_f(search = search,
+                       genus,
+                       species,
+                       synonyms,
+                       additionalkeywords)
+
   return(countsp)
 }
 
@@ -206,27 +201,23 @@ Count_scopus <- function(search = c("t", "tak"),
   
   search <- match.arg(search)
   
+  create_query_string <- switch(
+    search,
+    t   = create_query_string_T_scopus,
+    tak = create_query_string_TAK_scopus
+  )
+  
   sp_check(genus,
            species = paste0(species))
-  if (search == "t") {
-    response <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                          query = list(apiKey = apikey,
-                                       query = create_query_string_T_scopus(genus,
-                                                                            species = paste0(species),
-                                                                            synonyms,
-                                                                            additionalkeywords),
-                                       httpAccept = "application/xml")) #format the URL to be sent to the API
-  } else if (search == "tak") {
-    response <- httr::GET("http://api.elsevier.com/content/search/scopus",
-                          query = list(apiKey = apikey,
-                                       query = create_query_string_TAK_scopus(genus,
-                                                                              species = paste0(species),
-                                                                              synonyms,
-                                                                              additionalkeywords),
-                                       httpAccept = "application/xml")) #format the URL to be sent to the API
-  } else {
-    stop('Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, or keywords.')
-  }
+
+  response <- httr::GET("http://api.elsevier.com/content/search/scopus",
+                        query = list(apiKey = apikey,
+                                     query = create_query_string(genus,
+                                                                 species = paste0(species),
+                                                                 synonyms,
+                                                                 additionalkeywords),
+                                     httpAccept = "application/xml")) #format the URL to be sent to the API
+
   httr::stop_for_status(response) #pass any HTTP errors to the R console
   response_data <- XML::xmlParse(response) #parse the data to extract values
   resultCount <- as.numeric(XML::xpathSApply(response_data,"//opensearch:totalResults", XML::xmlValue)) #get the total number of search results for the string
