@@ -48,43 +48,25 @@ Count <- function(db = c("scopus", "wos", "base"),
   if (missing(genus)) {
     stop('Genus is missing from your query.')
   }
-  if (db == "scopus" & search == "t") {
-    countsp <- Count_scopus(search = "t",
+  if (db == "scopus") {
+    countsp <- Count_scopus(search = search,
                             genus,
                             species,
                             synonyms,
                             additionalkeywords)
-  } else if (db == "scopus" & search == "tak") {
-    countsp <- Count_scopus(search = "tak",
-                            genus, 
-                            species,
-                            synonyms,
-                            additionalkeywords)
-  } else if (db == "wos" & search == "t") {
-    countsp <- Count_wos(search = "t",
+  } else if (db == "wos") {
+    countsp <- Count_wos(search = search,
                          genus,
                          species,
                          synonyms,
                          additionalkeywords)
-  } else if (db == "wos" & search == "tak") {
-    countsp <- Count_wos(search = "tak",
-                         genus,
-                         species,
-                         synonyms,
-                         additionalkeywords)
-  } else if (db == "base" & search == "t") {
-    countsp <- Count_base(search = "t",
+  } else if (db == "base") {
+    countsp <- Count_base(search = search,
                           genus,
                           species,
                           synonyms,
                           additionalkeywords)
-  } else if (db == "base" & search == "tak") {
-    countsp <- Count_base(search = "tak",
-                          genus,
-                          species,
-                          synonyms,
-                          additionalkeywords)
-  } 
+  }
   return(countsp)
 }
 
