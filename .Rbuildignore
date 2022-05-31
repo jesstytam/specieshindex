@@ -9,3 +9,4 @@ paper.md
 README_cache
 README.rmd
 docs
+^LICENSE\.md$
