@@ -15,16 +15,6 @@ To get this package to work, make sure you have the following packages
 installed.
 
 ``` r
-#Installation from GitHub
-install.packages("rscopus")
-install.packages("wosr")
-install.packages("rbace")
-install.packages("taxize")
-install.packages("XML")
-install.packages("httr")
-install.packages("dplyr")
-install.packages("data.table")
-install.packages("tidyr")
 remotes::install_github("jessicatytam/specieshindex", build_vignettes = TRUE, dependencies = TRUE)
 
 #Load the library
