@@ -24,6 +24,8 @@ test_that("string construction", {
                                                           additionalkeywords = "cons",
                                                           synonyms = "Woylie"),
               "character")
+  expect_type(create_query_string_T_wos("genus","species",c("syn1","syn2")),"character")
+  expect_type(create_query_string_TAK_wos("genus","species",c("syn1","syn2")),"character")
 })
 
 #Count()

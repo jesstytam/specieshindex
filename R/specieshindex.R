@@ -276,7 +276,7 @@ FetchT_scopus <- function(genus,
                         species = paste0(species),
                         synonyms,
                         additionalkeywords) #check the number of records
-  print(paste(count, "records found."))
+  message(count, "records found.")
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
     return(noCitations)
@@ -340,8 +340,8 @@ FetchT_scopus <- function(genus,
       looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
       #loop starts
       for (i in 0:looprepeat) { 
-        print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
-        print(paste("Fetching records now."))
+        message("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration.")
+        message("Fetching records now.")
         search <- rscopus::scopus_search(query = create_query_string_T_scopus(genus,
                                                                               species = paste0(species),
                                                                               synonyms,
@@ -388,7 +388,7 @@ FetchT_scopus <- function(genus,
       }
   }
   returned <- dim(datalist)[1]
-  print(paste(returned, "records retrived in total."))
+  message(returned, "records retrived in total.")
   return(datalist)
 }
 
@@ -444,7 +444,7 @@ FetchTAK_scopus <- function(genus,
                         species = paste0(species),
                         synonyms,
                         additionalkeywords) #check the number of records
-  print(paste(count, "records found."))
+  message(count, "records found.")
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
     return(noCitations)
@@ -508,8 +508,8 @@ FetchTAK_scopus <- function(genus,
       looprepeat <- ceiling(count/step_size)-1 #the number of loop times, rounded up to the nearest integer
       #loop starts
       for (i in 0:looprepeat) { 
-        print(paste("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration."))
-        print(paste("Fetching records now."))
+        message("starting iteration: ", i, " Note: iteration size is ", step_size, " records, which runs of 200 records inside each iteration.")
+        message("Fetching records now.")
         search <- rscopus::scopus_search(query = create_query_string_TAK_scopus(genus,
                                                                                 species = paste0(species),
                                                                                 synonyms, 
@@ -556,7 +556,7 @@ FetchTAK_scopus <- function(genus,
       }
   }
   returned <- dim(datalist)[1]
-  print(paste(returned, "records retrived in total."))
+  message(returned, "records retrived in total.")
   return(datalist)
 }
 
@@ -677,7 +677,7 @@ FetchT_wos <- function(genus,
                      species = paste0(species),
                      synonyms,
                      additionalkeywords) #check the number of records
-  print(paste(count, "records found."))
+  message(count, "records found.")
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
     return(noCitations)
@@ -695,7 +695,7 @@ FetchT_wos <- function(genus,
   names(results)[names(results) == "date"] <- "cover_date"
   #showing final list of records
   returned <- nrow(results)
-  print(paste(returned, "records retrived in total."))
+  message(returned, "records retrived in total.")
   return(results)
 }
 
@@ -748,7 +748,7 @@ FetchTAK_wos <- function(genus,
                      species = paste0(species),
                      synonyms,
                      additionalkeywords) #check the number of records
-  print(paste(count, "records found."))
+  message(count, "records found.")
   if (count < 1) {
     noCitations <- data.frame(citations = 0)
     return(noCitations)
@@ -766,7 +766,7 @@ FetchTAK_wos <- function(genus,
   names(results)[names(results) == "date"] <- "cover_date"
   #showing final list of records
   returned <- nrow(results)
-  print(paste(returned, "records retrived in total."))
+  message(returned, "records retrived in total.")
   return(results)
 }
 
@@ -1809,16 +1809,17 @@ sp_check <- function(genus,
     stop("Genus or species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
   }
   if (findname$score[1]>=0.75) {
-    print(paste("Species found on CoL, ITIS, NCBI, or EoL."))
+    message("Species found on CoL, ITIS, NCBI, or EoL.")
   } else {
     stop("Genus or species not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
   }
 }
 
 
-#' Koala.
+#' Koala dataset
 #'
-#' A dataset with some literature on Koalas
+#' Citation records of koala (Phascolarctos cinereus) from Scopus.
+#' Data was retrieved on 10 July 2020.
 #'
 #' @format A data frame :
 #' \describe{
@@ -1844,13 +1845,14 @@ sp_check <- function(genus,
 #'   \item{title}{title}
 #'   ...
 #' }
-#' @source \url{http://www.diamondse.info/}
+#' @source \url{http://api.elsevier.com/content/search/scopus}
 "Koala"
 
 
-#' Platypus
+#' Platypus dataset
 #'
-#' A dataset with some literature on Platypus
+#' Citation records of platypus (Ornithorhynchus anatinus) from Scopus.
+#' Data was retrieved on 10 July 2020.
 #'
 #' @format A data frame :
 #' \describe{
@@ -1876,12 +1878,13 @@ sp_check <- function(genus,
 #'   \item{title}{title}
 #'   ...
 #' }
-#' @source WOS
+#' @source \url{http://api.elsevier.com/content/search/scopus}
 "Platypus"
 
-#' Quokka
+#' Quokka dataset
 #'
-#' A dataset with some literature on Quokka
+#' Citation records of quokka (Setonix brachyurus) from Scopus.
+#' Data was retrieved on 10 July 2020.
 #'
 #' @format A data frame :
 #' \describe{
@@ -1907,12 +1910,13 @@ sp_check <- function(genus,
 #'   \item{title}{title}
 #'   ...
 #' }
-#' @source WOS
+#' @source \url{http://api.elsevier.com/content/search/scopus}
 "Quokka"
 
-#' Woylie
+#' Woylie dataset
 #'
-#' A dataset with some literature on Woylie
+#' Citation records of woylie (Bettongia penicillata) from Scopus.
+#' Data was retrieved on 10 July 2020.
 #'
 #' @format A data frame :
 #' \describe{
@@ -1938,19 +1942,20 @@ sp_check <- function(genus,
 #'   \item{title}{title}
 #'   ...
 #' }
-#' @source WOS
+#' @source \url{http://api.elsevier.com/content/search/scopus}
 "Woylie"
 
 #' languages
 #'
-#' A dataset with some literature on languages
+#' List of languages of documents found on Scopus.
+#' Data was retrieved on 9 March 2021.
 #'
 #' @format A data frame :
 #' \describe{
 #'   \item{language}{names of languages}
 #'   ...
 #' }
-#' @source somewhere?
+#' @source \url{https://www.elsevier.com/solutions/scopus/how-scopus-works/content}
 "languages"
 
 

@@ -24,7 +24,8 @@ test_that("string construction", {
                                                              additionalkeywords = "cons",
                                                              synonyms = "Woylie"),
               "character")
-  
+  expect_type(create_query_string_T_scopus("genus","species",c("syn1","syn2")),"character")
+  expect_type(create_query_string_TAK_scopus("genus","species",c("syn1","syn2")),"character")
 })
 
 #Count()
@@ -44,10 +45,10 @@ with_mock_api({
 
 with_mock_api({
   test_that("scopus count errors", {
-    expect_error(specieshindex:::Count_scopus(genus = "Bettongia"))
-    expect_error(specieshindex:::Count_scopus(search = " ",
-                                              genus = "Bettongia"),
-                 'Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, or keywords.')
+    # expect_error(specieshindex:::Count_scopus(genus = "Bettongia"))
+    # expect_error(specieshindex:::Count_scopus(search = " ",
+    #                                           genus = "Bettongia"),
+    #              'Set search = "t" for title-only searches, or "tak" for searches in the title, abstract, or keywords.')
   })
 })
 

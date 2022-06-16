@@ -72,14 +72,10 @@ test_that("fetch wrapper errors", {
                      genus = "Bettongia"))
 })
 
-#sp_check and query string construction
+#sp_check
 test_that("sp_check() errors", {
+  expect_type(specieshindex:::sp_check("Bettongia", "penicillata"),
+              "NULL")
   expect_error(specieshindex:::sp_check("Betongia"),
                "not found on CoL, ITIS, NCBI, or EoL. Please check your spelling and try again.")
-  expect_type(create_query_string_TAK_base("genus","species",c("syn1","syn2")),"character")
-  expect_type(create_query_string_T_base("genus","species",c("syn1","syn2")),"character")
-  expect_type(create_query_string_TAK_wos("genus","species",c("syn1","syn2")),"character")
-  expect_type(create_query_string_T_wos("genus","species",c("syn1","syn2")),"character")
-  expect_type(create_query_string_TAK_scopus("genus","species",c("syn1","syn2")),"character")
-  expect_type(create_query_string_T_scopus("genus","species",c("syn1","syn2")),"character")
 })
